@@ -1,0 +1,632 @@
+%% LyX 2.0.6 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english,hyperref]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\usepackage{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=true,
+ linkcolor=black,urlcolor=blue}
+  }
+\else
+  \hypersetup{unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=true,
+ linkcolor=black,urlcolor=blue}
+\fi
+\usepackage{breakurl}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ \AtBeginDocument{
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+ \long\def\lyxframe#1{\@lyxframe#1\@lyxframestop}%
+ \def\@lyxframe{\@ifnextchar<{\@@lyxframe}{\@@lyxframe<*>}}%
+ \def\@@lyxframe<#1>{\@ifnextchar[{\@@@lyxframe<#1>}{\@@@lyxframe<#1>[]}}
+ \def\@@@lyxframe<#1>[{\@ifnextchar<{\@@@@@lyxframe<#1>[}{\@@@@lyxframe<#1>[<*>][}}
+ \def\@@@@@lyxframe<#1>[#2]{\@ifnextchar[{\@@@@lyxframe<#1>[#2]}{\@@@@lyxframe<#1>[#2][]}}
+ \long\def\@@@@lyxframe<#1>[#2][#3]#4\@lyxframestop#5\lyxframeend{%
+   \frame<#1>[#2][#3]{\frametitle{#4}#5}}
+ \def\lyxframeend{} % In case there is a superfluous frame end
+ \newenvironment{lyxcode}
+   {\par\begin{list}{}{
+     \setlength{\rightmargin}{\leftmargin}
+     \setlength{\listparindent}{0pt}% needed for AMS classes
+     \raggedright
+     \setlength{\itemsep}{0pt}
+     \setlength{\parsep}{0pt}
+     \normalfont\ttfamily}%
+    \def\{{\char`\{}
+    \def\}{\char`\}}
+    \def\textasciitilde{\char`\~}
+    \item[]}
+   {\end{list}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme[secheader]{Boadilla}
+\usecolortheme{seahorse}
+\title[Temporal Logic and FRP]{Temporal Logic and Functional Reactive Programming}
+\author{Sergei Winitzki}
+\date{April 25, 2014}
+\institute[Versal Group Inc.]{Bay Area Categories and Types}
+
+\makeatother
+
+\begin{document}
+\frame{\titlepage}
+
+
+\lyxframeend{}\lyxframe{What is ``reactive programming''}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+\textbf{Transformational} programs & \textbf{Reactive} programs\tabularnewline
+\hline 
+\hline 
+example: \texttt{\textcolor{blue}{pdflatex frp\_talk.tex}} & example: any GUI program\tabularnewline
+\hline 
+start, run, then stop & keep running indefinitely\tabularnewline
+\hline 
+read some input, write some output & wait for signals, send messages \tabularnewline
+\hline 
+\textbf{execution:} sequential + some parallel & ``main run loop'' + concurrency\tabularnewline
+\hline 
+\textbf{difficulty:} algorithms & signal/response sequences\tabularnewline
+\hline 
+\textbf{specification:} classical logic & temporal logic? flowcharts?\tabularnewline
+\hline 
+\textbf{verification:} prove it correct  & model checking?\tabularnewline
+\hline 
+\textbf{synthesis:} extract code from proof & temporal synthesis? \tabularnewline
+\hline 
+\textbf{type theory:} intuitionistic logic & intuitionistic temporal logic\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{The uses of logic in computer science }
+\begin{enumerate}
+\item Logic as a \textbf{specification} \textbf{language} - enables automatic
+verification 
+
+\begin{itemize}
+\item Automatic synthesis of programs from specifications?
+\end{itemize}
+\item (Intuitionistic) logic as \textbf{type theory} - guides language design
+
+\begin{itemize}
+\item Mathematicians have already minimized the set of axioms! 
+\end{itemize}
+\item \textbf{Logic programming} - use a decidable subset of logic 
+
+\begin{itemize}
+\item Very high-level language, but limited to its domain 
+\end{itemize}
+\item \textbf{Automated theorem proving} - derive a program as a proof artifact 
+
+\begin{itemize}
+\item Requires advanced type systems and proof heuristics
+\end{itemize}
+\end{enumerate}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Part 1: Introduction to temporal logic}
+\begin{itemize}
+\item Let's forget all philosophy, ``what is time'', ``what is true'',
+modal logic...
+\item We want to see logic as a down-to-earth, computationally useful tool
+\item We begin with the computational view of classical Boolean logic
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Boolean algebra: notation}
+\begin{itemize}
+\item Classical propositional (Boolean) logic: $T$, $F$, $a\vee b$, $a\wedge b$,
+$\neg a$, $a\rightarrow b$
+\item A notation better adapted to school-level algebra: $1$, $0$, $a+b$,
+$ab$, $a'$
+\item The only ``new rule'' is $1+1=1$
+\item Define $a\rightarrow b=a'+b$
+\item Some identities: 
+\begin{align*}
+0a=0,\quad1a=a, & \quad a+0=a,\quad a+1=1,\\
+a+a=a,\quad aa=a, & \quad a+a'=1,\quad aa'=0,\\
+\left(a+b\right)'=a'b', & \quad\left(ab\right)'=a'+b',\quad\left(a'\right)'=a\\
+a\left(b+c\right)=ab+ac, & \quad\left(a+b\right)\left(a+c\right)=a+bc
+\end{align*}
+
+\item DNF = ``expand all brackets''. Some DNF simplification tricks: 
+\begin{align*}
+a+ab=a, & \quad a\left(a+b\right)=a,\\
+\left(a\rightarrow b\right)\left(a'\rightarrow c\right) & =ab+a'c,\\
+\left(a\rightarrow x\right)\left(b\rightarrow x'\right) & =\left(a'+x\right)\left(b'+x'\right)=x'a'+xb'
+\end{align*}
+
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Boolean algebra: example}
+
+\textcolor{blue}{\emph{Of the three suspects $A$, $B$, $C$, only
+one is guilty of a crime. }}
+
+\textcolor{blue}{\emph{Suspect $A$ says: ``$B$ did it''. Suspect
+$B$ says: ``$C$ is innocent.''}}
+
+\textcolor{blue}{\emph{The guilty one is lying, the innocent ones
+tell the truth.}}
+\[
+\phi=\left(ab'c'+a'bc'+a'b'c\right)\left(a'b+ab'\right)\left(b'c'+bc\right)
+\]
+\textbf{Simplify}: expand the brackets, omit $aa'$, $bb'$, $cc'$,
+replace $aa=a$ etc.:
+\[
+\phi=ab'c'+0+0=ab'c'
+\]
+
+
+\textcolor{blue}{The guilty one is $A$.}
+
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Synthesis of Boolean programs}
+\begin{itemize}
+\item Specification of a ``Boolean program'':
+\end{itemize}
+\textcolor{blue}{\emph{If the boss is in, I need to work unless the
+telephone rings.}}
+
+\textcolor{blue}{\emph{If the boss is not in, I go drink tea.}}
+\begin{itemize}
+\item $b=$``boss is in'', $r=$``telephone rings'', $w=$``I work'',
+$w'=$``I drink tea''
+\begin{align*}
+\phi(b,r,w) & =\left(br'\rightarrow w\right)\left(b'\rightarrow w'\right)\\
+ & =w'\left(br'\right)'+wb=w'\left(b'+r\right)+wb
+\end{align*}
+
+\item \textbf{Goal}: given any $b$ and $r$, compute $w$ such that $\phi(b,r,w)=1$. 
+\item One solution is just $\phi(b,r,w=1)$:
+\[
+w=\phi(b,r,1)=0\left(b'+r\right)+1b=b
+\]
+\textcolor{blue}{``I work if and only if the boss is in''}
+\item (Other solutions exist, e.g. $w=br'$)
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Propositional linear-time temporal logic (LTL)}
+\begin{itemize}
+\item Reactive programs respond to an \emph{infinite} \emph{stream} of signals
+\item So let's work with\emph{ infinite boolean sequences} (``linear time'')\\
+\textbf{Boolean} operations:
+\begin{align*}
+a & =\left[a_{0},a_{1},a_{2},...\right];\quad b=\left[b_{0},b_{1},b_{2},...\right];\\
+a+b & =\left[a_{0}+b_{0},a_{1}+b_{1},...\right];\; a'=\left[a_{0}^{\prime},a_{1}^{\prime},...\right];\; ab=\left[a_{0}b_{0},a_{1}b_{1},...\right]
+\end{align*}
+\textbf{Temporal} operations:
+\begin{align*}
+\mbox{(Next)}\quad\mathbf{N}a & =\left[a_{1},a_{2},...\right]\\
+\mbox{(Sometimes)}\quad\mathbf{F}a & =\left[a_{0}+a_{1}+a_{2}+...,\ a_{1}+a_{2}+...,\ ...\right]\\
+\mbox{(Always)}\quad\mathbf{G}a & =\left[a_{0}a_{1}a_{2}a_{3}...,\ a_{1}a_{2}a_{3}...,\ a_{2}a_{3}...,\ ...\right]
+\end{align*}
+Other notation (from modal logic):
+\[
+\mathbf{N}a\equiv\bigcirc a;\;\mathbf{F}a\equiv\lozenge a;\;\mathbf{G}a\equiv\square a
+\]
+\texttt{\textcolor{blue}{\scriptsize{ }}}{\scriptsize \par}
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Temporal fixpoints and the $\mu$-calculus notation}
+\begin{itemize}
+\item LTL admits \emph{only} temporal functions defined\emph{ by} \emph{fixpoints}:
+\begin{align*}
+\mathbf{F}a & =\left[a_{0}+a_{1}+a_{2}+a_{3}+...,\ a_{1}+a_{2}+a_{3}+...,\ ...\right]\\
+\mathbf{F}a & =a+\mathbf{N}(\mathbf{F}a)\\
+\mathbf{G}a & =\left[a_{0}a_{1}a_{2}a_{3}...,\ a_{1}a_{2}a_{3}...,a_{2}a_{3}...,\ ...\right]\\
+\mathbf{G}a & =a\mathbf{N}(\mathbf{G}a)
+\end{align*}
+
+\item Notation: $\boldsymbol{\mu}$ for the least fixpoint, $\boldsymbol{\nu}$
+for the greatest fixpoint
+\begin{align*}
+\mathbf{F}a=\boldsymbol{\mu}x.\left(a+\mathbf{N}x\right); & \quad\mathbf{G}a=\boldsymbol{\nu}x.\left(a(\mathbf{N}x)\right)\\
+\mbox{but}\quad\boldsymbol{\nu}x.\left(a+\mathbf{N}x\right)=1; & \quad\boldsymbol{\mu}x.\left(a(\mathbf{N}x)\right)=0
+\end{align*}
+
+\item The most general fixpoints involving \emph{only one} $\mathbf{N}$:
+\begin{align*}
+\mbox{(weak Until)}\quad p\mathbf{U}q & =\boldsymbol{\nu}x.\left(q+p(\mathbf{N}x)\right)\\
+\mbox{(strict Until)}\quad p\dot{\mathbf{U}}q & =\boldsymbol{\mu}x.\left(q+p(\mathbf{N}x)\right)
+\end{align*}
+
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{LTL: interpretation of ``Until''}
+\begin{itemize}
+\item Weak Until: $p\mathbf{U}q$ = ``$p$ holds from now on until $q$
+first becomes true''
+\[
+p\mathbf{U}q=q+p\mathbf{N}\left(q+p\mathbf{N}\left(q+...\right)\right)
+\]
+Example:
+\begin{align*}
+a & =\left[1,0,0,0,1,0,...\right]\\
+b & =\left[0,1,0,1,0,1,...\right]\\
+a\mathbf{U}b & =\left[1,1,0,1,1,1,...\right]
+\end{align*}
+
+\item Strict Until: $p\dot{\mathbf{U}}q$ = ``$q$ \emph{must} become true,
+and $p$ holds until then'' 
+\item Dualities: $\left(\mathbf{F}a\right)'=\mathbf{G}(a')$; also $(p\dot{\mathbf{U}}q)^{\prime}=q'\mathbf{U}(p'q')$
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{LTL: temporal specification }
+
+\textcolor{blue}{\emph{Whenever the boss comes by my office, I will
+start working. }}
+
+\textcolor{blue}{\emph{Once I start working, I will keep working until
+the telephone rings.}}
+
+\[
+\mathbf{G}\left(\left(b\rightarrow\mathbf{F}w\right)\left(w\rightarrow w\mathbf{U}r\right)\right)=\mathbf{G}\left(\left(b'+\mathbf{F}w\right)\left(w'+w\mathbf{U}r\right)\right)
+\]
+
+
+\textcolor{blue}{\emph{Whenever the button is pressed, the dialog
+will appear. }}
+
+\textcolor{blue}{\emph{The dialog will disappear after 1 minute of
+user inactivity.}}
+
+\[
+\mathbf{G}\left(\left(b\rightarrow\mathbf{F}d\right)\left(d\rightarrow\mathbf{F}t\right)\left(d\rightarrow d\mathbf{U}td'\right)\right)
+\]
+
+\begin{itemize}
+\item The timer $t$ is an external event and is \emph{not specified} here
+\item Difficult to say ``$x$ stays true until further notice'' 
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{LTL: disjunctive normal form}
+\begin{itemize}
+\item What would be the DNF in LTL? Let's just expand brackets:
+\begin{align*}
+\phi & =\mathbf{G}\left(\left(b'+\mathbf{F}w\right)\left(w'+w\mathbf{U}r\right)\right)=\left(b'+\mathbf{F}w\right)\left(w'+w\mathbf{U}r\right)\mathbf{N}\phi\\
+ & =\left(b'+w+\mathbf{N}(\mathbf{F}w)\right)\left(w'+r+w\mathbf{N}(w\mathbf{U}r)\right)\mathbf{N}\phi\\
+ & =\left(b'+w+\mathbf{N}(w+\mathbf{N}(\mathbf{F}w))\right)\left(w'+r+w\mathbf{N}(r+w\mathbf{N}(w\mathbf{U}r))\right)\mathbf{N}\left(...\right)\\
+ & =\quad...\quad\mathbf{N}\left(...\quad...\mathbf{N}(...\quad...\mathbf{N}\left(...\right))\right)...
+\end{align*}
+We will \emph{never} \emph{finish} expanding those brackets!\medskip{}
+
+\item But many subformulas under $\mathbf{N}(...)$ are the same:
+\begin{align*}
+\phi_{1} & =\mathbf{F}w;\quad\phi_{2}=w\mathbf{U}r;\\
+\phi & =\left(b'+w+\mathbf{N}\phi_{1}\right)\left(w'+r+w\mathbf{N}\phi_{2}\right)\mathbf{N}\phi\\
+ & =\left(rw+b'w'\right)\mathbf{N}\phi+w'\mathbf{N}(\phi\phi_{1})+w\mathbf{N}(\phi\phi_{2})
+\end{align*}
+ 
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{LTL: disjunctive normal form}
+\begin{itemize}
+\item Let's expand and simplify $\phi\phi_{1}$ and $\phi\phi_{2}$: we
+get simultaneous fixpoints
+\begin{align*}
+\phi & =\left(rw+b'w'\right)\mathbf{N}(\phi)+w'\mathbf{N}(\phi\phi_{1})+w\mathbf{N}(\phi\phi_{2});\\
+\phi\phi_{1} & =rw\mathbf{N}(\phi)+\left(r+w'\right)\mathbf{N}(\phi\phi_{1})+w\mathbf{N}(\phi\phi_{2});\\
+\phi\phi_{2} & =r\left(w+b'\right)\mathbf{N}(\phi)+r\mathbf{N}(\phi\phi_{1})+w\mathbf{N}(\phi\phi_{2}).
+\end{align*}
+
+\item The DNF for LTL is a \emph{graph!}
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.8\columnwidth]{tree-dnf}
+\par\end{center}
+
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{The failure of LTL program synthesis}
+\begin{itemize}
+\item Goal: given $b$ and $r$, determine $w$ 
+\item The DNF generates a \emph{nondeterministic} finite automaton (NFA)
+for $w$
+\item States of the automaton are $\phi$, $\phi\phi_{1}$, $\phi\phi_{2}$,
+... (\emph{sets of fixpoints} of $\phi$)
+\item Determinizing the automaton may exponentially increase its size
+
+\begin{itemize}
+\item Worst case: for $\phi$ with $n$ fixpoints, DFA will have $2^{2^{n}}$
+states
+\end{itemize}
+\item Specifications will generally need to use many fixpoints. Example:\\
+\textcolor{blue}{\emph{Whenever $b$ is pressed, send query $q$ and
+show $w$ (``Waiting''). }}\\
+\textcolor{blue}{\emph{Upon reply $r$, show $d$ (``Done''). Pressing
+$c$ (``Cancel'') stops waiting. }}
+\begin{align*}
+\phi & =\mathbf{G}\,[\left(bw'\rightarrow b\mathbf{U}d'w\right)\left(w\rightarrow d'w\mathbf{U}\left(c+r\right)\right)\\
+ & \quad\ \quad\left(cw\rightarrow c\mathbf{U}w'\right)\left(q\leftrightarrow bw'\right)\left(rw\rightarrow r\mathbf{U}dw'\right)].
+\end{align*}
+
+
+\begin{itemize}
+\item LTL is not particularly convenient for modular specification
+\item Synthesis is \emph{not practical} (I write and debug my automata by
+hand...)
+\end{itemize}
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Part 2: Temporal logic as type theory}
+\begin{itemize}
+\item Logic gives a recipe for designing a \emph{minimal} programming language
+(Curry-Howard isomorphism)
+\item Typically, we use an \textbf{intuitionistic} version of the logic:
+
+\begin{itemize}
+\item No negation, no $\bot$; only $a+b$, $ab$, $a\rightarrow b$
+\item No law of excluded middle
+\item No truth tables, no ``simplification''
+\item Usually, cannot derive proofs automatically
+\end{itemize}
+\item Axioms are \emph{predefined terms} needed in the language
+
+\begin{itemize}
+\item Example: $\left(a\rightarrow c\right)\rightarrow\left(b\rightarrow c\right)\rightarrow\left(a+b\rightarrow c\right)$
+is the \textbf{case} operator
+\end{itemize}
+\item Proof rules are \emph{predefined constructions} needed in the language
+
+\begin{itemize}
+\item Example: modus ponens ($a$; $a\rightarrow b$ so $b$) is function
+application
+\end{itemize}
+\item Natural deduction rules are typing rules for the language
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Interpreting values typed by LTL}
+\begin{itemize}
+\item What does it mean to have a value $x$ of type, say, $\mathbf{G}(\alpha\rightarrow\alpha\mathbf{U}\beta)$?
+
+\begin{itemize}
+\item $x:\mathbf{N}\alpha$ means that $x:\alpha$ will be available \emph{only}
+at the \emph{next} time tick \\
+($x$ is a \textbf{deferred value} of type $\alpha$)
+\item $x:\mathbf{F}\alpha$ means that $x:\alpha$ will be available at
+\emph{some} future tick(s)\\
+($x$ is an \textbf{event} of type $\alpha$)
+\item $x:\mathbf{G\alpha}$ means that a (different) value $x:\alpha$ is
+available at \emph{every} tick\\
+($x$ is an \textbf{infinite stream} of type $\alpha$)
+\item $x:\alpha\mathbf{U}\beta$ means a \textbf{finite stream} of $\alpha$
+that may end with a $\beta$ 
+\end{itemize}
+\item Some \emph{temporal axioms} of intuitionistic LTL:
+\begin{align*}
+\mbox{(deferred apply)}\quad\mathbf{N}\left(\alpha\rightarrow\beta\right) & \rightarrow\left(\mathbf{N}\alpha\rightarrow\mathbf{N}\beta\right);\\
+\mathbf{\mbox{(streamed apply)}\quad G}\left(\alpha\rightarrow\beta\right) & \rightarrow\left(\mathbf{G}\alpha\rightarrow\mathbf{G}\beta\right);\\
+\mbox{(generate a stream)}\quad\mathbf{G}\left(\alpha\rightarrow\mathbf{N}\alpha\right) & \rightarrow\left(\alpha\rightarrow\mathbf{G}\alpha\right);\\
+\mbox{(read infinite stream)}\quad\mathbf{G}\alpha & \rightarrow\alpha\mathbf{N}(\mathbf{G}\alpha)\\
+\mbox{(read finite stream)}\quad\alpha\mathbf{U}\beta & \rightarrow\beta+\alpha\mathbf{N}(\alpha\mathbf{U}\beta)
+\end{align*}
+
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{A small FRP language: Elm}
+\begin{itemize}
+\item Core \texttt{Elm}: polymorphic $\lambda$-calculus with \texttt{lift2},
+\texttt{foldp}, \texttt{async} \end{itemize}
+\begin{lyxcode}
+lift2~:~$\left(\alpha\rightarrow\beta\rightarrow\gamma\right)\rightarrow\mathbf{G}\alpha\rightarrow\mathbf{G}\beta\rightarrow\mathbf{G}\gamma$
+
+foldp~:~$\left(\alpha\rightarrow\beta\rightarrow\beta\right)\rightarrow\beta\rightarrow\mathbf{G}\alpha\rightarrow\mathbf{G}\beta$
+
+async~:~$\mathbf{G}\alpha\rightarrow\mathbf{G}\alpha$\end{lyxcode}
+\begin{itemize}
+\item (\texttt{lift2} makes $\mathbf{G}$ an applicative functor)
+\item \texttt{async} is a special \emph{scheduling} \emph{instruction}
+\item Limitations:
+
+\begin{itemize}
+\item Cannot have a type $\mathbf{G}(\mathbf{G}\alpha)$, also no concept
+of $\mathbf{N}$ or $\mathbf{F}$
+\item Cannot construct temporal values by hand
+\item This language is an \emph{incomplete} Curry-Howard image of LTL!
+\item \textcolor{blue}{\emph{I work after the boss comes by and until the
+phone rings}}: \\
+$\quad$let after\_until w (b,r) = (w or b) and not r in \\
+$\quad\quad$foldp after\_until false (boss, phone)
+\end{itemize}
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{``Legacy'' FRP systems: \texttt{FrTime}, \texttt{Fran}, AFRP, etc.}
+\begin{itemize}
+\item Two functors: ``continuous behavior'' $\mathbf{G}\alpha$ and ``discrete
+event'' $\mathbf{F}\alpha$
+\item Time is conceptually continuous
+\item Explicit $\mathbf{N}$, delay by time $\Delta t$, explicit values
+of time
+\item Many predefined combinators that do not follow from type theory: \\
+\texttt{value-now}, \texttt{delay-by}, \texttt{integral}, ... (\texttt{FrTime})\\
+\texttt{merge}, \texttt{switcher}, $\mathbf{G}\left(\mathbf{G}\alpha\right)$,
+... (\texttt{Fran})
+\item AFRP: temporal values are not available, only combinators!
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{A lower-level FRP language: \texttt{AdjS} }
+\begin{itemize}
+\item A lower-level type system: $\mathbf{N}\alpha$ (\texttt{next}), $\hat{\boldsymbol{\mu}}\alpha.\Sigma$
+($\boldsymbol{\mu}$+next), $\boxdot\alpha$ (\texttt{stable})
+\item Explicit one-step temporal fixpoints, for example $\mathbf{F}\tau=\hat{\boldsymbol{\mu}}\alpha.\tau+\alpha$
+\[
+\tau=\hat{\boldsymbol{\mu}}\alpha.\Sigma\cong\hat{\boldsymbol{\mu}}\alpha.\left[\frac{\mathbf{N}\tau}{\alpha}\right]\Sigma
+\]
+
+\item Term assignments, simplified (see Krishnaswamy's paper):
+\begin{align*}
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\mbox{next }e:\mathbf{N}\alpha}\;_{\mathbf{N}I}\quad\quad\frac{\Gamma\vdash f:\mathbf{N}\alpha\quad\Gamma,x:\alpha\vdash e:\beta}{\mbox{let next }x=f\mbox{ in }e:\beta}\;_{\mathbf{N}E}\\
+\frac{\Gamma\vdash e:\left[\mathbf{N}(\hat{\boldsymbol{\mu}}\alpha.\Sigma)/\alpha\right]\Sigma}{\Gamma\vdash\mbox{into }e:\hat{\boldsymbol{\mu}}\alpha.\Sigma}\;_{\hat{\boldsymbol{\mu}}I}\quad\quad\frac{\Gamma\vdash e:\hat{\boldsymbol{\mu}}\alpha.\Sigma}{\Gamma\vdash\mbox{out }e:\left[\mathbf{N}(\hat{\boldsymbol{\mu}}\alpha.\Sigma)/\alpha\right]\Sigma}\;_{\hat{\boldsymbol{\mu}}E}\\
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\mbox{stable }e:\boxdot\alpha}\;_{\boxdot I}\quad\quad\frac{\Gamma\vdash f:\boxdot\alpha\quad\Gamma,x:\alpha\vdash e:\beta}{\Gamma\vdash\mbox{let stable }x=f\mbox{ in }e:\beta}\;_{\boxdot E}
+\end{align*}
+
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Dreams of an ideal FRP language }
+\begin{itemize}
+\item Requirements for a broadly usable FRP language: 
+
+\begin{itemize}
+\item ``stable'' and ``temporal'' types distinguished statically
+\item seamless conversion from \texttt{int} to $\mathbf{G}$(\texttt{int})
+and back, for ``stable'' types
+\item construct values of type $\mathbf{F}\alpha$ by hand: from asynchronous
+scheduling
+\item construct values of type $\mathbf{F}\alpha$ from external sources
+(environment)
+\item tick-free operation: $\mathbf{N}$ is not needed, use $\mathbf{F}$
+instead
+\item the runloop (UI thread / background threads) needs to be represented 
+\end{itemize}
+\item I guess we are still in the research phase here...
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Conclusions and outlook}
+\begin{itemize}
+\item LTL is not a good fit as a specification language for reactive programs
+\item LTL synthesis from specification is theoretical, not practical
+\item FRP tries to make specification closer to implementation
+\item There are some languages that implement FRP in various \emph{ad hoc}
+ways
+\item The ideal is not (yet) reached
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Abstract}
+
+In my day job, most bugs come from imperatively implemented reactive
+programs. Temporal Logic and FRP are declarative approaches that promise
+to solve my problems. I will briefly review the motivations behind
+and the connections between temporal logic and FRP. I propose a rather
+\textquotedbl{}pedestrian\textquotedbl{} approach to propositional
+linear-time temporal logic (LTL), showing how to perform calculations
+in LTL and how to synthesize programs from LTL formulas. I intend
+to explain why LTL largely failed to solve the synthesis problem,
+and how FRP tries to cope.\medskip{}
+
+
+FRP can be formulated as a $\lambda$-calculus with types given by
+the propositional intuitionistic LTL. I will discuss the limitations
+of this approach, and outline the features of FRP that are required
+by typical application programming scenarios. \medskip{}
+
+
+My talk will be largely self-contained and should be understandable
+to anyone familiar with Curry-Howard and functional programming.
+
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Suggested reading }
+
+E. Czaplicki, S. Chong. \href{http://people.seas.harvard.edu/~chong/pubs/pldi13-elm.pdf}{Asynchronous FRP for GUIs}.
+(2013) 
+
+E. Czaplicki. \href{http://www.seas.harvard.edu/sites/default/files/files/archived/Czaplicki.pdf}{Concurrent FRP for functional GUI}
+(2012). 
+
+N. R. Krishnaswamy. \href{https://www.mpi-sws.org/~neelk/simple-frp.pdfHigher-order functional reactive programming without spacetime leaks}{https://www.mpi-sws.org/$\sim$neelk/simple-frp.pdfHigher-order functional reactive programming without spacetime leaks}(2013).
+
+M. F. Dam. Lectures on temporal logic. Slides: \href{http://www.csc.kth.se/~mfd/Courses/Temporal_logic/lecture1.pdf}{Syntax and semantics of LTL},
+\href{http://www.csc.kth.se/~mfd/Courses/Temporal_logic/lecture2.pdf}{A Hilbert-style proof system for LTL} 
+
+E. Bainomugisha, et al. \href{ftp://progftp.vub.ac.be/tech_report/2012/vub-soft-tr-12-13.pdf}{A survey of reactive programming}
+(2013).
+
+W. Jeltsch. \href{http://www.ioc.ee/~wolfgang/research/plpv-2013-paper.pdf}{Temporal logic with Until, Functional Reactive Programming with processes, and concrete process categories.}
+(2013).
+
+A. Jeffrey. \href{http://ect.bell-labs.com/who/ajeffrey/papers/plpv12.pdf}{LTL types FRP.}
+(2012).
+
+D. Marchignoli. \href{http://phd.di.unipi.it/Theses/PhDthesis_Marchignoli.pdf}{Natural deduction systems for temporal logic.}
+(2002). -- See Chapter 2 for a natural deduction system for modal
+and temporal logics. 
+
+
+\lyxframeend{}
+\end{document}
