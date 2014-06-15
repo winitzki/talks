@@ -122,6 +122,8 @@ The four programming paradigms
 
 \begin_layout Plain Layout
 
+\series bold
+Paradigm
 \end_layout
 
 \end_inset
@@ -401,7 +403,7 @@ conflicting modules
 \begin_layout Plain Layout
 
 \size footnotesize
-domain-specific
+specific domain
 \end_layout
 
 \end_inset
@@ -513,7 +515,7 @@ good
 
  = 
 \emph on
-visual, convenient,
+visual, pragmatically convenient,
 \emph default
  complete for the domain 
 \begin_inset Formula $D$
@@ -549,7 +551,7 @@ implements the specification
 Less formally:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 A declarative language is a 
 \begin_inset Quotes eld
 \end_inset
@@ -640,7 +642,7 @@ Example: declarative Haskell 98
 \end_layout
 
 \begin_layout Itemize
-Application domain: recursively defined algebraic data structures
+Application domain: recursively defined, algebraic data structures
 \end_layout
 
 \begin_layout Itemize
@@ -696,6 +698,14 @@ data BTree
 )
 \family default
  
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout EndFrame
+
 \end_layout
 
 \begin_layout BeginFrame
@@ -811,7 +821,6 @@ All jumping creatures are green.
 \color magenta
 Ngtrks is small and green.
  Pgvdrk is a jumping martian.
- 
 \end_layout
 
 \begin_layout Standard
@@ -825,14 +834,18 @@ Who is intelligent?
 \size footnotesize
 (inpired by S.
  Lem, 
-\begin_inset Quotes eld
-\end_inset
-
+\emph on
 Invasion from Aldebaran
-\begin_inset Quotes erd
+\emph default
+)
+\size default
+
+\begin_inset Newline newline
 \end_inset
 
-)
+
+\family typewriter
+ 
 \end_layout
 
 \begin_layout LyX-Code
@@ -901,7 +914,7 @@ main :-
 \end_layout
 
 \begin_layout BeginFrame
-Prolog in a nutshell 1: predicates 
+Prolog in a nutshell 1: symbols, predicates, rules
 \end_layout
 
 \begin_layout Itemize
@@ -966,6 +979,10 @@ and
 \end_inset
 
 
+\end_layout
+
+\begin_layout Itemize
+Rules come in any order; no declarations
 \end_layout
 
 \begin_layout Itemize
@@ -1118,6 +1135,14 @@ trace
 \end_inset
 
  and follow the search)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout EndFrame
+
 \end_layout
 
 \begin_layout BeginFrame
@@ -1434,7 +1459,7 @@ resolution
 \end_layout
 
 \begin_layout Itemize
-Use a restricted fragment of predicate logic:
+Consider a restricted fragment of predicate logic:
 \end_layout
 
 \begin_deeper
@@ -1659,7 +1684,7 @@ passive predicates
 \begin_inset Quotes erd
 \end_inset
 
-
+ (a distinct namespace)
 \begin_inset Newline newline
 \end_inset
 
@@ -1705,7 +1730,7 @@ and so can contain
 \emph on
 any
 \emph default
- other structures (no types!): 
+ other structures (no typechecking!): 
 \begin_inset Newline newline
 \end_inset
 
@@ -1783,7 +1808,7 @@ User-defined syntax: infix, prefix, postfix
 \end_layout
 
 \begin_layout Itemize
-Many more features (metaprogramming, sets, cut/fail, etc.)
+Many more features: metaprogramming, sets, cut/fail, updates, ...
 \end_layout
 
 \begin_layout EndFrame
@@ -1824,7 +1849,7 @@ append_l([], X, X).
 \end_layout
 
 \begin_layout Itemize
-Problem: We want a 
+Problem: We need a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1906,14 +1931,14 @@ op(500, xfy, -).
 
 \size scriptsize
 \color red
-Call: (6) append([a, b, c|_G2447]-_G2447, [d, e|_G2456]-_G2456, _G2463)
+append([a, b, c|_G2447]-_G2447, [d, e|_G2456]-_G2456, _G2463)
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color red
-Exit: (6) append([a, b, c, d, e|_G2456]-[d, e|_G2456], [d, e|_G2456]-_G2456,
+append([a, b, c, d, e|_G2456]-[d, e|_G2456], [d, e|_G2456]-_G2456,
 \end_layout
 
 \begin_layout LyX-Code
@@ -1934,6 +1959,14 @@ A = [d, e|B],   C = [a, b, c, d, e|B]-B.
  
 \end_layout
 
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
 \begin_layout BeginFrame
 \begin_inset Quotes eld
 \end_inset
@@ -1946,7 +1979,7 @@ Pointers made safe
 \end_layout
 
 \begin_layout Itemize
-Implement a queue (insertions at end of list)
+Implement insertion at end of queue:
 \begin_inset Newline newline
 \end_inset
 
@@ -1982,39 +2015,699 @@ insert_at_end(E, Q-[E|Y], Q-Y).
 
 \size scriptsize
 \color red
-[trace] ?- append( [a,b,c|A]- A, [d,e|B]-B, C).
+[trace]
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color red
-Call: (6) append([a, b, c|_G2447]-_G2447, [d, e|_G2456]-_G2456, _G2463)
+?- insert_at_end( n, [a,b,c|X]-X, Q ).
+ 
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color red
-Exit: (6) append([a, b, c, d, e|_G2456]-[d, e|_G2456], [d, e|_G2456]-_G2456,
+X = [n|_G1726],    Q = [a, b, c, n|_G1726]-_G1726.
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color red
-    [a, b, c, d, e|_G2456]-_G2456)
+?- head( X, [a,b,c,n|Y]-Y, Z).
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color red
-A = [d, e|B],   C = [a, b, c, d, e|B]-B.
+X = a,     Z = [b, c, n|Y]-Y.
+\end_layout
 
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+\begin_inset Quotes eld
+\end_inset
+
+Pointers made safe
+\begin_inset Quotes erd
+\end_inset
+
+: iterators
+\end_layout
+
+\begin_layout Itemize
+A list iterator: set at begin, increment, check if at end
+\end_layout
+
+\begin_layout Itemize
+Split the list into a pair of queues
+\end_layout
+
+\begin_layout Itemize
+Effectively, we have a pointer to the 
+\emph on
+middle
+\emph default
+ of a list:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+:- op(600, xfx, ^^).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+plist_at_begin(X-X ^^ A-B).
+ plist_at_end(A-B ^^ X-X).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+plist_incr(A-[X|B] ^^ [X|C]-D, A-B ^^ C-D).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+[trace]  ?- plist_incr([a,b|X]-X ^^ [c,d,e|Y]-Y, P).
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+plist_incr([a, b|_G1978]-_G1978 ^^ [c, d, e|_G1990]-_G1990, _G1999)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+plist_incr([a, b, c|_G2113]-[c|_G2113] ^^ [c, d, e|_G1990]-_G1990,
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+    [a, b, c|_G2113]-_G2113 ^^ [d, e|_G1990]-_G1990)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+X = [c|_G2113],   P = [a, b, c|_G2113]-_G2113  ^^ [d, e|Y]-Y.
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Prolog and relational databases
+\end_layout
+
+\begin_layout Standard
+
+\size footnotesize
+Alice lost her umbrella on Monday.
+ Brian lost his glasses on Tuesday.
+ Chris lost his pen on Monday.
+ Dennis lost his watch on Monday and his pen on Tuesday.
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\size footnotesize
+ Whoever loses something on Monday will be unlucky for the whole week.
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\size footnotesize
+\emph on
+ Who is unlucky for the whole week and also lost something on Tuesday?
+\size default
+\emph default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size scriptsize
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\color blue
+ lost(alice, umbrella, monday).
+ lost(brian, glasses, tuesday).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\color blue
+ lost(chris, pen, monday).
+\family default
 \size default
 \color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+ lost(dennis, watch, monday).
+ lost(dennis, pen, tuesday).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\color blue
+ unlucky(X) :- lost(X, _, monday).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\color blue
+ ?- unlucky(Who), lost(Who, _, tuesday).
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Our predicates are either facts or non-recursive inferences
+\end_layout
+
+\begin_layout Itemize
+We will need 
+\emph on
+no backtracking
+\emph default
+ (unlike the 
+\begin_inset Quotes eld
+\end_inset
+
+Martians
+\begin_inset Quotes erd
+\end_inset
+
+ example)
+\end_layout
+
+\begin_layout Itemize
+A query such as 
+\family typewriter
+\size scriptsize
+\color blue
+?- unlucky(X)
+\family default
+\size default
+\color inherit
+ will usually return many results
+\end_layout
+
+\begin_layout BeginFrame
+Prolog and relational databases
+\end_layout
+
+\begin_layout Itemize
+We have seen this before...
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\size scriptsize
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+lost:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+person
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+object
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+day
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alice
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+umbrella
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+monday
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+brian
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+glasses
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+tuesday
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+chris
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pen
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+monday
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+dennis
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+watch
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+monday
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+dennis
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pen
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+tuesday
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
  
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+unlucky:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+person
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alice
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+chris
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+dennis
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Our Prolog code...
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+unlucky(X) :- lost(X, _, monday).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+?- unlucky(Who), lost(Who, _, tuesday).
+\end_layout
+
+\begin_layout Itemize
+...is translated into SQL as:
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+CREATE VIEW unlucky AS SELECT person FROM lost WHERE lost.day='monday';
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+SELECT person FROM unlucky NATURAL JOIN lost WHERE lost.day='tuesday';
+\end_layout
+
+\begin_layout LyX-Code
+
 \end_layout
 
 \begin_layout EndFrame
@@ -2026,7 +2719,11 @@ Conclusions and outlook
 \end_layout
 
 \begin_layout Itemize
-Prolog is a forgotten, but its legacy lives on
+Declarative programming = creating a good DSL for your domain
+\end_layout
+
+\begin_layout Itemize
+Prolog is almost forgotten, but its legacy lives on
 \end_layout
 
 \begin_layout Itemize
@@ -2058,10 +2755,9 @@ Free implementations I used:
 \end_layout
 
 \begin_layout Itemize
-SWI-Prolog: 
 \begin_inset CommandInset href
 LatexCommand href
-name "http://www.swi-prolog.org/"
+name "SWI-Prolog"
 target "http://www.swi-prolog.org/"
 
 \end_inset
@@ -2070,10 +2766,9 @@ target "http://www.swi-prolog.org/"
 \end_layout
 
 \begin_layout Itemize
-The Mercury programming language: 
 \begin_inset CommandInset href
 LatexCommand href
-name "http://www.mercurylang.org/information/features.html"
+name "The Mercury programming language"
 target "http://www.mercurylang.org/information/features.html"
 
 \end_inset
@@ -2082,7 +2777,7 @@ target "http://www.mercurylang.org/information/features.html"
 \end_layout
 
 \begin_layout Standard
-Pedagogical introduction to logic programming:
+A great pedagogical introduction to Prolog and Datalog:
 \begin_inset Note Note
 status open
 
@@ -2097,7 +2792,8 @@ http://f3.tiera.ru/2/Cs_Computer%20science/CsPl_Programming%20languages/Prolog/
 
 \begin_layout Itemize
 D.
- Maier, D.S.
+ Maier, D.
+ S.
  Warren.
  
 \emph on
@@ -2108,7 +2804,7 @@ Computing with logic: Logic programming with Prolog
 \end_layout
 
 \begin_layout Standard
-Advanced core Prolog programming:
+Advanced Prolog programming:
 \end_layout
 
 \begin_layout Itemize
@@ -2146,23 +2842,56 @@ The craft of Prolog
 \end_layout
 
 \begin_layout Standard
-Implementation: (the WAM is still an important source of inspiration)
+Implementation (the WAM is still an important source of inspiration):
 \end_layout
 
 \begin_layout Itemize
 H.
- Ait-Kaci.
+ A
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+"i
+\end_layout
+
+\end_inset
+
+t-Kaci.
  
 \emph on
 
 \begin_inset CommandInset href
 LatexCommand href
-name "Warren's Abstract Machine (WAM). A tutorial.  1991"
+name "Warren's Abstract Machine (WAM)"
 target "http://wambook.sourceforge.net/"
 
 \end_inset
 
 
+\emph default
+.
+ MIT, 1991
+\end_layout
+
+\begin_layout Itemize
+W.
+ F.
+ Clocksin.
+ 
+\emph on
+Design and simulation of a sequential Prolog machine
+\emph default
+.
+ New Gen.
+ Comp., 3 (1985), p.
+\begin_inset space ~
+\end_inset
+
+101 (describes the ZIP machine)
 \end_layout
 
 \begin_layout EndFrame
@@ -2182,7 +2911,7 @@ Prolog in a nutshell
 \end_layout
 
 \begin_layout Itemize
-How Prolog "makes pointers safe" 
+How Prolog "makes pointers safe"
 \end_layout
 
 \begin_layout Itemize
