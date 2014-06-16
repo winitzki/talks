@@ -41,6 +41,7 @@
 \pdf_title "That scripting language called Prolog"
 \pdf_author "Sergei Winitzki, Ph.D."
 \pdf_subject "Prolog programming language"
+\pdf_keywords "programming languages, Prolog, logic programming"
 \pdf_bookmarks true
 \pdf_bookmarksnumbered true
 \pdf_bookmarksopen false
@@ -982,7 +983,7 @@ and
 \end_layout
 
 \begin_layout Itemize
-Rules come in any order; no declarations
+Rules can be given in any order; no declarations
 \end_layout
 
 \begin_layout Itemize
@@ -1827,7 +1828,12 @@ Pointers made safe
 \end_layout
 
 \begin_layout Itemize
-Append lists: this takes linear time!
+Appending lists.
+ This takes 
+\begin_inset Formula $O(n)$
+\end_inset
+
+ operations!
 \begin_inset Newline newline
 \end_inset
 
@@ -1835,7 +1841,7 @@ Append lists: this takes linear time!
 \family typewriter
  
 \color blue
-append_l([], X, X).
+l_append([], X, X).
 \family default
 \color inherit
 
@@ -1845,11 +1851,11 @@ append_l([], X, X).
 
 \family typewriter
 \color blue
- append_l([X|Xs], Y, [X|Zs]) :- append(Xs, Y, Zs).
+ l_append([X|Xs], Y, [X|Zs]) :- l_append(Xs, Y, Zs).
 \end_layout
 
 \begin_layout Itemize
-Problem: We need a 
+To optimize, we need a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1916,29 +1922,29 @@ op(500, xfy, -).
 
 \family typewriter
 \color blue
- append_dl(X-Y,Y-Z,X-Z).
- /* that's it??? */
+ dl_append(X-Y,Y-Z,X-Z).
+ /* O(1) operations! */
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color red
-[trace] ?- append( [a,b,c|A]- A, [d,e|B]-B, C).
+[trace] ?- dl_append( [a,b,c|A]- A, [d,e|B]-B, C).
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color red
-append([a, b, c|_G2447]-_G2447, [d, e|_G2456]-_G2456, _G2463)
+dl_append([a, b, c|_G2447]-_G2447, [d, e|_G2456]-_G2456, _G2463)
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color red
-append([a, b, c, d, e|_G2456]-[d, e|_G2456], [d, e|_G2456]-_G2456,
+dl_append([a, b, c, d, e|_G2456]-[d, e|_G2456], [d, e|_G2456]-_G2456,
 \end_layout
 
 \begin_layout LyX-Code
@@ -1987,10 +1993,11 @@ Implement insertion at end of queue:
 \family typewriter
  
 \color blue
-list_to_queue(L,Q-Y) :- append_l(L,Y,Q).
+list_to_queue(L,Q-Y) :- l_append(L,Y,Q).
+ /* O(n) */
 \family default
 \color inherit
-
+ 
 \begin_inset Newline newline
 \end_inset
 
@@ -1998,7 +2005,8 @@ list_to_queue(L,Q-Y) :- append_l(L,Y,Q).
 \family typewriter
  
 \color blue
-insert_at_end(E, Q-[E|Y], Q-Y).
+q_insert_at_end(E, Q-[E|Y], Q-Y).
+ /* O(1) */
 \family default
 \color inherit
 
@@ -2008,7 +2016,7 @@ insert_at_end(E, Q-[E|Y], Q-Y).
 
 \family typewriter
 \color blue
- head(E, [E|Q]-Y, Q-Y).
+ q_head(E, [E|Q]-Y, Q-Y).
 \end_layout
 
 \begin_layout LyX-Code
@@ -2022,7 +2030,7 @@ insert_at_end(E, Q-[E|Y], Q-Y).
 
 \size scriptsize
 \color red
-?- insert_at_end( n, [a,b,c|X]-X, Q ).
+?- q_insert_at_end( n, [a,b,c|X]-X, Q ).
  
 \end_layout
 
@@ -2037,7 +2045,7 @@ X = [n|_G1726],    Q = [a, b, c, n|_G1726]-_G1726.
 
 \size scriptsize
 \color red
-?- head( X, [a,b,c,n|Y]-Y, Z).
+?- q_head( X, [a,b,c,n|Y]-Y, Z).
 \end_layout
 
 \begin_layout LyX-Code
@@ -2155,6 +2163,300 @@ plist_incr([a, b, c|_G2113]-[c|_G2113] ^^ [c, d, e|_G1990]-_G1990,
 \size scriptsize
 \color red
 X = [c|_G2113],   P = [a, b, c|_G2113]-_G2113  ^^ [d, e|Y]-Y.
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Parsing with Definite Clause Grammars
+\end_layout
+
+\begin_layout Itemize
+Top-down parsing with unlimited backtracking...
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+expr ::== term | term oper expr | '(' expr ')'
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+oper ::== 'and' | 'or' | ...
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+term ::== 'true' | 'false' | ...
+\end_layout
+
+\begin_layout Itemize
+...is similar to Prolog's evaluation strategy on 
+\emph on
+token queues
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+expr(Ts) :- term(Ts).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+expr(Ts-X) :- term(Ts-T1), op(T1-T2), expr(T2-X).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+oper([T|X]-X) :- T='and'.
+ oper([T|X]-X) :- T='or'.
+ /* etc.
+ */
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+term([T|X]-X) :- T='true'.
+ term([T|X]-X) :- T='false'.
+ /* etc.
+ */
+\end_layout
+
+\begin_layout Itemize
+Syntactic sugar (
+\family typewriter
+\size scriptsize
+\color blue
+-->
+\family default
+\size default
+\color inherit
+) is provided to avoid writing out the queues
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+expr --> term.
+ expr --> term, oper, expr.
+ expr --> ['('], expr, [')'].
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+oper --> ['and'].
+ oper --> ['or'].
+ term --> ['true'].
+ term --> ['false'].
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+/* test: */
+\color blue
+ ?- expr(['true', 'and', 'false', 'or', 'true'], []).
+\end_layout
+
+\begin_layout Itemize
+Nonterminals can have extra arguments and call Prolog code
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+No need for Lex/Yacc (but they do other grammars...)
+\end_layout
+
+\begin_layout Itemize
+Can parse some non-CFG grammars (
+\begin_inset Quotes eld
+\end_inset
+
+attributed
+\begin_inset Quotes erd
+\end_inset
+
+ grammars)
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Interpreters
+\end_layout
+
+\begin_layout Itemize
+A lambda-calculus interpreter in 3 lines of Prolog?...
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+:- op(1190, xfy, ~>).
+ :- op(1180, yfx, @).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+comp(A~>B, A~>B).
+ comp( (A~>B) @ A, B).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+comp(A@B@C, R) :- comp(A@B,S), comp(S@C,R).
+ comp(A@B, A@B).
+\end_layout
+
+\begin_layout Itemize
+...um, not really (lacking 
+\begin_inset Formula $\alpha$
+\end_inset
+
+-conversion and multiple steps)
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+?- comp( (X~>Y~>X) @ 1, Result).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+Result = (Y~>1) .
+
+\color blue
+ /* okay! */
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+?- comp( (X~> X@X) @ (Y~>Y), R1), comp(R1 @ 1,Res).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+X = Y, 
+\color red
+Y = (Y~>Y)
+\color blue
+, R1 = ((Y~>Y)@ (Y~>Y)), Res = ((Y~>Y)@1) .
+ /* 
+\color red
+???
+\color blue
+ */
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "A Prolog module with about 15 clauses"
+target "http://www.cs.utexas.edu/~cannata/cs345/Class%20Notes/12A%20Simple%20Lambda%20Calculus%20in%20Prolog%20(%20Ha4.htm"
+
+\end_inset
+
+ achieves this (hacky!):
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+:- use_module(lambda).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+id - (X ~> X).
+ const - (C ~> _ ~> C).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+ycomb - (F ~> (X ~> F ~ (X ~ X)) ~ (X ~> F ~ (X ~ X))).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+fac - ( F ~> N ~> iff ~ (N F = const; F = (const ~ id) ).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+?- lambda((y~fac~4), Result).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+Result = 24
 \end_layout
 
 \begin_layout EndFrame
@@ -2296,6 +2598,10 @@ A query such as
 \size default
 \color inherit
  will usually return many results
+\end_layout
+
+\begin_layout EndFrame
+
 \end_layout
 
 \begin_layout BeginFrame
@@ -2704,6 +3010,332 @@ CREATE VIEW unlucky AS SELECT person FROM lost WHERE lost.day='monday';
 \size scriptsize
 \color blue
 SELECT person FROM unlucky NATURAL JOIN lost WHERE lost.day='tuesday';
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Prolog, Datalog, and SQL
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+SQL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Datalog
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Prolog
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+recursive data
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+recursive queries
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Horn clauses
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+control flow
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+functions
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+typed values
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset VSpace defskip
+\end_inset
+
+Prolog + functions + types = 
+\series bold
+functional-logic programming
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Functional-logic programming in Mercury
+\end_layout
+
+\begin_layout Itemize
+Mercury: 
 \end_layout
 
 \begin_layout LyX-Code
