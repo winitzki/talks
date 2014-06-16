@@ -3335,11 +3335,241 @@ Functional-logic programming in Mercury
 \end_layout
 
 \begin_layout Itemize
-Mercury: 
+Mercury is Prolog + some features of ML
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Immutable values, static type inference, algebraic polymorphism
+\end_layout
+
+\begin_layout Itemize
+all predicates and all arguments are labeled with 
+\begin_inset Quotes eld
+\end_inset
+
+modes
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+static detection of errors in predicate use
+\end_layout
+
+\begin_layout Itemize
+functions are deterministic predicates with strict modes
+\end_layout
+
+\begin_layout Itemize
+products, sums, labeled records, higher-order functions
+\end_layout
+
+\begin_layout Itemize
+I/O by unique types
+\end_layout
+
+\begin_layout Itemize
+modules and signatures 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+`a 
+\end_layout
+
+\end_inset
+
+ la Standard ML
+\end_layout
+
+\begin_layout Itemize
+type classes 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+`a 
+\end_layout
+
+\end_inset
+
+ la Haskell
+\end_layout
+
+\begin_layout Itemize
+standard library: arrays, multithreading, etc.
+\end_layout
+
+\begin_layout Itemize
+can compile to machine code, C, Java, Erlang
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout BeginFrame
+A taste of Mercury
+\end_layout
+
+\begin_layout Itemize
+Read an integer and print its factorial
 \end_layout
 
 \begin_layout LyX-Code
 
+\family typewriter
+\size scriptsize
+\color blue
+:- module f.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- interface.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- import_module io.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- pred main(io::di, io::uo) is det.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- implementation.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- import_module int.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- pred fact(int::in, int::out) is det.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- import_module list, string.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+fact(N,F) :- ( if N =< 1 then F = 1 else fact(N-1, A), F = A*N ).
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+main(!IO) :- io.read_line_as_string(Result, !IO),
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  ( if Result = ok(String), 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+       string.to_int(string.strip(String), N)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+    then
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+       io.format("fact(%d) = %d
+\backslash
+n", [i(N), i(fact(N))], !IO) 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+    else
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+       io.format("That isn’t a number...
+\backslash
+n", [], !IO) 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  ).
 \end_layout
 
 \begin_layout EndFrame
@@ -3355,23 +3585,19 @@ Declarative programming = creating a good DSL for your domain
 \end_layout
 
 \begin_layout Itemize
-Prolog is almost forgotten, but its legacy lives on
-\end_layout
-
-\begin_layout Itemize
 It is quite easy to pick up Prolog, after seeing SQL and Haskell
 \end_layout
 
 \begin_layout Itemize
-Prolog makes building DSLs easy
+Prolog makes building DSLs easy (both internal and external DSLs)
 \end_layout
 
 \begin_layout Itemize
-Mercury = Prolog + types + functions 
+Mercury = Prolog + types + functions
 \end_layout
 
 \begin_layout Itemize
-Curry = Haskell + logical variables + predicates
+Prolog is almost forgotten, but its legacy lives on
 \end_layout
 
 \begin_layout EndFrame
@@ -3552,8 +3778,8 @@ Why Prolog was the ultimate scripting language for AI (backtracking search,
 \end_layout
 
 \begin_layout Itemize
-What is "functional-logic programming" (a taste of the programming languages
- Mercury and Curry)
+What is "functional-logic programming" (a taste of the programming language
+ Mercury)
 \end_layout
 
 \begin_layout EndFrame
