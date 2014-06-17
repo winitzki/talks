@@ -845,8 +845,6 @@ Invasion from Aldebaran
 \end_inset
 
 
-\family typewriter
- 
 \end_layout
 
 \begin_layout LyX-Code
@@ -897,17 +895,31 @@ main :-
 
 \color blue
   intelligent(X), format('~w is intelligent.~n', X), halt.
-\end_layout
+\color inherit
 
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename e_martians_out.png
-	width 7cm
-
+\begin_inset Newline newline
 \end_inset
 
+ 
+\end_layout
 
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\align left
+$ swipl -o martians -q -t main -c martians.pl
+\end_layout
+
+\begin_layout LyX-Code
+\align left
+$ ./martians 
+\end_layout
+
+\begin_layout LyX-Code
+\align left
+pgvdrk is intelligent.
 \end_layout
 
 \begin_layout EndFrame
@@ -1230,6 +1242,19 @@ intelligent(X) :- green(X), martian(X).
 \size footnotesize
 \color blue
 ?- intelligent(X).
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Phantom VPhantom
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -1667,6 +1692,22 @@ M is N-1
  resembles an expression but is actually a predicate!
 \end_layout
 
+\begin_layout Itemize
+it means 
+\family typewriter
+\color blue
+is(M,'-'(N,1))
+\family default
+\color inherit
+ , where 
+\family typewriter
+\color blue
+'-'
+\family default
+\color inherit
+ is an infix data constructor! 
+\end_layout
+
 \end_deeper
 \begin_layout EndFrame
 
@@ -1808,8 +1849,115 @@ User-defined syntax: infix, prefix, postfix
  op(200, xf, :!).
 \end_layout
 
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+What is 
+\begin_inset Quotes eld
+\end_inset
+
+unification
+\begin_inset Quotes erd
+\end_inset
+
+?
+\end_layout
+
 \begin_layout Itemize
-Many more features: metaprogramming, sets, cut/fail, updates, ...
+Unification is Prolog's way of 
+\begin_inset Quotes eld
+\end_inset
+
+assigning values to variables
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Assignment is always done by pattern-matching:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\family default
+\color blue
+like(1).
+ like(2).
+
+\color inherit
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\color blue
+
+\begin_inset space ~
+\end_inset
+
+ like(you_know(Y,X)) :- like(X), like(Y).
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\color blue
+
+\begin_inset space ~
+\end_inset
+
+ really(A,B) :- like(A), like(you_know(A,B).
+\end_layout
+
+\begin_layout Itemize
+The predicate
+\color blue
+ really(1,2)
+\color inherit
+ holds because 
+\begin_inset Formula $A$
+\end_inset
+
+ is assigned 
+\begin_inset Formula $1$
+\end_inset
+
+ and the arguments of predicates are 
+\begin_inset Quotes eld
+\end_inset
+
+unified
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\color blue
+like(you_know(Y,X))
+\color inherit
+ is unified with 
+\color blue
+like(you_know(A,B))
+\color inherit
+ to yield 
+\begin_inset Formula $Y=A$
+\end_inset
+
+ and 
+\begin_inset Formula $X=B$
+\end_inset
+
+
 \end_layout
 
 \begin_layout EndFrame
@@ -2434,7 +2582,7 @@ id - (X ~> X).
 \family typewriter
 \size scriptsize
 \color blue
-ycomb - (F ~> (X ~> F ~ (X ~ X)) ~ (X ~> F ~ (X ~ X))).
+ycomb - (F ~> (X ~> F @ (X @ X)) @ (X ~> F @ (X @ X))).
 \end_layout
 
 \begin_layout Standard
@@ -2442,14 +2590,14 @@ ycomb - (F ~> (X ~> F ~ (X ~ X)) ~ (X ~> F ~ (X ~ X))).
 \family typewriter
 \size scriptsize
 \color blue
-fac - ( F ~> N ~> iff ~ (N F = const; F = (const ~ id) ).
+fac - ( F ~> N ~> iff @ (N F = const; F = (const @ id) ).
 \end_layout
 
 \begin_layout Standard
 
 \family typewriter
 \size scriptsize
-?- lambda((y~fac~4), Result).
+?- lambda((y @ fac @ 4), Result).
 \end_layout
 
 \begin_layout Standard
@@ -3027,7 +3175,7 @@ Prolog, Datalog, and SQL
 \begin_layout Standard
 \align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="7" columns="4">
+<lyxtabular version="3" rows="8" columns="4">
 <features tabularvalignment="middle">
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
@@ -3091,7 +3239,7 @@ recursive data
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+?
 \end_layout
 
 \end_inset
@@ -3268,11 +3416,49 @@ functions
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 typed values
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+named values
 \end_layout
 
 \end_inset
@@ -3324,6 +3510,48 @@ functional-logic programming
 
 \begin_layout LyX-Code
 
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Compiling Prolog to virtual machines 
+\end_layout
+
+\begin_layout Itemize
+Warren's Abstract Machine (WAM) is still the most influential
+\end_layout
+
+\begin_layout Itemize
+Instructions depend on stack and heap management
+\end_layout
+
+\begin_layout Itemize
+Compilation of core Prolog to WAM is relatively straightforward
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename wam-example-d_h_d_warren-1983.png
+	lyxscale 50
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\size scriptsize
+(D.
+ H.
+ D.
+ Warren, 1983)
 \end_layout
 
 \begin_layout EndFrame
@@ -3410,7 +3638,7 @@ standard library: arrays, multithreading, etc.
 \end_layout
 
 \begin_layout Itemize
-can compile to machine code, C, Java, Erlang
+can compile to high-performance machine code, C, Java, Erlang
 \end_layout
 
 \end_deeper
@@ -3577,6 +3805,68 @@ n", [], !IO)
 \end_layout
 
 \begin_layout BeginFrame
+Prolog: A perfect scripting language 
+\end_layout
+
+\begin_layout Itemize
+No declarations, runtime (
+\begin_inset Quotes eld
+\end_inset
+
+dynamic
+\begin_inset Quotes erd
+\end_inset
+
+) typing, immutable values
+\end_layout
+
+\begin_layout Itemize
+Data constructors and predicates have user-defined infix syntax
+\end_layout
+
+\begin_layout Itemize
+Pattern-matching on recursive data structures, with backtracking 
+\end_layout
+
+\begin_layout Itemize
+Metaprogramming, reflection, self-modifying code
+\end_layout
+
+\begin_layout Itemize
+Easy to do embedded or external DSLs (monadic top-down parsing)
+\end_layout
+
+\begin_layout Itemize
+ISO standard since 1995, many free implementations
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+typically with a REPL and a compiler to high-performance VM
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Interface to databases, networking, multithreading, GUI, ...
+\end_layout
+
+\begin_layout Itemize
+Core language is 
+\begin_inset Quotes eld
+\end_inset
+
+small
+\begin_inset Quotes erd
+\end_inset
+
+; full language is hard to use?
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
 Conclusions and outlook
 \end_layout
 
@@ -3585,7 +3875,7 @@ Declarative programming = creating a good DSL for your domain
 \end_layout
 
 \begin_layout Itemize
-It is quite easy to pick up Prolog, after seeing SQL and Haskell
+It is easy to pick up Prolog, after seeing SQL and Haskell
 \end_layout
 
 \begin_layout Itemize
