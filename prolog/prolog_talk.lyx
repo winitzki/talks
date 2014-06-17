@@ -1804,6 +1804,13 @@ Syntax sugar for lists:
 
 \begin_deeper
 \begin_layout Itemize
+Similar to Haskell's 
+\family typewriter
+\color blue
+a:b:c:[]
+\end_layout
+
+\begin_layout Itemize
 Examples:
 \begin_inset Newline newline
 \end_inset
@@ -1878,7 +1885,11 @@ assigning values to variables
 \end_layout
 
 \begin_layout Itemize
-Assignment is always done by pattern-matching:
+Pattern-matching of recursive structures, fitting unassigned variables
+\end_layout
+
+\begin_layout Itemize
+Assignment is propagated to other rules:
 \begin_inset Newline newline
 \end_inset
 
@@ -1921,40 +1932,20 @@ The predicate
 \color blue
  really(1,2)
 \color inherit
- holds because 
-\begin_inset Formula $A$
-\end_inset
-
- is assigned 
-\begin_inset Formula $1$
-\end_inset
-
- and the arguments of predicates are 
-\begin_inset Quotes eld
-\end_inset
-
-unified
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-
+ holds because
 \color blue
-like(you_know(Y,X))
+ like(you_know(Y,X))
 \color inherit
  is unified with 
 \color blue
-like(you_know(A,B))
+like(you_know(1,2))
 \color inherit
  to yield 
-\begin_inset Formula $Y=A$
+\begin_inset Formula $Y=1$
 \end_inset
 
  and 
-\begin_inset Formula $X=B$
+\begin_inset Formula $X=2$
 \end_inset
 
 
@@ -1972,16 +1963,15 @@ Pointers made safe
 \begin_inset Quotes erd
 \end_inset
 
-: lists
+: difference lists
 \end_layout
 
 \begin_layout Itemize
-Appending lists.
- This takes 
+Appending ordinary lists takes 
 \begin_inset Formula $O(n)$
 \end_inset
 
- operations!
+ operations:
 \begin_inset Newline newline
 \end_inset
 
@@ -2111,6 +2101,107 @@ A = [d, e|B],   C = [a, b, c, d, e|B]-B.
 \size default
 \color inherit
  
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+\begin_inset Quotes eld
+\end_inset
+
+Pointers made safe
+\begin_inset Quotes erd
+\end_inset
+
+: difference lists
+\end_layout
+
+\begin_layout Standard
+How this works in more detail:
+\end_layout
+
+\begin_layout Itemize
+We have the program 
+\family typewriter
+\color blue
+dl_append(X-Y,Y-Z,X-Z).
+\end_layout
+
+\begin_layout Itemize
+We have the query
+\size scriptsize
+\color red
+ 
+\family typewriter
+\size default
+\color blue
+?- dl_append([a,b,c|A]-A, [d,e|B]-B, C).
+ 
+\end_layout
+
+\begin_layout Itemize
+The value of 
+\family typewriter
+\color blue
+Y
+\family default
+\color inherit
+ can be unified with the query structure only
+\begin_inset Newline newline
+\end_inset
+
+ if we assign 
+\family typewriter
+\color blue
+Y=A
+\family default
+\color inherit
+ and also 
+\family typewriter
+\color blue
+Y=[d,e|B]
+\family default
+\color inherit
+ and 
+\family typewriter
+\color blue
+Z=B
+\family default
+\color inherit
+.
+\end_layout
+
+\begin_layout Itemize
+Thus we must have 
+\family typewriter
+\color blue
+A=[d,e|B] 
+\end_layout
+
+\begin_layout Itemize
+Therefore 
+\family typewriter
+\color blue
+X
+\family default
+\color inherit
+ must be assigned 
+\family typewriter
+\color blue
+[a,b,c|A]=[a,b,c,d,e|B]
+\end_layout
+
+\begin_layout Itemize
+Finally 
+\family typewriter
+\color blue
+C=X-Z=[a,b,c,d,e|B]-B
 \end_layout
 
 \begin_layout LyX-Code
@@ -3517,48 +3608,6 @@ functional-logic programming
 \end_layout
 
 \begin_layout BeginFrame
-Compiling Prolog to virtual machines 
-\end_layout
-
-\begin_layout Itemize
-Warren's Abstract Machine (WAM) is still the most influential
-\end_layout
-
-\begin_layout Itemize
-Instructions depend on stack and heap management
-\end_layout
-
-\begin_layout Itemize
-Compilation of core Prolog to WAM is relatively straightforward
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename wam-example-d_h_d_warren-1983.png
-	lyxscale 50
-	width 75text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\align center
-
-\size scriptsize
-(D.
- H.
- D.
- Warren, 1983)
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
 Functional-logic programming in Mercury
 \end_layout
 
@@ -3642,7 +3691,7 @@ can compile to high-performance machine code, C, Java, Erlang
 \end_layout
 
 \end_deeper
-\begin_layout LyX-Code
+\begin_layout EndFrame
 
 \end_layout
 
@@ -3860,6 +3909,48 @@ small
 \end_inset
 
 ; full language is hard to use?
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Compiling Prolog to a virtual machine
+\end_layout
+
+\begin_layout Itemize
+Warren's Abstract Machine (WAM) is still the most influential
+\end_layout
+
+\begin_layout Itemize
+Instructions depend on stack and heap management
+\end_layout
+
+\begin_layout Itemize
+Compilation of core Prolog to WAM is relatively straightforward
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename wam-example-d_h_d_warren-1983.png
+	lyxscale 50
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\size scriptsize
+(D.
+ H.
+ D.
+ Warren, 1983)
 \end_layout
 
 \begin_layout EndFrame
