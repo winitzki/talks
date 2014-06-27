@@ -63,3 +63,4 @@ Presented at [SF Types, Theorems, and Programming Languages meetup, June 16, 201
 
 [Talk slides](prolog/prolog_talk.pdf)
 
+[Video: animated slides with audio recording](http://youtu.be/Fhc7fPQF1iY­)
