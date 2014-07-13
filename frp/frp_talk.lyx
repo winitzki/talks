@@ -1366,9 +1366,9 @@ States of the automaton are
 
 , ...
  (
-\emph on
+\series bold
 sets of fixpoints
-\emph default
+\series default
  of 
 \begin_inset Formula $\phi$
 \end_inset
@@ -1376,6 +1376,12 @@ sets of fixpoints
 )
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+The DNF construction generates these states for us
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Determinizing the automaton may exponentially increase its size
 \end_layout
@@ -1462,7 +1468,6 @@ Cancel
 \end_inset
 
 ) stops waiting.
- 
 \emph default
 \color inherit
 
@@ -1568,7 +1573,7 @@ predefined terms
 \begin_deeper
 \begin_layout Itemize
 Example: 
-\begin_inset Formula $\left(a\rightarrow c\right)	\rightarrow\left(b\rightarrow c\right)\rightarrow\left(a+b\rightarrow c\right)$
+\begin_inset Formula $\left(a\rightarrow c\right)\rightarrow\left(b\rightarrow c\right)\rightarrow\left(a+b\rightarrow c\right)$
 \end_inset
 
  is the 
