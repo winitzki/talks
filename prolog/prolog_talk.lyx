@@ -931,7 +931,7 @@ Prolog in a nutshell 1: symbols, predicates, rules
 \end_layout
 
 \begin_layout Itemize
-Outer-level lower symbols are 
+Outer-level lowercase symbols are 
 \series bold
 logical
 \series default
@@ -1550,12 +1550,24 @@ Resolution
 \begin_inset Quotes erd
 \end_inset
 
-:
+: the 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Formula ${\color{blue}b}$
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ is eliminated from two clauses 
 \begin_inset Formula 
 \[
 \left(c\leftarrow a\wedge p\wedge q\right)\Leftarrow\begin{cases}
-b\leftarrow a\wedge p\\
-c\leftarrow b\wedge q
+{\color{blue}b}\leftarrow a\wedge p\\
+c\leftarrow{\color{blue}b}\wedge q
 \end{cases}
 \]
 
@@ -1940,7 +1952,7 @@ The predicate
 \color blue
 like(you_know(1,2))
 \color inherit
- to yield 
+ to set 
 \begin_inset Formula $Y=1$
 \end_inset
 
@@ -2495,7 +2507,7 @@ Syntactic sugar (
 \family default
 \size default
 \color inherit
-) is provided to avoid writing out the queues
+) is provided to avoid writing out the queues:
 \end_layout
 
 \begin_layout Standard
@@ -2849,6 +2861,15 @@ Prolog and relational databases
 
 \begin_layout Itemize
 We have seen this before...
+ (it is called 
+\begin_inset Quotes eld
+\end_inset
+
+SQL
+\begin_inset Quotes erd
+\end_inset
+
+)
 \end_layout
 
 \begin_layout Standard
@@ -3924,11 +3945,11 @@ Warren's Abstract Machine (WAM) is still the most influential
 \end_layout
 
 \begin_layout Itemize
-Instructions depend on stack and heap management
+Instructions assume that WAM manages stack and heap
 \end_layout
 
 \begin_layout Itemize
-Compilation of core Prolog to WAM is relatively straightforward
+Compilation of core Prolog to WAM is relatively straightforward:
 \end_layout
 
 \begin_layout Standard
