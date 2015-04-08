@@ -667,19 +667,7 @@ Propositional linear-time temporal logic (LTL)
 \end_layout
 
 \begin_layout Itemize
-Reactive programs respond to an 
-\emph on
-infinite
-\emph default
- 
-\emph on
-stream
-\emph default
- of signals
-\end_layout
-
-\begin_layout Itemize
-So let's work with
+We work with
 \emph on
  infinite boolean sequences
 \emph default
@@ -802,128 +790,6 @@ What is the operational semantics? (I.e., how to compile this?)
 \end_layout
 
 \begin_layout BeginFrame
-Using logic as type theory
-\end_layout
-
-\begin_layout Itemize
-Logic gives a recipe for designing a 
-\emph on
-minimal
-\emph default
- programming language (Curry-Howard isomorphism)
-\end_layout
-
-\begin_layout Itemize
-Typically, we use an 
-\series bold
-intuitionistic
-\series default
- version of the logic:
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-No negation, no 
-\begin_inset Formula $\bot$
-\end_inset
-
-; only 
-\begin_inset Formula $a+b$
-\end_inset
-
-, 
-\begin_inset Formula $ab$
-\end_inset
-
-, 
-\begin_inset Formula $a\rightarrow b$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-No law of excluded middle
-\end_layout
-
-\begin_layout Itemize
-No truth tables, no 
-\begin_inset Quotes eld
-\end_inset
-
-simplification
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Usually, cannot derive proofs automatically
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Axioms are 
-\emph on
-predefined terms
-\emph default
- needed in the language
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Example: 
-\begin_inset Formula $\left(a\rightarrow c\right)\rightarrow\left(b\rightarrow c\right)\rightarrow\left(a+b\rightarrow c\right)$
-\end_inset
-
- is the 
-\series bold
-case
-\series default
- operator
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Proof rules are 
-\emph on
-predefined constructions
-\emph default
- needed in the language
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Example: modus ponens (
-\begin_inset Formula $a$
-\end_inset
-
-; 
-\begin_inset Formula $a\rightarrow b$
-\end_inset
-
- so 
-\begin_inset Formula $b$
-\end_inset
-
-) is function application
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Natural deduction rules are 
-\emph on
-typing rules
-\emph default
- for the language
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
 Interpreting values typed by LTL
 \end_layout
 
@@ -936,7 +802,7 @@ What does it mean to have a value
 \begin_inset Formula $\mathbf{G}(\alpha\rightarrow\alpha\mathbf{U}\beta)$
 \end_inset
 
-?
+ ??
 \end_layout
 
 \begin_deeper
@@ -1088,15 +954,15 @@ Elm
 \end_layout
 
 \begin_layout Itemize
-Core 
-\family typewriter
-Elm
-\family default
-: polymorphic 
+polymorphic 
 \begin_inset Formula $\lambda$
 \end_inset
 
 -calculus with 
+\begin_inset Formula $\mathbf{G}\alpha$
+\end_inset
+
+ and 
 \family typewriter
 map2
 \family default
