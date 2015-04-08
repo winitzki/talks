@@ -6,7 +6,7 @@
 \begin_preamble
 \usetheme[secheader]{Boadilla}
 \usecolortheme{seahorse}
-\title[Elm-style FRP]{Elm-style Functional Reactive Programming in Asynchronous Temporal Logic}
+\title[Elm-style FRP]{Elm-style Functional Reactive Programming demystified}
 \author{Sergei Winitzki}
 \date{April 13, 2015}
 \institute[Versal Group Inc.]{SF Types, Theorems, and Programming Languages}
@@ -110,8 +110,7 @@ functional reactive programming
 \end_layout
 
 \begin_layout Standard
-\align center
-It has little to do with...
+FRP has little to do with...
 \end_layout
 
 \begin_layout Itemize
@@ -239,7 +238,7 @@ pdflatex elm_talk.tex
 \series bold
 example
 \series default
-: any GUI program, any OS
+: any GUI program, OS
 \end_layout
 
 \end_inset
@@ -294,7 +293,7 @@ wait for signals, send messages
 \series bold
 execution:
 \series default
- sequential + some parallel
+ sequential, parallel
 \end_layout
 
 \end_inset
@@ -310,7 +309,7 @@ main run loop
 \begin_inset Quotes erd
 \end_inset
 
- + async/concurrency
+ + concurrency
 \end_layout
 
 \end_inset
@@ -504,7 +503,7 @@ Motivation for FRP
 \end_layout
 
 \begin_layout Itemize
-Reactive programs work with 
+Reactive programs work on 
 \series bold
 infinite sequences
 \series default
@@ -558,7 +557,7 @@ changes with time
 
 \end_deeper
 \begin_layout Itemize
-Reactive programs then become 
+Reactive programs are 
 \series bold
 pure functions
 \end_layout
@@ -595,7 +594,7 @@ Signal
 \family default
  
 \family typewriter
-HttpRequest
+Request
 \family default
  
 \begin_inset Formula $\rightarrow$
@@ -607,7 +606,7 @@ Signal
 \family default
  
 \family typewriter
-HttpResponse
+Response
 \family default
  
 \end_layout
@@ -708,14 +707,7 @@ Reminder (Curry-Howard): temporal logic expressions will be our types
 
 \begin_layout Itemize
 We only need to control the order of events: no hard real-time requirements
-\end_layout
-
-\begin_layout Itemize
-Temporal types need to represent only a 
-\series bold
-single infinite sequence
-\series default
- of values
+ 
 \end_layout
 
 \begin_layout Itemize
@@ -771,6 +763,20 @@ true
 false
 \series default
  dichotomy
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+In other words:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+a temporal type represents a 
+\series bold
+single infinite sequence
+\series default
+ of values
 \end_layout
 
 \end_deeper
@@ -1415,7 +1421,11 @@ I work after the boss comes by and until the phone rings
 \begin_inset Formula $\quad$
 \end_inset
 
+
+\family typewriter
 let after_until w (b,r) = (w or b) and not r in 
+\family default
+
 \begin_inset Newline newline
 \end_inset
 
@@ -1423,6 +1433,8 @@ let after_until w (b,r) = (w or b) and not r in
 \begin_inset Formula $\quad\quad$
 \end_inset
 
+
+\family typewriter
 foldp after_until false (boss, phone)
 \end_layout
 
