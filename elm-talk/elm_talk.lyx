@@ -385,11 +385,6 @@ temporal
 Temporal logic: mini-introduction
 \end_layout
 
-\begin_layout Standard
-\align center
-
-\end_layout
-
 \begin_layout Itemize
 classical propositional logic 
 \begin_inset Formula $\approx$
@@ -445,7 +440,7 @@ false
 \end_layout
 
 \begin_layout BeginFrame
-Boolean algebra: notation
+Boolean arithmetic: notation
 \end_layout
 
 \begin_layout Itemize
@@ -477,7 +472,7 @@ Classical propositional (Boolean) logic:
 \end_layout
 
 \begin_layout Itemize
-A notation better adapted to school-level algebra: 
+A notation better adapted to school-level arithmetic: 
 \begin_inset Formula $1$
 \end_inset
 
@@ -536,30 +531,7 @@ a\left(b+c\right)=ab+ac, & \quad\left(a+b\right)\left(a+c\right)=a+bc
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Itemize
-DNF = 
-\begin_inset Quotes eld
-\end_inset
-
-expand all brackets
-\begin_inset Quotes erd
-\end_inset
-
-.
- Some DNF simplification tricks: 
-\begin_inset Formula 
-\begin{align*}
-a+ab=a, & \quad a\left(a+b\right)=a,\\
-\left(a\rightarrow b\right)\left(a'\rightarrow c\right) & =ab+a'c,\\
-\left(a\rightarrow x\right)\left(b\rightarrow x'\right) & =\left(a'+x\right)\left(b'+x'\right)=x'a'+xb'
-\end{align*}
-
-\end_inset
-
-
+ 
 \end_layout
 
 \begin_layout EndFrame
@@ -567,7 +539,7 @@ a+ab=a, & \quad a\left(a+b\right)=a,\\
 \end_layout
 
 \begin_layout BeginFrame
-Boolean algebra: example
+Boolean arithmetic: example
 \end_layout
 
 \begin_layout Standard
@@ -759,103 +731,6 @@ Other notation (from modal logic):
 \end_inset
 
 
-\family typewriter
-\size scriptsize
-\color blue
- 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-Temporal logic redux
-\end_layout
-
-\begin_layout Itemize
-LTL admits 
-\emph on
-only
-\emph default
- temporal functions defined
-\emph on
- by
-\emph default
- 
-\emph on
-fixpoints
-\emph default
-:
-\begin_inset Formula 
-\begin{align*}
-\mathbf{F}a & =\left[a_{0}+a_{1}+a_{2}+a_{3}+...,\ a_{1}+a_{2}+a_{3}+...,\ ...\right]\\
-\mathbf{F}a & =a+\mathbf{N}(\mathbf{F}a)\\
-\mathbf{G}a & =\left[a_{0}a_{1}a_{2}a_{3}...,\ a_{1}a_{2}a_{3}...,a_{2}a_{3}...,\ ...\right]\\
-\mathbf{G}a & =a\mathbf{N}(\mathbf{G}a)
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Notation: 
-\begin_inset Formula $\boldsymbol{\mu}$
-\end_inset
-
- for the least fixpoint, 
-\begin_inset Formula $\boldsymbol{\nu}$
-\end_inset
-
- for the greatest fixpoint
-\begin_inset Formula 
-\begin{align*}
-\mathbf{F}a=\boldsymbol{\mu}x.\left(a+\mathbf{N}x\right); & \quad\mathbf{G}a=\boldsymbol{\nu}x.\left(a(\mathbf{N}x)\right)\\
-\mbox{but}\quad\boldsymbol{\nu}x.\left(a+\mathbf{N}x\right)=1; & \quad\boldsymbol{\mu}x.\left(a(\mathbf{N}x)\right)=0
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-The most general fixpoints involving 
-\emph on
-only one
-\emph default
- 
-\begin_inset Formula $\mathbf{N}$
-\end_inset
-
-:
-\begin_inset Formula 
-\begin{align*}
-\mbox{(weak Until)}\quad p\mathbf{U}q & =\boldsymbol{\nu}x.\left(q+p(\mathbf{N}x)\right)\\
-\mbox{(strict Until)}\quad p\dot{\mathbf{U}}q & =\boldsymbol{\mu}x.\left(q+p(\mathbf{N}x)\right)
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-LTL: interpretation of 
-\begin_inset Quotes eld
-\end_inset
-
-Until
-\begin_inset Quotes erd
-\end_inset
-
-
 \end_layout
 
 \begin_layout Itemize
@@ -887,56 +762,6 @@ p\mathbf{U}q=q+p\mathbf{N}\left(q+p\mathbf{N}\left(q+...\right)\right)
 
 \end_inset
 
-Example:
-\begin_inset Formula 
-\begin{align*}
-a & =\left[1,0,0,0,1,0,...\right]\\
-b & =\left[0,1,0,1,0,1,...\right]\\
-a\mathbf{U}b & =\left[1,1,0,1,1,1,...\right]
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Strict Until: 
-\begin_inset Formula $p\dot{\mathbf{U}}q$
-\end_inset
-
- = 
-\begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset Formula $q$
-\end_inset
-
- 
-\emph on
-must
-\emph default
- become true, and 
-\begin_inset Formula $p$
-\end_inset
-
- holds until then
-\begin_inset Quotes erd
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Itemize
-Dualities: 
-\begin_inset Formula $\left(\mathbf{F}a\right)'=\mathbf{G}(a')$
-\end_inset
-
-; also 
-\begin_inset Formula $(p\dot{\mathbf{U}}q)^{\prime}=q'\mathbf{U}(p'q')$
-\end_inset
-
 
 \end_layout
 
@@ -945,376 +770,39 @@ Dualities:
 \end_layout
 
 \begin_layout BeginFrame
-LTL: temporal specification 
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-\color blue
-Whenever the boss comes by my office, I will start working.
- 
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-\color blue
-Once I start working, I will keep working until the telephone rings.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\mathbf{G}\left(\left(b\rightarrow\mathbf{F}w\right)\left(w\rightarrow w\mathbf{U}r\right)\right)=\mathbf{G}\left(\left(b'+\mathbf{F}w\right)\left(w'+w\mathbf{U}r\right)\right)
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-\color blue
-Whenever the button is pressed, the dialog will appear.
- 
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-\color blue
-The dialog will disappear after 1 minute of user inactivity.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\mathbf{G}\left(\left(b\rightarrow\mathbf{F}d\right)\left(d\rightarrow\mathbf{F}t\right)\left(d\rightarrow d\mathbf{U}td'\right)\right)
-\]
-
-\end_inset
-
-
+Temporal logic redux
 \end_layout
 
 \begin_layout Itemize
-The timer 
-\begin_inset Formula $t$
-\end_inset
-
- is an external event and is 
-\emph on
-not specified
-\emph default
- here
-\end_layout
-
-\begin_layout Itemize
-Difficult to say 
-\begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset Formula $x$
-\end_inset
-
- stays true until further notice
-\begin_inset Quotes erd
-\end_inset
-
- 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-LTL: disjunctive normal form
-\end_layout
-
-\begin_layout Itemize
-What would be the DNF in LTL? Let's just expand brackets:
-\begin_inset Formula 
-\begin{align*}
-\phi & =\mathbf{G}\left(\left(b'+\mathbf{F}w\right)\left(w'+w\mathbf{U}r\right)\right)=\left(b'+\mathbf{F}w\right)\left(w'+w\mathbf{U}r\right)\mathbf{N}\phi\\
- & =\left(b'+w+\mathbf{N}(\mathbf{F}w)\right)\left(w'+r+w\mathbf{N}(w\mathbf{U}r)\right)\mathbf{N}\phi\\
- & =\left(b'+w+\mathbf{N}(w+\mathbf{N}(\mathbf{F}w))\right)\left(w'+r+w\mathbf{N}(r+w\mathbf{N}(w\mathbf{U}r))\right)\mathbf{N}\left(...\right)\\
- & =\quad...\quad\mathbf{N}\left(...\quad...\mathbf{N}(...\quad...\mathbf{N}\left(...\right))\right)...
-\end{align*}
-
-\end_inset
-
-We will 
-\emph on
-never
-\emph default
- 
-\emph on
-finish
-\emph default
- expanding those brackets!
-\begin_inset VSpace defskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-But many subformulas under 
-\begin_inset Formula $\mathbf{N}(...)$
-\end_inset
-
- are the same:
-\begin_inset Formula 
-\begin{align*}
-\phi_{1} & =\mathbf{F}w;\quad\phi_{2}=w\mathbf{U}r;\\
-\phi & =\left(b'+w+\mathbf{N}\phi_{1}\right)\left(w'+r+w\mathbf{N}\phi_{2}\right)\mathbf{N}\phi\\
- & =\left(rw+b'w'\right)\mathbf{N}\phi+w'\mathbf{N}(\phi\phi_{1})+w\mathbf{N}(\phi\phi_{2})
-\end{align*}
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-LTL: disjunctive normal form
-\end_layout
-
-\begin_layout Itemize
-Let's expand and simplify 
-\begin_inset Formula $\phi\phi_{1}$
-\end_inset
-
- and 
-\begin_inset Formula $\phi\phi_{2}$
-\end_inset
-
-: we get simultaneous fixpoints
-\begin_inset Formula 
-\begin{align*}
-\phi & =\left(rw+b'w'\right)\mathbf{N}(\phi)+w'\mathbf{N}(\phi\phi_{1})+w\mathbf{N}(\phi\phi_{2});\\
-\phi\phi_{1} & =rw\mathbf{N}(\phi)+\left(r+w'\right)\mathbf{N}(\phi\phi_{1})+w\mathbf{N}(\phi\phi_{2});\\
-\phi\phi_{2} & =r\left(w+b'\right)\mathbf{N}(\phi)+r\mathbf{N}(\phi\phi_{1})+w\mathbf{N}(\phi\phi_{2}).
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-The DNF for LTL is a 
-\emph on
-graph!
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename tree-dnf.pdf
-	width 80col%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-The failure of LTL program synthesis
-\end_layout
-
-\begin_layout Itemize
-Goal: given 
-\begin_inset Formula $b$
-\end_inset
-
- and 
-\begin_inset Formula $r$
-\end_inset
-
-, determine 
-\begin_inset Formula $w$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Itemize
-The DNF generates a 
-\emph on
-nondeterministic
-\emph default
- finite automaton (NFA) for 
-\begin_inset Formula $w$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-States of the automaton are 
-\begin_inset Formula $\phi$
+LTL as type theory: do we use 
+\begin_inset Formula $\mathbf{N}\alpha$
 \end_inset
 
 , 
-\begin_inset Formula $\phi\phi_{1}$
+\begin_inset Formula $\mathbf{F}\alpha$
 \end_inset
 
 , 
-\begin_inset Formula $\phi\phi_{2}$
+\begin_inset Formula $\mathbf{G}\alpha$
 \end_inset
 
-, ...
- (
-\series bold
-sets of fixpoints
-\series default
- of 
-\begin_inset Formula $\phi$
-\end_inset
-
-)
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-The DNF construction generates these states for us
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Determinizing the automaton may exponentially increase its size
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Worst case: for 
-\begin_inset Formula $\phi$
-\end_inset
-
- with 
-\begin_inset Formula $n$
-\end_inset
-
- fixpoints, DFA will have 
-\begin_inset Formula $2^{2^{n}}$
-\end_inset
-
- states
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Specifications will generally need to use many fixpoints.
- Example:
-\begin_inset Newline newline
-\end_inset
-
-
-\emph on
-\color blue
-Whenever 
-\begin_inset Formula $b$
-\end_inset
-
- is pressed, send query 
-\begin_inset Formula $q$
-\end_inset
-
- and show 
-\begin_inset Formula $w$
-\end_inset
-
- (
-\begin_inset Quotes eld
-\end_inset
-
-Waiting
-\begin_inset Quotes erd
-\end_inset
-
-).
- 
-\begin_inset Newline newline
-\end_inset
-
-Upon reply 
-\begin_inset Formula $r$
-\end_inset
-
-, show 
-\begin_inset Formula $d$
-\end_inset
-
- (
-\begin_inset Quotes eld
-\end_inset
-
-Done
-\begin_inset Quotes erd
-\end_inset
-
-).
- Pressing 
-\begin_inset Formula $c$
-\end_inset
-
- (
-\begin_inset Quotes eld
-\end_inset
-
-Cancel
-\begin_inset Quotes erd
-\end_inset
-
-) stops waiting.
-\emph default
-\color inherit
-
-\begin_inset Formula 
-\begin{align*}
-\phi & =\mathbf{G}\,[\left(bw'\rightarrow b\mathbf{U}d'w\right)\left(w\rightarrow d'w\mathbf{U}\left(c+r\right)\right)\\
- & \quad\ \quad\left(cw\rightarrow c\mathbf{U}w'\right)\left(q\leftrightarrow bw'\right)\left(rw\rightarrow r\mathbf{U}dw'\right)].
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-LTL is not particularly convenient for modular specification
+ as new types?
 \end_layout
 
 \begin_layout Itemize
-Synthesis is 
-\emph on
-not practical
-\emph default
- (I write and debug my automata by hand...)
+Are they to be functors, monads, ...?
 \end_layout
 
-\end_deeper
+\begin_layout Itemize
+What is the operational semantics? (I.e., how to compile this?)
+\end_layout
+
 \begin_layout EndFrame
 
 \end_layout
 
 \begin_layout BeginFrame
-Part 2: Temporal logic as type theory
+Using logic as type theory
 \end_layout
 
 \begin_layout Itemize
@@ -1424,7 +912,11 @@ Example: modus ponens (
 
 \end_deeper
 \begin_layout Itemize
-Natural deduction rules are typing rules for the language
+Natural deduction rules are 
+\emph on
+typing rules
+\emph default
+ for the language
 \end_layout
 
 \begin_layout EndFrame
@@ -1590,7 +1082,9 @@ temporal axioms
 \end_layout
 
 \begin_layout BeginFrame
-A small FRP language: Elm
+A small FRP language: 
+\family typewriter
+Elm
 \end_layout
 
 \begin_layout Itemize
@@ -1604,7 +1098,7 @@ Elm
 
 -calculus with 
 \family typewriter
-lift2
+map2
 \family default
 , 
 \family typewriter
@@ -1618,7 +1112,7 @@ async
 \end_layout
 
 \begin_layout LyX-Code
-lift2 : 
+map2 : 
 \begin_inset Formula $\left(\alpha\rightarrow\beta\rightarrow\gamma\right)\rightarrow\mathbf{G}\alpha\rightarrow\mathbf{G}\beta\rightarrow\mathbf{G}\gamma$
 \end_inset
 
@@ -1644,7 +1138,7 @@ async :
 \begin_layout Itemize
 (
 \family typewriter
-lift2
+map2
 \family default
  makes 
 \begin_inset Formula $\mathbf{G}$
@@ -1677,7 +1171,7 @@ Cannot have a type
 \begin_inset Formula $\mathbf{G}(\mathbf{G}\alpha)$
 \end_inset
 
-, also no concept of 
+, also not using 
 \begin_inset Formula $\mathbf{N}$
 \end_inset
 
@@ -1732,279 +1226,31 @@ foldp after_until false (boss, phone)
 \end_layout
 
 \begin_layout BeginFrame
-\begin_inset Quotes eld
-\end_inset
-
-Legacy
-\begin_inset Quotes erd
-\end_inset
-
- FRP systems: 
-\family typewriter
-FrTime
-\family default
-, 
-\family typewriter
-Fran
-\family default
-, AFRP, etc.
+Conclusions and outlook
 \end_layout
 
 \begin_layout Itemize
-Two functors: 
-\begin_inset Quotes eld
-\end_inset
-
-continuous behavior
-\begin_inset Quotes erd
-\end_inset
-
- 
-\begin_inset Formula $\mathbf{G}\alpha$
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-discrete event
-\begin_inset Quotes erd
-\end_inset
-
- 
-\begin_inset Formula $\mathbf{F}\alpha$
-\end_inset
-
-
+LTL is not a good fit as a specification language for reactive programs
 \end_layout
 
 \begin_layout Itemize
-Time is conceptually continuous
+LTL synthesis from specification is theoretical, not practical
 \end_layout
 
 \begin_layout Itemize
-Explicit 
-\begin_inset Formula $\mathbf{N}$
-\end_inset
-
-, delay by time 
-\begin_inset Formula $\Delta t$
-\end_inset
-
-, explicit values of time
+FRP tries to make specification closer to implementation
 \end_layout
 
 \begin_layout Itemize
-Many predefined combinators that do not follow from type theory: 
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-value-now
-\family default
-, 
-\family typewriter
-delay-by
-\family default
-, 
-\family typewriter
-integral
-\family default
-, ...
- (
-\family typewriter
-FrTime
-\family default
-)
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-merge
-\family default
-, 
-\family typewriter
-switcher
-\family default
-, 
-\begin_inset Formula $\mathbf{G}\left(\mathbf{G}\alpha\right)$
-\end_inset
-
-, ...
- (
-\family typewriter
-Fran
-\family default
-)
+There are some languages that implement FRP in various 
+\emph on
+ad hoc
+\emph default
+ ways
 \end_layout
 
 \begin_layout Itemize
-AFRP: temporal values are not available, only combinators!
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-A lower-level FRP language: 
-\family typewriter
-AdjS
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-A lower-level type system: 
-\begin_inset Formula $\mathbf{N}\alpha$
-\end_inset
-
- (
-\family typewriter
-next
-\family default
-), 
-\begin_inset Formula $\hat{\boldsymbol{\mu}}\alpha.\Sigma$
-\end_inset
-
- (
-\begin_inset Formula $\boldsymbol{\mu}$
-\end_inset
-
-+next), 
-\begin_inset Formula $\boxdot\alpha$
-\end_inset
-
- (
-\family typewriter
-stable
-\family default
-)
-\end_layout
-
-\begin_layout Itemize
-Explicit one-step temporal fixpoints, for example 
-\begin_inset Formula $\mathbf{F}\tau=\hat{\boldsymbol{\mu}}\alpha.\tau+\alpha$
-\end_inset
-
- 
-\begin_inset Formula 
-\[
-\tau=\hat{\boldsymbol{\mu}}\alpha.\Sigma\cong\hat{\boldsymbol{\mu}}\alpha.\left[\frac{\mathbf{N}\tau}{\alpha}\right]\Sigma
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Term assignments, simplified (see Krishnaswamy's paper):
-\begin_inset Formula 
-\begin{align*}
-\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\mbox{next }e:\mathbf{N}\alpha}\;_{\mathbf{N}I}\quad\quad\frac{\Gamma\vdash f:\mathbf{N}\alpha\quad\Gamma,x:\alpha\vdash e:\beta}{\mbox{let next }x=f\mbox{ in }e:\beta}\;_{\mathbf{N}E}\\
-\frac{\Gamma\vdash e:\left[\mathbf{N}(\hat{\boldsymbol{\mu}}\alpha.\Sigma)/\alpha\right]\Sigma}{\Gamma\vdash\mbox{into }e:\hat{\boldsymbol{\mu}}\alpha.\Sigma}\;_{\hat{\boldsymbol{\mu}}I}\quad\quad\frac{\Gamma\vdash e:\hat{\boldsymbol{\mu}}\alpha.\Sigma}{\Gamma\vdash\mbox{out }e:\left[\mathbf{N}(\hat{\boldsymbol{\mu}}\alpha.\Sigma)/\alpha\right]\Sigma}\;_{\hat{\boldsymbol{\mu}}E}\\
-\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\mbox{stable }e:\boxdot\alpha}\;_{\boxdot I}\quad\quad\frac{\Gamma\vdash f:\boxdot\alpha\quad\Gamma,x:\alpha\vdash e:\beta}{\Gamma\vdash\mbox{let stable }x=f\mbox{ in }e:\beta}\;_{\boxdot E}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-Dreams of an ideal FRP language 
-\end_layout
-
-\begin_layout Itemize
-Requirements for a broadly usable FRP language: 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-stable
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-temporal
-\begin_inset Quotes erd
-\end_inset
-
- types distinguished statically
-\end_layout
-
-\begin_layout Itemize
-seamless conversion from 
-\family typewriter
-int
-\family default
- to 
-\begin_inset Formula $\mathbf{G}$
-\end_inset
-
-(
-\family typewriter
-int
-\family default
-) and back, for 
-\begin_inset Quotes eld
-\end_inset
-
-stable
-\begin_inset Quotes erd
-\end_inset
-
- types
-\end_layout
-
-\begin_layout Itemize
-construct values of type 
-\begin_inset Formula $\mathbf{F}\alpha$
-\end_inset
-
- by hand: from asynchronous scheduling
-\end_layout
-
-\begin_layout Itemize
-construct values of type 
-\begin_inset Formula $\mathbf{F}\alpha$
-\end_inset
-
- from external sources (environment)
-\end_layout
-
-\begin_layout Itemize
-tick-free operation: 
-\begin_inset Formula $\mathbf{N}$
-\end_inset
-
- is not needed, use 
-\begin_inset Formula $\mathbf{F}$
-\end_inset
-
- instead
-\end_layout
-
-\begin_layout Itemize
-the runloop (UI thread / background threads) needs to be represented 
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-I guess we are still in the research phase here...
+The ideal is not (yet) reached
 \end_layout
 
 \begin_layout EndFrame
@@ -2053,11 +1299,7 @@ In my day job, most bugs come from imperatively implemented reactive programs.
  my problems.
  I will briefly review the motivations behind and the connections between
  temporal logic and FRP.
- I propose a rather "pedestrian" approach to propositional linear-time temporal
- logic (LTL), showing how to perform calculations in LTL and how to synthesize
- programs from LTL formulas.
- I intend to explain why LTL largely failed to solve the synthesis problem,
- and how FRP tries to cope.
+ 
 \begin_inset VSpace defskip
 \end_inset
 
@@ -2065,13 +1307,14 @@ In my day job, most bugs come from imperatively implemented reactive programs.
 \end_layout
 
 \begin_layout Standard
-FRP can be formulated as a 
+FRP can be defined as a 
 \begin_inset Formula $\lambda$
 \end_inset
 
 -calculus with types given by the propositional intuitionistic LTL.
- I will discuss the limitations of this approach, and outline the features
- of FRP that are required by typical application programming scenarios.
+ The Elm language uses a subset of LTL and yet achieves high expressivity
+ for GUI programming.
+ I discuss the current limitations of Elm and outline some possible extensions.
  
 \begin_inset VSpace defskip
 \end_inset
@@ -2121,20 +1364,6 @@ target "http://www.seas.harvard.edu/sites/default/files/files/archived/Czaplicki
 
  (2012).
  
-\end_layout
-
-\begin_layout Standard
-N.
- R.
- Krishnaswamy.
- 
-\begin_inset CommandInset href
-LatexCommand href
-target "https://www.mpi-sws.org/~neelk/simple-frp.pdfHigher-order functional reactive programming without spacetime leaks"
-
-\end_inset
-
-(2013).
 \end_layout
 
 \begin_layout Standard
