@@ -102,11 +102,81 @@ What is
 \begin_inset Quotes eld
 \end_inset
 
-reactive programming
+functional reactive programming
 \begin_inset Quotes erd
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\align center
+It has little to do with...
+\end_layout
+
+\begin_layout Itemize
+event-driven state machines
+\end_layout
+
+\begin_layout Itemize
+message-passing concurrency and 
+\begin_inset Quotes eld
+\end_inset
+
+actors
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+distributed computing on massively parallel load-balanced clusters
+\end_layout
+
+\begin_layout Itemize
+ma/reduce, the 
+\begin_inset Quotes eld
+\end_inset
+
+reactive manifesto
+\begin_inset Quotes erd
+\end_inset
+
+, (
+\emph on
+insert latest fad here
+\emph default
+)...
+\end_layout
+
+\begin_layout Standard
+FRP is...
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+pure functions using temporal types as primitives
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+(temporal type 
+\begin_inset Formula $\approx$
+\end_inset
+
+ lazy stream of events)
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Transformational vs.
+ reactive programs
 \end_layout
 
 \begin_layout Standard
@@ -156,7 +226,7 @@ example
 : 
 \family typewriter
 \color blue
-pdflatex frp_talk.tex
+pdflatex elm_talk.tex
 \end_layout
 
 \end_inset
@@ -169,7 +239,7 @@ pdflatex frp_talk.tex
 \series bold
 example
 \series default
-: any GUI program
+: any GUI program, any OS
 \end_layout
 
 \end_inset
@@ -240,7 +310,7 @@ main run loop
 \begin_inset Quotes erd
 \end_inset
 
- + concurrency
+ + async/concurrency
 \end_layout
 
 \end_inset
@@ -279,7 +349,7 @@ signal/response sequences
 \series bold
 specification:
 \series default
- classical logic
+ classical logic?
 \end_layout
 
 \end_inset
@@ -288,7 +358,7 @@ specification:
 \begin_inset Text
 
 \begin_layout Plain Layout
-temporal logic? flowcharts?
+classical temporal logic?
 \end_layout
 
 \end_inset
@@ -303,7 +373,7 @@ temporal logic? flowcharts?
 \series bold
 verification:
 \series default
- prove it correct 
+ proof of correctness?
 \end_layout
 
 \end_inset
@@ -327,7 +397,7 @@ model checking?
 \series bold
 synthesis:
 \series default
- extract code from proof
+ extract code from proof?
 \end_layout
 
 \end_inset
@@ -382,9 +452,277 @@ temporal
 \end_layout
 
 \begin_layout BeginFrame
-Temporal logic: mini-introduction
+Difficulties in reactive programming
 \end_layout
 
+\begin_layout Itemize
+Input signals may come at unpredictable times
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Imperative updates are difficult to keep in the correct order
+\end_layout
+
+\begin_layout Itemize
+Flow of events becomes difficult to understand
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Asynchronous (out-of-order) callback structures are difficult to maintain
+\end_layout
+
+\begin_layout Itemize
+Inverted control (
+\begin_inset Quotes eld
+\end_inset
+
+the system will call you
+\begin_inset Quotes erd
+\end_inset
+
+) obscures the flow of data
+\end_layout
+
+\begin_layout Itemize
+Some concurrency is usually required (e.g.
+\begin_inset space ~
+\end_inset
+
+background tasks)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Explicit multithreaded code is hard
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+Motivation for FRP
+\end_layout
+
+\begin_layout Itemize
+Reactive programs work with 
+\series bold
+infinite sequences
+\series default
+ of input/output values
+\end_layout
+
+\begin_layout Itemize
+Main idea: make infinite sequences implicit, as a new 
+\begin_inset Quotes eld
+\end_inset
+
+temporal
+\begin_inset Quotes erd
+\end_inset
+
+ type
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+(Elm) 
+\family typewriter
+Signal
+\family default
+ 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ --- an infinite sequence of values of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+alternatively, a value of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ that 
+\begin_inset Quotes eld
+\end_inset
+
+changes with time
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Reactive programs then become 
+\series bold
+pure functions
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+a GUI is a pure function of type 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+Inputs
+\family default
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+View
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+a Web server is a pure function 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+HttpRequest
+\family default
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+HttpResponse
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+all mutation is 
+\series bold
+implicit
+\series default
+ in 
+\family typewriter
+Signal
+\family default
+ 
+\begin_inset Formula $\alpha$
+\end_inset
+
+; our code is 100% immutable
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+instead of updating an 
+\family typewriter
+x:Int
+\family default
+, we define a temporal value of type 
+\family typewriter
+Signal Int
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+asynchronous behavior is 
+\series bold
+implicit
+\series default
+: our code has no callbacks
+\end_layout
+
+\begin_layout Itemize
+concurrency / parallelism is 
+\series bold
+implicit
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+(the runtime needs to provide the required scheduling of events)
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Elm primitives
+\end_layout
+
+\begin_layout Itemize
+Reactive programs work with 
+\series bold
+infinite sequences
+\series default
+ of input/output values
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Elm primitives
+\end_layout
+
+\begin_layout Itemize
+Reactive programs work with 
+\series bold
+infinite sequences
+\series default
+ of input/output values
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Part 2.
+ Temporal logic and FRP
+\end_layout
+
+\begin_layout Itemize
+Reminder (Curry-Howard): temporal logic expressions will be our types
+\end_layout
+
+\begin_layout Itemize
+We only need to control the order of events: no hard real-time requirements
+\end_layout
+
+\begin_layout Itemize
+Temporal types need to represent only a 
+\series bold
+single infinite sequence
+\series default
+ of values
+\end_layout
+
+\begin_layout Itemize
+How to understand temporal logic:
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 classical propositional logic 
 \begin_inset Formula $\approx$
@@ -410,7 +748,7 @@ false
 \end_layout
 
 \begin_layout Itemize
-temporal logic 
+(linear-time) temporal logic 
 \begin_inset Formula $\approx$
 \end_inset
 
@@ -432,9 +770,10 @@ true
 \series bold
 false
 \series default
- 
+ dichotomy
 \end_layout
 
+\end_deeper
 \begin_layout EndFrame
 
 \end_layout
@@ -948,21 +1287,22 @@ temporal axioms
 \end_layout
 
 \begin_layout BeginFrame
-A small FRP language: 
+
 \family typewriter
 Elm
+\family default
+ as an FRP language 
 \end_layout
 
 \begin_layout Itemize
-polymorphic 
 \begin_inset Formula $\lambda$
 \end_inset
 
--calculus with 
+-calculus with type 
 \begin_inset Formula $\mathbf{G}\alpha$
 \end_inset
 
- and 
+, primitives 
 \family typewriter
 map2
 \family default
@@ -1177,10 +1517,19 @@ FRP can be defined as a
 \begin_inset Formula $\lambda$
 \end_inset
 
--calculus with types given by the propositional intuitionistic LTL.
- The Elm language uses a subset of LTL and yet achieves high expressivity
- for GUI programming.
- I discuss the current limitations of Elm and outline some possible extensions.
+-calculus with types given by a (limited subset of) propositional intuitionistic
+ LTL.
+ Although the 
+\family typewriter
+Elm
+\family default
+ language uses a subset of LTL, it achieves high expressivity for GUI programmin
+g.
+ I discuss the current limitations of 
+\family typewriter
+Elm
+\family default
+ and outline some possible extensions.
  
 \begin_inset VSpace defskip
 \end_inset
