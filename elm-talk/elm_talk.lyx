@@ -114,11 +114,7 @@ FRP has little to do with...
 \end_layout
 
 \begin_layout Itemize
-event-driven state machines
-\end_layout
-
-\begin_layout Itemize
-message-passing concurrency and 
+multithreading, message-passing concurrency, 
 \begin_inset Quotes eld
 \end_inset
 
@@ -224,6 +220,7 @@ example
 \series default
 : 
 \family typewriter
+\size footnotesize
 \color blue
 pdflatex elm_talk.tex
 \end_layout
@@ -659,7 +656,7 @@ implicit
 
 \begin_deeper
 \begin_layout Itemize
-(the runtime needs to provide the required scheduling of events)
+the runtime needs to provide the required scheduling of events
 \end_layout
 
 \end_deeper
@@ -708,7 +705,7 @@ Temporal type
 Temporal primitive terms: 
 \end_layout
 
-\begin_layout Quotation
+\begin_layout LyX-Code
 
 \family typewriter
 constant
@@ -720,7 +717,7 @@ constant
 
 \end_layout
 
-\begin_layout Quotation
+\begin_layout LyX-Code
 
 \family typewriter
 map2
@@ -732,7 +729,7 @@ map2
 
 \end_layout
 
-\begin_layout Quotation
+\begin_layout LyX-Code
 
 \family typewriter
 foldp
@@ -756,7 +753,7 @@ foldp
 
 \end_layout
 
-\begin_layout Quotation
+\begin_layout LyX-Code
 
 \family typewriter
 drop
@@ -768,7 +765,7 @@ drop
 
 \end_layout
 
-\begin_layout Quotation
+\begin_layout LyX-Code
 
 \family typewriter
 async
@@ -864,7 +861,7 @@ import Signal (..)
 \end_layout
 
 \begin_layout LyX-Code
-
+  
 \end_layout
 
 \begin_layout LyX-Code
@@ -873,6 +870,144 @@ main : Signal Element
 
 \begin_layout LyX-Code
 main = constant ( plainText "Hello, World!" )
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Typical program structure in 
+\family typewriter
+Elm
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+A state machine:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+update: Command 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ State 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ State
+\end_layout
+
+\begin_layout Itemize
+A rendering function:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+draw: State 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ View
+\end_layout
+
+\begin_layout Itemize
+A manager that merges the required input signals:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+merge_input
+\family default
+: 
+\begin_inset Formula $\Sigma$
+\end_inset
+
+
+\family typewriter
+Command
+\end_layout
+
+\begin_layout Itemize
+Predefined input signals: Mouse, Keyboard, timer, HTML, etc.
+\end_layout
+
+\begin_layout Itemize
+Program boilerplate:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+init_state : State
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+main : 
+\begin_inset Formula $\Sigma$
+\end_inset
+
+
+\family default
+View
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+main = map draw $ foldp update init_state merge_input 
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Some limitations of 
+\family typewriter
+Elm
+\family default
+-style FRP
+\end_layout
+
+\begin_layout Itemize
+No recursion of any kind
+\end_layout
+
+\begin_layout Itemize
+No higher-order signals: no 
+\begin_inset Formula $\Sigma(\Sigma\alpha)$
+\end_inset
+
+ allowed by type system
+\end_layout
+
+\begin_layout Itemize
+The signal processing logic is specified statically
+\end_layout
+
+\begin_layout Itemize
+No way of defining new signals
+\end_layout
+
+\begin_layout Itemize
+Impossible to implement the 
+\begin_inset Quotes eld
+\end_inset
+
+dining philosophers
+\begin_inset Quotes erd
+\end_inset
+
+!
 \end_layout
 
 \begin_layout EndFrame
