@@ -1088,6 +1088,31 @@ main = map draw $ foldp update init_state merge_inputs
 \end_layout
 
 \begin_layout BeginFrame
+Asynchrony and concurrency in 
+\family typewriter
+Elm
+\end_layout
+
+\begin_layout Itemize
+Long-running computations will delay signal updates
+\end_layout
+
+\begin_layout Itemize
+Solutions: 1.
+ Caching of all results.
+ 2.
+ Use 
+\family typewriter
+async
+\family default
+ 
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
 Some limitations of 
 \family typewriter
 Elm
@@ -1116,7 +1141,7 @@ The signal processing logic is fully specified statically
 \end_layout
 
 \begin_layout Itemize
-No constructors for signals 
+No constructors for signals
 \end_layout
 
 \begin_layout Itemize
@@ -1131,6 +1156,128 @@ dining philosophers
 !
 \end_layout
 
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+Elm
+\family default
+ cannot do 
+\begin_inset Quotes eld
+\end_inset
+
+dining philosophers
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Dining philosophers
+\begin_inset Quotes erd
+\end_inset
+
+ requires to model a philosopher who thinks for a random time and then eats
+ for a random time
+\end_layout
+
+\begin_layout Itemize
+Can Elm construct a signal value 
+\family typewriter
+p
+\family default
+ 
+\family typewriter
+:
+\family default
+ 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+Unit
+\family default
+ that updates at random times? 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+No! There is no way to delay the update times of a signal 
+\series bold
+at runtime
+\series default
+.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Time.delay:
+\family default
+ 
+\family typewriter
+Int
+\family default
+
+\begin_inset Formula $\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+ cannot use a time-varying delay value 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Time.every:
+\family default
+ 
+\family typewriter
+Int
+\family default
+
+\begin_inset Formula $\rightarrow\Sigma$
+\end_inset
+
+
+\family typewriter
+Int
+\family default
+ also requires a fixed delay value
+\end_layout
+
+\begin_layout Itemize
+Cannot lift 
+\family typewriter
+Time.every
+\family default
+ into 
+\family typewriter
+
+\begin_inset Formula $\Sigma$
+\end_inset
+
+Int
+\family default
+
+\begin_inset Formula $\rightarrow\Sigma\Sigma$
+\end_inset
+
+
+\family typewriter
+Int
+\family default
+ to achieve variable delay
+\end_layout
+
+\end_deeper
 \begin_layout EndFrame
 
 \end_layout
@@ -1164,11 +1311,11 @@ Possible extensions
 \end_layout
 
 \begin_layout Itemize
-Recursive signal expressions
+Recursive definitions for signals
 \end_layout
 
 \begin_layout Itemize
-Monadic signals
+Monadic signal combinators
 \end_layout
 
 \begin_layout Itemize
