@@ -135,15 +135,18 @@ read some input, write some output & wait for signals, send messages \tabularnew
 \item Imperative updates are difficult to keep in the correct order
 \item Flow of events becomes difficult to understand
 \end{itemize}
-\item Asynchronous (out-of-order) callback structures are difficult to maintain
+\item Asynchronous (out-of-order) callback logic becomes opaque
 \item Inverted control (``the system will call you'') obscures the flow
 of data
 \item Some concurrency is usually required (e.g.~background tasks)
 
 \begin{itemize}
-\item Explicit multithreaded code is hard
+\item Explicit multithreaded code is hard to write and debug
 \end{itemize}
 \end{itemize}
+
+\lyxframeend{}
+
 
 \lyxframeend{}\lyxframe{Motivation for FRP}
 \begin{itemize}
@@ -188,7 +191,7 @@ code is 100\% immutable
 \item \texttt{Elm} is a pure polymorphic $\lambda$-calculus with products
 and sums
 \item \textbf{Temporal type} $\Sigma\alpha$ --- a time-dependent value
-of type $\alpha$
+of \textbf{ordinary} type $\alpha$
 \item Temporal primitive terms: \end{itemize}
 \begin{lyxcode}
 constant:~$\alpha\rightarrow\Sigma\alpha$
@@ -201,10 +204,35 @@ drop:~$(\alpha\rightarrow\mbox{Bool})\rightarrow\Sigma\alpha\rightarrow\Sigma\al
 
 async:~$\Sigma\alpha\rightarrow\Sigma\alpha$\end{lyxcode}
 \begin{itemize}
+\item \textbf{No nested} temporal types: \texttt{constant (constant x)}
+is illegal!
 \item Domain-specific primitive types: \texttt{Bool}, \texttt{Int}, \texttt{Float},
 \texttt{String}, \texttt{View}
-\item Standard library with data structures, HTML, HTTP, etc.
+\item Standard library with data structures, HTML, HTTP, JSON, ...
+
+\begin{itemize}
+\item ... \texttt{Time.every}, \texttt{Mouse.position}, \texttt{Window.dimensions},
+...
+\end{itemize}
 \item Try \texttt{Elm} online at \href{http://elm-lang.org/try}{http://elm-lang.org/try}
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{\texttt{Elm} type judgments}
+\begin{itemize}
+\item Non-temporal expressions are evaluated \textbf{eagerly} in pure$\lambda$-calculus
+\item The runtime will cache all values to avoid recomputation
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{\texttt{Elm} operational semantics}
+\begin{itemize}
+\item Non-temporal expressions are evaluated \textbf{eagerly} in pure$\lambda$-calculus
+\item The runtime will cache all values to avoid recomputation
 \end{itemize}
 
 \lyxframeend{}
@@ -223,9 +251,15 @@ import~Signal~(..)
 
 ~~
 
+text~:~Element
+
+text~=~plainText~\textquotedbl{}Hello,~World!\textquotedbl{}
+
+~~
+
 main~:~Signal~Element~
 
-main~=~constant~(~plainText~\textquotedbl{}Hello,~World!\textquotedbl{}~)
+main~=~constant~text
 \end{lyxcode}
 
 \lyxframeend{}
@@ -241,19 +275,33 @@ update:~Command~$\rightarrow$~State~$\rightarrow$~State\end{lyxcode}
 \begin{lyxcode}
 draw:~State~$\rightarrow$~View\end{lyxcode}
 \begin{itemize}
-\item A manager that merges the required input signals:\end{itemize}
-\begin{lyxcode}
-merge\_input:~$\Sigma$Command\end{lyxcode}
+\item A manager that merges the required input signals into one:
+
 \begin{itemize}
-\item Predefined input signals: Mouse, Keyboard, timer, HTML, etc.
+\item may use \texttt{Mouse}, \texttt{Keyboard}, \texttt{Time}, \texttt{HTML}
+stuff, etc.
+\end{itemize}
+\end{itemize}
+\begin{lyxcode}
+merge\_inputs:~Signal~Command\end{lyxcode}
+\begin{itemize}
 \item Program boilerplate:\end{itemize}
 \begin{lyxcode}
 init\_state~:~State
 
-main~:~$\Sigma$View
+main~:~Signal~View
 
-main~=~map~draw~\$~foldp~update~init\_state~merge\_input~
+main~=~map~draw~\$~foldp~update~init\_state~merge\_inputs~
 \end{lyxcode}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Asynchrony and concurrency in \texttt{Elm}}
+\begin{itemize}
+\item Long-running computations will delay signal updates
+\item Solutions: 1. Caching of all results. 2. Use \texttt{async} 
+\end{itemize}
 
 \lyxframeend{}
 
@@ -261,11 +309,54 @@ main~=~map~draw~\$~foldp~update~init\_state~merge\_input~
 \lyxframeend{}\lyxframe{Some limitations of \texttt{Elm}-style FRP}
 \begin{itemize}
 \item No recursion of any kind
-\item No higher-order signals: no $\Sigma(\Sigma\alpha)$ allowed by type
-system
-\item The signal processing logic is specified statically
-\item No way of defining new signals
+\item No higher-order signals: $\Sigma(\Sigma\alpha)$ is disallowed by
+the type system
+\item No distinction between continuous time and discrete time
+\item The signal processing logic is fully specified statically
+\item No constructors for signals
 \item Impossible to implement the ``dining philosophers''!
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{\texttt{Elm} cannot do ``dining philosophers''}
+\begin{itemize}
+\item ``Dining philosophers'' requires to model a philosopher who thinks
+for a random time and then eats for a random time
+\item Can Elm construct a signal value \texttt{p} \texttt{:} \texttt{Signal}
+\texttt{Unit} that updates at random times? 
+
+\begin{itemize}
+\item No! There is no way to delay the update times of a signal \textbf{at
+runtime}.
+\item \texttt{Time.delay:} \texttt{Int}$\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
+cannot use a time-varying delay value 
+\item \texttt{Time.every:} \texttt{Int}$\rightarrow\Sigma$\texttt{Int}
+also requires a fixed delay value
+\item Cannot lift \texttt{Time.every} into \texttt{$\Sigma$Int}$\rightarrow\Sigma\Sigma$\texttt{Int}
+to achieve variable delay
+\end{itemize}
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Limitations of the JavaScript backend for \texttt{Elm}}
+\begin{itemize}
+\item No implementation for \texttt{async}
+\item Ordinary recursion may generate invalid JavaScript
+\item The lack of recursive signals is compensated by ad hoc primitives
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Possible extensions}
+\begin{itemize}
+\item Recursive definitions for signals
+\item Monadic signal combinators
+\item Signal constructors
 \end{itemize}
 
 \lyxframeend{}
