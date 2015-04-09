@@ -466,7 +466,7 @@ Flow of events becomes difficult to understand
 
 \end_deeper
 \begin_layout Itemize
-Asynchronous (out-of-order) callback structures are difficult to maintain
+Asynchronous (out-of-order) callback logic becomes opaque
 \end_layout
 
 \begin_layout Itemize
@@ -491,10 +491,14 @@ background tasks)
 
 \begin_deeper
 \begin_layout Itemize
-Explicit multithreaded code is hard
+Explicit multithreaded code is hard to write and debug
 \end_layout
 
 \end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
 \begin_layout BeginFrame
 Motivation for FRP
 \end_layout
@@ -694,7 +698,11 @@ Temporal type
 \begin_inset Formula $\Sigma\alpha$
 \end_inset
 
- --- a time-dependent value of type 
+ --- a time-dependent value of 
+\series bold
+ordinary
+\series default
+ type 
 \begin_inset Formula $\alpha$
 \end_inset
 
@@ -778,6 +786,18 @@ async
 \end_layout
 
 \begin_layout Itemize
+
+\series bold
+No nested
+\series default
+ temporal types: 
+\family typewriter
+constant (constant x)
+\family default
+ is illegal!
+\end_layout
+
+\begin_layout Itemize
 Domain-specific primitive types: 
 \family typewriter
 Bool
@@ -800,9 +820,28 @@ View
 \end_layout
 
 \begin_layout Itemize
-Standard library with data structures, HTML, HTTP, etc.
+Standard library with data structures, HTML, HTTP, JSON, ...
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+...
+ 
+\family typewriter
+Time.every
+\family default
+, 
+\family typewriter
+Mouse.position
+\family default
+, 
+\family typewriter
+Window.dimensions
+\family default
+, ...
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Try 
 \family typewriter
@@ -817,6 +856,62 @@ target "http://elm-lang.org/try"
 \end_inset
 
 
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+Elm
+\family default
+ type judgments
+\end_layout
+
+\begin_layout Itemize
+Non-temporal expressions are evaluated 
+\series bold
+eagerly
+\series default
+ in pure
+\begin_inset Formula $\lambda$
+\end_inset
+
+-calculus
+\end_layout
+
+\begin_layout Itemize
+The runtime will cache all values to avoid recomputation
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+Elm
+\family default
+ operational semantics
+\end_layout
+
+\begin_layout Itemize
+Non-temporal expressions are evaluated 
+\series bold
+eagerly
+\series default
+ in pure
+\begin_inset Formula $\lambda$
+\end_inset
+
+-calculus
+\end_layout
+
+\begin_layout Itemize
+The runtime will cache all values to avoid recomputation
 \end_layout
 
 \begin_layout EndFrame
@@ -865,11 +960,23 @@ import Signal (..)
 \end_layout
 
 \begin_layout LyX-Code
+text : Element
+\end_layout
+
+\begin_layout LyX-Code
+text = plainText "Hello, World!"
+\end_layout
+
+\begin_layout LyX-Code
+  
+\end_layout
+
+\begin_layout LyX-Code
 main : Signal Element 
 \end_layout
 
 \begin_layout LyX-Code
-main = constant ( plainText "Hello, World!" )
+main = constant text
 \end_layout
 
 \begin_layout EndFrame
@@ -917,25 +1024,39 @@ draw: State
 \end_layout
 
 \begin_layout Itemize
-A manager that merges the required input signals:
+A manager that merges the required input signals into one:
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+may use 
+\family typewriter
+Mouse
+\family default
+, 
+\family typewriter
+Keyboard
+\family default
+, 
+\family typewriter
+Time
+\family default
+, 
+\family typewriter
+HTML
+\family default
+ stuff, etc.
+\end_layout
+
+\end_deeper
 \begin_layout LyX-Code
 
 \family typewriter
 merge_input
 \family default
-: 
-\begin_inset Formula $\Sigma$
-\end_inset
-
-
+s: Signal
 \family typewriter
-Command
-\end_layout
-
-\begin_layout Itemize
-Predefined input signals: Mouse, Keyboard, timer, HTML, etc.
+ Command
 \end_layout
 
 \begin_layout Itemize
@@ -952,18 +1073,14 @@ init_state : State
 
 \family typewriter
 main : 
-\begin_inset Formula $\Sigma$
-\end_inset
-
-
 \family default
-View
+Signal View
 \end_layout
 
 \begin_layout LyX-Code
 
 \family typewriter
-main = map draw $ foldp update init_state merge_input 
+main = map draw $ foldp update init_state merge_inputs 
 \end_layout
 
 \begin_layout EndFrame
@@ -983,19 +1100,23 @@ No recursion of any kind
 \end_layout
 
 \begin_layout Itemize
-No higher-order signals: no 
+No higher-order signals: 
 \begin_inset Formula $\Sigma(\Sigma\alpha)$
 \end_inset
 
- allowed by type system
+ is disallowed by the type system
 \end_layout
 
 \begin_layout Itemize
-The signal processing logic is specified statically
+No distinction between continuous time and discrete time
 \end_layout
 
 \begin_layout Itemize
-No way of defining new signals
+The signal processing logic is fully specified statically
+\end_layout
+
+\begin_layout Itemize
+No constructors for signals 
 \end_layout
 
 \begin_layout Itemize
@@ -1008,6 +1129,50 @@ dining philosophers
 \end_inset
 
 !
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Limitations of the JavaScript backend for 
+\family typewriter
+Elm
+\end_layout
+
+\begin_layout Itemize
+No implementation for 
+\family typewriter
+async
+\end_layout
+
+\begin_layout Itemize
+Ordinary recursion may generate invalid JavaScript
+\end_layout
+
+\begin_layout Itemize
+The lack of recursive signals is compensated by ad hoc primitives
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Possible extensions
+\end_layout
+
+\begin_layout Itemize
+Recursive signal expressions
+\end_layout
+
+\begin_layout Itemize
+Monadic signals
+\end_layout
+
+\begin_layout Itemize
+Signal constructors
 \end_layout
 
 \begin_layout EndFrame
