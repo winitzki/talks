@@ -633,9 +633,13 @@ instead of updating an
 \family typewriter
 x:Int
 \family default
-, we define a temporal value of type 
+, we define a value of type 
 \family typewriter
-Signal Int
+Signal
+\family default
+ 
+\family typewriter
+Int
 \end_layout
 
 \end_deeper
@@ -665,15 +669,157 @@ implicit
 \end_layout
 
 \begin_layout BeginFrame
-Elm primitives
+
+\family typewriter
+Elm
+\family default
+ in a nutshell
 \end_layout
 
 \begin_layout Itemize
-Reactive programs work with 
+
+\family typewriter
+Elm
+\family default
+ is a pure polymorphic 
+\begin_inset Formula $\lambda$
+\end_inset
+
+-calculus with products and sums
+\end_layout
+
+\begin_layout Itemize
+
 \series bold
-infinite sequences
+Temporal type
 \series default
- of input/output values
+ 
+\begin_inset Formula $\Sigma\alpha$
+\end_inset
+
+ --- a time-dependent value of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Temporal primitive terms: 
+\end_layout
+
+\begin_layout Quotation
+
+\family typewriter
+constant
+\family default
+: 
+\begin_inset Formula $\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quotation
+
+\family typewriter
+map2
+\family default
+: 
+\begin_inset Formula $(\alpha\rightarrow\beta\rightarrow\gamma)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta\rightarrow\Sigma\gamma$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quotation
+
+\family typewriter
+foldp
+\family default
+: 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\left(\alpha\rightarrow\beta\rightarrow\beta\right)\rightarrow\beta\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quotation
+
+\family typewriter
+drop
+\family default
+: 
+\begin_inset Formula $(\alpha\rightarrow\mbox{Bool})\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quotation
+
+\family typewriter
+async
+\family default
+: 
+\begin_inset Formula $\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Domain-specific primitive types: 
+\family typewriter
+Bool
+\family default
+, 
+\family typewriter
+Int
+\family default
+, 
+\family typewriter
+Float
+\family default
+, 
+\family typewriter
+String
+\family default
+, 
+\family typewriter
+View
+\end_layout
+
+\begin_layout Itemize
+Standard library with data structures, HTML, HTTP, etc.
+\end_layout
+
+\begin_layout Itemize
+Try 
+\family typewriter
+Elm
+\family default
+ online at 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://elm-lang.org/try"
+target "http://elm-lang.org/try"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout EndFrame
@@ -681,15 +827,52 @@ infinite sequences
 \end_layout
 
 \begin_layout BeginFrame
-Elm primitives
+\begin_inset Quotes eld
+\end_inset
+
+Hello, world
+\begin_inset Quotes erd
+\end_inset
+
+ in 
+\family typewriter
+Elm
+\family default
+ 
 \end_layout
 
 \begin_layout Itemize
-Reactive programs work with 
+The value called 
+\family typewriter
 \series bold
-infinite sequences
+main
+\family default
 \series default
- of input/output values
+ will be visualized by the runtime
+\end_layout
+
+\begin_layout LyX-Code
+import Graphics.Element (..) 
+\end_layout
+
+\begin_layout LyX-Code
+import Text (..) 
+\end_layout
+
+\begin_layout LyX-Code
+import Signal (..)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+main : Signal Element 
+\end_layout
+
+\begin_layout LyX-Code
+main = constant ( plainText "Hello, World!" )
 \end_layout
 
 \begin_layout EndFrame
@@ -1448,18 +1631,6 @@ Conclusions and outlook
 \end_layout
 
 \begin_layout Itemize
-LTL is not a good fit as a specification language for reactive programs
-\end_layout
-
-\begin_layout Itemize
-LTL synthesis from specification is theoretical, not practical
-\end_layout
-
-\begin_layout Itemize
-FRP tries to make specification closer to implementation
-\end_layout
-
-\begin_layout Itemize
 There are some languages that implement FRP in various 
 \emph on
 ad hoc
@@ -1480,26 +1651,6 @@ Conclusions and outlook
 \end_layout
 
 \begin_layout Itemize
-LTL is not a good fit as a specification language for reactive programs
-\end_layout
-
-\begin_layout Itemize
-LTL synthesis from specification is theoretical, not practical
-\end_layout
-
-\begin_layout Itemize
-FRP tries to make specification closer to implementation
-\end_layout
-
-\begin_layout Itemize
-There are some languages that implement FRP in various 
-\emph on
-ad hoc
-\emph default
- ways
-\end_layout
-
-\begin_layout Itemize
 The ideal is not (yet) reached
 \end_layout
 
@@ -1513,10 +1664,7 @@ Abstract
 
 \begin_layout Standard
 In my day job, most bugs come from imperatively implemented reactive programs.
- Temporal Logic and FRP are declarative approaches that promise to solve
- my problems.
- I will briefly review the motivations behind and the connections between
- temporal logic and FRP.
+ FRP is a declarative approach that promises to solve my problems.
  
 \begin_inset VSpace defskip
 \end_inset
@@ -1529,19 +1677,25 @@ FRP can be defined as a
 \begin_inset Formula $\lambda$
 \end_inset
 
--calculus with types given by a (limited subset of) propositional intuitionistic
- LTL.
+-calculus with types given by a propositional intuitionistic linear-time
+ temporal logic (LTL).
  Although the 
 \family typewriter
 Elm
 \family default
- language uses a subset of LTL, it achieves high expressivity for GUI programmin
-g.
+ language uses only a subset of LTL, it achieves high expressivity for GUI
+ programming.
  I discuss the current limitations of 
 \family typewriter
 Elm
 \family default
  and outline some possible extensions.
+ I will also briefly review the motivations behind and the connections between
+ temporal logic, FRP, and 
+\family typewriter
+Elm
+\family default
+.
  
 \begin_inset VSpace defskip
 \end_inset
@@ -1550,8 +1704,9 @@ Elm
 \end_layout
 
 \begin_layout Standard
-My talk will be largely self-contained and should be understandable to anyone
- familiar with Curry-Howard and functional programming.
+My talk will be understandable to anyone familiar with Curry-Howard and
+ functional programming.
+ (The first part of the talk does not rely on temporal logic or Curry-Howard.)
 \end_layout
 
 \begin_layout EndFrame
