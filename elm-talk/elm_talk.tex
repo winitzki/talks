@@ -200,8 +200,6 @@ map2:~$(\alpha\rightarrow\beta\rightarrow\gamma)\rightarrow\Sigma\alpha\rightarr
 
 foldp:~\textrm{$\left(\alpha\rightarrow\beta\rightarrow\beta\right)\rightarrow\beta\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$}
 
-drop:~$(\alpha\rightarrow\mbox{Bool})\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
-
 async:~$\Sigma\alpha\rightarrow\Sigma\alpha$\end{lyxcode}
 \begin{itemize}
 \item \textbf{No nested} temporal types: \texttt{constant (constant x)}
@@ -211,7 +209,7 @@ is illegal!
 \item Standard library with data structures, HTML, HTTP, JSON, ...
 
 \begin{itemize}
-\item ... \texttt{Time.every}, \texttt{Mouse.position}, \texttt{Window.dimensions},
+\item ...and signals \texttt{Time.every}, \texttt{Mouse.position}, \texttt{Window.dimensions},
 ...
 \end{itemize}
 \item Try \texttt{Elm} online at \href{http://elm-lang.org/try}{http://elm-lang.org/try}
@@ -220,7 +218,7 @@ is illegal!
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{\texttt{Elm} type judgments}
+\lyxframeend{}\lyxframe{\texttt{{*}Elm} type judgments}
 \begin{itemize}
 \item Non-temporal expressions are evaluated \textbf{eagerly} in pure$\lambda$-calculus
 \item The runtime will cache all values to avoid recomputation
@@ -229,10 +227,22 @@ is illegal!
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{\texttt{Elm} operational semantics}
+\lyxframeend{}\lyxframe{\texttt{{*}Elm} operational semantics}
 \begin{itemize}
-\item Non-temporal expressions are evaluated \textbf{eagerly} in pure$\lambda$-calculus
-\item The runtime will cache all values to avoid recomputation
+\item Non-temporal expressions are evaluated \textbf{eagerly} in pure $\lambda$-calculus
+\item The runtime will cache all values to avoid recomputation 
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{\texttt{{*}Elm} operational semantics}
+\begin{itemize}
+\item Example
+\item \textcolor{blue}{\emph{I work after the boss comes by and until the
+phone rings}}: \\
+$\quad$\texttt{let after\_until w (b,r) = (w or b) and not r in }\\
+$\quad\quad$\texttt{foldp after\_until false (boss, phone)}
 \end{itemize}
 
 \lyxframeend{}
@@ -297,10 +307,10 @@ main~=~map~draw~\$~foldp~update~init\_state~merge\_inputs~
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Asynchrony and concurrency in \texttt{Elm}}
+\lyxframeend{}\lyxframe{{*}Asynchrony and concurrency in \texttt{Elm}}
 \begin{itemize}
 \item Long-running computations will delay signal updates
-\item Solutions: 1. Caching of all results. 2. Use \texttt{async} 
+\item Solutions: 1. Caching of all results. 2. Using \texttt{async} 
 \end{itemize}
 
 \lyxframeend{}
@@ -314,7 +324,10 @@ the type system
 \item No distinction between continuous time and discrete time
 \item The signal processing logic is fully specified statically
 \item No constructors for signals
+
+\begin{itemize}
 \item Impossible to implement the ``dining philosophers''!
+\end{itemize}
 \end{itemize}
 
 \lyxframeend{}
@@ -322,10 +335,10 @@ the type system
 
 \lyxframeend{}\lyxframe{\texttt{Elm} cannot do ``dining philosophers''}
 \begin{itemize}
-\item ``Dining philosophers'' requires to model a philosopher who thinks
+\item ``Dining philosophers'': need to simulate a philosopher who thinks
 for a random time and then eats for a random time
-\item Can Elm construct a signal value \texttt{p} \texttt{:} \texttt{Signal}
-\texttt{Unit} that updates at random times? 
+\item Can a signal value \texttt{p} \texttt{:} \texttt{Signal} \texttt{Unit}
+update at random times? 
 
 \begin{itemize}
 \item No! There is no way to delay the update times of a signal \textbf{at
@@ -342,17 +355,25 @@ to achieve variable delay
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Limitations of the JavaScript backend for \texttt{Elm}}
+\lyxframeend{}\lyxframe{The JavaScript backend for \texttt{Elm}}
+
+Features
 \begin{itemize}
-\item No implementation for \texttt{async}
+\item Good support for HTML/CSS, HTTP requests, JSON
+\item Good performance of caching views
+\item Transparent, declarative modeling of data
+\end{itemize}
+Limitations
+\begin{itemize}
+\item No implementation for \texttt{async} and no concurrency
 \item Ordinary recursion may generate invalid JavaScript
-\item The lack of recursive signals is compensated by ad hoc primitives
+\item The lack of recursive signals is compensated by \emph{ad hoc} primitives
 \end{itemize}
 
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Possible extensions}
+\lyxframeend{}\lyxframe{{*}Possible extensions}
 \begin{itemize}
 \item Recursive definitions for signals
 \item Monadic signal combinators
@@ -363,9 +384,11 @@ to achieve variable delay
 
 
 \lyxframeend{}\lyxframe{Part 2. Temporal logic and FRP}
+
+{\footnotesize{This part of the talk is optional.}}{\footnotesize \par}
 \begin{itemize}
 \item Reminder (Curry-Howard): temporal logic expressions will be our types
-\item We only need to control the order of events: no hard real-time requirements 
+\item We only need to control the \textbf{order} of events: no ``hard real-time''
 \item How to understand temporal logic:
 
 \begin{itemize}
@@ -528,10 +551,6 @@ async~:~$\mathbf{G}\alpha\rightarrow\mathbf{G}\alpha$\end{lyxcode}
 $\mathbf{N}$ or $\mathbf{F}$
 \item Cannot construct temporal values by hand
 \item This language is an \emph{incomplete} Curry-Howard image of LTL!
-\item \textcolor{blue}{\emph{I work after the boss comes by and until the
-phone rings}}: \\
-$\quad$\texttt{let after\_until w (b,r) = (w or b) and not r in }\\
-$\quad\quad$\texttt{foldp after\_until false (boss, phone)}
 \end{itemize}
 \end{itemize}
 
@@ -548,7 +567,7 @@ ways
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Conclusions and outlook}
+\lyxframeend{}\lyxframe{{*}Conclusions and outlook}
 \begin{itemize}
 \item The ideal is not (yet) reached
 \end{itemize}
