@@ -764,18 +764,6 @@ foldp
 \begin_layout LyX-Code
 
 \family typewriter
-drop
-\family default
-: 
-\begin_inset Formula $(\alpha\rightarrow\mbox{Bool})\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
-\end_inset
-
-
-\end_layout
-
-\begin_layout LyX-Code
-
-\family typewriter
 async
 \family default
 : 
@@ -825,8 +813,7 @@ Standard library with data structures, HTML, HTTP, JSON, ...
 
 \begin_deeper
 \begin_layout Itemize
-...
- 
+...and signals 
 \family typewriter
 Time.every
 \family default
@@ -865,7 +852,7 @@ target "http://elm-lang.org/try"
 \begin_layout BeginFrame
 
 \family typewriter
-Elm
+*Elm
 \family default
  type judgments
 \end_layout
@@ -893,7 +880,7 @@ The runtime will cache all values to avoid recomputation
 \begin_layout BeginFrame
 
 \family typewriter
-Elm
+*Elm
 \family default
  operational semantics
 \end_layout
@@ -903,7 +890,7 @@ Non-temporal expressions are evaluated
 \series bold
 eagerly
 \series default
- in pure
+ in pure 
 \begin_inset Formula $\lambda$
 \end_inset
 
@@ -911,7 +898,55 @@ eagerly
 \end_layout
 
 \begin_layout Itemize
-The runtime will cache all values to avoid recomputation
+The runtime will cache all values to avoid recomputation 
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+*Elm
+\family default
+ operational semantics
+\end_layout
+
+\begin_layout Itemize
+Example
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+\color blue
+I work after the boss comes by and until the phone rings
+\emph default
+\color inherit
+: 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\quad$
+\end_inset
+
+
+\family typewriter
+let after_until w (b,r) = (w or b) and not r in 
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\quad\quad$
+\end_inset
+
+
+\family typewriter
+foldp after_until false (boss, phone)
 \end_layout
 
 \begin_layout EndFrame
@@ -1088,7 +1123,7 @@ main = map draw $ foldp update init_state merge_inputs
 \end_layout
 
 \begin_layout BeginFrame
-Asynchrony and concurrency in 
+*Asynchrony and concurrency in 
 \family typewriter
 Elm
 \end_layout
@@ -1101,7 +1136,7 @@ Long-running computations will delay signal updates
 Solutions: 1.
  Caching of all results.
  2.
- Use 
+ Using 
 \family typewriter
 async
 \family default
@@ -1144,6 +1179,7 @@ The signal processing logic is fully specified statically
 No constructors for signals
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 Impossible to implement the 
 \begin_inset Quotes eld
@@ -1156,6 +1192,7 @@ dining philosophers
 !
 \end_layout
 
+\end_deeper
 \begin_layout EndFrame
 
 \end_layout
@@ -1184,12 +1221,12 @@ Dining philosophers
 \begin_inset Quotes erd
 \end_inset
 
- requires to model a philosopher who thinks for a random time and then eats
+: need to simulate a philosopher who thinks for a random time and then eats
  for a random time
 \end_layout
 
 \begin_layout Itemize
-Can Elm construct a signal value 
+Can a signal value 
 \family typewriter
 p
 \family default
@@ -1205,7 +1242,7 @@ Signal
 \family typewriter
 Unit
 \family default
- that updates at random times? 
+ update at random times? 
 \end_layout
 
 \begin_deeper
@@ -1283,15 +1320,37 @@ Int
 \end_layout
 
 \begin_layout BeginFrame
-Limitations of the JavaScript backend for 
+The JavaScript backend for 
 \family typewriter
 Elm
+\end_layout
+
+\begin_layout Standard
+Features
+\end_layout
+
+\begin_layout Itemize
+Good support for HTML/CSS, HTTP requests, JSON
+\end_layout
+
+\begin_layout Itemize
+Good performance of caching views
+\end_layout
+
+\begin_layout Itemize
+Transparent, declarative modeling of data
+\end_layout
+
+\begin_layout Standard
+Limitations
 \end_layout
 
 \begin_layout Itemize
 No implementation for 
 \family typewriter
 async
+\family default
+ and no concurrency
 \end_layout
 
 \begin_layout Itemize
@@ -1299,7 +1358,11 @@ Ordinary recursion may generate invalid JavaScript
 \end_layout
 
 \begin_layout Itemize
-The lack of recursive signals is compensated by ad hoc primitives
+The lack of recursive signals is compensated by 
+\emph on
+ad hoc
+\emph default
+ primitives
 \end_layout
 
 \begin_layout EndFrame
@@ -1307,7 +1370,7 @@ The lack of recursive signals is compensated by ad hoc primitives
 \end_layout
 
 \begin_layout BeginFrame
-Possible extensions
+*Possible extensions
 \end_layout
 
 \begin_layout Itemize
@@ -1331,13 +1394,30 @@ Part 2.
  Temporal logic and FRP
 \end_layout
 
+\begin_layout Standard
+
+\size footnotesize
+This part of the talk is optional.
+\end_layout
+
 \begin_layout Itemize
 Reminder (Curry-Howard): temporal logic expressions will be our types
 \end_layout
 
 \begin_layout Itemize
-We only need to control the order of events: no hard real-time requirements
- 
+We only need to control the 
+\series bold
+order
+\series default
+ of events: no 
+\begin_inset Quotes eld
+\end_inset
+
+hard real-time
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -2034,38 +2114,6 @@ This language is an
 incomplete
 \emph default
  Curry-Howard image of LTL!
-\end_layout
-
-\begin_layout Itemize
-
-\emph on
-\color blue
-I work after the boss comes by and until the phone rings
-\emph default
-\color inherit
-: 
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Formula $\quad$
-\end_inset
-
-
-\family typewriter
-let after_until w (b,r) = (w or b) and not r in 
-\family default
-
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Formula $\quad\quad$
-\end_inset
-
-
-\family typewriter
-foldp after_until false (boss, phone)
 \end_layout
 
 \end_deeper
