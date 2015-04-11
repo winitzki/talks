@@ -710,7 +710,11 @@ ordinary
 \end_layout
 
 \begin_layout Itemize
-Temporal primitive terms: 
+Temporal primitive terms in core 
+\family typewriter
+Elm
+\family default
+: 
 \end_layout
 
 \begin_layout LyX-Code
@@ -782,7 +786,7 @@ No nested
 \family typewriter
 constant (constant x)
 \family default
- is illegal!
+ is ill-typed!
 \end_layout
 
 \begin_layout Itemize
@@ -852,25 +856,80 @@ target "http://elm-lang.org/try"
 \begin_layout BeginFrame
 
 \family typewriter
-*Elm
+Elm
 \family default
  type judgments
 \end_layout
 
 \begin_layout Itemize
-Non-temporal expressions are evaluated 
-\series bold
-eagerly
-\series default
- in pure
+Non-temporal values are used as in polymorphic 
 \begin_inset Formula $\lambda$
 \end_inset
 
 -calculus
 \end_layout
 
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{\Gamma,(x:\alpha)\vdash e:\beta}{\Gamma\vdash(\lambda x.e):\alpha\rightarrow\beta}\,\textsc{Lambda} & \quad\frac{\Gamma\vdash e_{1}:\alpha\rightarrow\beta\quad\Gamma\vdash e_{2}:\alpha}{\Gamma\vdash e_{1}\, e_{2}:\beta}\,\textsc{Apply}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Itemize
-The runtime will cache all values to avoid recomputation
+Temporal values have special types of the form 
+\begin_inset Formula $\Sigma\tau$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Here, type variables 
+\begin_inset Formula $\alpha,\beta$
+\end_inset
+
+,...
+ 
+\series bold
+cannot
+\series default
+ 
+\series bold
+be
+\series default
+ of the form 
+\begin_inset Formula $\Sigma\tau$
+\end_inset
+
+:
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash(\mbox{constant}\, e):\Sigma\alpha}\,\textsc{Constant}\\
+\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash\mbox{map2}\: m\: p\: q:\Sigma\gamma}\,\textsc{Map2}\\
+\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash s:\Sigma\alpha}{\Gamma\vdash(\mbox{foldp}\, u\, e\, s):\Sigma\beta}\,\textsc{FoldP}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+A value of type 
+\begin_inset Formula $\Sigma\Sigma\alpha$
+\end_inset
+
+ is impossible in a well-typed expression!
 \end_layout
 
 \begin_layout EndFrame
@@ -954,6 +1013,7 @@ foldp after_until false (boss, phone)
 \end_layout
 
 \begin_layout BeginFrame
+GUI building: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1326,7 +1386,7 @@ Elm
 \end_layout
 
 \begin_layout Standard
-Features
+Features:
 \end_layout
 
 \begin_layout Itemize
@@ -1342,7 +1402,7 @@ Transparent, declarative modeling of data
 \end_layout
 
 \begin_layout Standard
-Limitations
+Limitations:
 \end_layout
 
 \begin_layout Itemize

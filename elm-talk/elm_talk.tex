@@ -192,7 +192,7 @@ code is 100\% immutable
 and sums
 \item \textbf{Temporal type} $\Sigma\alpha$ --- a time-dependent value
 of \textbf{ordinary} type $\alpha$
-\item Temporal primitive terms: \end{itemize}
+\item Temporal primitive terms in core \texttt{Elm}: \end{itemize}
 \begin{lyxcode}
 constant:~$\alpha\rightarrow\Sigma\alpha$
 
@@ -200,18 +200,16 @@ map2:~$(\alpha\rightarrow\beta\rightarrow\gamma)\rightarrow\Sigma\alpha\rightarr
 
 foldp:~\textrm{$\left(\alpha\rightarrow\beta\rightarrow\beta\right)\rightarrow\beta\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$}
 
-drop:~$(\alpha\rightarrow\mbox{Bool})\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
-
 async:~$\Sigma\alpha\rightarrow\Sigma\alpha$\end{lyxcode}
 \begin{itemize}
 \item \textbf{No nested} temporal types: \texttt{constant (constant x)}
-is illegal!
+is ill-typed!
 \item Domain-specific primitive types: \texttt{Bool}, \texttt{Int}, \texttt{Float},
 \texttt{String}, \texttt{View}
 \item Standard library with data structures, HTML, HTTP, JSON, ...
 
 \begin{itemize}
-\item ... \texttt{Time.every}, \texttt{Mouse.position}, \texttt{Window.dimensions},
+\item ...and signals \texttt{Time.every}, \texttt{Mouse.position}, \texttt{Window.dimensions},
 ...
 \end{itemize}
 \item Try \texttt{Elm} online at \href{http://elm-lang.org/try}{http://elm-lang.org/try}
@@ -222,23 +220,56 @@ is illegal!
 
 \lyxframeend{}\lyxframe{\texttt{Elm} type judgments}
 \begin{itemize}
-\item Non-temporal expressions are evaluated \textbf{eagerly} in pure$\lambda$-calculus
-\item The runtime will cache all values to avoid recomputation
+\item Non-temporal values are used as in polymorphic $\lambda$-calculus
 \end{itemize}
+\begin{align*}
+\frac{\Gamma,(x:\alpha)\vdash e:\beta}{\Gamma\vdash(\lambda x.e):\alpha\rightarrow\beta}\,\textsc{Lambda} & \quad\frac{\Gamma\vdash e_{1}:\alpha\rightarrow\beta\quad\Gamma\vdash e_{2}:\alpha}{\Gamma\vdash e_{1}\, e_{2}:\beta}\,\textsc{Apply}
+\end{align*}
 
-\lyxframeend{}
-
-
-\lyxframeend{}\lyxframe{\texttt{Elm} operational semantics}
 \begin{itemize}
-\item Non-temporal expressions are evaluated \textbf{eagerly} in pure$\lambda$-calculus
-\item The runtime will cache all values to avoid recomputation
+\item Temporal values have special types of the form $\Sigma\tau$
+
+\begin{itemize}
+\item Here, type variables $\alpha,\beta$,... \textbf{cannot} \textbf{be}
+of the form $\Sigma\tau$:
+\end{itemize}
+\end{itemize}
+\begin{align*}
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash(\mbox{constant}\, e):\Sigma\alpha}\,\textsc{Constant}\\
+\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash\mbox{map2}\: m\: p\: q:\Sigma\gamma}\,\textsc{Map2}\\
+\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash s:\Sigma\alpha}{\Gamma\vdash(\mbox{foldp}\, u\, e\, s):\Sigma\beta}\,\textsc{FoldP}
+\end{align*}
+
+\begin{itemize}
+\item A value of type $\Sigma\Sigma\alpha$ is impossible in a well-typed
+expression!
 \end{itemize}
 
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{``Hello, world'' in \texttt{Elm} }
+\lyxframeend{}\lyxframe{\texttt{{*}Elm} operational semantics}
+\begin{itemize}
+\item Non-temporal expressions are evaluated \textbf{eagerly} in pure $\lambda$-calculus
+\item The runtime will cache all values to avoid recomputation 
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{\texttt{{*}Elm} operational semantics}
+\begin{itemize}
+\item Example
+\item \textcolor{blue}{\emph{I work after the boss comes by and until the
+phone rings}}: \\
+$\quad$\texttt{let after\_until w (b,r) = (w or b) and not r in }\\
+$\quad\quad$\texttt{foldp after\_until false (boss, phone)}
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{GUI building: ``Hello, world'' in \texttt{Elm} }
 \begin{itemize}
 \item The value called \texttt{\textbf{main}} will be visualized by the
 runtime\end{itemize}
@@ -297,10 +328,10 @@ main~=~map~draw~\$~foldp~update~init\_state~merge\_inputs~
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Asynchrony and concurrency in \texttt{Elm}}
+\lyxframeend{}\lyxframe{{*}Asynchrony and concurrency in \texttt{Elm}}
 \begin{itemize}
 \item Long-running computations will delay signal updates
-\item Solutions: 1. Caching of all results. 2. Use \texttt{async} 
+\item Solutions: 1. Caching of all results. 2. Using \texttt{async} 
 \end{itemize}
 
 \lyxframeend{}
@@ -314,7 +345,10 @@ the type system
 \item No distinction between continuous time and discrete time
 \item The signal processing logic is fully specified statically
 \item No constructors for signals
+
+\begin{itemize}
 \item Impossible to implement the ``dining philosophers''!
+\end{itemize}
 \end{itemize}
 
 \lyxframeend{}
@@ -322,10 +356,10 @@ the type system
 
 \lyxframeend{}\lyxframe{\texttt{Elm} cannot do ``dining philosophers''}
 \begin{itemize}
-\item ``Dining philosophers'' requires to model a philosopher who thinks
+\item ``Dining philosophers'': need to simulate a philosopher who thinks
 for a random time and then eats for a random time
-\item Can Elm construct a signal value \texttt{p} \texttt{:} \texttt{Signal}
-\texttt{Unit} that updates at random times? 
+\item Can a signal value \texttt{p} \texttt{:} \texttt{Signal} \texttt{Unit}
+update at random times? 
 
 \begin{itemize}
 \item No! There is no way to delay the update times of a signal \textbf{at
@@ -342,17 +376,25 @@ to achieve variable delay
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Limitations of the JavaScript backend for \texttt{Elm}}
+\lyxframeend{}\lyxframe{The JavaScript backend for \texttt{Elm}}
+
+Features:
 \begin{itemize}
-\item No implementation for \texttt{async}
+\item Good support for HTML/CSS, HTTP requests, JSON
+\item Good performance of caching views
+\item Transparent, declarative modeling of data
+\end{itemize}
+Limitations:
+\begin{itemize}
+\item No implementation for \texttt{async} and no concurrency
 \item Ordinary recursion may generate invalid JavaScript
-\item The lack of recursive signals is compensated by ad hoc primitives
+\item The lack of recursive signals is compensated by \emph{ad hoc} primitives
 \end{itemize}
 
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Possible extensions}
+\lyxframeend{}\lyxframe{{*}Possible extensions}
 \begin{itemize}
 \item Recursive definitions for signals
 \item Monadic signal combinators
@@ -363,9 +405,11 @@ to achieve variable delay
 
 
 \lyxframeend{}\lyxframe{Part 2. Temporal logic and FRP}
+
+{\footnotesize{This part of the talk is optional.}}{\footnotesize \par}
 \begin{itemize}
 \item Reminder (Curry-Howard): temporal logic expressions will be our types
-\item We only need to control the order of events: no hard real-time requirements 
+\item We only need to control the \textbf{order} of events: no ``hard real-time''
 \item How to understand temporal logic:
 
 \begin{itemize}
@@ -528,10 +572,6 @@ async~:~$\mathbf{G}\alpha\rightarrow\mathbf{G}\alpha$\end{lyxcode}
 $\mathbf{N}$ or $\mathbf{F}$
 \item Cannot construct temporal values by hand
 \item This language is an \emph{incomplete} Curry-Howard image of LTL!
-\item \textcolor{blue}{\emph{I work after the boss comes by and until the
-phone rings}}: \\
-$\quad$\texttt{let after\_until w (b,r) = (w or b) and not r in }\\
-$\quad\quad$\texttt{foldp after\_until false (boss, phone)}
 \end{itemize}
 \end{itemize}
 
@@ -548,7 +588,7 @@ ways
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Conclusions and outlook}
+\lyxframeend{}\lyxframe{{*}Conclusions and outlook}
 \begin{itemize}
 \item The ideal is not (yet) reached
 \end{itemize}
