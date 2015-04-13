@@ -267,13 +267,13 @@ expression!
 \item Temporal expressions are built from \textbf{input} signals and combinators
 
 \begin{itemize}
-\item It is not possible to ``consume'' a signal!
+\item It is not possible to ``consume'' a signal ($\Sigma\alpha\rightarrow\beta$)!
 \end{itemize}
 \item Every temporal expression has a \textbf{current value} denoted by
 $e^{\left[c\right]}$
 \end{itemize}
 \[
-\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}\:\textsc{CurrentEval}
+\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}\:\textsc{CurVal}
 \]
 
 \begin{itemize}
@@ -282,9 +282,9 @@ has an initial value: $i^{[a]}$
 \item \textbf{Initial} current values for all expressions are derived:
 \end{itemize}
 \begin{align*}
-\frac{\Gamma\vdash\mbox{constant}\ c:\Sigma\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{ConstInit}\\
-\frac{\Gamma\vdash\mbox{map2}\ m\ p^{\left[a\right]}\ q^{\left[b\right]}:\Sigma\gamma}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \:\textsc{Map2Init}\\
-\frac{\Gamma\vdash\mbox{foldp}\, u\, e\, q:\Sigma\beta}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right){}^{\left[e\right]}:\Sigma\beta} & \:\textsc{FoldPInit}
+\frac{\Gamma\vdash\left(\mbox{constant}\ c\right):\Sigma\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{ConstInit}\\
+\frac{\Gamma\vdash\left(\mbox{map2}\ m\ p^{\left[a\right]}\ q^{\left[b\right]}\right):\Sigma\gamma}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \:\textsc{Map2Init}\\
+\frac{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right):\Sigma\beta}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right){}^{\left[e\right]}:\Sigma\beta} & \:\textsc{FoldPInit}
 \end{align*}
 
 
@@ -340,8 +340,8 @@ unchanged:
 \item All computations during an update step are \textbf{synchronous}
 
 \begin{itemize}
-\item The expression $\mathbf{U}_{s\leftarrow b}\left\{ e\right\} $ is
-reduced only after all subexpressions of $e$
+\item The expression $\mathbf{U}_{s\leftarrow b}\left\{ e^{\left[c\right]}\right\} $
+is reduced only after all subexpressions of $e$
 \end{itemize}
 \end{itemize}
 
@@ -577,7 +577,7 @@ Limitations:
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Possible extensions}
+\lyxframeend{}\lyxframe{Some conservative extensions of \texttt{Elm}}
 \begin{itemize}
 \item Fix initial value semantics for \texttt{async'} \texttt{:} $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$ 
 \item Allow recursive definitions for signals

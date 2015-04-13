@@ -1007,7 +1007,11 @@ consume
 \begin_inset Quotes erd
 \end_inset
 
- a signal!
+ a signal (
+\begin_inset Formula $\Sigma\alpha\rightarrow\beta$
+\end_inset
+
+)!
 \end_layout
 
 \end_deeper
@@ -1026,7 +1030,7 @@ current value
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}\:\textsc{CurrentEval}
+\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}\:\textsc{CurVal}
 \]
 
 \end_inset
@@ -1061,9 +1065,9 @@ Initial
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\frac{\Gamma\vdash\mbox{constant}\ c:\Sigma\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{ConstInit}\\
-\frac{\Gamma\vdash\mbox{map2}\ m\ p^{\left[a\right]}\ q^{\left[b\right]}:\Sigma\gamma}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \:\textsc{Map2Init}\\
-\frac{\Gamma\vdash\mbox{foldp}\, u\, e\, q:\Sigma\beta}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right){}^{\left[e\right]}:\Sigma\beta} & \:\textsc{FoldPInit}
+\frac{\Gamma\vdash\left(\mbox{constant}\ c\right):\Sigma\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{ConstInit}\\
+\frac{\Gamma\vdash\left(\mbox{map2}\ m\ p^{\left[a\right]}\ q^{\left[b\right]}\right):\Sigma\gamma}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \:\textsc{Map2Init}\\
+\frac{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right):\Sigma\beta}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right){}^{\left[e\right]}:\Sigma\beta} & \:\textsc{FoldPInit}
 \end{align*}
 
 \end_inset
@@ -1202,7 +1206,7 @@ synchronous
 \begin_deeper
 \begin_layout Itemize
 The expression 
-\begin_inset Formula $\mathbf{U}_{s\leftarrow b}\left\{ e\right\} $
+\begin_inset Formula $\mathbf{U}_{s\leftarrow b}\left\{ e^{\left[c\right]}\right\} $
 \end_inset
 
  is reduced only after all subexpressions of 
@@ -1976,7 +1980,9 @@ Easy deployment and interop in Web applications
 \end_layout
 
 \begin_layout BeginFrame
-Possible extensions
+Some conservative extensions of 
+\family typewriter
+Elm
 \end_layout
 
 \begin_layout Itemize
