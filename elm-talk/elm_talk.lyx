@@ -736,11 +736,7 @@ Temporal type
 \begin_inset Formula $\Sigma\alpha$
 \end_inset
 
- --- a time-dependent value of 
-\series bold
-ordinary
-\series default
- type 
+ --- a lazy sequence of values of type 
 \begin_inset Formula $\alpha$
 \end_inset
 
@@ -748,7 +744,11 @@ ordinary
 \end_layout
 
 \begin_layout Itemize
-Temporal combinators in core 
+Temporal 
+\series bold
+combinators
+\series default
+ in core 
 \family typewriter
 Elm
 \family default
@@ -1034,7 +1034,7 @@ Every predefined signal
 \series bold
 Initial
 \series default
- current values for combinators are evaluated:
+ current values for all expressions are derived:
 \end_layout
 
 \begin_layout Standard
@@ -1145,7 +1145,7 @@ Only the current values are updated in all subexpressions
 \begin{align*}
  & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{constant}\ c\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
  & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
- & \quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[b\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right)^{\left[m\ b\ c\right]} & \textsc{Map2Upd}\\
+ & \quad\quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[b\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right)^{\left[m\ b\ c\right]} & \textsc{Map2Upd}\\
  & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\, u\, e\, q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\, u\, e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
 \end{align*}
 
@@ -1335,7 +1335,7 @@ target "http://elm-lang.org/try"
 \end_layout
 
 \begin_layout BeginFrame
-Typical program structure in 
+Typical GUI boilerplate in 
 \family typewriter
 Elm
 \family default
@@ -1343,13 +1343,13 @@ Elm
 \end_layout
 
 \begin_layout Itemize
-A state machine:
+A state machine with stepwise update:
 \end_layout
 
 \begin_layout LyX-Code
 
 \family typewriter
-update: Command 
+update : Command 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -1367,7 +1367,7 @@ A rendering function:
 \begin_layout LyX-Code
 
 \family typewriter
-draw: State 
+draw : State 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -1405,13 +1405,13 @@ HTML
 \family typewriter
 merge_input
 \family default
-s: Signal
+s : Signal
 \family typewriter
  Command
 \end_layout
 
 \begin_layout Itemize
-Program boilerplate:
+Main boilerplate:
 \end_layout
 
 \begin_layout LyX-Code
@@ -1469,7 +1469,11 @@ Use
 \family typewriter
 async
 \family default
- : 
+ 
+\family typewriter
+:
+\family default
+ 
 \begin_inset Formula $\Sigma\alpha\rightarrow\Sigma\alpha$
 \end_inset
 
@@ -1551,7 +1555,51 @@ async
 \end_layout
 
 \begin_layout Itemize
-UI shows results of long computations
+UI that shows results of some long computations:
+\end_layout
+
+\begin_layout LyX-Code
+draw : Int -> Int -> View
+\end_layout
+
+\begin_layout LyX-Code
+draw x y = ...
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\end_layout
+
+\begin_layout LyX-Code
+s : Signal Int -- input values
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\end_layout
+
+\begin_layout LyX-Code
+fSlow : Int -> Int
+\end_layout
+
+\begin_layout LyX-Code
+res1 = async (map fSlow s)
+\end_layout
+
+\begin_layout LyX-Code
+fFast : Int -> Int
+\end_layout
+
+\begin_layout LyX-Code
+res2 = map fFast s
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\end_layout
+
+\begin_layout LyX-Code
+main : Signal View = map2 draw res1 res2
 \end_layout
 
 \begin_layout EndFrame
@@ -1883,11 +1931,15 @@ Easy deployment and interop in Web applications
 \end_layout
 
 \begin_layout BeginFrame
-*Possible extensions
+Possible extensions
 \end_layout
 
 \begin_layout Itemize
-Complete semantics for async : 
+Fix initial value semantics for 
+\family typewriter
+async'
+\family default
+ : 
 \begin_inset Formula $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
 \end_inset
 
@@ -1895,17 +1947,96 @@ Complete semantics for async :
 \end_layout
 
 \begin_layout Itemize
-Recursive definitions for signals
+Allow recursive definitions for signals
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
-Monadic signal combinators
+generate updates as 
+\family typewriter
+s0
+\family default
+, 
+\family typewriter
+f(s0)
+\family default
+, 
+\family typewriter
+f(f(s0))
+\family default
+, ...
+ are being computed:
 \end_layout
 
+\begin_layout LyX-Code
+s = async' s0 (map f s)
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
-Signal constructors
+Add monadic signal combinator, 
+\family typewriter
+bind :
+\family default
+ 
+\begin_inset Formula $(\alpha\rightarrow\Sigma\beta)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
+\end_inset
+
+
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+use input signals from dynamically created UI:
+\end_layout
+
+\begin_layout LyX-Code
+viewS = map draw stateS
+\end_layout
+
+\begin_layout LyX-Code
+stateS = foldp update_on_click (bind get_clicks viewS)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Allow user-defined signals constructed from asynchronous APIs
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Generate signal updates whenever callback is called:
+\end_layout
+
+\begin_layout LyX-Code
+type 
+\begin_inset Formula $\mathbf{C}\alpha\beta=\alpha\rightarrow\left(\beta\rightarrow\bot\right)\rightarrow\bot$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+chain : 
+\begin_inset Formula $\mathbf{C}\alpha\beta\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout LyX-Code
+some_async_api : 
+\begin_inset Formula $\mathbf{C}\alpha\beta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+values_of_b = chain some_async_api values_of_a 
+\end_layout
+
+\end_deeper
 \begin_layout EndFrame
 
 \end_layout
@@ -1915,16 +2046,16 @@ Part 2.
  Temporal logic and FRP
 \end_layout
 
-\begin_layout Standard
-
-\size footnotesize
-This part of the talk is optional.
-\end_layout
-
 \begin_layout Itemize
-Reminder (Curry-Howard): temporal logic expressions will be our types
+Reminder (Curry-Howard): logical expressions will be types
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+...and the axioms will be primitive terms
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 We only need to control the 
 \series bold
@@ -1971,7 +2102,7 @@ false
 \end_layout
 
 \begin_layout Itemize
-(linear-time) temporal logic 
+(linear-time) temporal logic LTL
 \begin_inset Formula $\approx$
 \end_inset
 
@@ -1981,7 +2112,7 @@ infinite sequences
 \end_layout
 
 \begin_layout Itemize
-intuitionistic temporal logic 
+intuitionistic temporal logic ITL
 \begin_inset Formula $\approx$
 \end_inset
 
@@ -2003,7 +2134,7 @@ In other words:
 
 \begin_deeper
 \begin_layout Itemize
-a temporal type represents a 
+an ITL type represents a 
 \series bold
 single infinite sequence
 \series default
@@ -2337,6 +2468,10 @@ p\mathbf{U}q=q+p\mathbf{N}\left(q+p\mathbf{N}\left(q+...\right)\right)
 Temporal logic redux
 \end_layout
 
+\begin_layout Standard
+Designers of FRP languages must face some choices:
+\end_layout
+
 \begin_layout Itemize
 LTL as type theory: do we use 
 \begin_inset Formula $\mathbf{N}\alpha$
@@ -2358,7 +2493,23 @@ Are they to be functors, monads, ...?
 \end_layout
 
 \begin_layout Itemize
+Which temporal axioms to use as language primitives?
+\end_layout
+
+\begin_layout Itemize
 What is the operational semantics? (I.e., how to compile this?)
+\end_layout
+
+\begin_layout Standard
+A sophisticated example: [Krishnaswamy 2013]
+\end_layout
+
+\begin_layout Itemize
+uses full LTL with higher-order temporal types and fixpoints
+\end_layout
+
+\begin_layout Itemize
+uses linear types to control space/time leaks
 \end_layout
 
 \begin_layout EndFrame
@@ -2500,10 +2651,10 @@ finite stream
 
 \end_deeper
 \begin_layout Itemize
-Some 
-\emph on
-temporal axioms
-\emph default
+Some temporal 
+\series bold
+axioms
+\series default
  of intuitionistic LTL:
 \begin_inset Formula 
 \begin{align*}
@@ -2772,6 +2923,20 @@ target "http://www.seas.harvard.edu/sites/default/files/files/archived/Czaplicki
 
  (2012).
  
+\end_layout
+
+\begin_layout Standard
+N.
+ R.
+ Krishnaswamy.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://www.mpi-sws.org/~neelk/simple-frp.pdfHigher-order functional reactive programming without spacetime leaks"
+
+\end_inset
+
+(2013).
 \end_layout
 
 \begin_layout Standard

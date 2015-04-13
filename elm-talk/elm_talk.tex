@@ -202,9 +202,9 @@ code is 100\% immutable
 \begin{itemize}
 \item \texttt{Elm} is a pure polymorphic $\lambda$-calculus with products
 and sums
-\item \textbf{Temporal type} $\Sigma\alpha$ --- a time-dependent value
-of \textbf{ordinary} type $\alpha$
-\item Temporal combinators in core \texttt{Elm}: \end{itemize}
+\item \textbf{Temporal type} $\Sigma\alpha$ --- a lazy sequence of values
+of type $\alpha$
+\item Temporal \textbf{combinators} in core \texttt{Elm}: \end{itemize}
 \begin{lyxcode}
 constant:~$\alpha\rightarrow\Sigma\alpha$
 
@@ -274,7 +274,7 @@ $e^{\left[c\right]}$
 
 \begin{itemize}
 \item Every predefined signal $i:\Sigma\alpha$ has an initial value: $i^{[a]}$
-\item \textbf{Initial} current values for combinators are evaluated:
+\item \textbf{Initial} current values for all expressions are derived:
 \end{itemize}
 \begin{align*}
 \frac{\Gamma\vdash\mbox{constant}\ c:\Sigma\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{ConstInit}\\
@@ -317,7 +317,7 @@ applied to the whole program at once:
 \begin{align*}
  & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{constant}\ c\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
  & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
- & \quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[b\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right)^{\left[m\ b\ c\right]} & \textsc{Map2Upd}\\
+ & \quad\quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[b\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right)^{\left[m\ b\ c\right]} & \textsc{Map2Upd}\\
  & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\, u\, e\, q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\, u\, e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
 \end{align*}
 
@@ -394,15 +394,15 @@ main~=~constant~text\end{lyxcode}
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Typical program structure in \texttt{Elm} }
+\lyxframeend{}\lyxframe{Typical GUI boilerplate in \texttt{Elm} }
 \begin{itemize}
-\item A state machine:\end{itemize}
+\item A state machine with stepwise update:\end{itemize}
 \begin{lyxcode}
-update:~Command~$\rightarrow$~State~$\rightarrow$~State\end{lyxcode}
+update~:~Command~$\rightarrow$~State~$\rightarrow$~State\end{lyxcode}
 \begin{itemize}
 \item A rendering function:\end{itemize}
 \begin{lyxcode}
-draw:~State~$\rightarrow$~View\end{lyxcode}
+draw~:~State~$\rightarrow$~View\end{lyxcode}
 \begin{itemize}
 \item A manager that merges the required input signals into one:
 
@@ -412,9 +412,9 @@ stuff, etc.
 \end{itemize}
 \end{itemize}
 \begin{lyxcode}
-merge\_inputs:~Signal~Command\end{lyxcode}
+merge\_inputs~:~Signal~Command\end{lyxcode}
 \begin{itemize}
-\item Program boilerplate:\end{itemize}
+\item Main boilerplate:\end{itemize}
 \begin{lyxcode}
 init\_state~:~State
 
@@ -431,7 +431,7 @@ main~=~map~draw~\$~foldp~update~init\_state~merge\_inputs~
 \item Long-running computations will delay signal updates!
 \item Example: \texttt{map f s} where \texttt{f:$\alpha\rightarrow\alpha$}
 takes a long time to compute
-\item Use \texttt{async} : $\Sigma\alpha\rightarrow\Sigma\alpha$
+\item Use \texttt{async} \texttt{:} $\Sigma\alpha\rightarrow\Sigma\alpha$
 \item Operational semantics: ($i$ is a \textbf{new} input signal)
 \begin{align*}
 \frac{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}{\Gamma,\left(i:\Sigma\alpha\right)\vdash\left(\mbox{async}_{i}\ e\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{AsyncInit}\\
@@ -456,8 +456,30 @@ runs and sets the current value
 
 \lyxframeend{}\lyxframe{Example of using \texttt{async}}
 \begin{itemize}
-\item UI shows results of long computations
-\end{itemize}
+\item UI that shows results of some long computations:\end{itemize}
+\begin{lyxcode}
+draw~:~Int~-\textgreater{}~Int~-\textgreater{}~View
+
+draw~x~y~=~...
+
+~
+
+s~:~Signal~Int~-{}-~input~values
+
+~
+
+fSlow~:~Int~-\textgreater{}~Int
+
+res1~=~async~(map~fSlow~s)
+
+fFast~:~Int~-\textgreater{}~Int
+
+res2~=~map~fFast~s
+
+~
+
+main~:~Signal~View~=~map2~draw~res1~res2
+\end{lyxcode}
 
 \lyxframeend{}
 
@@ -470,7 +492,6 @@ the type system
 \item The signal processing logic is fully specified statically
 \item No constructors for user-defined signals
 \item No recursion possible in signal definition!
-\item No full concurrency (e.g., ``dining philosophers'')
 \item Incomplete semantics for \texttt{async}\textrm{ : $\Sigma\alpha\rightarrow\Sigma\alpha$}
 
 \begin{itemize}
@@ -481,6 +502,7 @@ time!
 \item Need \texttt{async'} : $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
 to specify initial value?
 \end{itemize}
+\item No full concurrency (e.g., ``dining philosophers'')
 \end{itemize}
 
 \lyxframeend{}
@@ -540,22 +562,51 @@ Limitations:
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{{*}Possible extensions}
+\lyxframeend{}\lyxframe{Possible extensions}
 \begin{itemize}
-\item Complete semantics for async : $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$ 
-\item Recursive definitions for signals
-\item Monadic signal combinators
-\item Signal constructors
+\item Fix initial value semantics for \texttt{async'} : $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$ 
+\item Allow recursive definitions for signals
+
+\begin{itemize}
+\item generate updates as \texttt{s0}, \texttt{f(s0)}, \texttt{f(f(s0))},
+... are being computed:\end{itemize}
+\begin{lyxcode}
+s~=~async'~s0~(map~f~s)
+\end{lyxcode}
+\item Add monadic signal combinator, \texttt{bind :} $(\alpha\rightarrow\Sigma\beta)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
+
+\begin{itemize}
+\item use input signals from dynamically created UI:\end{itemize}
+\begin{lyxcode}
+viewS~=~map~draw~stateS
+
+stateS~=~foldp~update\_on\_click~(bind~get\_clicks~viewS)
+\end{lyxcode}
+\item Allow user-defined signals constructed from asynchronous APIs
+
+\begin{itemize}
+\item Generate signal updates whenever callback is called:\end{itemize}
+\begin{lyxcode}
+type~$\mathbf{C}\alpha\beta=\alpha\rightarrow\left(\beta\rightarrow\bot\right)\rightarrow\bot$
+
+chain~:~$\mathbf{C}\alpha\beta\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$~
+
+some\_async\_api~:~$\mathbf{C}\alpha\beta$
+
+values\_of\_b~=~chain~some\_async\_api~values\_of\_a~
+\end{lyxcode}
 \end{itemize}
 
 \lyxframeend{}
 
 
 \lyxframeend{}\lyxframe{Part 2. Temporal logic and FRP}
-
-{\footnotesize{This part of the talk is optional.}}{\footnotesize \par}
 \begin{itemize}
-\item Reminder (Curry-Howard): temporal logic expressions will be our types
+\item Reminder (Curry-Howard): logical expressions will be types
+
+\begin{itemize}
+\item ...and the axioms will be primitive terms
+\end{itemize}
 \item We only need to control the \textbf{order} of events: no ``hard real-time''
 \item How to understand temporal logic:
 
@@ -563,16 +614,15 @@ Limitations:
 \item classical propositional logic $\approx$ Boolean arithmetic
 \item intuitionistic propositional logic $\approx$ same but without \textbf{true}
 / \textbf{false} dichotomy
-\item (linear-time) temporal logic $\approx$ Boolean arithmetic for \emph{infinite
-sequences}
-\item intuitionistic temporal logic $\approx$ same but without \textbf{true}
+\item (linear-time) temporal logic LTL$\approx$ Boolean arithmetic for
+\emph{infinite sequences}
+\item intuitionistic temporal logic ITL$\approx$ same but without \textbf{true}
 / \textbf{false} dichotomy
 \end{itemize}
 \item In other words:
 
 \begin{itemize}
-\item a temporal type represents a \textbf{single infinite sequence} of
-values
+\item an ITL type represents a \textbf{single infinite sequence} of values
 \end{itemize}
 \end{itemize}
 
@@ -657,11 +707,19 @@ p\mathbf{U}q=q+p\mathbf{N}\left(q+p\mathbf{N}\left(q+...\right)\right)
 
 
 \lyxframeend{}\lyxframe{Temporal logic redux}
+
+Designers of FRP languages must face some choices:
 \begin{itemize}
 \item LTL as type theory: do we use $\mathbf{N}\alpha$, $\mathbf{F}\alpha$,
 $\mathbf{G}\alpha$ as new types?
 \item Are they to be functors, monads, ...?
+\item Which temporal axioms to use as language primitives?
 \item What is the operational semantics? (I.e., how to compile this?)
+\end{itemize}
+A sophisticated example: {[}Krishnaswamy 2013{]}
+\begin{itemize}
+\item uses full LTL with higher-order temporal types and fixpoints
+\item uses linear types to control space/time leaks
 \end{itemize}
 
 \lyxframeend{}
@@ -685,7 +743,7 @@ available at \emph{every} tick\\
 \item $x:\alpha\mathbf{U}\beta$ means a \textbf{finite stream} of $\alpha$
 that may end with a $\beta$ 
 \end{itemize}
-\item Some \emph{temporal axioms} of intuitionistic LTL:
+\item Some temporal \textbf{axioms} of intuitionistic LTL:
 \begin{align*}
 \mbox{(deferred apply)}\quad\mathbf{N}\left(\alpha\rightarrow\beta\right) & \rightarrow\left(\mathbf{N}\alpha\rightarrow\mathbf{N}\beta\right);\\
 \mathbf{\mbox{(streamed apply)}\quad G}\left(\alpha\rightarrow\beta\right) & \rightarrow\left(\mathbf{G}\alpha\rightarrow\mathbf{G}\beta\right);\\
@@ -770,6 +828,8 @@ E. Czaplicki, S. Chong. \href{http://people.seas.harvard.edu/~chong/pubs/pldi13-
 
 E. Czaplicki. \href{http://www.seas.harvard.edu/sites/default/files/files/archived/Czaplicki.pdf}{Concurrent FRP for functional GUI}
 (2012). 
+
+N. R. Krishnaswamy. \href{https://www.mpi-sws.org/~neelk/simple-frp.pdfHigher-order functional reactive programming without spacetime leaks}{https://www.mpi-sws.org/$\sim$neelk/simple-frp.pdfHigher-order functional reactive programming without spacetime leaks}(2013).
 
 M. F. Dam. Lectures on temporal logic. Slides: \href{http://www.csc.kth.se/~mfd/Courses/Temporal_logic/lecture1.pdf}{Syntax and semantics of LTL},
 \href{http://www.csc.kth.se/~mfd/Courses/Temporal_logic/lecture2.pdf}{A Hilbert-style proof system for LTL} 
