@@ -98,15 +98,18 @@ titlepage}
 \end_layout
 
 \begin_layout BeginFrame
-What is 
+Part 1.
+ 
 \begin_inset Quotes eld
 \end_inset
 
-functional reactive programming
+Functional reactive programming
 \begin_inset Quotes erd
 \end_inset
 
-
+ in 
+\family typewriter
+Elm
 \end_layout
 
 \begin_layout Standard
@@ -148,7 +151,13 @@ FRP means...
 \begin_layout Itemize
 
 \series bold
-pure functions using temporal types as primitives
+pure functions 
+\series default
+using
+\series bold
+ temporal types
+\series default
+ as primitives
 \end_layout
 
 \begin_deeper
@@ -162,11 +171,19 @@ pure functions using temporal types as primitives
 
 \end_deeper
 \begin_layout Standard
-Most useful for:
+FRP is probably most useful for:
 \end_layout
 
 \begin_layout Itemize
 GUI programming
+\end_layout
+
+\begin_layout Standard
+Elm is...
+\end_layout
+
+\begin_layout Itemize
+a viable implementation of FRP geared for Web apps
 \end_layout
 
 \begin_layout EndFrame
@@ -2452,7 +2469,7 @@ Abstract
 
 \begin_layout Standard
 In my day job, most bugs come from implementing reactive programs imperatively.
- FRP is a declarative approach that promises to solve my problems.
+ FRP is a declarative approach that promises to solve these problems.
  
 \begin_inset VSpace defskip
 \end_inset
@@ -2477,7 +2494,7 @@ Elm
 \family default
  language uses only a subset of LTL, it achieves high expressivity for GUI
  programming.
- I formally define the operational semantics of 
+ I will formally define the operational semantics of 
 \family typewriter
 Elm
 \family default
