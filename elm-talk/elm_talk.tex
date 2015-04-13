@@ -265,6 +265,10 @@ expression!
 \begin{itemize}
 \item Non-temporal expressions are evaluated \textbf{eagerly} in pure $\lambda$-calculus
 \item All temporal expressions are built from input signals and combinators
+
+\begin{itemize}
+\item It is not possible to ``consume'' a signal!
+\end{itemize}
 \item Every temporal expression has a \textbf{current value} denoted by
 $e^{\left[c\right]}$
 \end{itemize}
@@ -564,7 +568,7 @@ Limitations:
 
 \lyxframeend{}\lyxframe{Possible extensions}
 \begin{itemize}
-\item Fix initial value semantics for \texttt{async'} : $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$ 
+\item Fix initial value semantics for \texttt{async'} \texttt{:} $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$ 
 \item Allow recursive definitions for signals
 
 \begin{itemize}
@@ -573,7 +577,7 @@ Limitations:
 \begin{lyxcode}
 s~=~async'~s0~(map~f~s)
 \end{lyxcode}
-\item Add monadic signal combinator, \texttt{bind :} $(\alpha\rightarrow\Sigma\beta)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
+\item Add monadic signal combinator, \texttt{bind} \texttt{:} $(\alpha\rightarrow\Sigma\beta)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
 
 \begin{itemize}
 \item use input signals from dynamically created UI:\end{itemize}

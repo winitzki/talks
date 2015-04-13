@@ -994,6 +994,20 @@ eagerly
 All temporal expressions are built from input signals and combinators
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+It is not possible to 
+\begin_inset Quotes eld
+\end_inset
+
+consume
+\begin_inset Quotes erd
+\end_inset
+
+ a signal!
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Every temporal expression has a 
 \series bold
@@ -1939,7 +1953,11 @@ Fix initial value semantics for
 \family typewriter
 async'
 \family default
- : 
+ 
+\family typewriter
+:
+\family default
+ 
 \begin_inset Formula $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
 \end_inset
 
@@ -1976,7 +1994,11 @@ s = async' s0 (map f s)
 \begin_layout Itemize
 Add monadic signal combinator, 
 \family typewriter
-bind :
+bind
+\family default
+ 
+\family typewriter
+:
 \family default
  
 \begin_inset Formula $(\alpha\rightarrow\Sigma\beta)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
@@ -2001,6 +2023,21 @@ stateS = foldp update_on_click (bind get_clicks viewS)
 \end_deeper
 \begin_layout Itemize
 Allow user-defined signals constructed from asynchronous APIs
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Add a slide explaining applicative/monadic problems and how we solve them
+ with these extensions
+\end_layout
+
+\begin_layout Plain Layout
+Implement Demo for two checkboxes and boss / telephone / work
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
