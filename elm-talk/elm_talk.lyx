@@ -1681,6 +1681,10 @@ res2 = map fFast s
 main : Signal View = map2 draw res1 res2
 \end_layout
 
+\begin_layout Itemize
+Both results are updated as soon as they are computed
+\end_layout
+
 \begin_layout EndFrame
 
 \end_layout
