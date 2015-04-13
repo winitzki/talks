@@ -77,5 +77,5 @@ FRP can be defined as a λ-calculus that admits temporal types, i.e. types given
 
 My talk will be understandable to anyone familiar with Curry-Howard and functional programming. The first part of the talk is a self-contained presentation of `Elm` that does not rely on temporal logic or Curry-Howard. The second part of the talk will explain the basic intuitions behind temporal logic and its connection with FRP.
 
-[Talk slides](elm_talk/elm_talk.pdf)
+[Talk slides](elm-talk/elm_talk.pdf)
 
