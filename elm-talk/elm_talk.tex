@@ -444,9 +444,12 @@ main~=~map~draw~(foldp~update~init\_state~merge\_inputs)
 \lyxframeend{}\lyxframe{Asynchrony and concurrency in \texttt{Elm}}
 \begin{itemize}
 \item Long-running computations will delay signal updates!
-\item Example: \texttt{map f s} where \texttt{f:$\alpha\rightarrow\alpha$}
-takes a long time to compute
-\item Use \texttt{async} \texttt{:} $\Sigma\alpha\rightarrow\Sigma\alpha$
+
+\begin{itemize}
+\item Example: \texttt{foldp} \texttt{f} \texttt{e} \texttt{s} where \texttt{f:$\alpha\rightarrow\beta\rightarrow\beta$}
+takes a long time
+\end{itemize}
+\item \texttt{Elm}'s solution is to use \texttt{async} \texttt{:} $\Sigma\alpha\rightarrow\Sigma\alpha$
 \item Operational semantics: ($i$ is a \textbf{new} input signal for each
 \texttt{async})
 \begin{align*}

@@ -1501,24 +1501,42 @@ Elm
 Long-running computations will delay signal updates!
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 Example: 
 \family typewriter
-map f s
+foldp
+\family default
+ 
+\family typewriter
+f
+\family default
+ 
+\family typewriter
+e
+\family default
+ 
+\family typewriter
+s
 \family default
  where 
 \family typewriter
 f:
-\begin_inset Formula $\alpha\rightarrow\alpha$
+\begin_inset Formula $\alpha\rightarrow\beta\rightarrow\beta$
 \end_inset
 
 
 \family default
- takes a long time to compute
+ takes a long time
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
-Use 
+
+\family typewriter
+Elm
+\family default
+'s solution is to use 
 \family typewriter
 async
 \family default
