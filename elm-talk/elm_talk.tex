@@ -310,22 +310,6 @@ applied to the whole program at once:
 \]
 
 \begin{itemize}
-\item All computations during an update step are \textbf{synchronous}
-\end{itemize}
-
-\lyxframeend{}\lyxframe{\texttt{Elm} operational semantics 3: Updating combinators}
-\begin{itemize}
-\item The whole program \textbf{remains} a static signal expression tree
-\item Only the current values are updated in all subexpressions
-\end{itemize}
-\begin{align*}
- & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{constant}\ c\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
- & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
- & \quad\quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[b\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right)^{\left[m\ b\ c\right]} & \textsc{Map2Upd}\\
- & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\, u\, e\, q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\, u\, e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
-\end{align*}
-
-\begin{itemize}
 \item Efficient implementation:
 
 \begin{itemize}
@@ -334,36 +318,25 @@ applied to the whole program at once:
 \end{itemize}
 \end{itemize}
 
-\lyxframeend{}
-
-
-\lyxframeend{}\lyxframe{Example of using \texttt{foldp} }
+\lyxframeend{}\lyxframe{\texttt{Elm} operational semantics 3: Updating combinators}
 \begin{itemize}
-\item Specification:
-
-\begin{itemize}
-\item \textcolor{blue}{\emph{I work only after the boss comes by and unless
-the phone rings}} 
+\item The whole program \textbf{remains} a static signal expression tree
+\item Only the current values are updated in all subexpressions
 \end{itemize}
-\item Implementation:\end{itemize}
-\begin{lyxcode}
-after\_unless~:~(Bool,~Bool)~-\textgreater{}~Bool~-\textgreater{}~Bool
+\begin{align*}
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{constant}\ c\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
+ & \quad\quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[b\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right)^{\left[m\ b\ c\right]} & \textsc{Map2Upd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\, u\, e\, q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\, u\, e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
+\end{align*}
 
-after\_unless~(b,r)~w~=~(w~or~b)~and~not~r
-
-~$\quad\quad$
-
-boss~:~Signal~Bool
-
-phone:~Signal~Bool
-
-~$\quad\quad$
-
-i\_work~:~Signal~Bool
-
-i\_work~=~foldp~after\_unless~false~(boss,~phone)\end{lyxcode}
 \begin{itemize}
-\item Demo
+\item All computations during an update step are \textbf{synchronous}
+
+\begin{itemize}
+\item The expression $\mathbf{U}_{s\leftarrow b}\left\{ e\right\} $ is
+reduced only after all subexpressions of $e$
+\end{itemize}
 \end{itemize}
 
 \lyxframeend{}
@@ -398,6 +371,38 @@ main~=~constant~text\end{lyxcode}
 \lyxframeend{}
 
 
+\lyxframeend{}\lyxframe{Example of using \texttt{foldp} }
+\begin{itemize}
+\item Specification:
+
+\begin{itemize}
+\item \textcolor{blue}{\emph{I work only after the boss comes by and unless
+the phone rings}} 
+\end{itemize}
+\item Implementation:\end{itemize}
+\begin{lyxcode}
+after\_unless~:~(Bool,~Bool)~-\textgreater{}~Bool~-\textgreater{}~Bool
+
+after\_unless~(b,r)~w~=~(w~\textbar{}\textbar{}~b)~\&\&~not~r
+
+~$\quad\quad$
+
+boss~:~Signal~Bool
+
+phone:~Signal~Bool
+
+~$\quad\quad$
+
+i\_work~:~Signal~Bool
+
+i\_work~=~foldp~after\_unless~false~(boss,~phone)\end{lyxcode}
+\begin{itemize}
+\item Demo
+\end{itemize}
+
+\lyxframeend{}
+
+
 \lyxframeend{}\lyxframe{Typical GUI boilerplate in \texttt{Elm} }
 \begin{itemize}
 \item A state machine with stepwise update:\end{itemize}
@@ -424,7 +429,7 @@ init\_state~:~State
 
 main~:~Signal~View
 
-main~=~map~draw~\$~foldp~update~init\_state~merge\_inputs~
+main~=~map~draw~(foldp~update~init\_state~merge\_inputs)
 \end{lyxcode}
 
 \lyxframeend{}

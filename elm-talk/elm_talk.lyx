@@ -1134,6 +1134,20 @@ All computations during an update step are
 synchronous
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+The expression 
+\begin_inset Formula $\mathbf{U}_{s\leftarrow b}\left\{ e\right\} $
+\end_inset
+
+ is reduced only after all subexpressions of 
+\begin_inset Formula $e$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout BeginFrame
 
 \family typewriter
@@ -1157,7 +1171,7 @@ Only the current values are updated in all subexpressions
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
- & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{constant}\ c\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{constant}\ c\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
  & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
  & \quad\quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[b\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right)^{\left[m\ b\ c\right]} & \textsc{Map2Upd}\\
  & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\, u\, e\, q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\, u\, e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
@@ -1182,86 +1196,6 @@ Unchanged current values are cached and not recomputed
 \end_layout
 
 \end_deeper
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-Example of using 
-\family typewriter
-foldp
-\family default
- 
-\end_layout
-
-\begin_layout Itemize
-Specification:
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-
-\emph on
-\color blue
-I work only after the boss comes by and unless the phone rings
-\emph default
-\color inherit
- 
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Implementation:
-\end_layout
-
-\begin_layout LyX-Code
-after_unless : (Bool, Bool) -> Bool -> Bool
-\end_layout
-
-\begin_layout LyX-Code
-
-\family typewriter
-after_unless (b,r) w = (w or b) and not r
-\end_layout
-
-\begin_layout LyX-Code
- 
-\begin_inset Formula $\quad\quad$
-\end_inset
-
-
-\end_layout
-
-\begin_layout LyX-Code
-boss : Signal Bool
-\end_layout
-
-\begin_layout LyX-Code
-phone: Signal Bool
-\end_layout
-
-\begin_layout LyX-Code
- 
-\begin_inset Formula $\quad\quad$
-\end_inset
-
-
-\end_layout
-
-\begin_layout LyX-Code
-i_work : Signal Bool
-\end_layout
-
-\begin_layout LyX-Code
-i_work = 
-\family typewriter
-foldp after_unless false (boss, phone)
-\end_layout
-
-\begin_layout Itemize
-Demo
-\end_layout
-
 \begin_layout EndFrame
 
 \end_layout
@@ -1342,6 +1276,86 @@ target "http://elm-lang.org/try"
 \end_inset
 
 
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Example of using 
+\family typewriter
+foldp
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+Specification:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+\color blue
+I work only after the boss comes by and unless the phone rings
+\emph default
+\color inherit
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Implementation:
+\end_layout
+
+\begin_layout LyX-Code
+after_unless : (Bool, Bool) -> Bool -> Bool
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+after_unless (b,r) w = (w || b) && not r
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\begin_inset Formula $\quad\quad$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+boss : Signal Bool
+\end_layout
+
+\begin_layout LyX-Code
+phone: Signal Bool
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\begin_inset Formula $\quad\quad$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+i_work : Signal Bool
+\end_layout
+
+\begin_layout LyX-Code
+i_work = 
+\family typewriter
+foldp after_unless false (boss, phone)
+\end_layout
+
+\begin_layout Itemize
+Demo
 \end_layout
 
 \begin_layout EndFrame
@@ -1445,7 +1459,7 @@ Signal View
 \begin_layout LyX-Code
 
 \family typewriter
-main = map draw $ foldp update init_state merge_inputs 
+main = map draw (foldp update init_state merge_inputs)
 \end_layout
 
 \begin_layout EndFrame
