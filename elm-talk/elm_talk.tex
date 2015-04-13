@@ -164,7 +164,7 @@ of data
 \begin{itemize}
 \item Reactive programs work on \textbf{infinite sequences} of input/output
 values
-\item Main idea: make infinite sequences implicit, as a new ``\textbf{temporal}''
+\item Main idea: make sequences \textbf{implicit}, as a new ``temporal''
 type
 
 \begin{itemize}
@@ -179,12 +179,12 @@ of type $\alpha$
 \texttt{Signal} \texttt{View} 
 \item a Web server is a pure function \texttt{Signal} \texttt{Request} $\rightarrow$
 \texttt{Signal} \texttt{Response} 
-\item all mutation is \textbf{implicit} in \texttt{Signal} $\alpha$; our
-code is 100\% immutable
+\item all mutation is \textbf{implicit} in \texttt{Signal} $\alpha$ 
 
 \begin{itemize}
 \item instead of updating an \texttt{x:Int}, we define a value of type \texttt{Signal}
 \texttt{Int}
+\item our code is 100\% immutable, no side effects, no \texttt{IO} monads
 \end{itemize}
 \item asynchronous behavior is \textbf{implicit}: our code has no callbacks
 \item concurrency / parallelism is \textbf{implicit}

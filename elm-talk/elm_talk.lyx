@@ -546,15 +546,15 @@ infinite sequences
 \end_layout
 
 \begin_layout Itemize
-Main idea: make infinite sequences implicit, as a new 
+Main idea: make sequences 
+\series bold
+implicit
+\series default
+, as a new 
 \begin_inset Quotes eld
 \end_inset
 
-
-\series bold
 temporal
-\series default
-
 \begin_inset Quotes erd
 \end_inset
 
@@ -663,7 +663,7 @@ Signal
 \begin_inset Formula $\alpha$
 \end_inset
 
-; our code is 100% immutable
+ 
 \end_layout
 
 \begin_deeper
@@ -679,6 +679,14 @@ Signal
  
 \family typewriter
 Int
+\end_layout
+
+\begin_layout Itemize
+our code is 100% immutable, no side effects, no 
+\family typewriter
+IO
+\family default
+ monads
 \end_layout
 
 \end_deeper
