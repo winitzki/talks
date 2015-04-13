@@ -226,6 +226,7 @@ is ill-typed!
 \lyxframeend{}
 
 
+<<<<<<< HEAD
 \lyxframeend{}\lyxframe{Details: \texttt{Elm} type judgments}
 \begin{itemize}
 \item Polymorphically typed $\lambda$-calculus (also with temporal types)
@@ -248,6 +249,9 @@ involve $\Sigma$:
 \frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash s:\Sigma\alpha}{\Gamma\vdash(\mbox{foldp}\, u\, e\, s):\Sigma\beta} & \,\textsc{FoldP}
 \end{align*}
 
+=======
+\lyxframeend{}\lyxframe{\texttt{{*}Elm} type judgments}
+>>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \begin{itemize}
 \item A value of type $\Sigma\Sigma\alpha$ is impossible in a well-typed
 expression!
@@ -256,12 +260,31 @@ expression!
 \lyxframeend{}
 
 
+<<<<<<< HEAD
 \lyxframeend{}\lyxframe{\texttt{Elm} operational semantics. ``Current value''}
 \begin{itemize}
 \item Non-temporal expressions are evaluated \textbf{eagerly} in pure $\lambda$-calculus
 \item All temporal expressions are built from input signals and combinators
 \item Every temporal expression has a \textbf{current value} denoted by
 $e^{\left[c\right]}$
+=======
+\lyxframeend{}\lyxframe{\texttt{{*}Elm} operational semantics}
+\begin{itemize}
+\item Non-temporal expressions are evaluated \textbf{eagerly} in pure $\lambda$-calculus
+\item The runtime will cache all values to avoid recomputation 
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{\texttt{{*}Elm} operational semantics}
+\begin{itemize}
+\item Example
+\item \textcolor{blue}{\emph{I work after the boss comes by and until the
+phone rings}}: \\
+$\quad$\texttt{let after\_until w (b,r) = (w or b) and not r in }\\
+$\quad\quad$\texttt{foldp after\_until false (boss, phone)}
+>>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \end{itemize}
 \[
 \frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}
@@ -381,7 +404,11 @@ main~=~map~draw~\$~foldp~update~init\_state~merge\_inputs~
 \lyxframeend{}\lyxframe{{*}Asynchrony and concurrency in \texttt{Elm}}
 \begin{itemize}
 \item Long-running computations will delay signal updates
+<<<<<<< HEAD
 \item Solutions: 1. Caching of all results. 2. Using \texttt{async} : $\Sigma\alpha\rightarrow\Sigma\alpha$
+=======
+\item Solutions: 1. Caching of all results. 2. Using \texttt{async} 
+>>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \end{itemize}
 
 \lyxframeend{}
@@ -395,11 +422,18 @@ the type system
 \item No distinction between continuous time and discrete time
 \item The signal processing logic is fully specified statically
 \item No constructors for signals
+<<<<<<< HEAD
 \item No full concurrency (e.g., ``dining philosophers'')
 \item Incomplete semantics for \texttt{async}\textrm{ : $\Sigma\alpha\rightarrow\Sigma\alpha$}
 
 \begin{itemize}
 \item Need \texttt{async} : $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$ 
+\end{itemize}
+=======
+
+\begin{itemize}
+\item Impossible to implement the ``dining philosophers''!
+>>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \end{itemize}
 \end{itemize}
 
@@ -408,7 +442,14 @@ the type system
 
 \lyxframeend{}\lyxframe{\texttt{Elm} cannot simulate ``dining philosophers''}
 \begin{itemize}
+<<<<<<< HEAD
 \item A philosopher thinks for a random time, then eats for a random time
+=======
+\item ``Dining philosophers'': need to simulate a philosopher who thinks
+for a random time and then eats for a random time
+\item Can a signal value \texttt{p} \texttt{:} \texttt{Signal} \texttt{Unit}
+update at random times? 
+>>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 
 \begin{itemize}
 \item Can a signal value \texttt{p} \texttt{:} \texttt{Signal} \texttt{Unit}
@@ -429,6 +470,7 @@ to achieve variable delay
 
 \lyxframeend{}\lyxframe{The JavaScript backend for \texttt{Elm}}
 
+<<<<<<< HEAD
 Features:
 \begin{itemize}
 \item Good support for HTML/CSS, HTTP requests, JSON
@@ -440,11 +482,25 @@ Limitations:
 \item No implementation for \texttt{async} (JavaScript lacks concurrency)
 \item The lack of recursive signals is compensated by \emph{ad hoc} primitives
 \item Ordinary recursion may generate invalid JavaScript
+=======
+Features
+\begin{itemize}
+\item Good support for HTML/CSS, HTTP requests, JSON
+\item Good performance of caching views
+\item Transparent, declarative modeling of data
+\end{itemize}
+Limitations
+\begin{itemize}
+\item No implementation for \texttt{async} and no concurrency
+\item Ordinary recursion may generate invalid JavaScript
+\item The lack of recursive signals is compensated by \emph{ad hoc} primitives
+>>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \end{itemize}
 
 \lyxframeend{}
 
 
+<<<<<<< HEAD
 \lyxframeend{}\lyxframe{\texttt{Elm}-style FRP: the good parts}
 \begin{itemize}
 \item Transparent, declarative modeling of data through ADTs
@@ -460,6 +516,8 @@ Limitations:
 \lyxframeend{}
 
 
+=======
+>>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \lyxframeend{}\lyxframe{{*}Possible extensions}
 \begin{itemize}
 \item Complete semantics for async : $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$ 
@@ -650,7 +708,18 @@ $\mathbf{N}$ or $\mathbf{F}$
 \item There are some languages that implement FRP in various \emph{ad hoc}
 ways
 \item The ideal is not (yet) reached
+<<<<<<< HEAD
 \item \texttt{Elm}-style FRP is a promising step in the right direction
+=======
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{{*}Conclusions and outlook}
+\begin{itemize}
+\item The ideal is not (yet) reached
+>>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \end{itemize}
 
 \lyxframeend{}
