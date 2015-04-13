@@ -297,7 +297,7 @@ has an initial value: $i^{[a]}$
 \item Update steps happen only to \textbf{input signals} $s\in{\cal I}$
 and \textbf{one at a time}
 \item Update steps $\mathbf{U}_{s\leftarrow a}\left\{ ...\right\} $ are
-applied to the whole program at once:
+applied to the \textbf{whole program} at once:
 \end{itemize}
 \[
 \frac{\Gamma\vdash s:\Sigma\alpha\quad s\in{\cal I}\quad\Gamma\vdash a:\alpha\quad\Gamma\vdash e^{\left[c\right]}:\Sigma\beta\quad\Gamma\vdash e'^{\left[c'\right]}:\Sigma\beta}{\Gamma\vdash\mathbf{U}_{s\leftarrow a}\left\{ e^{\left[c\right]}\right\} \Rightarrow e'^{\left[c'\right]}}
@@ -447,7 +447,8 @@ main~=~map~draw~(foldp~update~init\_state~merge\_inputs)
 \item Example: \texttt{map f s} where \texttt{f:$\alpha\rightarrow\alpha$}
 takes a long time to compute
 \item Use \texttt{async} \texttt{:} $\Sigma\alpha\rightarrow\Sigma\alpha$
-\item Operational semantics: ($i$ is a \textbf{new} input signal)
+\item Operational semantics: ($i$ is a \textbf{new} input signal for each
+\texttt{async})
 \begin{align*}
 \frac{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}{\Gamma,\left(i:\Sigma\alpha\right)\vdash\left(\mbox{async}_{i}\ e\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{AsyncInit}\\
 \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{async}_{i}\ e\right)^{\left[c\right]}\right\} \Rightarrow\mathbf{U}_{i\leftarrow c'}^{\dagger}\left(\mbox{async}_{i}\ \mathbf{U}_{s\leftarrow a}^{\dagger}\left\{ e\right\} ^{\left[c'\right]}\right)^{\left[c\right]} & \:\textsc{AsyncSched}\\
@@ -458,11 +459,11 @@ takes a long time to compute
 runs on another thread...
 
 \begin{itemize}
-\item ...while the current value $c$ remains unchanged...
-\item ...and another update $\mathbf{U}_{i\leftarrow c'}^{\dagger}$ is
-\textbf{scheduled} but not yet triggered.
+\item ...while the current value $c$ remains unchanged
+\item Another update $\mathbf{U}_{i\leftarrow c'}^{\dagger}$ is \textbf{scheduled}
+but not yet triggered
 \item When $c'$ is ready, $\mathbf{U}_{i\leftarrow c'}\left\{ ...\right\} $
-runs and sets the current value
+runs and sets the current value to $c'$
 \end{itemize}
 \end{itemize}
 

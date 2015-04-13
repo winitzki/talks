@@ -1106,7 +1106,11 @@ Update steps
 \begin_inset Formula $\mathbf{U}_{s\leftarrow a}\left\{ ...\right\} $
 \end_inset
 
- are applied to the whole program at once:
+ are applied to the 
+\series bold
+whole program
+\series default
+ at once:
 \end_layout
 
 \begin_layout Standard
@@ -1538,7 +1542,11 @@ Operational semantics: (
 \series bold
 new
 \series default
- input signal)
+ input signal for each 
+\family typewriter
+async
+\family default
+)
 \begin_inset Formula 
 \begin{align*}
 \frac{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}{\Gamma,\left(i:\Sigma\alpha\right)\vdash\left(\mbox{async}_{i}\ e\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{AsyncInit}\\
@@ -1565,11 +1573,11 @@ The update computation
 \begin_inset Formula $c$
 \end_inset
 
- remains unchanged...
+ remains unchanged
 \end_layout
 
 \begin_layout Itemize
-...and another update 
+Another update 
 \begin_inset Formula $\mathbf{U}_{i\leftarrow c'}^{\dagger}$
 \end_inset
 
@@ -1577,7 +1585,7 @@ The update computation
 \series bold
 scheduled
 \series default
- but not yet triggered.
+ but not yet triggered
 \end_layout
 
 \begin_layout Itemize
@@ -1589,7 +1597,11 @@ When
 \begin_inset Formula $\mathbf{U}_{i\leftarrow c'}\left\{ ...\right\} $
 \end_inset
 
- runs and sets the current value
+ runs and sets the current value to 
+\begin_inset Formula $c'$
+\end_inset
+
+
 \end_layout
 
 \end_deeper
