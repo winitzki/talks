@@ -401,9 +401,9 @@ phone:~Signal~Bool
 
 i\_work~:~Signal~Bool
 
-i\_work~=~foldp~after\_unless~false~(boss,~phone)\end{lyxcode}
+i\_work~=~foldp~after\_unless~False~(boss,~phone)\end{lyxcode}
 \begin{itemize}
-\item Demo
+\item Demo (\texttt{boss\_phone\_work.elm})
 \end{itemize}
 
 \lyxframeend{}
@@ -415,7 +415,8 @@ i\_work~=~foldp~after\_unless~false~(boss,~phone)\end{lyxcode}
 \begin{lyxcode}
 update~:~Command~$\rightarrow$~State~$\rightarrow$~State\end{lyxcode}
 \begin{itemize}
-\item A rendering function:\end{itemize}
+\item A rendering function (\texttt{View} is either \texttt{Element} or
+\texttt{Html}):\end{itemize}
 \begin{lyxcode}
 draw~:~State~$\rightarrow$~View\end{lyxcode}
 \begin{itemize}

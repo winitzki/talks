@@ -1384,11 +1384,15 @@ i_work : Signal Bool
 \begin_layout LyX-Code
 i_work = 
 \family typewriter
-foldp after_unless false (boss, phone)
+foldp after_unless False (boss, phone)
 \end_layout
 
 \begin_layout Itemize
-Demo
+Demo (
+\family typewriter
+boss_phone_work.elm
+\family default
+)
 \end_layout
 
 \begin_layout EndFrame
@@ -1422,7 +1426,19 @@ update : Command
 \end_layout
 
 \begin_layout Itemize
-A rendering function:
+A rendering function (
+\family typewriter
+View
+\family default
+ is either 
+\family typewriter
+Element
+\family default
+ or 
+\family typewriter
+Html
+\family default
+):
 \end_layout
 
 \begin_layout LyX-Code
@@ -2107,7 +2123,7 @@ status open
 
 \begin_layout Plain Layout
 Add a slide explaining applicative/monadic problems and how we solve them
- with these extensions
+ with these extension
 \end_layout
 
 \begin_layout Plain Layout
