@@ -243,7 +243,7 @@ is ill-typed!
 \item Temporal types are denoted by $\Sigma\tau$
 
 \begin{itemize}
-\item In these rules, type variables $\alpha,\beta$,... \textbf{cannot}
+\item In these rules, type variables $\alpha,\beta,\gamma$ \textbf{cannot}
 involve $\Sigma$:
 \end{itemize}
 \end{itemize}
@@ -264,7 +264,7 @@ expression!
 \lyxframeend{}\lyxframe{\texttt{Elm} operational semantics 1: Current values}
 \begin{itemize}
 \item Non-temporal expressions are evaluated \textbf{eagerly} in pure $\lambda$-calculus
-\item All temporal expressions are built from input signals and combinators
+\item Temporal expressions are built from \textbf{input} signals and combinators
 
 \begin{itemize}
 \item It is not possible to ``consume'' a signal!
@@ -277,7 +277,8 @@ $e^{\left[c\right]}$
 \]
 
 \begin{itemize}
-\item Every predefined signal $i:\Sigma\alpha$ has an initial value: $i^{[a]}$
+\item Every predefined \textbf{input} signal $i:\Sigma\alpha,i\in{\cal I}$
+has an initial value: $i^{[a]}$
 \item \textbf{Initial} current values for all expressions are derived:
 \end{itemize}
 \begin{align*}
@@ -293,20 +294,21 @@ $e^{\left[c\right]}$
 
 \lyxframeend{}\lyxframe{\texttt{Elm} operational semantics 2: Update steps}
 \begin{itemize}
-\item Update steps happen only to \textbf{input signals} $s$ and \textbf{one
-at a time}
+\item Update steps happen only to \textbf{input signals} $s\in{\cal I}$
+and \textbf{one at a time}
 \item Update steps $\mathbf{U}_{s\leftarrow a}\left\{ ...\right\} $ are
 applied to the whole program at once:
 \end{itemize}
 \[
-\frac{\Gamma\vdash s:\Sigma\alpha\quad\Gamma\vdash a:\alpha\quad\Gamma\vdash e^{\left[c\right]}:\Sigma\beta\quad\Gamma\vdash e'^{\left[c'\right]}:\Sigma\beta}{\Gamma\vdash\mathbf{U}_{s\leftarrow a}\left\{ e^{\left[c\right]}\right\} \Rightarrow e'^{\left[c'\right]}}
+\frac{\Gamma\vdash s:\Sigma\alpha\quad s\in{\cal I}\quad\Gamma\vdash a:\alpha\quad\Gamma\vdash e^{\left[c\right]}:\Sigma\beta\quad\Gamma\vdash e'^{\left[c'\right]}:\Sigma\beta}{\Gamma\vdash\mathbf{U}_{s\leftarrow a}\left\{ e^{\left[c\right]}\right\} \Rightarrow e'^{\left[c'\right]}}
 \]
 
 \begin{itemize}
-\item An update step on $s$ will leave all other signals unchanged:
+\item An update step on $s$ will leave all other \textbf{input} signals
+unchanged:
 \end{itemize}
 \[
-\mathbf{U}_{s\leftarrow b}\left\{ s^{\left[a\right]}\right\} \Rightarrow s^{\left[b\right]}\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s'^{\left[c\right]}\right\} \Rightarrow s'^{\left[c\right]}
+\forall s\neq s'\in{\cal I}:\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s^{\left[a\right]}\right\} \Rightarrow s^{\left[b\right]}\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s'^{\left[c\right]}\right\} \Rightarrow s'^{\left[c\right]}
 \]
 
 \begin{itemize}
@@ -320,8 +322,12 @@ applied to the whole program at once:
 
 \lyxframeend{}\lyxframe{\texttt{Elm} operational semantics 3: Updating combinators}
 \begin{itemize}
-\item The whole program \textbf{remains} a static signal expression tree
+\item Operational semantics does not reduce temporal expressions
+
+\begin{itemize}
+\item The whole program \textbf{remains} a static temporal expression tree
 \item Only the current values are updated in all subexpressions
+\end{itemize}
 \end{itemize}
 \begin{align*}
  & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{constant}\ c\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\

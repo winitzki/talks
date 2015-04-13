@@ -929,10 +929,9 @@ Temporal types are denoted by
 \begin_deeper
 \begin_layout Itemize
 In these rules, type variables 
-\begin_inset Formula $\alpha,\beta$
+\begin_inset Formula $\alpha,\beta,\gamma$
 \end_inset
 
-,...
  
 \series bold
 cannot
@@ -991,7 +990,11 @@ eagerly
 \end_layout
 
 \begin_layout Itemize
-All temporal expressions are built from input signals and combinators
+Temporal expressions are built from 
+\series bold
+input
+\series default
+ signals and combinators
 \end_layout
 
 \begin_deeper
@@ -1032,8 +1035,12 @@ current value
 \end_layout
 
 \begin_layout Itemize
-Every predefined signal 
-\begin_inset Formula $i:\Sigma\alpha$
+Every predefined 
+\series bold
+input
+\series default
+ signal 
+\begin_inset Formula $i:\Sigma\alpha,i\in{\cal I}$
 \end_inset
 
  has an initial value: 
@@ -1082,7 +1089,7 @@ Update steps happen only to
 input signals
 \series default
  
-\begin_inset Formula $s$
+\begin_inset Formula $s\in{\cal I}$
 \end_inset
 
  and 
@@ -1101,7 +1108,7 @@ Update steps
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash s:\Sigma\alpha\quad\Gamma\vdash a:\alpha\quad\Gamma\vdash e^{\left[c\right]}:\Sigma\beta\quad\Gamma\vdash e'^{\left[c'\right]}:\Sigma\beta}{\Gamma\vdash\mathbf{U}_{s\leftarrow a}\left\{ e^{\left[c\right]}\right\} \Rightarrow e'^{\left[c'\right]}}
+\frac{\Gamma\vdash s:\Sigma\alpha\quad s\in{\cal I}\quad\Gamma\vdash a:\alpha\quad\Gamma\vdash e^{\left[c\right]}:\Sigma\beta\quad\Gamma\vdash e'^{\left[c'\right]}:\Sigma\beta}{\Gamma\vdash\mathbf{U}_{s\leftarrow a}\left\{ e^{\left[c\right]}\right\} \Rightarrow e'^{\left[c'\right]}}
 \]
 
 \end_inset
@@ -1114,13 +1121,17 @@ An update step on
 \begin_inset Formula $s$
 \end_inset
 
- will leave all other signals unchanged:
+ will leave all other 
+\series bold
+input
+\series default
+ signals unchanged:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\mathbf{U}_{s\leftarrow b}\left\{ s^{\left[a\right]}\right\} \Rightarrow s^{\left[b\right]}\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s'^{\left[c\right]}\right\} \Rightarrow s'^{\left[c\right]}
+\forall s\neq s'\in{\cal I}:\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s^{\left[a\right]}\right\} \Rightarrow s^{\left[b\right]}\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s'^{\left[c\right]}\right\} \Rightarrow s'^{\left[c\right]}
 \]
 
 \end_inset
@@ -1151,17 +1162,23 @@ Elm
 \end_layout
 
 \begin_layout Itemize
+Operational semantics does not reduce temporal expressions
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
 The whole program 
 \series bold
 remains
 \series default
- a static signal expression tree
+ a static temporal expression tree
 \end_layout
 
 \begin_layout Itemize
 Only the current values are updated in all subexpressions
 \end_layout
 
+\end_deeper
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
