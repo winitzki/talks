@@ -126,11 +126,11 @@ actors
 \end_layout
 
 \begin_layout Itemize
-distributed computing on massively parallel load-balanced clusters
+distributed computing on massively parallel, load-balanced clusters
 \end_layout
 
 \begin_layout Itemize
-ma/reduce, the 
+map/reduce, the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -138,15 +138,11 @@ reactive manifesto
 \begin_inset Quotes erd
 \end_inset
 
-, (
-\emph on
-insert latest fad here
-\emph default
-)...
+
 \end_layout
 
 \begin_layout Standard
-FRP is...
+FRP means...
 \end_layout
 
 \begin_layout Itemize
@@ -165,6 +161,14 @@ pure functions using temporal types as primitives
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+Most useful for:
+\end_layout
+
+\begin_layout Itemize
+GUI programming
+\end_layout
+
 \begin_layout EndFrame
 
 \end_layout
@@ -451,6 +455,10 @@ temporal
 Difficulties in reactive programming
 \end_layout
 
+\begin_layout Standard
+Usually, reactive programs are written imperatively...
+\end_layout
+
 \begin_layout Itemize
 Input signals may come at unpredictable times
 \end_layout
@@ -469,6 +477,19 @@ Flow of events becomes difficult to understand
 Asynchronous (out-of-order) callback logic becomes opaque
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+callback hell
+\begin_inset Quotes erd
+\end_inset
+
+: deeply nested callbacks, all mutating data
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Inverted control (
 \begin_inset Quotes eld
@@ -516,7 +537,11 @@ Main idea: make infinite sequences implicit, as a new
 \begin_inset Quotes eld
 \end_inset
 
+
+\series bold
 temporal
+\series default
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -670,11 +695,11 @@ the runtime needs to provide the required scheduling of events
 \end_layout
 
 \begin_layout BeginFrame
-
+Czaplicki's original 
 \family typewriter
 Elm
 \family default
- in a nutshell
+ 2013 in a nutshell
 \end_layout
 
 \begin_layout Itemize
@@ -710,7 +735,7 @@ ordinary
 \end_layout
 
 \begin_layout Itemize
-Temporal primitive terms in core 
+Temporal combinators in core 
 \family typewriter
 Elm
 \family default
@@ -854,7 +879,7 @@ target "http://elm-lang.org/try"
 \end_layout
 
 \begin_layout BeginFrame
-
+Details: 
 \family typewriter
 Elm
 \family default
@@ -862,17 +887,17 @@ Elm
 \end_layout
 
 \begin_layout Itemize
-Non-temporal values are used as in polymorphic 
+Polymorphically typed 
 \begin_inset Formula $\lambda$
 \end_inset
 
--calculus
+-calculus (also with temporal types)
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\frac{\Gamma,(x:\alpha)\vdash e:\beta}{\Gamma\vdash(\lambda x.e):\alpha\rightarrow\beta}\,\textsc{Lambda} & \quad\frac{\Gamma\vdash e_{1}:\alpha\rightarrow\beta\quad\Gamma\vdash e_{2}:\alpha}{\Gamma\vdash e_{1}\, e_{2}:\beta}\,\textsc{Apply}
+\frac{\Gamma,(x:\alpha)\vdash e:\beta}{\Gamma\vdash(\lambda x.e):\alpha\rightarrow\beta}\,\textsc{Lambda} & \quad\frac{\Gamma\vdash e_{1}:\alpha\rightarrow\beta\quad\Gamma\vdash e_{2}:\alpha}{\Gamma\vdash(e_{1}\, e_{2}):\beta}\,\textsc{Apply}
 \end{align*}
 
 \end_inset
@@ -881,7 +906,7 @@ Non-temporal values are used as in polymorphic
 \end_layout
 
 \begin_layout Itemize
-Temporal values have special types of the form 
+Temporal types are denoted by 
 \begin_inset Formula $\Sigma\tau$
 \end_inset
 
@@ -890,7 +915,7 @@ Temporal values have special types of the form
 
 \begin_deeper
 \begin_layout Itemize
-Here, type variables 
+In these rules, type variables 
 \begin_inset Formula $\alpha,\beta$
 \end_inset
 
@@ -899,12 +924,8 @@ Here, type variables
 \series bold
 cannot
 \series default
- 
-\series bold
-be
-\series default
- of the form 
-\begin_inset Formula $\Sigma\tau$
+ involve 
+\begin_inset Formula $\Sigma$
 \end_inset
 
 :
@@ -914,9 +935,9 @@ be
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash(\mbox{constant}\, e):\Sigma\alpha}\,\textsc{Constant}\\
-\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash\mbox{map2}\: m\: p\: q:\Sigma\gamma}\,\textsc{Map2}\\
-\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash s:\Sigma\alpha}{\Gamma\vdash(\mbox{foldp}\, u\, e\, s):\Sigma\beta}\,\textsc{FoldP}
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash(\mbox{constant}\, e):\Sigma\alpha} & \,\textsc{Constant}\\
+\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash(\mbox{map2}\: m\: p\: q):\Sigma\gamma} & \,\textsc{Map2}\\
+\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash s:\Sigma\alpha}{\Gamma\vdash(\mbox{foldp}\, u\, e\, s):\Sigma\beta} & \,\textsc{FoldP}
 \end{align*}
 
 \end_inset
@@ -939,9 +960,18 @@ A value of type
 \begin_layout BeginFrame
 
 \family typewriter
-*Elm
+Elm
 \family default
- operational semantics
+ operational semantics.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Current value
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -957,7 +987,130 @@ eagerly
 \end_layout
 
 \begin_layout Itemize
-The runtime will cache all values to avoid recomputation 
+All temporal expressions are built from input signals and combinators
+\end_layout
+
+\begin_layout Itemize
+Every temporal expression has a 
+\series bold
+current value
+\series default
+ denoted by 
+\begin_inset Formula $e^{\left[c\right]}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Every predefined signal 
+\begin_inset Formula $i:\Sigma\alpha$
+\end_inset
+
+ has an initial value: 
+\begin_inset Formula $i^{[a]}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Current values for combinators are evaluated:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{\Gamma\vdash c:\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \,\textsc{ConstantInit}\\
+\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p^{\left[a\right]}:\Sigma\alpha\quad\Gamma\vdash q^{\left[b\right]}:\Sigma\beta}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \,\textsc{Map2Init}\\
+\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e^{\left[b\right]}:\beta\quad\Gamma\vdash s^{\left[a\right]}:\Sigma\alpha}{\Gamma\vdash(\mbox{foldp}\, u\, e\, s)^{\left[b\right]}:\Sigma\beta} & \,\textsc{FoldPInit}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+*Elm
+\family default
+ operational semantics.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Update step
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Update events 
+\begin_inset Formula $\mathbf{U}_{s\leftarrow a}\left\{ ...\right\} $
+\end_inset
+
+ are applied to the whole program at once:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash s:\Sigma\alpha\quad\Gamma\vdash a:\alpha\quad\Gamma\vdash e^{\left[c\right]}:\Sigma\beta\quad\Gamma\vdash e'^{\left[c'\right]}:\Sigma\beta}{\Gamma\vdash\mathbf{U}_{s\leftarrow a}\left\{ e^{\left[c\right]}\right\} \Rightarrow e'^{\left[c'\right]}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Update events happen only to 
+\series bold
+input signals
+\series default
+ and 
+\series bold
+one at a time
+\end_layout
+
+\begin_layout Itemize
+Update events leave all other signals unchanged:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathbf{U}_{i\leftarrow b}\left\{ i^{\left[a\right]}\right\} \Rightarrow i^{\left[b\right]}\quad\quad\mathbf{U}_{i'\leftarrow b}\left\{ i^{\left[a\right]}\right\} \Rightarrow i^{\left[a\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+By default, all computations during an update are 
+\series bold
+synchronous
 \end_layout
 
 \begin_layout EndFrame
@@ -983,7 +1136,7 @@ Example
 I work after the boss comes by and until the phone rings
 \emph default
 \color inherit
-: 
+
 \begin_inset Newline newline
 \end_inset
 
@@ -993,7 +1146,7 @@ I work after the boss comes by and until the phone rings
 
 
 \family typewriter
-let after_until w (b,r) = (w or b) and not r in 
+let after_until (b,r) w = (w or b) and not r in
 \family default
 
 \begin_inset Newline newline
@@ -1200,7 +1353,11 @@ Solutions: 1.
 \family typewriter
 async
 \family default
- 
+ : 
+\begin_inset Formula $\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+
 \end_layout
 
 \begin_layout EndFrame
@@ -1239,9 +1396,8 @@ The signal processing logic is fully specified statically
 No constructors for signals
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
-Impossible to implement the 
+No full concurrency (e.g., 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1249,7 +1405,42 @@ dining philosophers
 \begin_inset Quotes erd
 \end_inset
 
-!
+)
+\end_layout
+
+\begin_layout Itemize
+Incomplete semantics for 
+\family typewriter
+async
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ : 
+\begin_inset Formula $\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Need 
+\family typewriter
+async
+\family default
+ : 
+\begin_inset Formula $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+ 
 \end_layout
 
 \end_deeper
@@ -1262,7 +1453,7 @@ dining philosophers
 \family typewriter
 Elm
 \family default
- cannot do 
+ cannot simulate 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1274,17 +1465,10 @@ dining philosophers
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-Dining philosophers
-\begin_inset Quotes erd
-\end_inset
-
-: need to simulate a philosopher who thinks for a random time and then eats
- for a random time
+A philosopher thinks for a random time, then eats for a random time
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 Can a signal value 
 \family typewriter
@@ -1302,16 +1486,14 @@ Signal
 \family typewriter
 Unit
 \family default
- update at random times? 
+ update itself at random times? 
 \end_layout
 
-\begin_deeper
+\end_deeper
 \begin_layout Itemize
 No! There is no way to delay the update times of a signal 
 \series bold
 at runtime
-\series default
-.
 \end_layout
 
 \begin_layout Itemize
@@ -1374,7 +1556,6 @@ Int
  to achieve variable delay
 \end_layout
 
-\end_deeper
 \begin_layout EndFrame
 
 \end_layout
@@ -1394,11 +1575,11 @@ Good support for HTML/CSS, HTTP requests, JSON
 \end_layout
 
 \begin_layout Itemize
-Good performance of caching views
+Good performance of caching HTML views
 \end_layout
 
 \begin_layout Itemize
-Transparent, declarative modeling of data
+Support for Canvas and HTML-free UI building
 \end_layout
 
 \begin_layout Standard
@@ -1410,11 +1591,7 @@ No implementation for
 \family typewriter
 async
 \family default
- and no concurrency
-\end_layout
-
-\begin_layout Itemize
-Ordinary recursion may generate invalid JavaScript
+ (JavaScript lacks concurrency)
 \end_layout
 
 \begin_layout Itemize
@@ -1425,12 +1602,72 @@ ad hoc
  primitives
 \end_layout
 
+\begin_layout Itemize
+Ordinary recursion may generate invalid JavaScript
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+Elm
+\family default
+-style FRP: the good parts
+\end_layout
+
+\begin_layout Itemize
+Transparent, declarative modeling of data through ADTs
+\end_layout
+
+\begin_layout Itemize
+Immutable and safe data structures (
+\family typewriter
+Array
+\family default
+, 
+\family typewriter
+Dict
+\family default
+, ...) 
+\end_layout
+
+\begin_layout Itemize
+No runtime errors or exceptions!
+\end_layout
+
+\begin_layout Itemize
+Space/time leaks are impossible!
+\end_layout
+
+\begin_layout Itemize
+Language is Haskell-like but simpler for beginners
+\end_layout
+
+\begin_layout Itemize
+Full type inference
+\end_layout
+
+\begin_layout Itemize
+Easy deployment and interop in Web applications
+\end_layout
+
 \begin_layout EndFrame
 
 \end_layout
 
 \begin_layout BeginFrame
 *Possible extensions
+\end_layout
+
+\begin_layout Itemize
+Complete semantics for async : 
+\begin_inset Formula $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+ 
 \end_layout
 
 \begin_layout Itemize
@@ -2182,7 +2419,7 @@ incomplete
 \end_layout
 
 \begin_layout BeginFrame
-Conclusions and outlook
+Conclusions
 \end_layout
 
 \begin_layout Itemize
@@ -2197,16 +2434,12 @@ ad hoc
 The ideal is not (yet) reached
 \end_layout
 
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout BeginFrame
-*Conclusions and outlook
-\end_layout
-
 \begin_layout Itemize
-The ideal is not (yet) reached
+
+\family typewriter
+Elm
+\family default
+-style FRP is a promising step in the right direction
 \end_layout
 
 \begin_layout EndFrame
@@ -2218,7 +2451,7 @@ Abstract
 \end_layout
 
 \begin_layout Standard
-In my day job, most bugs come from imperatively implemented reactive programs.
+In my day job, most bugs come from implementing reactive programs imperatively.
  FRP is a declarative approach that promises to solve my problems.
  
 \begin_inset VSpace defskip
@@ -2232,21 +2465,29 @@ FRP can be defined as a
 \begin_inset Formula $\lambda$
 \end_inset
 
--calculus with types given by a propositional intuitionistic linear-time
- temporal logic (LTL).
+-calculus that admits temporal types, i.e.
+\begin_inset space \space{}
+\end_inset
+
+types given by a propositional intuitionistic linear-time temporal logic
+ (LTL).
  Although the 
 \family typewriter
 Elm
 \family default
  language uses only a subset of LTL, it achieves high expressivity for GUI
  programming.
+ I formally define the operational semantics of 
+\family typewriter
+Elm
+\family default
+.
  I discuss the current limitations of 
 \family typewriter
 Elm
 \family default
- and outline some possible extensions.
- I will also briefly review the motivations behind and the connections between
- temporal logic, FRP, and 
+ and outline possible extensions.
+ I also review the connections between temporal logic, FRP, and 
 \family typewriter
 Elm
 \family default
@@ -2261,7 +2502,13 @@ Elm
 \begin_layout Standard
 My talk will be understandable to anyone familiar with Curry-Howard and
  functional programming.
- (The first part of the talk does not rely on temporal logic or Curry-Howard.)
+ The first part of the talk is a self-contained presentation of 
+\family typewriter
+Elm
+\family default
+ that does not rely on temporal logic or Curry-Howard.
+ The second part of the talk will explain the basic intuitions behind temporal
+ logic and its connection with FRP.
 \end_layout
 
 \begin_layout EndFrame
