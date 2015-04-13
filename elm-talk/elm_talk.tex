@@ -71,7 +71,7 @@
 \frame{\titlepage}
 
 
-\lyxframeend{}\lyxframe{What is ``functional reactive programming''}
+\lyxframeend{}\lyxframe{Part 1. Functional reactive programming in \texttt{Elm}}
 
 FRP has little to do with...
 \begin{itemize}
@@ -81,15 +81,19 @@ FRP has little to do with...
 \end{itemize}
 FRP means...
 \begin{itemize}
-\item \textbf{pure functions using temporal types as primitives}
+\item \textbf{pure functions }using\textbf{ temporal types} as primitives
 
 \begin{itemize}
 \item (temporal type $\approx$ lazy stream of events)
 \end{itemize}
 \end{itemize}
-Most useful for:
+FRP is probably most useful for:
 \begin{itemize}
 \item GUI programming
+\end{itemize}
+\texttt{Elm} is...
+\begin{itemize}
+\item a viable implementation of FRP geared for Web apps
 \end{itemize}
 
 \lyxframeend{}
@@ -186,7 +190,7 @@ code is 100\% immutable
 \item concurrency / parallelism is \textbf{implicit}
 
 \begin{itemize}
-\item the runtime needs to provide the required scheduling of events
+\item the FRP runtime will provide the required scheduling of events
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -194,7 +198,7 @@ code is 100\% immutable
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{Czaplicki's original \texttt{Elm} 2013 in a nutshell}
+\lyxframeend{}\lyxframe{Czaplicki's original \texttt{Elm} 2012 in a nutshell}
 \begin{itemize}
 \item \texttt{Elm} is a pure polymorphic $\lambda$-calculus with products
 and sums
@@ -219,15 +223,15 @@ is ill-typed!
 \begin{itemize}
 \item ...and signals \texttt{Time.every}, \texttt{Mouse.position}, \texttt{Window.dimensions},
 ...
+\item ...and some utility functions: \texttt{map}, \texttt{merge}, \texttt{drop},
+...
 \end{itemize}
-\item Try \texttt{Elm} online at \href{http://elm-lang.org/try}{http://elm-lang.org/try}
 \end{itemize}
 
 \lyxframeend{}
 
 
-<<<<<<< HEAD
-\lyxframeend{}\lyxframe{Details: \texttt{Elm} type judgments}
+\lyxframeend{}\lyxframe{Details: \texttt{Elm} type judgments {[}Czaplicki 2012{]}}
 \begin{itemize}
 \item Polymorphically typed $\lambda$-calculus (also with temporal types)
 \end{itemize}
@@ -244,14 +248,11 @@ involve $\Sigma$:
 \end{itemize}
 \end{itemize}
 \begin{align*}
-\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash(\mbox{constant}\, e):\Sigma\alpha} & \,\textsc{Constant}\\
-\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash(\mbox{map2}\: m\: p\: q):\Sigma\gamma} & \,\textsc{Map2}\\
-\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash s:\Sigma\alpha}{\Gamma\vdash(\mbox{foldp}\, u\, e\, s):\Sigma\beta} & \,\textsc{FoldP}
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\left(\mbox{constant}\, e\right):\Sigma\alpha} & \:\textsc{Const}\\
+\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash\left(\mbox{map2}\: m\: p\: q\right):\Sigma\gamma} & \:\textsc{Map2}\\
+\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash q:\Sigma\alpha}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right):\Sigma\beta} & \:\textsc{FoldP}
 \end{align*}
 
-=======
-\lyxframeend{}\lyxframe{\texttt{{*}Elm} type judgments}
->>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \begin{itemize}
 \item A value of type $\Sigma\Sigma\alpha$ is impossible in a well-typed
 expression!
@@ -260,44 +261,25 @@ expression!
 \lyxframeend{}
 
 
-<<<<<<< HEAD
-\lyxframeend{}\lyxframe{\texttt{Elm} operational semantics. ``Current value''}
+\lyxframeend{}\lyxframe{\texttt{Elm} operational semantics 1: Current values}
 \begin{itemize}
 \item Non-temporal expressions are evaluated \textbf{eagerly} in pure $\lambda$-calculus
 \item All temporal expressions are built from input signals and combinators
 \item Every temporal expression has a \textbf{current value} denoted by
 $e^{\left[c\right]}$
-=======
-\lyxframeend{}\lyxframe{\texttt{{*}Elm} operational semantics}
-\begin{itemize}
-\item Non-temporal expressions are evaluated \textbf{eagerly} in pure $\lambda$-calculus
-\item The runtime will cache all values to avoid recomputation 
-\end{itemize}
-
-\lyxframeend{}
-
-
-\lyxframeend{}\lyxframe{\texttt{{*}Elm} operational semantics}
-\begin{itemize}
-\item Example
-\item \textcolor{blue}{\emph{I work after the boss comes by and until the
-phone rings}}: \\
-$\quad$\texttt{let after\_until w (b,r) = (w or b) and not r in }\\
-$\quad\quad$\texttt{foldp after\_until false (boss, phone)}
->>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \end{itemize}
 \[
-\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}
+\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}\:\textsc{CurrentEval}
 \]
 
 \begin{itemize}
 \item Every predefined signal $i:\Sigma\alpha$ has an initial value: $i^{[a]}$
-\item Current values for combinators are evaluated:
+\item \textbf{Initial} current values for combinators are evaluated:
 \end{itemize}
 \begin{align*}
-\frac{\Gamma\vdash c:\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \,\textsc{ConstantInit}\\
-\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p^{\left[a\right]}:\Sigma\alpha\quad\Gamma\vdash q^{\left[b\right]}:\Sigma\beta}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \,\textsc{Map2Init}\\
-\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e^{\left[b\right]}:\beta\quad\Gamma\vdash s^{\left[a\right]}:\Sigma\alpha}{\Gamma\vdash(\mbox{foldp}\, u\, e\, s)^{\left[b\right]}:\Sigma\beta} & \,\textsc{FoldPInit}
+\frac{\Gamma\vdash\mbox{constant}\ c:\Sigma\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{ConstInit}\\
+\frac{\Gamma\vdash\mbox{map2}\ m\ p^{\left[a\right]}\ q^{\left[b\right]}:\Sigma\gamma}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \:\textsc{Map2Init}\\
+\frac{\Gamma\vdash\mbox{foldp}\, u\, e\, q:\Sigma\beta}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right){}^{\left[e\right]}:\Sigma\beta} & \:\textsc{FoldPInit}
 \end{align*}
 
 
@@ -305,9 +287,11 @@ $\quad\quad$\texttt{foldp after\_until false (boss, phone)}
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{\texttt{{*}Elm} operational semantics. ``Update step''}
+\lyxframeend{}\lyxframe{\texttt{Elm} operational semantics 2: Update steps}
 \begin{itemize}
-\item Update events $\mathbf{U}_{s\leftarrow a}\left\{ ...\right\} $ are
+\item Update steps happen only to \textbf{input signals} $s$ and \textbf{one
+at a time}
+\item Update steps $\mathbf{U}_{s\leftarrow a}\left\{ ...\right\} $ are
 applied to the whole program at once:
 \end{itemize}
 \[
@@ -315,28 +299,67 @@ applied to the whole program at once:
 \]
 
 \begin{itemize}
-\item Update events happen only to \textbf{input signals} and \textbf{one
-at a time}
-\item Update events leave all other signals unchanged:
+\item An update step on $s$ will leave all other signals unchanged:
 \end{itemize}
 \[
-\mathbf{U}_{i\leftarrow b}\left\{ i^{\left[a\right]}\right\} \Rightarrow i^{\left[b\right]}\quad\quad\mathbf{U}_{i'\leftarrow b}\left\{ i^{\left[a\right]}\right\} \Rightarrow i^{\left[a\right]}
+\mathbf{U}_{s\leftarrow b}\left\{ s^{\left[a\right]}\right\} \Rightarrow s^{\left[b\right]}\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s'^{\left[c\right]}\right\} \Rightarrow s'^{\left[c\right]}
 \]
 
 \begin{itemize}
-\item By default, all computations during an update are \textbf{synchronous}
+\item All computations during an update step are \textbf{synchronous}
+\end{itemize}
+
+\lyxframeend{}\lyxframe{\texttt{Elm} operational semantics 3: Updating combinators}
+\begin{itemize}
+\item The whole program \textbf{remains} a static signal expression tree
+\item Only the current values are updated in all subexpressions
+\end{itemize}
+\begin{align*}
+ & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{constant}\ c\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
+ & \quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[b\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right)^{\left[m\ b\ c\right]} & \textsc{Map2Upd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\, u\, e\, q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\, u\, e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
+\end{align*}
+
+\begin{itemize}
+\item Efficient implementation:
+
+\begin{itemize}
+\item The instances of input signals within expressions are not duplicated
+\item Unchanged current values are cached and not recomputed
+\end{itemize}
 \end{itemize}
 
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{\texttt{{*}Elm} operational semantics}
+\lyxframeend{}\lyxframe{Example of using \texttt{foldp} }
 \begin{itemize}
-\item Example
-\item \textcolor{blue}{\emph{I work after the boss comes by and until the
-phone rings}}\\
-$\quad$\texttt{let after\_until (b,r) w = (w or b) and not r in}\\
-$\quad\quad$\texttt{foldp after\_until false (boss, phone)}
+\item Specification:
+
+\begin{itemize}
+\item \textcolor{blue}{\emph{I work only after the boss comes by and unless
+the phone rings}} 
+\end{itemize}
+\item Implementation:\end{itemize}
+\begin{lyxcode}
+after\_unless~:~(Bool,~Bool)~-\textgreater{}~Bool~-\textgreater{}~Bool
+
+after\_unless~(b,r)~w~=~(w~or~b)~and~not~r
+
+~$\quad\quad$
+
+boss~:~Signal~Bool
+
+phone:~Signal~Bool
+
+~$\quad\quad$
+
+i\_work~:~Signal~Bool
+
+i\_work~=~foldp~after\_unless~false~(boss,~phone)\end{lyxcode}
+\begin{itemize}
+\item Demo
 \end{itemize}
 
 \lyxframeend{}
@@ -363,8 +386,10 @@ text~=~plainText~\char`\"{}Hello,~World!\char`\"{}
 
 main~:~Signal~Element~
 
-main~=~constant~text
-\end{lyxcode}
+main~=~constant~text\end{lyxcode}
+\begin{itemize}
+\item Try \texttt{Elm} online at \href{http://elm-lang.org/try}{http://elm-lang.org/try}
+\end{itemize}
 
 \lyxframeend{}
 
@@ -401,14 +426,37 @@ main~=~map~draw~\$~foldp~update~init\_state~merge\_inputs~
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{{*}Asynchrony and concurrency in \texttt{Elm}}
+\lyxframeend{}\lyxframe{Asynchrony and concurrency in \texttt{Elm}}
 \begin{itemize}
-\item Long-running computations will delay signal updates
-<<<<<<< HEAD
-\item Solutions: 1. Caching of all results. 2. Using \texttt{async} : $\Sigma\alpha\rightarrow\Sigma\alpha$
-=======
-\item Solutions: 1. Caching of all results. 2. Using \texttt{async} 
->>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
+\item Long-running computations will delay signal updates!
+\item Example: \texttt{map f s} where \texttt{f:$\alpha\rightarrow\alpha$}
+takes a long time to compute
+\item Use \texttt{async} : $\Sigma\alpha\rightarrow\Sigma\alpha$
+\item Operational semantics: ($i$ is a \textbf{new} input signal)
+\begin{align*}
+\frac{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}{\Gamma,\left(i:\Sigma\alpha\right)\vdash\left(\mbox{async}_{i}\ e\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{AsyncInit}\\
+\mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{async}_{i}\ e\right)^{\left[c\right]}\right\} \Rightarrow\mathbf{U}_{i\leftarrow c'}^{\dagger}\left(\mbox{async}_{i}\ \mathbf{U}_{s\leftarrow a}^{\dagger}\left\{ e\right\} ^{\left[c'\right]}\right)^{\left[c\right]} & \:\textsc{AsyncSched}\\
+\mathbf{U}_{i\leftarrow c'}\left\{ \left(\mbox{async}_{i}\ e\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{async}_{i}\ e\right)^{\left[c'\right]} & \:\textsc{AsyncUpd}
+\end{align*}
+
+\item The update computation $\mathbf{U}_{s\leftarrow a}^{\dagger}\left\{ e\right\} $
+runs on another thread...
+
+\begin{itemize}
+\item ...while the current value $c$ remains unchanged...
+\item ...and another update $\mathbf{U}_{i\leftarrow c'}^{\dagger}$ is
+\textbf{scheduled} but not yet triggered.
+\item When $c'$ is ready, $\mathbf{U}_{i\leftarrow c'}\left\{ ...\right\} $
+runs and sets the current value
+\end{itemize}
+\end{itemize}
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Example of using \texttt{async}}
+\begin{itemize}
+\item UI shows results of long computations
 \end{itemize}
 
 \lyxframeend{}
@@ -416,24 +464,22 @@ main~=~map~draw~\$~foldp~update~init\_state~merge\_inputs~
 
 \lyxframeend{}\lyxframe{Some limitations of \texttt{Elm}-style FRP}
 \begin{itemize}
-\item No recursion of any kind
 \item No higher-order signals: $\Sigma(\Sigma\alpha)$ is disallowed by
 the type system
 \item No distinction between continuous time and discrete time
 \item The signal processing logic is fully specified statically
-\item No constructors for signals
-<<<<<<< HEAD
+\item No constructors for user-defined signals
+\item No recursion possible in signal definition!
 \item No full concurrency (e.g., ``dining philosophers'')
 \item Incomplete semantics for \texttt{async}\textrm{ : $\Sigma\alpha\rightarrow\Sigma\alpha$}
 
 \begin{itemize}
-\item Need \texttt{async} : $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$ 
-\end{itemize}
-=======
-
-\begin{itemize}
-\item Impossible to implement the ``dining philosophers''!
->>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
+\item Example: \texttt{async} \texttt{(map} \texttt{f} \texttt{s)} where
+\texttt{f} takes a long time
+\item The initial value of this signal will not be available at initial
+time!
+\item Need \texttt{async'} : $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
+to specify initial value?
 \end{itemize}
 \end{itemize}
 
@@ -442,14 +488,7 @@ the type system
 
 \lyxframeend{}\lyxframe{\texttt{Elm} cannot simulate ``dining philosophers''}
 \begin{itemize}
-<<<<<<< HEAD
 \item A philosopher thinks for a random time, then eats for a random time
-=======
-\item ``Dining philosophers'': need to simulate a philosopher who thinks
-for a random time and then eats for a random time
-\item Can a signal value \texttt{p} \texttt{:} \texttt{Signal} \texttt{Unit}
-update at random times? 
->>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 
 \begin{itemize}
 \item Can a signal value \texttt{p} \texttt{:} \texttt{Signal} \texttt{Unit}
@@ -468,9 +507,8 @@ to achieve variable delay
 \lyxframeend{}
 
 
-\lyxframeend{}\lyxframe{The JavaScript backend for \texttt{Elm}}
+\lyxframeend{}\lyxframe{The JavaScript backend for \texttt{Elm} (2015)}
 
-<<<<<<< HEAD
 Features:
 \begin{itemize}
 \item Good support for HTML/CSS, HTTP requests, JSON
@@ -481,26 +519,12 @@ Limitations:
 \begin{itemize}
 \item No implementation for \texttt{async} (JavaScript lacks concurrency)
 \item The lack of recursive signals is compensated by \emph{ad hoc} primitives
-\item Ordinary recursion may generate invalid JavaScript
-=======
-Features
-\begin{itemize}
-\item Good support for HTML/CSS, HTTP requests, JSON
-\item Good performance of caching views
-\item Transparent, declarative modeling of data
-\end{itemize}
-Limitations
-\begin{itemize}
-\item No implementation for \texttt{async} and no concurrency
-\item Ordinary recursion may generate invalid JavaScript
-\item The lack of recursive signals is compensated by \emph{ad hoc} primitives
->>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
+\item Ordinary recursion may generate invalid JavaScript!
 \end{itemize}
 
 \lyxframeend{}
 
 
-<<<<<<< HEAD
 \lyxframeend{}\lyxframe{\texttt{Elm}-style FRP: the good parts}
 \begin{itemize}
 \item Transparent, declarative modeling of data through ADTs
@@ -516,8 +540,6 @@ Limitations
 \lyxframeend{}
 
 
-=======
->>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \lyxframeend{}\lyxframe{{*}Possible extensions}
 \begin{itemize}
 \item Complete semantics for async : $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$ 
@@ -708,18 +730,7 @@ $\mathbf{N}$ or $\mathbf{F}$
 \item There are some languages that implement FRP in various \emph{ad hoc}
 ways
 \item The ideal is not (yet) reached
-<<<<<<< HEAD
 \item \texttt{Elm}-style FRP is a promising step in the right direction
-=======
-\end{itemize}
-
-\lyxframeend{}
-
-
-\lyxframeend{}\lyxframe{{*}Conclusions and outlook}
-\begin{itemize}
-\item The ideal is not (yet) reached
->>>>>>> ae324c00192fd4dd93af0819ab8aea19075d7ec6
 \end{itemize}
 
 \lyxframeend{}
@@ -729,16 +740,16 @@ ways
 
 In my day job, most bugs come from implementing reactive programs
 imperatively. FRP is a declarative approach that promises to solve
-my problems. \medskip{}
+these problems. \medskip{}
 
 
 FRP can be defined as a $\lambda$-calculus that admits temporal types,
 i.e.\ types given by a propositional intuitionistic linear-time temporal
 logic (LTL). Although the \texttt{Elm} language uses only a subset
-of LTL, it achieves high expressivity for GUI programming. I formally
-define the operational semantics of \texttt{Elm}. I discuss the current
-limitations of \texttt{Elm} and outline possible extensions. I also
-review the connections between temporal logic, FRP, and \texttt{Elm}.
+of LTL, it achieves high expressivity for GUI programming. I will
+formally define the operational semantics of \texttt{Elm}. I discuss
+the current limitations of \texttt{Elm} and outline possible extensions.
+I also review the connections between temporal logic, FRP, and \texttt{Elm}.
 \medskip{}
 
 

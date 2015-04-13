@@ -99,15 +99,7 @@ titlepage}
 
 \begin_layout BeginFrame
 Part 1.
- 
-\begin_inset Quotes eld
-\end_inset
-
-Functional reactive programming
-\begin_inset Quotes erd
-\end_inset
-
- in 
+ Functional reactive programming in 
 \family typewriter
 Elm
 \end_layout
@@ -179,7 +171,11 @@ GUI programming
 \end_layout
 
 \begin_layout Standard
-Elm is...
+
+\family typewriter
+Elm
+\family default
+ is...
 \end_layout
 
 \begin_layout Itemize
@@ -702,7 +698,7 @@ implicit
 
 \begin_deeper
 \begin_layout Itemize
-the runtime needs to provide the required scheduling of events
+the FRP runtime will provide the required scheduling of events
 \end_layout
 
 \end_deeper
@@ -716,7 +712,7 @@ Czaplicki's original
 \family typewriter
 Elm
 \family default
- 2013 in a nutshell
+ 2012 in a nutshell
 \end_layout
 
 \begin_layout Itemize
@@ -874,23 +870,23 @@ Window.dimensions
 , ...
 \end_layout
 
-\end_deeper
 \begin_layout Itemize
-Try 
+...and some utility functions: 
 \family typewriter
-Elm
+map
 \family default
- online at 
-\begin_inset CommandInset href
-LatexCommand href
-name "http://elm-lang.org/try"
-target "http://elm-lang.org/try"
-
-\end_inset
-
-
+, 
+\family typewriter
+merge
+\family default
+, 
+\family typewriter
+drop
+\family default
+, ...
 \end_layout
 
+\end_deeper
 \begin_layout EndFrame
 
 \end_layout
@@ -900,7 +896,7 @@ Details:
 \family typewriter
 Elm
 \family default
- type judgments
+ type judgments [Czaplicki 2012]
 \end_layout
 
 \begin_layout Itemize
@@ -952,9 +948,9 @@ cannot
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash(\mbox{constant}\, e):\Sigma\alpha} & \,\textsc{Constant}\\
-\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash(\mbox{map2}\: m\: p\: q):\Sigma\gamma} & \,\textsc{Map2}\\
-\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash s:\Sigma\alpha}{\Gamma\vdash(\mbox{foldp}\, u\, e\, s):\Sigma\beta} & \,\textsc{FoldP}
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\left(\mbox{constant}\, e\right):\Sigma\alpha} & \:\textsc{Const}\\
+\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash\left(\mbox{map2}\: m\: p\: q\right):\Sigma\gamma} & \:\textsc{Map2}\\
+\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash q:\Sigma\alpha}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right):\Sigma\beta} & \:\textsc{FoldP}
 \end{align*}
 
 \end_inset
@@ -979,16 +975,7 @@ A value of type
 \family typewriter
 Elm
 \family default
- operational semantics.
- 
-\begin_inset Quotes eld
-\end_inset
-
-Current value
-\begin_inset Quotes erd
-\end_inset
-
-
+ operational semantics 1: Current values
 \end_layout
 
 \begin_layout Itemize
@@ -1022,7 +1009,7 @@ current value
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}
+\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}\:\textsc{CurrentEval}
 \]
 
 \end_inset
@@ -1043,15 +1030,19 @@ Every predefined signal
 \end_layout
 
 \begin_layout Itemize
-Current values for combinators are evaluated:
+
+\series bold
+Initial
+\series default
+ current values for combinators are evaluated:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\frac{\Gamma\vdash c:\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \,\textsc{ConstantInit}\\
-\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p^{\left[a\right]}:\Sigma\alpha\quad\Gamma\vdash q^{\left[b\right]}:\Sigma\beta}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \,\textsc{Map2Init}\\
-\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e^{\left[b\right]}:\beta\quad\Gamma\vdash s^{\left[a\right]}:\Sigma\alpha}{\Gamma\vdash(\mbox{foldp}\, u\, e\, s)^{\left[b\right]}:\Sigma\beta} & \,\textsc{FoldPInit}
+\frac{\Gamma\vdash\mbox{constant}\ c:\Sigma\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{ConstInit}\\
+\frac{\Gamma\vdash\mbox{map2}\ m\ p^{\left[a\right]}\ q^{\left[b\right]}:\Sigma\gamma}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \:\textsc{Map2Init}\\
+\frac{\Gamma\vdash\mbox{foldp}\, u\, e\, q:\Sigma\beta}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right){}^{\left[e\right]}:\Sigma\beta} & \:\textsc{FoldPInit}
 \end{align*}
 
 \end_inset
@@ -1066,22 +1057,27 @@ Current values for combinators are evaluated:
 \begin_layout BeginFrame
 
 \family typewriter
-*Elm
+Elm
 \family default
- operational semantics.
- 
-\begin_inset Quotes eld
-\end_inset
-
-Update step
-\begin_inset Quotes erd
-\end_inset
-
-
+ operational semantics 2: Update steps
 \end_layout
 
 \begin_layout Itemize
-Update events 
+Update steps happen only to 
+\series bold
+input signals
+\series default
+ 
+\begin_inset Formula $s$
+\end_inset
+
+ and 
+\series bold
+one at a time
+\end_layout
+
+\begin_layout Itemize
+Update steps 
 \begin_inset Formula $\mathbf{U}_{s\leftarrow a}\left\{ ...\right\} $
 \end_inset
 
@@ -1100,23 +1096,17 @@ Update events
 \end_layout
 
 \begin_layout Itemize
-Update events happen only to 
-\series bold
-input signals
-\series default
- and 
-\series bold
-one at a time
-\end_layout
+An update step on 
+\begin_inset Formula $s$
+\end_inset
 
-\begin_layout Itemize
-Update events leave all other signals unchanged:
+ will leave all other signals unchanged:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\mathbf{U}_{i\leftarrow b}\left\{ i^{\left[a\right]}\right\} \Rightarrow i^{\left[b\right]}\quad\quad\mathbf{U}_{i'\leftarrow b}\left\{ i^{\left[a\right]}\right\} \Rightarrow i^{\left[a\right]}
+\mathbf{U}_{s\leftarrow b}\left\{ s^{\left[a\right]}\right\} \Rightarrow s^{\left[b\right]}\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s'^{\left[c\right]}\right\} \Rightarrow s'^{\left[c\right]}
 \]
 
 \end_inset
@@ -1125,57 +1115,137 @@ Update events leave all other signals unchanged:
 \end_layout
 
 \begin_layout Itemize
-By default, all computations during an update are 
+All computations during an update step are 
 \series bold
 synchronous
-\end_layout
-
-\begin_layout EndFrame
-
 \end_layout
 
 \begin_layout BeginFrame
 
 \family typewriter
-*Elm
+Elm
 \family default
- operational semantics
+ operational semantics 3: Updating combinators
 \end_layout
 
 \begin_layout Itemize
-Example
+The whole program 
+\series bold
+remains
+\series default
+ a static signal expression tree
 \end_layout
 
+\begin_layout Itemize
+Only the current values are updated in all subexpressions
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+ & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{constant}\ c\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
+ & \quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[b\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right)^{\left[m\ b\ c\right]} & \textsc{Map2Upd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\, u\, e\, q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\, u\, e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Efficient implementation:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The instances of input signals within expressions are not duplicated
+\end_layout
+
+\begin_layout Itemize
+Unchanged current values are cached and not recomputed
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Example of using 
+\family typewriter
+foldp
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+Specification:
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 
 \emph on
 \color blue
-I work after the boss comes by and until the phone rings
+I work only after the boss comes by and unless the phone rings
 \emph default
 \color inherit
+ 
+\end_layout
 
-\begin_inset Newline newline
-\end_inset
+\end_deeper
+\begin_layout Itemize
+Implementation:
+\end_layout
 
+\begin_layout LyX-Code
+after_unless : (Bool, Bool) -> Bool -> Bool
+\end_layout
 
-\begin_inset Formula $\quad$
-\end_inset
-
+\begin_layout LyX-Code
 
 \family typewriter
-let after_until (b,r) w = (w or b) and not r in
-\family default
+after_unless (b,r) w = (w or b) and not r
+\end_layout
 
-\begin_inset Newline newline
-\end_inset
-
-
+\begin_layout LyX-Code
+ 
 \begin_inset Formula $\quad\quad$
 \end_inset
 
 
+\end_layout
+
+\begin_layout LyX-Code
+boss : Signal Bool
+\end_layout
+
+\begin_layout LyX-Code
+phone: Signal Bool
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\begin_inset Formula $\quad\quad$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+i_work : Signal Bool
+\end_layout
+
+\begin_layout LyX-Code
+i_work = 
 \family typewriter
-foldp after_until false (boss, phone)
+foldp after_unless false (boss, phone)
+\end_layout
+
+\begin_layout Itemize
+Demo
 \end_layout
 
 \begin_layout EndFrame
@@ -1242,6 +1312,22 @@ main : Signal Element
 
 \begin_layout LyX-Code
 main = constant text
+\end_layout
+
+\begin_layout Itemize
+Try 
+\family typewriter
+Elm
+\family default
+ online at 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://elm-lang.org/try"
+target "http://elm-lang.org/try"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout EndFrame
@@ -1353,20 +1439,33 @@ main = map draw $ foldp update init_state merge_inputs
 \end_layout
 
 \begin_layout BeginFrame
-*Asynchrony and concurrency in 
+Asynchrony and concurrency in 
 \family typewriter
 Elm
 \end_layout
 
 \begin_layout Itemize
-Long-running computations will delay signal updates
+Long-running computations will delay signal updates!
 \end_layout
 
 \begin_layout Itemize
-Solutions: 1.
- Caching of all results.
- 2.
- Using 
+Example: 
+\family typewriter
+map f s
+\family default
+ where 
+\family typewriter
+f:
+\begin_inset Formula $\alpha\rightarrow\alpha$
+\end_inset
+
+
+\family default
+ takes a long time to compute
+\end_layout
+
+\begin_layout Itemize
+Use 
 \family typewriter
 async
 \family default
@@ -1375,6 +1474,84 @@ async
 \end_inset
 
 
+\end_layout
+
+\begin_layout Itemize
+Operational semantics: (
+\begin_inset Formula $i$
+\end_inset
+
+ is a 
+\series bold
+new
+\series default
+ input signal)
+\begin_inset Formula 
+\begin{align*}
+\frac{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}{\Gamma,\left(i:\Sigma\alpha\right)\vdash\left(\mbox{async}_{i}\ e\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{AsyncInit}\\
+\mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{async}_{i}\ e\right)^{\left[c\right]}\right\} \Rightarrow\mathbf{U}_{i\leftarrow c'}^{\dagger}\left(\mbox{async}_{i}\ \mathbf{U}_{s\leftarrow a}^{\dagger}\left\{ e\right\} ^{\left[c'\right]}\right)^{\left[c\right]} & \:\textsc{AsyncSched}\\
+\mathbf{U}_{i\leftarrow c'}\left\{ \left(\mbox{async}_{i}\ e\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{async}_{i}\ e\right)^{\left[c'\right]} & \:\textsc{AsyncUpd}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The update computation 
+\begin_inset Formula $\mathbf{U}_{s\leftarrow a}^{\dagger}\left\{ e\right\} $
+\end_inset
+
+ runs on another thread...
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+...while the current value 
+\begin_inset Formula $c$
+\end_inset
+
+ remains unchanged...
+\end_layout
+
+\begin_layout Itemize
+...and another update 
+\begin_inset Formula $\mathbf{U}_{i\leftarrow c'}^{\dagger}$
+\end_inset
+
+ is 
+\series bold
+scheduled
+\series default
+ but not yet triggered.
+\end_layout
+
+\begin_layout Itemize
+When 
+\begin_inset Formula $c'$
+\end_inset
+
+ is ready, 
+\begin_inset Formula $\mathbf{U}_{i\leftarrow c'}\left\{ ...\right\} $
+\end_inset
+
+ runs and sets the current value
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Example of using 
+\family typewriter
+async
+\end_layout
+
+\begin_layout Itemize
+UI shows results of long computations
 \end_layout
 
 \begin_layout EndFrame
@@ -1387,10 +1564,6 @@ Some limitations of
 Elm
 \family default
 -style FRP
-\end_layout
-
-\begin_layout Itemize
-No recursion of any kind
 \end_layout
 
 \begin_layout Itemize
@@ -1410,19 +1583,11 @@ The signal processing logic is fully specified statically
 \end_layout
 
 \begin_layout Itemize
-No constructors for signals
+No constructors for user-defined signals
 \end_layout
 
 \begin_layout Itemize
-No full concurrency (e.g., 
-\begin_inset Quotes eld
-\end_inset
-
-dining philosophers
-\begin_inset Quotes erd
-\end_inset
-
-)
+No recursion possible in signal definition!
 \end_layout
 
 \begin_layout Itemize
@@ -1449,18 +1614,58 @@ async
 
 \begin_deeper
 \begin_layout Itemize
-Need 
+Example: 
 \family typewriter
 async
+\family default
+ 
+\family typewriter
+(map
+\family default
+ 
+\family typewriter
+f
+\family default
+ 
+\family typewriter
+s)
+\family default
+ where 
+\family typewriter
+f
+\family default
+ takes a long time
+\end_layout
+
+\begin_layout Itemize
+The initial value of this signal will not be available at initial time!
+\end_layout
+
+\begin_layout Itemize
+Need 
+\family typewriter
+async'
 \family default
  : 
 \begin_inset Formula $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
 \end_inset
 
- 
+ to specify initial value?
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+No full concurrency (e.g., 
+\begin_inset Quotes eld
+\end_inset
+
+dining philosophers
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
 \begin_layout EndFrame
 
 \end_layout
@@ -1581,6 +1786,8 @@ Int
 The JavaScript backend for 
 \family typewriter
 Elm
+\family default
+ (2015)
 \end_layout
 
 \begin_layout Standard
@@ -1620,7 +1827,7 @@ ad hoc
 \end_layout
 
 \begin_layout Itemize
-Ordinary recursion may generate invalid JavaScript
+Ordinary recursion may generate invalid JavaScript!
 \end_layout
 
 \begin_layout EndFrame
