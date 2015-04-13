@@ -978,18 +978,6 @@ Elm
 \end_layout
 
 \begin_layout Itemize
-Non-temporal expressions are evaluated 
-\series bold
-eagerly
-\series default
- in pure 
-\begin_inset Formula $\lambda$
-\end_inset
-
--calculus
-\end_layout
-
-\begin_layout Itemize
 Temporal expressions are built from 
 \series bold
 input
@@ -1170,7 +1158,7 @@ Elm
 \end_layout
 
 \begin_layout Itemize
-Operational semantics does not reduce temporal expressions
+Operational semantics does not reduce temporal expressions:
 \end_layout
 
 \begin_deeper
@@ -1213,11 +1201,23 @@ The expression
 \begin_inset Formula $\mathbf{U}_{s\leftarrow b}\left\{ e^{\left[c\right]}\right\} $
 \end_inset
 
- is reduced only after all subexpressions of 
+ is reduced 
+\series bold
+after
+\series default
+ all subexpressions of 
 \begin_inset Formula $e$
 \end_inset
 
 
+\end_layout
+
+\begin_layout Itemize
+Current values are non-temporal and are evaluated 
+\series bold
+eagerly
+\series default
+ 
 \end_layout
 
 \end_deeper

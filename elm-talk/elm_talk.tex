@@ -263,7 +263,6 @@ expression!
 
 \lyxframeend{}\lyxframe{\texttt{Elm} operational semantics 1: Current values}
 \begin{itemize}
-\item Non-temporal expressions are evaluated \textbf{eagerly} in pure $\lambda$-calculus
 \item Temporal expressions are built from \textbf{input} signals and combinators
 
 \begin{itemize}
@@ -322,7 +321,7 @@ unchanged:
 
 \lyxframeend{}\lyxframe{\texttt{Elm} operational semantics 3: Updating combinators}
 \begin{itemize}
-\item Operational semantics does not reduce temporal expressions
+\item Operational semantics does not reduce temporal expressions:
 
 \begin{itemize}
 \item The whole program \textbf{remains} a static temporal expression tree
@@ -341,7 +340,8 @@ unchanged:
 
 \begin{itemize}
 \item The expression $\mathbf{U}_{s\leftarrow b}\left\{ e^{\left[c\right]}\right\} $
-is reduced only after all subexpressions of $e$
+is reduced \textbf{after} all subexpressions of $e$
+\item Current values are non-temporal and are evaluated \textbf{eagerly} 
 \end{itemize}
 \end{itemize}
 
