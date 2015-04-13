@@ -1129,22 +1129,16 @@ An update step on
 \end_layout
 
 \begin_layout Itemize
-All computations during an update step are 
-\series bold
-synchronous
+Efficient implementation:
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-The expression 
-\begin_inset Formula $\mathbf{U}_{s\leftarrow b}\left\{ e\right\} $
-\end_inset
+The instances of input signals within expressions are not duplicated
+\end_layout
 
- is reduced only after all subexpressions of 
-\begin_inset Formula $e$
-\end_inset
-
-
+\begin_layout Itemize
+Unchanged current values are cached and not recomputed
 \end_layout
 
 \end_deeper
@@ -1183,16 +1177,22 @@ Only the current values are updated in all subexpressions
 \end_layout
 
 \begin_layout Itemize
-Efficient implementation:
+All computations during an update step are 
+\series bold
+synchronous
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-The instances of input signals within expressions are not duplicated
-\end_layout
+The expression 
+\begin_inset Formula $\mathbf{U}_{s\leftarrow b}\left\{ e\right\} $
+\end_inset
 
-\begin_layout Itemize
-Unchanged current values are cached and not recomputed
+ is reduced only after all subexpressions of 
+\begin_inset Formula $e$
+\end_inset
+
+
 \end_layout
 
 \end_deeper
