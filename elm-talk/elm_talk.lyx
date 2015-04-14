@@ -571,7 +571,11 @@ Signal
 \begin_inset Formula $\alpha$
 \end_inset
 
- --- an infinite sequence of values of type 
+ (
+\begin_inset Formula $\Sigma\alpha$
+\end_inset
+
+) --- an infinite sequence of values of type 
 \begin_inset Formula $\alpha$
 \end_inset
 
@@ -579,7 +583,11 @@ Signal
 \end_layout
 
 \begin_layout Itemize
-alternatively, a value of type 
+alternatively, 
+\begin_inset Formula $\Sigma\alpha$
+\end_inset
+
+ is a value of type 
 \begin_inset Formula $\alpha$
 \end_inset
 
@@ -2124,10 +2132,6 @@ status open
 \begin_layout Plain Layout
 Add a slide explaining applicative/monadic problems and how we solve them
  with these extension
-\end_layout
-
-\begin_layout Plain Layout
-Implement Demo for two checkboxes and boss / telephone / work
 \end_layout
 
 \end_inset

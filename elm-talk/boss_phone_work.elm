@@ -14,8 +14,8 @@ init_state = { boss = False, phone = False, work = False }
 main : Signal Element
 main = map draw merge_state
 
-merge_state = map3 (\x y z->{boss=x,phone=y,work=z}) bossS phoneS (i_work bossS phoneS)
-
+merge_state = map3 (\x y z->{boss=x,phone=y,work=z})
+  bossS phoneS (i_work bossS phoneS)
 
 bossC = channel False
 phoneC = channel False
@@ -34,5 +34,5 @@ draw { boss, phone, work } =
  flow down [
     make_checkbox bossC boss "Boss is nearby",
     make_checkbox phoneC phone "Phone is ringing",
-    container 150 30 midLeft (plainText work_text)
+    container 150 30 middle (plainText work_text)
  ]
