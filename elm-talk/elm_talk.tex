@@ -390,21 +390,19 @@ the phone rings}}
 \begin{lyxcode}
 after\_unless~:~(Bool,~Bool)~-\textgreater{}~Bool~-\textgreater{}~Bool
 
-after\_unless~(b,r)~w~=~(w~\textbar{}\textbar{}~b)~\&\&~not~r
+after\_unless~(b,p)~w~=~(w~\textbar{}\textbar{}~b)~\&\&~not~p
 
 ~$\quad\quad$
 
-boss~:~Signal~Bool
-
-phone:~Signal~Bool
+boss\_and\_phone~:~Signal~(Bool,Bool)
 
 ~$\quad\quad$
 
 i\_work~:~Signal~Bool
 
-i\_work~=~foldp~after\_unless~False~(boss,~phone)\end{lyxcode}
+i\_work~=~foldp~after\_unless~False~(boss\_and\_phone)\end{lyxcode}
 \begin{itemize}
-\item Demo (\texttt{boss\_phone\_work.elm})
+\item Demo (\href{https://github.com/winitzki/talks/blob/master/elm-talk/boss_phone_work.elm}{boss\_{}phone\_{}work.elm})
 \end{itemize}
 
 \lyxframeend{}
