@@ -3023,6 +3023,7 @@ Elm
 \end_layout
 
 \begin_layout EndFrame
+\start_of_appendix
 
 \end_layout
 
@@ -3160,6 +3161,201 @@ target "http://phd.di.unipi.it/Theses/PhDthesis_Marchignoli.pdf"
 
 \begin_layout EndFrame
 
+\end_layout
+
+\begin_layout Section
+Notes added after presenting the talk
+\end_layout
+
+\begin_layout Itemize
+What Evan calls 
+\begin_inset Quotes eld
+\end_inset
+
+syntax-directed initialization semantics
+\begin_inset Quotes erd
+\end_inset
+
+ is perhaps an important optimization, making sure that no signal values
+ are copied.
+\end_layout
+
+\begin_layout Itemize
+Either we update the signal tree bottom-up (as suggested in Evan's paper,
+ even concurrently, with message passing), or we evaluate it top-down (as
+ I presented).
+ Synchronization does not pose problems, except for the async primitive.
+ It remains to be seen which semantics is easier to formulate.
+ The bottom-up semantics might be easier if we figure out how to denote
+ the cascading update of expressions that depend on lower-level subexpressions.
+ (The cascading update is easy to present in the top-down formulation of
+ updates.)
+\end_layout
+
+\begin_layout Itemize
+The semantics of 
+\family typewriter
+async
+\family default
+ still requires refinement.
+ First, we need an initial value explicitly assigned to async expressions.
+ (What are the typical ways these initial values can be determined?) Second,
+ we need to denote the facts that the first update is scheduled on a background
+ thread, the second update is scheduled but not run, and - more importantly
+ - that the second update is scheduled to run on the entire Elm program
+ being evaluated, not only on the local 
+\family typewriter
+async
+\family default
+ expression being evaluated.
+ This is perhaps easier to express with bottom-up evaluation?
+\end_layout
+
+\begin_layout Itemize
+The semantics of updates needs refinement to specify when current values
+ remain unchanged but an update is scheduled, and when current values remain
+ unchanged while no update is performed on that subexpression.
+ This has implications only for 
+\family typewriter
+foldp
+\family default
+, which depends on the absence of 
+\begin_inset Quotes eld
+\end_inset
+
+stuttering
+\begin_inset Quotes erd
+\end_inset
+
+ updates.
+\end_layout
+
+\begin_layout Itemize
+Need to present typical FRP primitives, such as those used in 
+\family typewriter
+Rx
+\family default
+; promises; futures; 
+\family typewriter
+async.js
+\family default
+ library primitives; 
+\family typewriter
+bacon.js
+\family default
+ library primitives, etc., through Elm primitives
+\end_layout
+
+\begin_layout Itemize
+It is necessary to make 
+\family typewriter
+chain
+\family default
+ implicitly asynchronous, just like 
+\family typewriter
+bind
+\family default
+ and recursion.
+ But the 
+\family typewriter
+drop
+\family default
+ primitive still cannot be expressed through 
+\family typewriter
+chain
+\family default
+ - by omitting the callback invocation when the predicate returns 
+\family typewriter
+false
+\family default
+ we will approximate 
+\family typewriter
+drop
+\family default
+ but, when the predicate returns true, we will generate an asynchronous
+ update of the second signal, while what we presumably wanted is a synchronous
+ update.
+\end_layout
+
+\begin_layout Itemize
+However, 
+\family typewriter
+async
+\family default
+ itself can be expressed through 
+\family typewriter
+chain
+\family default
+.
+ Can 
+\family typewriter
+bind
+\family default
+ be expressed through 
+\family typewriter
+chain
+\family default
+? I think it can't because we can't convert 
+\begin_inset Formula $\alpha\rightarrow\Sigma\beta$
+\end_inset
+
+ into 
+\begin_inset Formula $\mathbf{C}\alpha\beta$
+\end_inset
+
+.
+ And what if we could? Consider 
+\family typewriter
+react
+\family default
+ 
+\family typewriter
+:
+\family default
+ 
+\begin_inset Formula $\Sigma\alpha\rightarrow(\alpha\rightarrow\bot)\rightarrow\bot$
+\end_inset
+
+ and 
+\family typewriter
+signal
+\family default
+ 
+\family typewriter
+:
+\family default
+ 
+\begin_inset Formula $(\left(\alpha\rightarrow\bot\right)\rightarrow\bot)\rightarrow\Sigma\alpha$
+\end_inset
+
+.
+ These two terms can build operational equivalence of 
+\begin_inset Formula $\Sigma\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $\left(\alpha\rightarrow\bot\right)\rightarrow\bot$
+\end_inset
+
+, since a callback can be called zero times or multiple times (simulating
+ a signal update) - and then we would reimplement Elm's runtime by hand.
+ It is not clear that this is desirable.
+ The implementation in terms of 
+\begin_inset Formula $\mathbf{C}\alpha\beta$
+\end_inset
+
+ definitely seems to be too low-level, and there is some advantage in restrictin
+g the signal primitives so that safety and clarity are maintained.
+\end_layout
+
+\begin_layout Itemize
+Perhaps the easiest and clearest way of presenting the semantics of Elm
+ is to translate Elm into callback types?
+\end_layout
+
+\begin_layout Itemize
+What are the axioms of temporal logic in Ewald's old paper, and how do they
+ translate to Elm primitives? What are the missing primitives?
 \end_layout
 
 \end_body
