@@ -1,0 +1,3166 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass beamer
+\begin_preamble
+\usetheme[secheader]{Boadilla}
+\usecolortheme{seahorse}
+\title[Elm-style FRP]{Elm-style Functional Reactive Programming demystified}
+\author{Sergei Winitzki}
+\date{April 13, 2015}
+\institute[Versal Group Inc.]{SF Types, Theorems, and Programming Languages}
+\end_preamble
+\options hyperref
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered true
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\pdf_quoted_options "linkcolor=black,urlcolor=blue"
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+frame{
+\backslash
+titlepage}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Part 1.
+ Functional reactive programming in 
+\family typewriter
+Elm
+\end_layout
+
+\begin_layout Standard
+FRP has little to do with...
+\end_layout
+
+\begin_layout Itemize
+multithreading, message-passing concurrency, 
+\begin_inset Quotes eld
+\end_inset
+
+actors
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+distributed computing on massively parallel, load-balanced clusters
+\end_layout
+
+\begin_layout Itemize
+map/reduce, the 
+\begin_inset Quotes eld
+\end_inset
+
+reactive manifesto
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+FRP means...
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+pure functions 
+\series default
+using
+\series bold
+ temporal types
+\series default
+ as primitives
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+(temporal type 
+\begin_inset Formula $\approx$
+\end_inset
+
+ lazy stream of values)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+FRP is probably most useful for:
+\end_layout
+
+\begin_layout Itemize
+GUI programming
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+Elm
+\family default
+ is...
+\end_layout
+
+\begin_layout Itemize
+a viable implementation of FRP geared for Web apps
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Transformational vs.
+ reactive programs
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="10" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Transformational
+\series default
+ programs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Reactive
+\series default
+ programs
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+example
+\series default
+: 
+\family typewriter
+\size footnotesize
+\color blue
+pdflatex elm_talk.tex
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+example
+\series default
+: any GUI program, OS
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+start, run, then stop
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+keep running indefinitely
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+read some input, write some output
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+wait for signals, send messages 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+execution:
+\series default
+ sequential, parallel
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+main run loop
+\begin_inset Quotes erd
+\end_inset
+
+ + concurrency
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+difficulty:
+\series default
+ algorithms
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+signal/response sequences
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+specification:
+\series default
+ classical logic?
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+classical temporal logic?
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+verification:
+\series default
+ proof of correctness?
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+model checking?
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+synthesis:
+\series default
+ extract code from proof?
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+temporal logic synthesis? 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+type theory:
+\series default
+ intuitionistic logic
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+intuitionistic 
+\emph on
+temporal
+\emph default
+ logic
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Difficulties in reactive programming
+\end_layout
+
+\begin_layout Standard
+Usually, reactive programs are written imperatively...
+\end_layout
+
+\begin_layout Itemize
+Input signals may come at unpredictable times
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Imperative updates are difficult to keep in the correct order
+\end_layout
+
+\begin_layout Itemize
+Flow of events becomes difficult to understand
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Asynchronous (out-of-order) callback logic becomes opaque
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+callback hell
+\begin_inset Quotes erd
+\end_inset
+
+: deeply nested callbacks, all mutating data
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Inverted control (
+\begin_inset Quotes eld
+\end_inset
+
+the system will call you
+\begin_inset Quotes erd
+\end_inset
+
+) obscures the flow of data
+\end_layout
+
+\begin_layout Itemize
+Some concurrency is usually required (e.g.
+\begin_inset space ~
+\end_inset
+
+background tasks)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Explicit multithreaded code is hard to write and debug
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Motivation for FRP
+\end_layout
+
+\begin_layout Itemize
+Reactive programs work on 
+\series bold
+infinite sequences
+\series default
+ of input/output values
+\end_layout
+
+\begin_layout Itemize
+Main idea: make sequences 
+\series bold
+implicit
+\series default
+, as a new 
+\begin_inset Quotes eld
+\end_inset
+
+temporal
+\begin_inset Quotes erd
+\end_inset
+
+ type
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+(Elm) 
+\family typewriter
+Signal
+\family default
+ 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ (
+\begin_inset Formula $\Sigma\alpha$
+\end_inset
+
+) --- an infinite sequence of values of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+alternatively, 
+\begin_inset Formula $\Sigma\alpha$
+\end_inset
+
+ is a value of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ that 
+\begin_inset Quotes eld
+\end_inset
+
+changes with time
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Reactive programs are 
+\series bold
+pure functions
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+a GUI is a pure function of type 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+Inputs
+\family default
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+View
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+a Web server is a pure function 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+Request
+\family default
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+Response
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+all mutation is 
+\series bold
+implicit
+\series default
+ in 
+\family typewriter
+Signal
+\family default
+ 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+instead of updating an 
+\family typewriter
+x:Int
+\family default
+, we define a value of type 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+Int
+\end_layout
+
+\begin_layout Itemize
+our code is 100% immutable, no side effects, no 
+\family typewriter
+IO
+\family default
+ monads
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+asynchronous behavior is 
+\series bold
+implicit
+\series default
+: our code has no callbacks
+\end_layout
+
+\begin_layout Itemize
+concurrency / parallelism is 
+\series bold
+implicit
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+the FRP runtime will provide the required scheduling of events
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Czaplicki's original 
+\family typewriter
+Elm
+\family default
+ 2012 in a nutshell
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Elm
+\family default
+ is a pure polymorphic 
+\begin_inset Formula $\lambda$
+\end_inset
+
+-calculus with products and sums
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Temporal type
+\series default
+ 
+\begin_inset Formula $\Sigma\alpha$
+\end_inset
+
+ --- a lazy sequence of values of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Temporal 
+\series bold
+combinators
+\series default
+ in core 
+\family typewriter
+Elm
+\family default
+: 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+constant
+\family default
+: 
+\begin_inset Formula $\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+map2
+\family default
+: 
+\begin_inset Formula $(\alpha\rightarrow\beta\rightarrow\gamma)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta\rightarrow\Sigma\gamma$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+foldp
+\family default
+: 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\left(\alpha\rightarrow\beta\rightarrow\beta\right)\rightarrow\beta\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+async
+\family default
+: 
+\begin_inset Formula $\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+No nested
+\series default
+ temporal types: 
+\family typewriter
+constant (constant x)
+\family default
+ is ill-typed!
+\end_layout
+
+\begin_layout Itemize
+Domain-specific primitive types: 
+\family typewriter
+Bool
+\family default
+, 
+\family typewriter
+Int
+\family default
+, 
+\family typewriter
+Float
+\family default
+, 
+\family typewriter
+String
+\family default
+, 
+\family typewriter
+View
+\end_layout
+
+\begin_layout Itemize
+Standard library with data structures, HTML, HTTP, JSON, ...
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+...and signals 
+\family typewriter
+Time.every
+\family default
+, 
+\family typewriter
+Mouse.position
+\family default
+, 
+\family typewriter
+Window.dimensions
+\family default
+, ...
+\end_layout
+
+\begin_layout Itemize
+...and some utility functions: 
+\family typewriter
+map
+\family default
+, 
+\family typewriter
+merge
+\family default
+, 
+\family typewriter
+drop
+\family default
+, ...
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Details: 
+\family typewriter
+Elm
+\family default
+ type judgments [Czaplicki 2012]
+\end_layout
+
+\begin_layout Itemize
+Polymorphically typed 
+\begin_inset Formula $\lambda$
+\end_inset
+
+-calculus (also with temporal types)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{\Gamma,(x:\alpha)\vdash e:\beta}{\Gamma\vdash(\lambda x.e):\alpha\rightarrow\beta}\,\textsc{Lambda} & \quad\frac{\Gamma\vdash e_{1}:\alpha\rightarrow\beta\quad\Gamma\vdash e_{2}:\alpha}{\Gamma\vdash(e_{1}\, e_{2}):\beta}\,\textsc{Apply}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Temporal types are denoted by 
+\begin_inset Formula $\Sigma\tau$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+In these rules, type variables 
+\begin_inset Formula $\alpha,\beta,\gamma$
+\end_inset
+
+ 
+\series bold
+cannot
+\series default
+ involve 
+\begin_inset Formula $\Sigma$
+\end_inset
+
+:
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\left(\mbox{constant}\, e\right):\Sigma\alpha} & \:\textsc{Const}\\
+\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash\left(\mbox{map2}\: m\: p\: q\right):\Sigma\gamma} & \:\textsc{Map2}\\
+\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash q:\Sigma\alpha}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right):\Sigma\beta} & \:\textsc{FoldP}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+A value of type 
+\begin_inset Formula $\Sigma\Sigma\alpha$
+\end_inset
+
+ is impossible in a well-typed expression!
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+Elm
+\family default
+ operational semantics 1: Current values
+\end_layout
+
+\begin_layout Itemize
+Temporal expressions are built from 
+\series bold
+input
+\series default
+ signals and combinators
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+It is not possible to 
+\begin_inset Quotes eld
+\end_inset
+
+consume
+\begin_inset Quotes erd
+\end_inset
+
+ a signal (
+\begin_inset Formula $\Sigma\alpha\rightarrow\beta$
+\end_inset
+
+)!
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Every temporal expression has a 
+\series bold
+current value
+\series default
+ denoted by 
+\begin_inset Formula $e^{\left[c\right]}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}\:\textsc{CurVal}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Every predefined 
+\series bold
+input
+\series default
+ signal 
+\begin_inset Formula $i:\Sigma\alpha,i\in{\cal I}$
+\end_inset
+
+ has an initial value: 
+\begin_inset Formula $i^{[a]}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Initial
+\series default
+ current values for all expressions are derived:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{\Gamma\vdash\left(\mbox{constant}\ c\right):\Sigma\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{ConstInit}\\
+\frac{\Gamma\vdash\left(\mbox{map2}\ m\ p^{\left[a\right]}\ q^{\left[b\right]}\right):\Sigma\gamma}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \:\textsc{Map2Init}\\
+\frac{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right):\Sigma\beta}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right){}^{\left[e\right]}:\Sigma\beta} & \:\textsc{FoldPInit}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+Elm
+\family default
+ operational semantics 2: Update steps
+\end_layout
+
+\begin_layout Itemize
+Update steps happen only to 
+\series bold
+input signals
+\series default
+ 
+\begin_inset Formula $s\in{\cal I}$
+\end_inset
+
+ and 
+\series bold
+one at a time
+\end_layout
+
+\begin_layout Itemize
+Update steps 
+\begin_inset Formula $\mathbf{U}_{s\leftarrow a}\left\{ ...\right\} $
+\end_inset
+
+ are applied to the 
+\series bold
+whole program
+\series default
+ at once:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash s:\Sigma\alpha\quad s\in{\cal I}\quad\Gamma\vdash a:\alpha\quad\Gamma\vdash e^{\left[c\right]}:\Sigma\beta\quad\Gamma\vdash c':\beta}{\Gamma\vdash\mathbf{U}_{s\leftarrow a}\left\{ e^{\left[c\right]}\right\} \Rightarrow e^{\left[c'\right]}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+An update step on 
+\begin_inset Formula $s$
+\end_inset
+
+ will leave all other 
+\series bold
+input
+\series default
+ signals unchanged:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\forall s\neq s'\in{\cal I}:\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s^{\left[a\right]}\right\} \Rightarrow s^{\left[b\right]}\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s'^{\left[c\right]}\right\} \Rightarrow s'^{\left[c\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Efficient implementation:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The instances of input signals within expressions are not duplicated
+\end_layout
+
+\begin_layout Itemize
+Unchanged current values are cached and not recomputed
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+
+\family typewriter
+Elm
+\family default
+ operational semantics 3: Updating combinators
+\end_layout
+
+\begin_layout Itemize
+Operational semantics does not reduce temporal expressions:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The whole program 
+\series bold
+remains
+\series default
+ a static temporal expression tree
+\end_layout
+
+\begin_layout Itemize
+Only the current values are updated in all subexpressions
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{constant}\ c\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
+ & \quad\quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[v\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[w\right]}\right)^{\left[m\ v\ w\right]} & \textsc{Map2Upd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\, u\, e\, q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\, u\, e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+All computations during an update step are 
+\series bold
+synchronous
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The expression 
+\begin_inset Formula $\mathbf{U}_{s\leftarrow b}\left\{ e^{\left[c\right]}\right\} $
+\end_inset
+
+ is reduced 
+\series bold
+after
+\series default
+ all subexpressions of 
+\begin_inset Formula $e$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Current values are non-temporal and are evaluated 
+\series bold
+eagerly
+\series default
+ 
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+GUI building: 
+\begin_inset Quotes eld
+\end_inset
+
+Hello, world
+\begin_inset Quotes erd
+\end_inset
+
+ in 
+\family typewriter
+Elm
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+The value called 
+\family typewriter
+\series bold
+main
+\family default
+\series default
+ will be visualized by the runtime
+\end_layout
+
+\begin_layout LyX-Code
+import Graphics.Element (..) 
+\end_layout
+
+\begin_layout LyX-Code
+import Text (..) 
+\end_layout
+
+\begin_layout LyX-Code
+import Signal (..)
+\end_layout
+
+\begin_layout LyX-Code
+  
+\end_layout
+
+\begin_layout LyX-Code
+text : Element
+\end_layout
+
+\begin_layout LyX-Code
+text = plainText "Hello, World!"
+\end_layout
+
+\begin_layout LyX-Code
+  
+\end_layout
+
+\begin_layout LyX-Code
+main : Signal Element 
+\end_layout
+
+\begin_layout LyX-Code
+main = constant text
+\end_layout
+
+\begin_layout Itemize
+Try 
+\family typewriter
+Elm
+\family default
+ online at 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://elm-lang.org/try"
+target "http://elm-lang.org/try"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Example of using 
+\family typewriter
+foldp
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+Specification:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+\color blue
+I work only after the boss comes by and unless the phone rings
+\emph default
+\color inherit
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Implementation:
+\end_layout
+
+\begin_layout LyX-Code
+after_unless : (Bool, Bool) -> Bool -> Bool
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+after_unless (b,p) w = (w || b) && not p
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\begin_inset Formula $\quad\quad$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+boss_and_phone : Signal (Bool,Bool)
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\begin_inset Formula $\quad\quad$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+i_work : Signal Bool
+\end_layout
+
+\begin_layout LyX-Code
+i_work = 
+\family typewriter
+foldp after_unless False (boss_and_phone)
+\end_layout
+
+\begin_layout Itemize
+Demo (
+\begin_inset CommandInset href
+LatexCommand href
+name "boss_phone_work.elm"
+target "https://github.com/winitzki/talks/blob/master/elm-talk/boss_phone_work.elm"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Typical GUI boilerplate in 
+\family typewriter
+Elm
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+A state machine with stepwise update:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+update : Command 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ State 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ State
+\end_layout
+
+\begin_layout Itemize
+A rendering function (
+\family typewriter
+View
+\family default
+ is either 
+\family typewriter
+Element
+\family default
+ or 
+\family typewriter
+Html
+\family default
+):
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+draw : State 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ View
+\end_layout
+
+\begin_layout Itemize
+A manager that merges the required input signals into one:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+may use 
+\family typewriter
+Mouse
+\family default
+, 
+\family typewriter
+Keyboard
+\family default
+, 
+\family typewriter
+Time
+\family default
+, 
+\family typewriter
+HTML
+\family default
+ stuff, etc.
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+
+\family typewriter
+merge_input
+\family default
+s : Signal
+\family typewriter
+ Command
+\end_layout
+
+\begin_layout Itemize
+Main boilerplate:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+init_state : State
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+main : 
+\family default
+Signal View
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+main = map draw (foldp update init_state merge_inputs)
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Asynchrony and concurrency in 
+\family typewriter
+Elm
+\end_layout
+
+\begin_layout Itemize
+Long-running computations will delay signal updates!
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Example: 
+\family typewriter
+foldp
+\family default
+ 
+\family typewriter
+f
+\family default
+ 
+\family typewriter
+e
+\family default
+ 
+\family typewriter
+s
+\family default
+ where 
+\family typewriter
+f:
+\begin_inset Formula $\alpha\rightarrow\beta\rightarrow\beta$
+\end_inset
+
+
+\family default
+ takes a long time
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\family typewriter
+Elm
+\family default
+'s solution is to use 
+\family typewriter
+async
+\family default
+ 
+\family typewriter
+:
+\family default
+ 
+\begin_inset Formula $\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Operational semantics: (
+\begin_inset Formula $i$
+\end_inset
+
+ is a 
+\series bold
+new
+\series default
+ input signal for each 
+\family typewriter
+async
+\family default
+)
+\begin_inset Formula 
+\begin{align*}
+\frac{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}{\Gamma,\left(i:\Sigma\alpha\right)\vdash\left(\mbox{async}_{i}\ e\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{AsyncInit}\\
+\mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{async}_{i}\ e\right)^{\left[c\right]}\right\} \Rightarrow\mathbf{U}_{i\leftarrow c'}^{\dagger}\left(\mbox{async}_{i}\ \mathbf{U}_{s\leftarrow a}^{\dagger}\left\{ e\right\} ^{\left[c'\right]}\right)^{\left[c\right]} & \:\textsc{AsyncSched}\\
+\mathbf{U}_{i\leftarrow c'}\left\{ \left(\mbox{async}_{i}\ e\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{async}_{i}\ e\right)^{\left[c'\right]} & \:\textsc{AsyncUpd}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The update computation 
+\begin_inset Formula $\mathbf{U}_{s\leftarrow a}^{\dagger}\left\{ e\right\} $
+\end_inset
+
+ runs on another thread...
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+...while the current value 
+\begin_inset Formula $c$
+\end_inset
+
+ remains unchanged
+\end_layout
+
+\begin_layout Itemize
+Another update 
+\begin_inset Formula $\mathbf{U}_{i\leftarrow c'}^{\dagger}$
+\end_inset
+
+ is 
+\series bold
+scheduled
+\series default
+ but not yet triggered
+\end_layout
+
+\begin_layout Itemize
+When 
+\begin_inset Formula $c'$
+\end_inset
+
+ is ready, 
+\begin_inset Formula $\mathbf{U}_{i\leftarrow c'}\left\{ ...\right\} $
+\end_inset
+
+ runs and sets the current value to 
+\begin_inset Formula $c'$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Example of using 
+\family typewriter
+async
+\end_layout
+
+\begin_layout Itemize
+UI that shows results of some long computations:
+\end_layout
+
+\begin_layout LyX-Code
+draw : Int -> Int -> View
+\end_layout
+
+\begin_layout LyX-Code
+draw x y = ...
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\end_layout
+
+\begin_layout LyX-Code
+s : Signal Int -- input values
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\end_layout
+
+\begin_layout LyX-Code
+fSlow : Int -> Int
+\end_layout
+
+\begin_layout LyX-Code
+res1 = async (map fSlow s)
+\end_layout
+
+\begin_layout LyX-Code
+fFast : Int -> Int
+\end_layout
+
+\begin_layout LyX-Code
+res2 = map fFast s
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\end_layout
+
+\begin_layout LyX-Code
+main : Signal View = map2 draw res1 res2
+\end_layout
+
+\begin_layout Itemize
+Both results are updated as soon as they are computed
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Some limitations of 
+\family typewriter
+Elm
+\family default
+-style FRP
+\end_layout
+
+\begin_layout Itemize
+No higher-order signals: 
+\begin_inset Formula $\Sigma(\Sigma\alpha)$
+\end_inset
+
+ is disallowed by the type system
+\end_layout
+
+\begin_layout Itemize
+No distinction between continuous time and discrete time
+\end_layout
+
+\begin_layout Itemize
+The signal processing logic is fully specified statically
+\end_layout
+
+\begin_layout Itemize
+No constructors for user-defined signals
+\end_layout
+
+\begin_layout Itemize
+No recursion possible in signal definition!
+\end_layout
+
+\begin_layout Itemize
+Incomplete semantics for 
+\family typewriter
+async
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ : 
+\begin_inset Formula $\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Example: 
+\family typewriter
+async
+\family default
+ 
+\family typewriter
+(map
+\family default
+ 
+\family typewriter
+f
+\family default
+ 
+\family typewriter
+s)
+\family default
+ where 
+\family typewriter
+f
+\family default
+ takes a long time
+\end_layout
+
+\begin_layout Itemize
+The initial value of this signal will not be available at initial time!
+\end_layout
+
+\begin_layout Itemize
+Need 
+\family typewriter
+async'
+\family default
+ : 
+\begin_inset Formula $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+ to specify initial value?
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+No full concurrency (e.g., 
+\begin_inset Quotes eld
+\end_inset
+
+dining philosophers
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+Elm
+\family default
+ cannot simulate 
+\begin_inset Quotes eld
+\end_inset
+
+dining philosophers
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+A philosopher thinks for a random time, then eats for a random time
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Can a signal value 
+\family typewriter
+p
+\family default
+ 
+\family typewriter
+:
+\family default
+ 
+\family typewriter
+Signal
+\family default
+ 
+\family typewriter
+Unit
+\family default
+ update itself at random times? 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+No! There is no way to delay the update times of a signal 
+\series bold
+at runtime
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Time.delay:
+\family default
+ 
+\family typewriter
+Int
+\family default
+
+\begin_inset Formula $\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+ cannot use a time-varying delay value 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Time.every:
+\family default
+ 
+\family typewriter
+Int
+\family default
+
+\begin_inset Formula $\rightarrow\Sigma$
+\end_inset
+
+
+\family typewriter
+Int
+\family default
+ also requires a fixed delay value
+\end_layout
+
+\begin_layout Itemize
+Cannot lift 
+\family typewriter
+Time.every
+\family default
+ into 
+\family typewriter
+
+\begin_inset Formula $\Sigma$
+\end_inset
+
+Int
+\family default
+
+\begin_inset Formula $\rightarrow\Sigma\Sigma$
+\end_inset
+
+
+\family typewriter
+Int
+\family default
+ to achieve variable delay
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+The JavaScript backend for 
+\family typewriter
+Elm
+\family default
+ (2015)
+\end_layout
+
+\begin_layout Standard
+Features:
+\end_layout
+
+\begin_layout Itemize
+Good support for HTML/CSS, HTTP requests, JSON
+\end_layout
+
+\begin_layout Itemize
+Good performance of caching HTML views
+\end_layout
+
+\begin_layout Itemize
+Support for Canvas and HTML-free UI building
+\end_layout
+
+\begin_layout Standard
+Limitations:
+\end_layout
+
+\begin_layout Itemize
+No implementation for 
+\family typewriter
+async
+\family default
+ (JavaScript lacks concurrency)
+\end_layout
+
+\begin_layout Itemize
+The lack of recursive signals is compensated by 
+\emph on
+ad hoc
+\emph default
+ primitives
+\end_layout
+
+\begin_layout Itemize
+Ordinary recursion may generate invalid JavaScript!
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+Elm
+\family default
+-style FRP: the good parts
+\end_layout
+
+\begin_layout Itemize
+Transparent, declarative modeling of data through ADTs
+\end_layout
+
+\begin_layout Itemize
+Immutable and safe data structures (
+\family typewriter
+Array
+\family default
+, 
+\family typewriter
+Dict
+\family default
+, ...) 
+\end_layout
+
+\begin_layout Itemize
+No runtime errors or exceptions!
+\end_layout
+
+\begin_layout Itemize
+Space/time leaks are impossible!
+\end_layout
+
+\begin_layout Itemize
+Language is Haskell-like but simpler for beginners
+\end_layout
+
+\begin_layout Itemize
+Full type inference
+\end_layout
+
+\begin_layout Itemize
+Easy deployment and interop in Web applications
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Some conservative extensions of 
+\family typewriter
+Elm
+\end_layout
+
+\begin_layout Itemize
+Fix initial value semantics for 
+\family typewriter
+async'
+\family default
+ 
+\family typewriter
+:
+\family default
+ 
+\begin_inset Formula $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+Allow recursive definitions for signals
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+generate updates as 
+\family typewriter
+s0
+\family default
+, 
+\family typewriter
+f(s0)
+\family default
+, 
+\family typewriter
+f(f(s0))
+\family default
+, ...
+ are being computed:
+\end_layout
+
+\begin_layout LyX-Code
+s = async' s0 (map f s)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Add monadic signal combinator, 
+\family typewriter
+bind
+\family default
+ 
+\family typewriter
+:
+\family default
+ 
+\begin_inset Formula $(\alpha\rightarrow\Sigma\beta)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+use input signals from dynamically created UI:
+\end_layout
+
+\begin_layout LyX-Code
+viewS = map draw stateS
+\end_layout
+
+\begin_layout LyX-Code
+stateS = foldp update_on_click (bind get_clicks viewS)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Allow user-defined signals constructed from asynchronous APIs
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Add a slide explaining applicative/monadic problems and how we solve them
+ with these extension
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Generate signal updates whenever callback is called:
+\end_layout
+
+\begin_layout LyX-Code
+type 
+\begin_inset Formula $\mathbf{C}\alpha\beta=\alpha\rightarrow\left(\beta\rightarrow\bot\right)\rightarrow\bot$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+chain : 
+\begin_inset Formula $\mathbf{C}\alpha\beta\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout LyX-Code
+some_async_api : 
+\begin_inset Formula $\mathbf{C}\alpha\beta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+values_of_b = chain some_async_api values_of_a 
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Part 2.
+ Temporal logic and FRP
+\end_layout
+
+\begin_layout Itemize
+Reminder (Curry-Howard): logical expressions will be types
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+...and the axioms will be primitive terms
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+We only need to control the 
+\series bold
+order
+\series default
+ of events: no 
+\begin_inset Quotes eld
+\end_inset
+
+hard real-time
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+How to understand temporal logic:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+classical propositional logic 
+\begin_inset Formula $\approx$
+\end_inset
+
+ Boolean arithmetic
+\end_layout
+
+\begin_layout Itemize
+intuitionistic propositional logic 
+\begin_inset Formula $\approx$
+\end_inset
+
+ same but without 
+\series bold
+true
+\series default
+ / 
+\series bold
+false
+\series default
+ dichotomy
+\end_layout
+
+\begin_layout Itemize
+(linear-time) temporal logic LTL
+\begin_inset Formula $\approx$
+\end_inset
+
+ Boolean arithmetic for 
+\emph on
+infinite sequences
+\end_layout
+
+\begin_layout Itemize
+intuitionistic temporal logic ITL
+\begin_inset Formula $\approx$
+\end_inset
+
+ same but without 
+\series bold
+true
+\series default
+ / 
+\series bold
+false
+\series default
+ dichotomy
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+In other words:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+an ITL type represents a 
+\series bold
+single infinite sequence
+\series default
+ of values
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Boolean arithmetic: notation
+\end_layout
+
+\begin_layout Itemize
+Classical propositional (Boolean) logic: 
+\begin_inset Formula $T$
+\end_inset
+
+, 
+\begin_inset Formula $F$
+\end_inset
+
+, 
+\begin_inset Formula $a\vee b$
+\end_inset
+
+, 
+\begin_inset Formula $a\wedge b$
+\end_inset
+
+, 
+\begin_inset Formula $\neg a$
+\end_inset
+
+, 
+\begin_inset Formula $a\rightarrow b$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+A notation better adapted to school-level arithmetic: 
+\begin_inset Formula $1$
+\end_inset
+
+, 
+\begin_inset Formula $0$
+\end_inset
+
+, 
+\begin_inset Formula $a+b$
+\end_inset
+
+, 
+\begin_inset Formula $ab$
+\end_inset
+
+, 
+\begin_inset Formula $a'$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The only 
+\begin_inset Quotes eld
+\end_inset
+
+new rule
+\begin_inset Quotes erd
+\end_inset
+
+ is 
+\begin_inset Formula $1+1=1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Define 
+\begin_inset Formula $a\rightarrow b=a'+b$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Some identities: 
+\begin_inset Formula 
+\begin{align*}
+0a=0,\quad1a=a, & \quad a+0=a,\quad a+1=1,\\
+a+a=a,\quad aa=a, & \quad a+a'=1,\quad aa'=0,\\
+\left(a+b\right)'=a'b', & \quad\left(ab\right)'=a'+b',\quad\left(a'\right)'=a\\
+a\left(b+c\right)=ab+ac, & \quad\left(a+b\right)\left(a+c\right)=a+bc
+\end{align*}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Boolean arithmetic: example
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\color blue
+Of the three suspects 
+\begin_inset Formula $A$
+\end_inset
+
+, 
+\begin_inset Formula $B$
+\end_inset
+
+, 
+\begin_inset Formula $C$
+\end_inset
+
+, only one is guilty of a crime.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\color blue
+Suspect 
+\begin_inset Formula $A$
+\end_inset
+
+ says: 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Formula $B$
+\end_inset
+
+ did it
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Suspect 
+\begin_inset Formula $B$
+\end_inset
+
+ says: 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Formula $C$
+\end_inset
+
+ is innocent.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\color blue
+The guilty one is lying, the innocent ones tell the truth.
+\emph default
+\color inherit
+
+\begin_inset Formula 
+\[
+\phi=\left(ab'c'+a'bc'+a'b'c\right)\left(a'b+ab'\right)\left(b'c'+bc\right)
+\]
+
+\end_inset
+
+
+\series bold
+Simplify
+\series default
+: expand the brackets, omit 
+\begin_inset Formula $aa'$
+\end_inset
+
+, 
+\begin_inset Formula $bb'$
+\end_inset
+
+, 
+\begin_inset Formula $cc'$
+\end_inset
+
+, replace 
+\begin_inset Formula $aa=a$
+\end_inset
+
+ etc.:
+\begin_inset Formula 
+\[
+\phi=ab'c'+0+0=ab'c'
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\color blue
+The guilty one is 
+\begin_inset Formula $A$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Propositional linear-time temporal logic (LTL)
+\end_layout
+
+\begin_layout Itemize
+We work with
+\emph on
+ infinite boolean sequences
+\emph default
+ (
+\begin_inset Quotes eld
+\end_inset
+
+linear time
+\begin_inset Quotes erd
+\end_inset
+
+)
+\begin_inset Newline newline
+\end_inset
+
+
+\series bold
+Boolean
+\series default
+ operations:
+\begin_inset Formula 
+\begin{align*}
+a & =\left[a_{0},a_{1},a_{2},...\right];\quad b=\left[b_{0},b_{1},b_{2},...\right];\\
+a+b & =\left[a_{0}+b_{0},a_{1}+b_{1},...\right];\; a'=\left[a_{0}^{\prime},a_{1}^{\prime},...\right];\; ab=\left[a_{0}b_{0},a_{1}b_{1},...\right]
+\end{align*}
+
+\end_inset
+
+
+\series bold
+Temporal
+\series default
+ operations:
+\begin_inset Formula 
+\begin{align*}
+\mbox{(Next)}\quad\mathbf{N}a & =\left[a_{1},a_{2},...\right]\\
+\mbox{(Sometimes)}\quad\mathbf{F}a & =\left[a_{0}+a_{1}+a_{2}+...,\ a_{1}+a_{2}+...,\ ...\right]\\
+\mbox{(Always)}\quad\mathbf{G}a & =\left[a_{0}a_{1}a_{2}a_{3}...,\ a_{1}a_{2}a_{3}...,\ a_{2}a_{3}...,\ ...\right]
+\end{align*}
+
+\end_inset
+
+Other notation (from modal logic):
+\begin_inset Formula 
+\[
+\mathbf{N}a\equiv\bigcirc a;\;\mathbf{F}a\equiv\lozenge a;\;\mathbf{G}a\equiv\square a
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Weak Until: 
+\begin_inset Formula $p\mathbf{U}q$
+\end_inset
+
+ = 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Formula $p$
+\end_inset
+
+ holds from now on until 
+\begin_inset Formula $q$
+\end_inset
+
+ first becomes true
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Formula 
+\[
+p\mathbf{U}q=q+p\mathbf{N}\left(q+p\mathbf{N}\left(q+...\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Temporal logic redux
+\end_layout
+
+\begin_layout Standard
+Designers of FRP languages must face some choices:
+\end_layout
+
+\begin_layout Itemize
+LTL as type theory: do we use 
+\begin_inset Formula $\mathbf{N}\alpha$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{F}\alpha$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{G}\alpha$
+\end_inset
+
+ as new types?
+\end_layout
+
+\begin_layout Itemize
+Are they to be functors, monads, ...?
+\end_layout
+
+\begin_layout Itemize
+Which temporal axioms to use as language primitives?
+\end_layout
+
+\begin_layout Itemize
+What is the operational semantics? (I.e., how to compile this?)
+\end_layout
+
+\begin_layout Standard
+A sophisticated example: [Krishnaswamy 2013]
+\end_layout
+
+\begin_layout Itemize
+uses full LTL with higher-order temporal types and fixpoints
+\end_layout
+
+\begin_layout Itemize
+uses linear types to control space/time leaks
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Interpreting values typed by LTL
+\end_layout
+
+\begin_layout Itemize
+What does it mean to have a value 
+\begin_inset Formula $x$
+\end_inset
+
+ of type, say, 
+\begin_inset Formula $\mathbf{G}(\alpha\rightarrow\alpha\mathbf{U}\beta)$
+\end_inset
+
+ ??
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $x:\mathbf{N}\alpha$
+\end_inset
+
+ means that 
+\begin_inset Formula $x:\alpha$
+\end_inset
+
+ will be available 
+\emph on
+only
+\emph default
+ at the 
+\emph on
+next
+\emph default
+ time tick 
+\begin_inset Newline newline
+\end_inset
+
+(
+\begin_inset Formula $x$
+\end_inset
+
+ is a 
+\series bold
+deferred value
+\series default
+ of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $x:\mathbf{F}\alpha$
+\end_inset
+
+ means that 
+\begin_inset Formula $x:\alpha$
+\end_inset
+
+ will be available at 
+\emph on
+some
+\emph default
+ future tick(s)
+\begin_inset Newline newline
+\end_inset
+
+(
+\begin_inset Formula $x$
+\end_inset
+
+ is an 
+\series bold
+event
+\series default
+ of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $x:\mathbf{G\alpha}$
+\end_inset
+
+ means that a (different) value 
+\begin_inset Formula $x:\alpha$
+\end_inset
+
+ is available at 
+\emph on
+every
+\emph default
+ tick
+\begin_inset Newline newline
+\end_inset
+
+(
+\begin_inset Formula $x$
+\end_inset
+
+ is an 
+\series bold
+infinite stream
+\series default
+ of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $x:\alpha\mathbf{U}\beta$
+\end_inset
+
+ means a 
+\series bold
+finite stream
+\series default
+ of 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ that may end with a 
+\begin_inset Formula $\beta$
+\end_inset
+
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Some temporal 
+\series bold
+axioms
+\series default
+ of intuitionistic LTL:
+\begin_inset Formula 
+\begin{align*}
+\mbox{(deferred apply)}\quad\mathbf{N}\left(\alpha\rightarrow\beta\right) & \rightarrow\left(\mathbf{N}\alpha\rightarrow\mathbf{N}\beta\right);\\
+\mathbf{\mbox{(streamed apply)}\quad G}\left(\alpha\rightarrow\beta\right) & \rightarrow\left(\mathbf{G}\alpha\rightarrow\mathbf{G}\beta\right);\\
+\mbox{(generate a stream)}\quad\mathbf{G}\left(\alpha\rightarrow\mathbf{N}\alpha\right) & \rightarrow\left(\alpha\rightarrow\mathbf{G}\alpha\right);\\
+\mbox{(read infinite stream)}\quad\mathbf{G}\alpha & \rightarrow\alpha\mathbf{N}(\mathbf{G}\alpha)\\
+\mbox{(read finite stream)}\quad\alpha\mathbf{U}\beta & \rightarrow\beta+\alpha\mathbf{N}(\alpha\mathbf{U}\beta)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\family typewriter
+Elm
+\family default
+ as an FRP language 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\lambda$
+\end_inset
+
+-calculus with type 
+\begin_inset Formula $\mathbf{G}\alpha$
+\end_inset
+
+, primitives 
+\family typewriter
+map2
+\family default
+, 
+\family typewriter
+foldp
+\family default
+, 
+\family typewriter
+async
+\family default
+ 
+\end_layout
+
+\begin_layout LyX-Code
+map2 : 
+\begin_inset Formula $\left(\alpha\rightarrow\beta\rightarrow\gamma\right)\rightarrow\mathbf{G}\alpha\rightarrow\mathbf{G}\beta\rightarrow\mathbf{G}\gamma$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+foldp : 
+\begin_inset Formula $\left(\alpha\rightarrow\beta\rightarrow\beta\right)\rightarrow\beta\rightarrow\mathbf{G}\alpha\rightarrow\mathbf{G}\beta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+async : 
+\begin_inset Formula $\mathbf{G}\alpha\rightarrow\mathbf{G}\alpha$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+(
+\family typewriter
+map2
+\family default
+ makes 
+\begin_inset Formula $\mathbf{G}$
+\end_inset
+
+ an applicative functor)
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+async
+\family default
+ is a special 
+\emph on
+scheduling
+\emph default
+ 
+\emph on
+instruction
+\end_layout
+
+\begin_layout Itemize
+Limitations:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Cannot have a type 
+\begin_inset Formula $\mathbf{G}(\mathbf{G}\alpha)$
+\end_inset
+
+, also not using 
+\begin_inset Formula $\mathbf{N}$
+\end_inset
+
+ or 
+\begin_inset Formula $\mathbf{F}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Cannot construct temporal values by hand
+\end_layout
+
+\begin_layout Itemize
+This language is an 
+\emph on
+incomplete
+\emph default
+ Curry-Howard image of LTL!
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Conclusions
+\end_layout
+
+\begin_layout Itemize
+There are some languages that implement FRP in various 
+\emph on
+ad hoc
+\emph default
+ ways
+\end_layout
+
+\begin_layout Itemize
+The ideal is not (yet) reached
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+Elm
+\family default
+-style FRP is a promising step in the right direction
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Abstract
+\end_layout
+
+\begin_layout Standard
+In my day job, most bugs come from implementing reactive programs imperatively.
+ FRP is a declarative approach that promises to solve these problems.
+ 
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+FRP can be defined as a 
+\begin_inset Formula $\lambda$
+\end_inset
+
+-calculus that admits temporal types, i.e.
+\begin_inset space \space{}
+\end_inset
+
+types given by a propositional intuitionistic linear-time temporal logic
+ (LTL).
+ Although the 
+\family typewriter
+Elm
+\family default
+ language uses only a subset of LTL, it achieves high expressivity for GUI
+ programming.
+ I will formally define the operational semantics of 
+\family typewriter
+Elm
+\family default
+.
+ I discuss the current limitations of 
+\family typewriter
+Elm
+\family default
+ and outline possible extensions.
+ I also review the connections between temporal logic, FRP, and 
+\family typewriter
+Elm
+\family default
+.
+ 
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+My talk will be understandable to anyone familiar with Curry-Howard and
+ functional programming.
+ The first part of the talk is a self-contained presentation of 
+\family typewriter
+Elm
+\family default
+ that does not rely on temporal logic or Curry-Howard.
+ The second part of the talk will explain the basic intuitions behind temporal
+ logic and its connection with FRP.
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout BeginFrame
+Suggested reading 
+\end_layout
+
+\begin_layout Standard
+E.
+ Czaplicki, S.
+ Chong.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Asynchronous FRP for GUIs"
+target "http://people.seas.harvard.edu/~chong/pubs/pldi13-elm.pdf"
+
+\end_inset
+
+.
+ (2013) 
+\end_layout
+
+\begin_layout Standard
+E.
+ Czaplicki.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Concurrent FRP for functional GUI"
+target "http://www.seas.harvard.edu/sites/default/files/files/archived/Czaplicki.pdf"
+
+\end_inset
+
+ (2012).
+ 
+\end_layout
+
+\begin_layout Standard
+N.
+ R.
+ Krishnaswamy.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://www.mpi-sws.org/~neelk/simple-frp.pdfHigher-order functional reactive programming without spacetime leaks"
+
+\end_inset
+
+(2013).
+\end_layout
+
+\begin_layout Standard
+M.
+ F.
+ Dam.
+ Lectures on temporal logic.
+ Slides: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Syntax and semantics of LTL"
+target "http://www.csc.kth.se/~mfd/Courses/Temporal_logic/lecture1.pdf"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "A Hilbert-style proof system for LTL"
+target "http://www.csc.kth.se/~mfd/Courses/Temporal_logic/lecture2.pdf"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+E.
+ Bainomugisha, et al.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "A survey of reactive programming"
+target "ftp://progftp.vub.ac.be/tech_report/2012/vub-soft-tr-12-13.pdf"
+
+\end_inset
+
+ (2013).
+\end_layout
+
+\begin_layout Standard
+W.
+ Jeltsch.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Temporal logic with Until, Functional Reactive Programming with processes, and concrete process categories."
+target "http://www.ioc.ee/~wolfgang/research/plpv-2013-paper.pdf"
+
+\end_inset
+
+ (2013).
+\end_layout
+
+\begin_layout Standard
+A.
+ Jeffrey.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "LTL types FRP."
+target "http://ect.bell-labs.com/who/ajeffrey/papers/plpv12.pdf"
+
+\end_inset
+
+ (2012).
+\end_layout
+
+\begin_layout Standard
+D.
+ Marchignoli.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Natural deduction systems for temporal logic."
+target "http://phd.di.unipi.it/Theses/PhDthesis_Marchignoli.pdf"
+
+\end_inset
+
+ (2002).
+ -- See Chapter 2 for a natural deduction system for modal and temporal
+ logics.
+ 
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\end_body
+\end_document
