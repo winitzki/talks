@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
 \textclass beamer
@@ -20,13 +20,13 @@
 \font_roman default
 \font_sans default
 \font_typewriter default
+\font_math auto
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
-
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -35,6 +35,9 @@
 \paperfontsize default
 \spacing single
 \use_hyperref true
+\pdf_title "Reviving the Old Russian orthography for the 21st century"
+\pdf_author "Sergei Winitzki"
+\pdf_subject "computer word processing"
 \pdf_bookmarks true
 \pdf_bookmarksnumbered true
 \pdf_bookmarksopen false
@@ -47,15 +50,24 @@
 \pdf_quoted_options "linkcolor=black,urlcolor=blue"
 \papersize default
 \use_geometry true
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 1
 \index Index
 \shortcut idx
@@ -96,32 +108,424 @@ titlepage}
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Old Russian Orthography
 \family typewriter
 : what and why
 \end_layout
 
-\begin_layout Standard
-Example of Russian: 
-\lang russian
-фывва
-\lang bulgarian
-ѣ
-\lang russian
-сть 
-\end_layout
+\end_inset
 
-\begin_layout EndFrame
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_deeper
+\begin_layout Itemize
+The Russian orthography was reformed in 1918
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+4 letters 
+\lang russian
+Ѣѣ, Ѳѳ, Іі, Ѵѵ
+\lang english
+ were physically removed from printing presses
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Often, 
+\lang russian
+Ъъ
+\lang english
+ was also removed by mistake
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+Classic Russian literature used the old orthography:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Pushkin, Turgenev, Dostoyevsky, Tolstoy, Chekhov, Nabokov, ...
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Old English orthography: example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+Hobbes, 
+\emph on
+De cive
+\emph default
+ (1651)
+\end_layout
+
+\begin_layout Frame
+\begin_inset Graphics
+	filename Hobbes_-_De_Cive_-_1651.png
+	lyxscale 50
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Old Russian orthography: example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+Nabokov, 
+\emph on
+Storm
+\emph default
+ (1930)
+\end_layout
+
+\begin_layout Frame
+\begin_inset Graphics
+	filename Sirin_-_Groza_1930.png
+	lyxscale 30
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Main challenges in processing old Russian orthography
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+As of 2000, no 8-bit encodings contained the letters 
+\lang russian
+Ѣѣ, Ѳѳ, Іі, Ѵѵ
+\lang english
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Unicode support was not widespread
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+No keyboard layouts, no screen fonts, few vector fonts 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+LaTeX font support: nonstandard font encoding by AMS
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+No spelling checker support, no OCR, no hyphenation
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+State of the art in 2015
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The letters 
+\lang russian
+Ѣѣ, Ѳѳ, Іі, Ѵѵ
+\lang english
+ are present in most Cyrillic fonts 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+typesetting, printing supported through Unicode
+\end_layout
+
+\begin_layout Itemize
+LaTeX font support: OT2 font encoding only!
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Some spelling checker support (ispell, AbiWord, Open Office)
+\end_layout
+
+\begin_layout Itemize
+Some language support for OCR
+\end_layout
+
+\begin_layout Itemize
+No hyphenation support, no standard keyboard layouts
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+The KOI8-C project (1999-2003)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "http://oldrus-ispell.sourceforge.net"
+target "http://oldrus-ispell.sourceforge.net"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+KOI8-C encoding (
+\begin_inset CommandInset href
+LatexCommand href
+name "IETF draft"
+target "http://www.ietf.org/archive/id/draft-winitzki-koi8c-encoding-00.txt"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Bitmapped X-Window fonts (BDF), the 
+\family typewriter
+xcyr
+\family default
+ package
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Became part of 
+\family typewriter
+xfonts-cyrillic
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\family typewriter
+ispell
+\family default
+ dictionary for old Russian orthography
+\end_layout
+
+\begin_layout Itemize
+PostScript typesetter using BDF as Type 3 fonts
+\end_layout
+
+\begin_layout Itemize
+A primitive converter from new to old orthography
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+The KOI8-C encoding and screen fonts in Netscape
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+Viewing Nabokov, 
+\emph on
+Despair
+\emph default
+ (1934)
+\end_layout
+
+\begin_layout Frame
+\begin_inset Graphics
+	filename xcyr-screenshot.jpg
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Working with the oldrus-ispell dictionary
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+Proofreading Melgunov's 
+\begin_inset Quotes eld
+\end_inset
+
+Red Terror in Russia
+\begin_inset Quotes erd
+\end_inset
+
+ (1924)
+\end_layout
+
+\begin_layout Frame
+\begin_inset Graphics
+	filename oldrus-screenshot.png
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Main challenges
 \end_layout
 
-\begin_layout EndFrame
-		
+\end_inset
+
+
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Main challenges
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Main challenges
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
