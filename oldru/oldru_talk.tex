@@ -1,0 +1,75 @@
+%% LyX 2.0.6 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[bulgarian,russian,english]{beamer}
+\usepackage[T2A,OT2,T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\usepackage{babel}
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=true,
+ linkcolor=black,urlcolor=blue}
+  }
+\else
+  \hypersetup{unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=true,
+ linkcolor=black,urlcolor=blue}
+\fi
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\DeclareRobustCommand{\cyrtext}{%
+  \fontencoding{T2A}\selectfont\def\encodingdefault{T2A}}
+\DeclareRobustCommand{\textcyr}[1]{\leavevmode{\cyrtext #1}}
+\AtBeginDocument{\DeclareFontEncoding{T2A}{}{}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ \AtBeginDocument{
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+ \long\def\lyxframe#1{\@lyxframe#1\@lyxframestop}%
+ \def\@lyxframe{\@ifnextchar<{\@@lyxframe}{\@@lyxframe<*>}}%
+ \def\@@lyxframe<#1>{\@ifnextchar[{\@@@lyxframe<#1>}{\@@@lyxframe<#1>[]}}
+ \def\@@@lyxframe<#1>[{\@ifnextchar<{\@@@@@lyxframe<#1>[}{\@@@@lyxframe<#1>[<*>][}}
+ \def\@@@@@lyxframe<#1>[#2]{\@ifnextchar[{\@@@@lyxframe<#1>[#2]}{\@@@@lyxframe<#1>[#2][]}}
+ \long\def\@@@@lyxframe<#1>[#2][#3]#4\@lyxframestop#5\lyxframeend{%
+   \frame<#1>[#2][#3]{\frametitle{#4}#5}}
+ \def\lyxframeend{} % In case there is a superfluous frame end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme[secheader]{Boadilla}
+\usecolortheme{seahorse}
+\title[Old Russian Orthography]{Reviving the Traditional Russian Orthography for the 21st Century}
+\author{Sergei Winitzki}
+\date{April 24, 2015}
+\institute[Versal Group Inc.]{Text By The Bay 2015}
+
+\makeatother
+
+\begin{document}
+\frame{\titlepage}
+
+
+\lyxframeend{}\lyxframe{Old Russian Orthography\texttt{: what and why}}
+
+Example of Russian: \foreignlanguage{russian}{фывва}\foreignlanguage{bulgarian}{ѣ}\foreignlanguage{russian}{сть }
+
+
+\lyxframeend{}
+
+
+\lyxframeend{}\lyxframe{Main challenges}
+
+
+\lyxframeend{		}
+\end{document}
