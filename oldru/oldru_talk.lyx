@@ -380,7 +380,27 @@ xcyr
 \begin_layout Itemize
 Became part of 
 \family typewriter
-xfonts-cyrillic
+
+\begin_inset CommandInset href
+LatexCommand href
+name "ucs-fonts"
+target "http://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html"
+
+\end_inset
+
+
+\family default
+ and 
+\family typewriter
+
+\begin_inset CommandInset href
+LatexCommand href
+name "xfonts-cyrillic"
+target "https://packages.debian.org/sid/xfonts-cyrillic"
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
