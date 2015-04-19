@@ -430,7 +430,7 @@ A primitive converter from new to old orthography
 status open
 
 \begin_layout Plain Layout
-The KOI8-C encoding and screen fonts in Netscape
+The KOI8-C encoding and screen fonts
 \end_layout
 
 \end_inset
@@ -443,14 +443,14 @@ Viewing Nabokov,
 \emph on
 Despair
 \emph default
- (1934)
+ (1934) in Netscape using KO8-C
 \end_layout
 
 \begin_layout Frame
 \begin_inset Graphics
 	filename xcyr-screenshot.jpg
 	lyxscale 50
-	scale 50
+	height 80theight%
 
 \end_inset
 
@@ -490,7 +490,7 @@ Red Terror in Russia
 \begin_inset Graphics
 	filename oldrus-screenshot.png
 	lyxscale 50
-	scale 50
+	width 120text%
 
 \end_inset
 
