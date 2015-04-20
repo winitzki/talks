@@ -108,14 +108,14 @@ Some letters are now removed: \emph{doe}, \emph{generall}, \emph{wisdome}
 \begin{frame}{...or when guided by a committee of experts}
 
 \begin{itemize}
-\item A proposal for English, similar to the Russian spelling reform
+\item A proposal for English, similar to the Russian spelling reform...
 
 \begin{itemize}
-\item Omit the mute ``e'' in endings, replace vowels to ``simplify''
+\item Omit the silent ``e'' in endings, replace vowels to ``simplify''
 
 \begin{itemize}
-\item some $\rightarrow$ sum, made $\rightarrow$ maid, gate $\rightarrow$
-gait, breathe $\rightarrow$ breath
+\item breathe $\rightarrow$ breath, some $\rightarrow$ sum, made $\rightarrow$
+maid, gate $\rightarrow$ gait
 \end{itemize}
 \item Replace the letters c$\rightarrow$k/s, x$\rightarrow$ks, y$\rightarrow$i
 
@@ -126,7 +126,7 @@ kseroks
 \item Physically remove the letters C, X, Y from all computer keyboards
 
 \begin{itemize}
-\item because they are ``a heritage of the horrible old times'' 
+\item because they are a heritage of the ``\emph{horrible old times}'' 
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -141,7 +141,7 @@ kseroks
 \begin{itemize}
 \item Cannot print adequate critical editions of classic literature
 \item Nobody wants to read even 100-year old books
-\item Reprinting each old book is hard work for editors
+\item Converting each old book to new spelling is hard for editors
 \end{itemize}
 \item In Russia:
 
@@ -218,7 +218,7 @@ Viewing Nabokov, \emph{Despair} (1934) in Netscape using KO8-C
 \begin{frame}{Working with the oldrus-ispell dictionary}
 
 
-Proofreading Melgunov's ``Red Terror in Russia'' (1924)
+Proofreading Melgunov's \emph{Red Terror in Russia} (1924)
 
 \includegraphics[width=1.2\textwidth]{oldrus-screenshot}
 \end{frame}
@@ -239,7 +239,7 @@ To convert texts to the old Russian orthography, we...
 
 \selectlanguage{russian}%
 \begin{itemize}
-\item есть - ѣсть, нежить - нѣжить, миръ - міръ, некогда - нѣкогда
+\item есть - ѣсть, нежить - нѣжить, некогда - нѣкогда
 \end{itemize}
 \selectlanguage{english}%
 \item restore old grammatical endings
@@ -269,18 +269,48 @@ To convert texts to the old Russian orthography, we...
 
 Disambiguation requires:
 \begin{itemize}
-\item identifying part of speech
-\item identifying inflection (number, gender, case)
-\item for some words, even identifying semantic content
+\item identifying parts of speech
 
+\selectlanguage{russian}%
 \begin{itemize}
-\item prononciation details (stress, \foreignlanguage{russian}{е/ё}) do
-not always suffice 
+\item синее $\rightarrow$ синее \foreignlanguage{english}{(blue)}, синѣе
+\foreignlanguage{english}{(more blue)}
+\item тем $\rightarrow$ темъ \foreignlanguage{english}{(of themes)}, тѣмъ
+\foreignlanguage{english}{(by that)}
 \end{itemize}
+\selectlanguage{english}%
+\item identifying grammatical forms (number, gender, case, tense)
+
+\selectlanguage{russian}%
+\begin{itemize}
+\item в море $\rightarrow$ въ море \foreignlanguage{english}{(into the
+sea)}, въ морѣ \foreignlanguage{english}{(within the sea)}
+\item есть $\rightarrow$ есть \foreignlanguage{english}{(it is)}, ѣсть
+\foreignlanguage{english}{(to eat)}
+\end{itemize}
+\selectlanguage{english}%
+\item for some words, identifying \textbf{semantic content in advance}
+
+\selectlanguage{russian}%
+\begin{itemize}
+\item мир $\rightarrow$ миръ \foreignlanguage{english}{(peace)}, міръ \foreignlanguage{english}{(world)}
+\item лечу $\rightarrow$ лечу \foreignlanguage{english}{(I fly)}, лѣчу
+\foreignlanguage{english}{(I heal)}
+\end{itemize}
+\selectlanguage{english}%
+\item prononciation details (stress, \foreignlanguage{russian}{е/ё}) do
+not always disambiguate 
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Main challenges}
+\begin{frame}{Outlook: the future of the old Russian orthography}
+
+\begin{itemize}
+\item Keyboard layouts will become standard in OSes
+\item Hyphenation dictionaries for \LaTeX{} and other systems
+\item Spelling dictionaries and grammar checking
+\item Fully disambiguating converter between new and old orthography
+\end{itemize}
 \end{frame}
 
 \end{document}

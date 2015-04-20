@@ -314,12 +314,12 @@ status open
 
 \begin_deeper
 \begin_layout Itemize
-A proposal for English, similar to the Russian spelling reform
+A proposal for English, similar to the Russian spelling reform...
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Omit the mute 
+Omit the silent 
 \begin_inset Quotes eld
 \end_inset
 
@@ -340,7 +340,11 @@ simplify
 
 \begin_deeper
 \begin_layout Itemize
-some 
+breathe 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ breath, some 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -352,11 +356,7 @@ some
 \begin_inset Formula $\rightarrow$
 \end_inset
 
- gait, breathe 
-\begin_inset Formula $\rightarrow$
-\end_inset
-
- breath
+ gait
 \end_layout
 
 \end_deeper
@@ -400,11 +400,15 @@ Physically remove the letters C, X, Y from all computer keyboards
 
 \begin_deeper
 \begin_layout Itemize
-because they are 
+because they are a heritage of the 
 \begin_inset Quotes eld
 \end_inset
 
-a heritage of the horrible old times
+
+\emph on
+horrible old times
+\emph default
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -450,7 +454,7 @@ Nobody wants to read even 100-year old books
 \end_layout
 
 \begin_layout Itemize
-Reprinting each old book is hard work for editors
+Converting each old book to new spelling is hard for editors
 \end_layout
 
 \end_deeper
@@ -744,13 +748,9 @@ Working with the oldrus-ispell dictionary
 
 \begin_layout Frame
 Proofreading Melgunov's 
-\begin_inset Quotes eld
-\end_inset
-
+\emph on
 Red Terror in Russia
-\begin_inset Quotes erd
-\end_inset
-
+\emph default
  (1924)
 \end_layout
 
@@ -807,7 +807,7 @@ disambiguate word pairs that became homographs...
 \begin_layout Itemize
 
 \lang russian
-есть - ѣсть, нежить - нѣжить, миръ - міръ, некогда - нѣкогда
+есть - ѣсть, нежить - нѣжить, некогда - нѣкогда
 \end_layout
 
 \end_deeper
@@ -899,27 +899,129 @@ Disambiguation requires:
 \end_layout
 
 \begin_layout Itemize
-identifying part of speech
-\end_layout
-
-\begin_layout Itemize
-identifying inflection (number, gender, case)
-\end_layout
-
-\begin_layout Itemize
-for some words, even identifying semantic content
+identifying parts of speech
 \end_layout
 
 \begin_deeper
+\begin_layout Itemize
+
+\lang russian
+синее 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ синее 
+\lang english
+(blue)
+\lang russian
+, синѣе 
+\lang english
+(more blue)
+\end_layout
+
+\begin_layout Itemize
+
+\lang russian
+тем 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ темъ 
+\lang english
+(of themes)
+\lang russian
+, тѣмъ 
+\lang english
+(by that)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+identifying grammatical forms (number, gender, case, tense)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang russian
+в море 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ въ море 
+\lang english
+(into the sea)
+\lang russian
+, въ морѣ 
+\lang english
+(within the sea)
+\end_layout
+
+\begin_layout Itemize
+
+\lang russian
+есть 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ есть 
+\lang english
+(it is)
+\lang russian
+, ѣсть 
+\lang english
+(to eat)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+for some words, identifying 
+\series bold
+semantic content in advance
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang russian
+мир 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ миръ 
+\lang english
+(peace)
+\lang russian
+, міръ 
+\lang english
+(world)
+\end_layout
+
+\begin_layout Itemize
+
+\lang russian
+лечу 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ лечу 
+\lang english
+(I fly)
+\lang russian
+, лѣчу 
+\lang english
+(I heal)
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 prononciation details (stress, 
 \lang russian
 е/ё
 \lang english
-) do not always suffice 
+) do not always disambiguate 
 \end_layout
 
-\end_deeper
 \end_deeper
 \begin_layout Separator
 
@@ -930,11 +1032,33 @@ prononciation details (stress,
 status open
 
 \begin_layout Plain Layout
-Main challenges
+Outlook: the future of the old Russian orthography
 \end_layout
 
 \end_inset
 
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Keyboard layouts will become standard in OSes
+\end_layout
+
+\begin_layout Itemize
+Hyphenation dictionaries for LaTeX and other systems
+\end_layout
+
+\begin_layout Itemize
+Spelling dictionaries and grammar checking
+\end_layout
+
+\begin_layout Itemize
+Fully disambiguating converter between new and old orthography
+\end_layout
+
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
