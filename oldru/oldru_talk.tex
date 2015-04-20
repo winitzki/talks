@@ -6,6 +6,7 @@
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
 \usepackage{babel}
+\usepackage{amssymb}
 \usepackage{graphicx}
 \ifx\hypersetup\undefined
   \AtBeginDocument{%
@@ -75,15 +76,13 @@ removed from printing presses
 \begin{itemize}
 \item Pushkin, Turgenev, Dostoyevsky, Tolstoy, Chekhov, Nabokov, ...
 \end{itemize}
+\item Replace \foreignlanguage{russian}{ѣ$\rightarrow$е, ѳ$\rightarrow$ф,
+і$\rightarrow$и, ѵ$\rightarrow$и} 
+
+\begin{itemize}
+\item motivation: ``simplify the spelling''
 \end{itemize}
-\end{frame}
-
-\begin{frame}{Old English orthography: example}
-
-
-Hobbes, \emph{De cive} (1651)
-
-\includegraphics[width=1\textwidth]{Hobbes_-_De_Cive_-_1651}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Old Russian orthography: example}
@@ -92,6 +91,67 @@ Hobbes, \emph{De cive} (1651)
 Nabokov, \emph{Storm} (1930)
 
 \includegraphics[width=1\textwidth]{Sirin_-_Groza_1930}
+\end{frame}
+
+\begin{frame}{Natural language orthography changes naturally...}
+
+
+Hobbes, \emph{De cive} (1651)
+
+\includegraphics[width=1\textwidth]{Hobbes_-_De_Cive_-_1651}
+
+Some letters are now added: \emph{somwhat}, \emph{judg}
+
+Some letters are now removed: \emph{doe}, \emph{generall}, \emph{wisdome} 
+\end{frame}
+
+\begin{frame}{...or when guided by a committee of experts}
+
+\begin{itemize}
+\item A proposal for English, similar to the Russian spelling reform
+
+\begin{itemize}
+\item Omit the mute ``e'' in endings, replace vowels to ``simplify''
+
+\begin{itemize}
+\item some $\rightarrow$ sum, made $\rightarrow$ maid, gate $\rightarrow$
+gait, breathe $\rightarrow$ breath
+\end{itemize}
+\item Replace the letters c$\rightarrow$k/s, x$\rightarrow$ks, y$\rightarrow$i
+
+\begin{itemize}
+\item played $\rightarrow$ plaid, hence $\rightarrow$ hens, xerox $\rightarrow$
+kseroks
+\end{itemize}
+\item Physically remove the letters C, X, Y from all computer keyboards
+
+\begin{itemize}
+\item because they are ``a heritage of the horrible old times'' 
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{What happens if you ban a few letters...}
+
+\begin{itemize}
+\item One generation later, nobody remembers anything was ever different
+\item You lose effective access to your own culture
+
+\begin{itemize}
+\item Cannot print adequate critical editions of classic literature
+\item Nobody wants to read even 100-year old books
+\item Reprinting each old book is hard work for editors
+\end{itemize}
+\item In Russia:
+
+\begin{itemize}
+\item People born after $\approx$1950 are loath to read texts in the old
+orthography
+\item Such texts are perceived to be unquestionably obsolete
+\item No typewriters \textbf{or computers} support the old Russian orthography 
+\end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Main challenges in processing old Russian orthography}
@@ -112,7 +172,7 @@ Nabokov, \emph{Storm} (1930)
 \end{itemize}
 \end{frame}
 
-\begin{frame}{State of the art in 2015}
+\begin{frame}{Back to 2015: State of the art}
 
 \begin{itemize}
 \item The letters \foreignlanguage{russian}{Ѣѣ, Ѳѳ, Іі, Ѵѵ} are present
@@ -128,20 +188,22 @@ in most Cyrillic fonts
 \end{itemize}
 \end{frame}
 
-\begin{frame}{The KOI8-C project (1999-2003)}
+\begin{frame}{The \texttt{oldrus-ispell} project (1999-2003)}
 
 \begin{itemize}
-\item \href{http://oldrus-ispell.sourceforge.net}{http://oldrus-ispell.sourceforge.net}
-\item KOI8-C encoding (\href{http://www.ietf.org/archive/id/draft-winitzki-koi8c-encoding-00.txt}{IETF draft})
+\item \href{http://oldrus-ispell.sourceforge.net/koi8-extended.html}{http://oldrus-ispell.sourceforge.net/koi8-extended.html}
+\item KOI8-C encoding (\href{http://www.ietf.org/archive/id/draft-winitzki-koi8c-encoding-00.txt}{IETF draft}),
+localization for the \href{http://links.twibright.com/}{links} browser
+\item A keyboard layout for X-Window and MS Windows 95
 \item Bitmapped X-Window fonts (BDF), the \texttt{xcyr} package
 
 \begin{itemize}
 \item Became part of \texttt{\href{http://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html}{ucs-fonts}}
-and \texttt{\href{https://packages.debian.org/sid/xfonts-cyrillic}{xfonts-cyrillic}}
+and \href{https://packages.debian.org/sid/xfonts-cyrillic}{xfonts-cyrillic}
 \end{itemize}
 \item \texttt{ispell} dictionary for old Russian orthography
-\item PostScript typesetter using BDF as Type 3 fonts
-\item A primitive converter from new to old orthography
+\item A PostScript typesetter using BDF as Type 3 fonts (Perl)
+\item A primitive converter, new $\rightleftarrows$ old orthography (Perl)
 \end{itemize}
 \end{frame}
 
@@ -161,12 +223,61 @@ Proofreading Melgunov's ``Red Terror in Russia'' (1924)
 \includegraphics[width=1.2\textwidth]{oldrus-screenshot}
 \end{frame}
 
-\begin{frame}{Main challenges}
+\begin{frame}{Main linguistic challenges}
 
+
+To convert texts to the old Russian orthography, we...
+\begin{itemize}
+\item disambiguate word pairs that became homographs...
+
+\selectlanguage{russian}%
+\begin{itemize}
+\item самого - самаго, синее - синѣе, оселъ - осѣлъ
+\end{itemize}
+\selectlanguage{english}%
+\item ...and also some homophones that became homonyms
+
+\selectlanguage{russian}%
+\begin{itemize}
+\item есть - ѣсть, нежить - нѣжить, миръ - міръ, некогда - нѣкогда
+\end{itemize}
+\selectlanguage{english}%
+\item restore old grammatical endings
+
+\selectlanguage{russian}%
+\begin{itemize}
+\item они, туманные звезды\foreignlanguage{english}{ $\rightarrow$ }онѣ,
+туманныя звѣзды
+\end{itemize}
+\selectlanguage{english}%
+\item restore old letters in word stems, prefixes, and suffixes
+
+\selectlanguage{russian}%
+\begin{itemize}
+\item Ѳедоръ \foreignlanguage{english}{(Theodor), }орѳографія \foreignlanguage{english}{(orthography)},
+мѵро \foreignlanguage{english}{(myrrhe)}
+\item рассвирепел $\rightarrow$ разсвирѣпѣлъ, нежнейшего \foreignlanguage{english}{$\rightarrow$}
+нѣжнѣйшаго
+\end{itemize}
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Main challenges}
+\begin{frame}{Main linguistic challenges}
 
+
+
+
+Disambiguation requires:
+\begin{itemize}
+\item identifying part of speech
+\item identifying inflection (number, gender, case)
+\item for some words, even identifying semantic content
+
+\begin{itemize}
+\item prononciation details (stress, \foreignlanguage{russian}{е/ё}) do
+not always suffice 
+\end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Main challenges}

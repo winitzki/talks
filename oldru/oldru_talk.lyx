@@ -158,43 +158,45 @@ Pushkin, Turgenev, Dostoyevsky, Tolstoy, Chekhov, Nabokov, ...
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+Replace 
+\lang russian
+ѣ
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+е, ѳ
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ф, і
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+и, ѵ
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+и
+\lang english
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+motivation: 
+\begin_inset Quotes eld
+\end_inset
+
+simplify the spelling
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
 \end_deeper
-\begin_layout Separator
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Old English orthography: example
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-Hobbes, 
-\emph on
-De cive
-\emph default
- (1651)
-\end_layout
-
-\begin_layout Frame
-\begin_inset Graphics
-	filename Hobbes_-_De_Cive_-_1651.png
-	lyxscale 50
-	width 100text%
-
-\end_inset
-
-
-\end_layout
-
+\end_deeper
 \begin_layout Separator
 
 \end_layout
@@ -231,6 +233,254 @@ Storm
 
 \end_layout
 
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Natural language orthography changes naturally...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+Hobbes, 
+\emph on
+De cive
+\emph default
+ (1651)
+\end_layout
+
+\begin_layout Frame
+\begin_inset Graphics
+	filename Hobbes_-_De_Cive_-_1651.png
+	lyxscale 50
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+Some letters are now added: 
+\emph on
+somwhat
+\emph default
+, 
+\emph on
+judg
+\end_layout
+
+\begin_layout Frame
+Some letters are now removed: 
+\emph on
+doe
+\emph default
+, 
+\emph on
+generall
+\emph default
+, 
+\emph on
+wisdome
+\emph default
+ 
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+...or when guided by a committee of experts
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+A proposal for English, similar to the Russian spelling reform
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Omit the mute 
+\begin_inset Quotes eld
+\end_inset
+
+e
+\begin_inset Quotes erd
+\end_inset
+
+ in endings, replace vowels to 
+\begin_inset Quotes eld
+\end_inset
+
+simplify
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+some 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ sum, made 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ maid, gate 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ gait, breathe 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ breath
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Replace the letters c
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+k/s, x
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ks, y
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+i
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+played 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ plaid, hence 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ hens, xerox 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ kseroks
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Physically remove the letters C, X, Y from all computer keyboards
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+because they are 
+\begin_inset Quotes eld
+\end_inset
+
+a heritage of the horrible old times
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What happens if you ban a few letters...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+One generation later, nobody remembers anything was ever different
+\end_layout
+
+\begin_layout Itemize
+You lose effective access to your own culture
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Cannot print adequate critical editions of classic literature
+\end_layout
+
+\begin_layout Itemize
+Nobody wants to read even 100-year old books
+\end_layout
+
+\begin_layout Itemize
+Reprinting each old book is hard work for editors
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+In Russia:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+People born after 
+\begin_inset Formula $\approx$
+\end_inset
+
+1950 are loath to read texts in the old orthography
+\end_layout
+
+\begin_layout Itemize
+Such texts are perceived to be unquestionably obsolete
+\end_layout
+
+\begin_layout Itemize
+No typewriters 
+\series bold
+or computers
+\series default
+ support the old Russian orthography 
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Separator
 
 \end_layout
@@ -287,7 +537,7 @@ No spelling checker support, no OCR, no hyphenation
 status open
 
 \begin_layout Plain Layout
-State of the art in 2015
+Back to 2015: State of the art
 \end_layout
 
 \end_inset
@@ -336,7 +586,11 @@ No hyphenation support, no standard keyboard layouts
 status open
 
 \begin_layout Plain Layout
-The KOI8-C project (1999-2003)
+The 
+\family typewriter
+oldrus-ispell
+\family default
+ project (1999-2003)
 \end_layout
 
 \end_inset
@@ -348,8 +602,8 @@ The KOI8-C project (1999-2003)
 \begin_layout Itemize
 \begin_inset CommandInset href
 LatexCommand href
-name "http://oldrus-ispell.sourceforge.net"
-target "http://oldrus-ispell.sourceforge.net"
+name "http://oldrus-ispell.sourceforge.net/koi8-extended.html"
+target "http://oldrus-ispell.sourceforge.net/koi8-extended.html"
 
 \end_inset
 
@@ -365,7 +619,19 @@ target "http://www.ietf.org/archive/id/draft-winitzki-koi8c-encoding-00.txt"
 
 \end_inset
 
-)
+), localization for the 
+\begin_inset CommandInset href
+LatexCommand href
+name "links"
+target "http://links.twibright.com/"
+
+\end_inset
+
+ browser
+\end_layout
+
+\begin_layout Itemize
+A keyboard layout for X-Window and MS Windows 95
 \end_layout
 
 \begin_layout Itemize
@@ -391,8 +657,6 @@ target "http://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html"
 
 \family default
  and 
-\family typewriter
-
 \begin_inset CommandInset href
 LatexCommand href
 name "xfonts-cyrillic"
@@ -413,11 +677,15 @@ ispell
 \end_layout
 
 \begin_layout Itemize
-PostScript typesetter using BDF as Type 3 fonts
+A PostScript typesetter using BDF as Type 3 fonts (Perl)
 \end_layout
 
 \begin_layout Itemize
-A primitive converter from new to old orthography
+A primitive converter, new 
+\begin_inset Formula $\rightleftarrows$
+\end_inset
+
+ old orthography (Perl)
 \end_layout
 
 \end_deeper
@@ -506,7 +774,7 @@ Red Terror in Russia
 status open
 
 \begin_layout Plain Layout
-Main challenges
+Main linguistic challenges
 \end_layout
 
 \end_inset
@@ -514,6 +782,96 @@ Main challenges
 
 \end_layout
 
+\begin_deeper
+\begin_layout Standard
+To convert texts to the old Russian orthography, we...
+\end_layout
+
+\begin_layout Itemize
+disambiguate word pairs that became homographs...
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang russian
+самого - самаго, синее - синѣе, оселъ - осѣлъ
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+...and also some homophones that became homonyms
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang russian
+есть - ѣсть, нежить - нѣжить, миръ - міръ, некогда - нѣкогда
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+restore old grammatical endings
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang russian
+они, туманные звезды
+\lang english
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 
+\lang russian
+онѣ, туманныя звѣзды
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+restore old letters in word stems, prefixes, and suffixes
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\lang russian
+Ѳедоръ 
+\lang english
+(Theodor), 
+\lang russian
+орѳографія 
+\lang english
+(orthography)
+\lang russian
+, мѵро 
+\lang english
+(myrrhe)
+\end_layout
+
+\begin_layout Itemize
+
+\lang russian
+рассвирепел 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ разсвирѣпѣлъ, нежнейшего 
+\lang english
+
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+
+\lang russian
+ нѣжнѣйшаго
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Separator
 
 \end_layout
@@ -523,7 +881,7 @@ Main challenges
 status open
 
 \begin_layout Plain Layout
-Main challenges
+Main linguistic challenges
 \end_layout
 
 \end_inset
@@ -531,6 +889,38 @@ Main challenges
 
 \end_layout
 
+\begin_layout Frame
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Disambiguation requires:
+\end_layout
+
+\begin_layout Itemize
+identifying part of speech
+\end_layout
+
+\begin_layout Itemize
+identifying inflection (number, gender, case)
+\end_layout
+
+\begin_layout Itemize
+for some words, even identifying semantic content
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+prononciation details (stress, 
+\lang russian
+е/ё
+\lang english
+) do not always suffice 
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Separator
 
 \end_layout
