@@ -6,6 +6,7 @@
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
 \usepackage{babel}
+\usepackage{calc}
 \usepackage{amssymb}
 \usepackage{graphicx}
 \ifx\hypersetup\undefined
@@ -111,7 +112,7 @@ Some letters are now removed: \emph{doe}, \emph{generall}, \emph{wisdome}
 \item A proposal for English, similar to the Russian spelling reform...
 
 \begin{itemize}
-\item Omit the silent ``e'' in endings, replace vowels to ``simplify''
+\item Omit the silent ``e'' in endings, replace vowels to simplify spelling
 
 \begin{itemize}
 \item breathe $\rightarrow$ breath, some $\rightarrow$ sum, made $\rightarrow$
@@ -126,7 +127,7 @@ kseroks
 \item Physically remove the letters C, X, Y from all computer keyboards
 
 \begin{itemize}
-\item because they are a heritage of the ``\emph{horrible old times}'' 
+\item because they are a heritage of the \emph{horrible old times} 
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -301,6 +302,50 @@ sea)}, въ морѣ \foreignlanguage{english}{(within the sea)}
 \item prononciation details (stress, \foreignlanguage{russian}{е/ё}) do
 not always disambiguate 
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Converter for the old Russian orthography}
+
+\begin{itemize}
+\item Dictionary-based, with some simple heuristics
+\item Misses some words, needs manual check
+\end{itemize}
+
+Tyutchev, \emph{Silentium} (1830)\\
+
+
+
+\fbox{\begin{minipage}[t]{0.45\columnwidth}%
+\selectlanguage{russian}%
+Молчи, скрывайся и таи 
+
+И чувства и мечты свои - 
+
+Пускай в душевной глубине 
+
+Встают и заходят оне 
+
+Безмолвно, как звезды в ночи,- 
+
+Любуйся ими - и молчи.\selectlanguage{english}%
+%
+\end{minipage}}~%
+\fbox{\begin{minipage}[t]{0.48\columnwidth}%
+\selectlanguage{russian}%
+Молчи, скрывайся и таи 
+
+И чувства и мечты свои - 
+
+Пускай въ душевной глубинѣ 
+
+Встаютъ и заходятъ онѣ 
+
+Безмолвно, какъ звѣзды въ ночи,- 
+
+Любуйся ими - и молчи. \selectlanguage{english}%
+%
+\end{minipage}}
+
 \end{frame}
 
 \begin{frame}{Outlook: the future of the old Russian orthography}

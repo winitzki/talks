@@ -327,15 +327,7 @@ e
 \begin_inset Quotes erd
 \end_inset
 
- in endings, replace vowels to 
-\begin_inset Quotes eld
-\end_inset
-
-simplify
-\begin_inset Quotes erd
-\end_inset
-
-
+ in endings, replace vowels to simplify spelling
 \end_layout
 
 \begin_deeper
@@ -401,17 +393,9 @@ Physically remove the letters C, X, Y from all computer keyboards
 \begin_deeper
 \begin_layout Itemize
 because they are a heritage of the 
-\begin_inset Quotes eld
-\end_inset
-
-
 \emph on
 horrible old times
 \emph default
-
-\begin_inset Quotes erd
-\end_inset
-
  
 \end_layout
 
@@ -1020,6 +1004,157 @@ prononciation details (stress,
 е/ё
 \lang english
 ) do not always disambiguate 
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Converter for the old Russian orthography
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Dictionary-based, with some simple heuristics
+\end_layout
+
+\begin_layout Itemize
+Misses some words, needs manual check
+\end_layout
+
+\begin_layout Standard
+Tyutchev, 
+\emph on
+Silentium
+\emph default
+ (1830)
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+
+\lang russian
+Молчи, скрывайся и таи 
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang russian
+И чувства и мечты свои - 
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang russian
+Пускай в душевной глубине 
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang russian
+Встают и заходят оне 
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang russian
+Безмолвно, как звезды в ночи,- 
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang russian
+Любуйся ими - и молчи.
+\end_layout
+
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "48col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+
+\lang russian
+Молчи, скрывайся и таи 
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang russian
+И чувства и мечты свои - 
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang russian
+Пускай въ душевной глубинѣ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang russian
+Встаютъ и заходятъ онѣ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang russian
+Безмолвно, какъ звѣзды въ ночи,- 
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang russian
+Любуйся ими - и молчи.
+ 
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
