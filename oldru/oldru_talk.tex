@@ -58,7 +58,7 @@
 
 \begin{document}
 \frame{\titlepage}
-\begin{frame}{Old Russian Orthography\texttt{: what and why}}
+\begin{frame}{Old Russian Orthography: what and why}
 
 \begin{itemize}
 \item The Russian orthography was reformed in 1918
@@ -227,7 +227,7 @@ Proofreading Melgunov's \emph{Red Terror in Russia} (1924)
 \begin{frame}{Main linguistic challenges}
 
 
-To convert texts to the old Russian orthography, we...
+To convert texts to the old Russian orthography, we:
 \begin{itemize}
 \item disambiguate word pairs that became homographs...
 
@@ -247,18 +247,18 @@ To convert texts to the old Russian orthography, we...
 
 \selectlanguage{russian}%
 \begin{itemize}
-\item они, туманные звезды\foreignlanguage{english}{ $\rightarrow$ }онѣ,
-туманныя звѣзды
+\item {*}они, туманные звезды\foreignlanguage{english}{ $\rightarrow$ }он\textbf{ѣ},
+туманны\textbf{я} зв\textbf{ѣ}зды
 \end{itemize}
 \selectlanguage{english}%
 \item restore old letters in word stems, prefixes, and suffixes
 
 \selectlanguage{russian}%
 \begin{itemize}
-\item Ѳедоръ \foreignlanguage{english}{(Theodor), }орѳографія \foreignlanguage{english}{(orthography)},
-мѵро \foreignlanguage{english}{(myrrhe)}
-\item рассвирепел $\rightarrow$ разсвирѣпѣлъ, нежнейшего \foreignlanguage{english}{$\rightarrow$}
-нѣжнѣйшаго
+\item \textbf{Ѳ}едоръ \foreignlanguage{english}{(\textbf{Th}eodor), }ор\textbf{ѳ}ографія
+\foreignlanguage{english}{(or\textbf{th}ography)}, м\textbf{ѵ}ро \foreignlanguage{english}{(m\textbf{y}rrhe)}
+\item {*}рассвирепел $\rightarrow$ ра\textbf{з}свир\textbf{ѣ}п\textbf{ѣ}лъ,
+{*}нежнейшего \foreignlanguage{english}{$\rightarrow$} н\textbf{ѣ}жн\textbf{ѣ}йш\textbf{а}го
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -274,28 +274,29 @@ Disambiguation requires:
 
 \selectlanguage{russian}%
 \begin{itemize}
-\item синее $\rightarrow$ синее \foreignlanguage{english}{(blue)}, синѣе
+\item {*}синее $\rightarrow$ синее \foreignlanguage{english}{(blue)}, синѣе
 \foreignlanguage{english}{(more blue)}
-\item тем $\rightarrow$ темъ \foreignlanguage{english}{(of themes)}, тѣмъ
-\foreignlanguage{english}{(by that)}
+\item {*}тем $\rightarrow$ темъ \foreignlanguage{english}{(of themes)},
+тѣмъ \foreignlanguage{english}{(by that)}
 \end{itemize}
 \selectlanguage{english}%
 \item identifying grammatical forms (number, gender, case, tense)
 
 \selectlanguage{russian}%
 \begin{itemize}
-\item в море $\rightarrow$ въ море \foreignlanguage{english}{(into the
+\item {*}в море $\rightarrow$ въ море \foreignlanguage{english}{(into the
 sea)}, въ морѣ \foreignlanguage{english}{(within the sea)}
-\item есть $\rightarrow$ есть \foreignlanguage{english}{(it is)}, ѣсть
+\item {*}есть $\rightarrow$ есть \foreignlanguage{english}{(it is)}, ѣсть
 \foreignlanguage{english}{(to eat)}
 \end{itemize}
 \selectlanguage{english}%
-\item for some words, identifying \textbf{semantic content in advance}
+\item for some words, identifying \textbf{semantic content} is required
 
 \selectlanguage{russian}%
 \begin{itemize}
-\item мир $\rightarrow$ миръ \foreignlanguage{english}{(peace)}, міръ \foreignlanguage{english}{(world)}
-\item лечу $\rightarrow$ лечу \foreignlanguage{english}{(I fly)}, лѣчу
+\item {*}мир $\rightarrow$ миръ \foreignlanguage{english}{(peace)}, міръ
+\foreignlanguage{english}{(world)}
+\item {*}лечу $\rightarrow$ лечу \foreignlanguage{english}{(I fly)}, лѣчу
 \foreignlanguage{english}{(I heal)}
 \end{itemize}
 \selectlanguage{english}%
@@ -336,11 +337,11 @@ Tyutchev, \emph{Silentium} (1830)\\
 
 И чувства и мечты свои - 
 
-Пускай въ душевной глубинѣ 
+Пускай в\textbf{ъ} душевной глубин\textbf{ѣ} 
 
-Встаютъ и заходятъ онѣ 
+Встают\textbf{ъ} и заходят\textbf{ъ} он\textbf{ѣ} 
 
-Безмолвно, какъ звѣзды въ ночи,- 
+Безмолвно, как\textbf{ъ} зв\textbf{ѣ}зды в\textbf{ъ} ночи,- 
 
 Любуйся ими - и молчи. \selectlanguage{english}%
 %
@@ -351,8 +352,8 @@ Tyutchev, \emph{Silentium} (1830)\\
 \begin{frame}{Outlook: the future of the old Russian orthography}
 
 \begin{itemize}
-\item Keyboard layouts will become standard in OSes
-\item Hyphenation dictionaries for \LaTeX{} and other systems
+\item Custom keyboard layouts will become standard in OSes?
+\item Hyphenation dictionaries for \LaTeX{} and other systems?
 \item Spelling dictionaries and grammar checking
 \item Fully disambiguating converter between new and old orthography
 \end{itemize}

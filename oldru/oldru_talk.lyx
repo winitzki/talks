@@ -113,9 +113,7 @@ titlepage}
 status open
 
 \begin_layout Plain Layout
-Old Russian Orthography
-\family typewriter
-: what and why
+Old Russian Orthography: what and why
 \end_layout
 
 \end_inset
@@ -828,7 +826,7 @@ Main linguistic challenges
 
 \begin_deeper
 \begin_layout Standard
-To convert texts to the old Russian orthography, we...
+To convert texts to the old Russian orthography, we:
 \end_layout
 
 \begin_layout Itemize
@@ -863,7 +861,7 @@ restore old grammatical endings
 \begin_layout Itemize
 
 \lang russian
-они, туманные звезды
+*они, туманные звезды
 \lang english
  
 \begin_inset Formula $\rightarrow$
@@ -871,7 +869,19 @@ restore old grammatical endings
 
  
 \lang russian
-онѣ, туманныя звѣзды
+он
+\series bold
+ѣ
+\series default
+, туманны
+\series bold
+я
+\series default
+ зв
+\series bold
+ѣ
+\series default
+зды
 \end_layout
 
 \end_deeper
@@ -882,28 +892,63 @@ restore old letters in word stems, prefixes, and suffixes
 \begin_deeper
 \begin_layout Itemize
 
+\series bold
 \lang russian
-Ѳедоръ 
+Ѳ
+\series default
+едоръ 
 \lang english
-(Theodor), 
+(
+\series bold
+Th
+\series default
+eodor), 
 \lang russian
-орѳографія 
+ор
+\series bold
+ѳ
+\series default
+ографія 
 \lang english
-(orthography)
+(or
+\series bold
+th
+\series default
+ography)
 \lang russian
-, мѵро 
+, м
+\series bold
+ѵ
+\series default
+ро 
 \lang english
-(myrrhe)
+(m
+\series bold
+y
+\series default
+rrhe)
 \end_layout
 
 \begin_layout Itemize
 
 \lang russian
-рассвирепел 
+*рассвирепел 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
- разсвирѣпѣлъ, нежнейшего 
+ ра
+\series bold
+з
+\series default
+свир
+\series bold
+ѣ
+\series default
+п
+\series bold
+ѣ
+\series default
+лъ, *нежнейшего 
 \lang english
 
 \begin_inset Formula $\rightarrow$
@@ -911,7 +956,19 @@ restore old letters in word stems, prefixes, and suffixes
 
 
 \lang russian
- нѣжнѣйшаго
+ н
+\series bold
+ѣ
+\series default
+жн
+\series bold
+ѣ
+\series default
+йш
+\series bold
+а
+\series default
+го
 \end_layout
 
 \end_deeper
@@ -950,7 +1007,7 @@ identifying parts of speech
 \begin_layout Itemize
 
 \lang russian
-синее 
+*синее 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -966,7 +1023,7 @@ identifying parts of speech
 \begin_layout Itemize
 
 \lang russian
-тем 
+*тем 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -988,7 +1045,7 @@ identifying grammatical forms (number, gender, case, tense)
 \begin_layout Itemize
 
 \lang russian
-в море 
+*в море 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -1004,7 +1061,7 @@ identifying grammatical forms (number, gender, case, tense)
 \begin_layout Itemize
 
 \lang russian
-есть 
+*есть 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -1021,14 +1078,16 @@ identifying grammatical forms (number, gender, case, tense)
 \begin_layout Itemize
 for some words, identifying 
 \series bold
-semantic content in advance
+semantic content
+\series default
+ is required
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 
 \lang russian
-мир 
+*мир 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -1044,7 +1103,7 @@ semantic content in advance
 \begin_layout Itemize
 
 \lang russian
-лечу 
+*лечу 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -1190,19 +1249,51 @@ status open
 \begin_layout Plain Layout
 
 \lang russian
-Пускай въ душевной глубинѣ 
+Пускай в
+\series bold
+ъ
+\series default
+ душевной глубин
+\series bold
+ѣ
+\series default
+ 
 \end_layout
 
 \begin_layout Plain Layout
 
 \lang russian
-Встаютъ и заходятъ онѣ 
+Встают
+\series bold
+ъ
+\series default
+ и заходят
+\series bold
+ъ
+\series default
+ он
+\series bold
+ѣ
+\series default
+ 
 \end_layout
 
 \begin_layout Plain Layout
 
 \lang russian
-Безмолвно, какъ звѣзды въ ночи,- 
+Безмолвно, как
+\series bold
+ъ
+\series default
+ зв
+\series bold
+ѣ
+\series default
+зды в
+\series bold
+ъ
+\series default
+ ночи,- 
 \end_layout
 
 \begin_layout Plain Layout
@@ -1237,11 +1328,11 @@ Outlook: the future of the old Russian orthography
 
 \begin_deeper
 \begin_layout Itemize
-Keyboard layouts will become standard in OSes
+Custom keyboard layouts will become standard in OSes?
 \end_layout
 
 \begin_layout Itemize
-Hyphenation dictionaries for LaTeX and other systems
+Hyphenation dictionaries for LaTeX and other systems?
 \end_layout
 
 \begin_layout Itemize
