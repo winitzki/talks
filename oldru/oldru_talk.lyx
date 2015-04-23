@@ -130,7 +130,7 @@ The Russian orthography was reformed in 1918
 
 \begin_deeper
 \begin_layout Itemize
-Replace 
+Replaced 
 \lang russian
 ѣ
 \begin_inset Formula $\rightarrow$
@@ -516,11 +516,11 @@ unquestionably
 \end_layout
 
 \begin_layout Itemize
-No typewriters 
+No
 \emph on
-or computers
+ 
 \emph default
- support the old Russian orthography 
+computers today support the old Russian orthography 
 \end_layout
 
 \end_deeper
@@ -558,7 +558,7 @@ Unicode support was not widespread
 
 \end_deeper
 \begin_layout Itemize
-No keyboard layouts, no screen fonts, few vector fonts 
+No keyboard layouts, no screen fonts, few vector fonts had 
 \end_layout
 
 \begin_deeper
@@ -568,7 +568,7 @@ LaTeX font support: nonstandard font encoding by AMS
 
 \end_deeper
 \begin_layout Itemize
-No spelling checker support, no OCR, no hyphenation
+No spelling checker support, no hyphenation, no OCR
 \end_layout
 
 \end_deeper
@@ -609,7 +609,11 @@ LaTeX font support: OT2 font encoding only!
 
 \end_deeper
 \begin_layout Itemize
-Some spelling checker support (ispell, AbiWord, Open Office)
+Some spelling checker support (
+\family typewriter
+ispell
+\family default
+, AbiWord, Open Office)
 \end_layout
 
 \begin_layout Itemize
