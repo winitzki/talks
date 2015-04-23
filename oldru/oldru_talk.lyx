@@ -130,35 +130,6 @@ The Russian orthography was reformed in 1918
 
 \begin_deeper
 \begin_layout Itemize
-4 letters 
-\lang russian
-Ѣѣ, Ѳѳ, Іі, Ѵѵ
-\lang english
- were physically removed from printing presses
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Often, 
-\lang russian
-Ъъ
-\lang english
- was also removed by mistake
-\end_layout
-
-\end_deeper
-\end_deeper
-\begin_layout Itemize
-Classic Russian literature used the old orthography:
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Pushkin, Turgenev, Dostoyevsky, Tolstoy, Chekhov, Nabokov, ...
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
 Replace 
 \lang russian
 ѣ
@@ -182,9 +153,49 @@ Replace
  
 \end_layout
 
+\begin_layout Itemize
+4 letters 
+\lang russian
+Ѣѣ, Ѳѳ, Іі, Ѵѵ
+\lang english
+ were physically removed from printing presses
+\end_layout
+
 \begin_deeper
 \begin_layout Itemize
-motivation: 
+Often, 
+\lang russian
+Ъъ
+\lang english
+ was also removed by mistake
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Replaced some prefixes, suffixes, and word endings
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Classic and modern Russian literature used the 
+\begin_inset Quotes eld
+\end_inset
+
+old
+\begin_inset Quotes erd
+\end_inset
+
+ orthography:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Pushkin, Turgenev, Dostoyevsky, Tolstoy, Chekhov, Nabokov, ...
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Motivation for reform: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -195,7 +206,6 @@ simplify the spelling
 
 \end_layout
 
-\end_deeper
 \end_deeper
 \begin_layout Separator
 
@@ -320,14 +330,18 @@ A proposal for English, similar to the Russian spelling reform...
 \begin_deeper
 \begin_layout Itemize
 Omit the silent 
+\emph on
+e
+\emph default
+ in endings, replace vowels to 
 \begin_inset Quotes eld
 \end_inset
 
-e
+simplify
 \begin_inset Quotes erd
 \end_inset
 
- in endings, replace vowels to simplify spelling
+ spelling
 \end_layout
 
 \begin_deeper
@@ -353,18 +367,44 @@ breathe
 
 \end_deeper
 \begin_layout Itemize
-Replace the letters c
+Replace the letters 
+\emph on
+c
+\emph default
+
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-k/s, x
+
+\emph on
+k
+\emph default
+/
+\emph on
+s
+\emph default
+, 
+\emph on
+x
+\emph default
+
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-ks, y
+
+\emph on
+ks
+\emph default
+, 
+\emph on
+y
+\emph default
+
 \begin_inset Formula $\rightarrow$
 \end_inset
 
+
+\emph on
 i
 \end_layout
 
@@ -387,7 +427,19 @@ played
 
 \end_deeper
 \begin_layout Itemize
-Physically remove the letters C, X, Y from all computer keyboards
+Physically remove the letters 
+\emph on
+C
+\emph default
+, 
+\emph on
+X
+\emph default
+, 
+\emph on
+Y
+\emph default
+ from all computer keyboards
 \end_layout
 
 \begin_deeper
@@ -456,14 +508,18 @@ People born after
 \end_layout
 
 \begin_layout Itemize
-Such texts are perceived to be unquestionably obsolete
+Such texts are perceived to be 
+\emph on
+unquestionably
+\emph default
+ obsolete
 \end_layout
 
 \begin_layout Itemize
 No typewriters 
-\series bold
+\emph on
 or computers
-\series default
+\emph default
  support the old Russian orthography 
 \end_layout
 
