@@ -123,26 +123,67 @@ Old Russian Orthography: what and why
 
 \begin_deeper
 \begin_layout Itemize
-The Russian orthography was reformed in 1918
+Classic and modern Russian literature used the 
+\begin_inset Quotes eld
+\end_inset
+
+old
+\begin_inset Quotes erd
+\end_inset
+
+ orthography
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Pushkin, Turgenev, Dostoyevsky, Tolstoy, Chekhov, Nabokov, ...
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+The orthography was reformed in 1918:
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 Replaced 
+\series bold
+\emph on
 \lang russian
 ѣ
+\series default
+\emph default
+
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-е, ѳ
+е, 
+\series bold
+\emph on
+ѳ
+\series default
+\emph default
+
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-ф, і
+ф, 
+\series bold
+\emph on
+і
+\series default
+\emph default
+
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-и, ѵ
+и, 
+\series bold
+\emph on
+ѵ
+\series default
+\emph default
+
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -153,8 +194,30 @@ Replaced
 
 \begin_layout Itemize
 4 letters 
+\series bold
+\emph on
 \lang russian
-Ѣѣ, Ѳѳ, Іі, Ѵѵ
+Ѣѣ
+\series default
+\emph default
+, 
+\series bold
+\emph on
+Ѳѳ
+\series default
+\emph default
+, 
+\series bold
+\emph on
+Іі
+\series default
+\emph default
+, 
+\series bold
+\emph on
+Ѵѵ
+\series default
+\emph default
 \lang english
  were physically removed from printing presses
 \end_layout
@@ -162,8 +225,12 @@ Replaced
 \begin_deeper
 \begin_layout Itemize
 Often, 
+\series bold
+\emph on
 \lang russian
 Ъъ
+\series default
+\emph default
 \lang english
  was also removed by mistake
 \end_layout
@@ -171,24 +238,6 @@ Often,
 \end_deeper
 \begin_layout Itemize
 Replaced some prefixes, suffixes, and word endings
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Classic and modern Russian literature used the 
-\begin_inset Quotes eld
-\end_inset
-
-old
-\begin_inset Quotes erd
-\end_inset
-
- orthography:
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Pushkin, Turgenev, Dostoyevsky, Tolstoy, Chekhov, Nabokov, ...
 \end_layout
 
 \end_deeper
