@@ -26,6 +26,7 @@
  pdfsubject={computer word processing},
  linkcolor=black,urlcolor=blue}
 \fi
+\usepackage{breakurl}
 
 \makeatletter
 
@@ -83,6 +84,7 @@ by mistake
 \item Replaced some prefixes, suffixes, and word endings
 \end{itemize}
 \item Motivation for reform: ``simplify the spelling''
+\item Old orthography continued to be used outside Russia
 \end{itemize}
 \end{frame}
 
@@ -144,8 +146,8 @@ computer keyboards
 
 \begin{itemize}
 \item Cannot print adequate critical editions of classic literature
-\item Nobody wants to read even 100-year old books
-\item Converting each old book to new spelling is hard for editors
+\item Nobody wants to read even 50-year old books
+\item Converting each book to new spelling is hard for editors
 \end{itemize}
 \item In Russia:
 
@@ -153,13 +155,15 @@ computer keyboards
 \item People born after $\approx$1950 are loath to read texts in the old
 orthography
 \item Such texts are perceived to be \emph{unquestionably} obsolete
-\item No\emph{ }computers today support the old Russian orthography 
+\item No\emph{ }computers today fully support the old Russian orthography
 \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Main challenges in processing old Russian orthography}
+\begin{frame}{Processing old Russian orthography in 2000}
 
+
+Main challenges:
 \begin{itemize}
 \item As of 2000, no 8-bit encodings contained the letters \foreignlanguage{russian}{Ѣѣ,
 Ѳѳ, Іі, Ѵѵ} 
@@ -167,10 +171,10 @@ orthography
 \begin{itemize}
 \item Unicode support was not widespread
 \end{itemize}
-\item No keyboard layouts, no screen fonts, few vector fonts had 
+\item No keyboard layouts, no screen fonts, few vector fonts had them
 
 \begin{itemize}
-\item \LaTeX{} font support: nonstandard font encoding by AMS
+\item \LaTeX{} font support: nonstandard font encoding made by AMS
 \end{itemize}
 \item No spelling checker support, no hyphenation, no OCR
 \end{itemize}
@@ -180,7 +184,7 @@ orthography
 
 \begin{itemize}
 \item The letters \foreignlanguage{russian}{Ѣѣ, Ѳѳ, Іі, Ѵѵ} are present
-in most Cyrillic fonts 
+in most (vector) Cyrillic fonts 
 
 \begin{itemize}
 \item typesetting, printing supported through Unicode
@@ -198,12 +202,12 @@ in most Cyrillic fonts
 \item \href{http://oldrus-ispell.sourceforge.net/koi8-extended.html}{http://oldrus-ispell.sourceforge.net/koi8-extended.html}
 \item KOI8-C encoding (\href{http://www.ietf.org/archive/id/draft-winitzki-koi8c-encoding-00.txt}{IETF draft}),
 localization for the \href{http://links.twibright.com/}{links} browser
-\item A keyboard layout for X-Window and MS Windows 95
+\item A keyboard layout for X-Window and MS Windows 9x
 \item Bitmapped X-Window fonts (BDF), the \texttt{xcyr} package
 
 \begin{itemize}
 \item Became part of \texttt{\href{http://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html}{ucs-fonts}}
-and \href{https://packages.debian.org/sid/xfonts-cyrillic}{xfonts-cyrillic}
+and \texttt{\href{https://packages.debian.org/sid/xfonts-cyrillic}{xfonts-cyrillic}}
 \end{itemize}
 \item \texttt{ispell} dictionary for old Russian orthography
 \item A PostScript typesetter using BDF as Type 3 fonts (Perl)
@@ -214,7 +218,7 @@ and \href{https://packages.debian.org/sid/xfonts-cyrillic}{xfonts-cyrillic}
 \begin{frame}{The KOI8-C encoding and screen fonts}
 
 
-Viewing Nabokov, \emph{Despair} (1934) in Netscape using KO8-C
+Viewing Nabokov, \emph{Despair} (1934) in Netscape using KOI8-C
 
 \includegraphics[height=0.8\textheight]{xcyr-screenshot}
 \end{frame}
@@ -227,7 +231,7 @@ Proofreading Melgunov's \emph{Red Terror in Russia} (1924)
 \includegraphics[width=1.2\textwidth]{oldrus-screenshot}
 \end{frame}
 
-\begin{frame}{Main linguistic challenges}
+\begin{frame}{Main linguistic challenge: recover lost information}
 
 
 To convert texts to the old Russian orthography, we:
@@ -246,7 +250,7 @@ To convert texts to the old Russian orthography, we:
 \item есть - ѣсть, нежить - нѣжить, некогда - нѣкогда
 \end{itemize}
 \selectlanguage{english}%
-\item restore old grammatical endings
+\item restore traditional word endings: requires parsing the grammar
 
 \selectlanguage{russian}%
 \begin{itemize}
@@ -266,12 +270,10 @@ To convert texts to the old Russian orthography, we:
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Main linguistic challenges}
+\begin{frame}{Disambiguation tasks}
 
 
 
-
-Disambiguation requires:
 \begin{itemize}
 \item identifying parts of speech
 
@@ -303,8 +305,8 @@ sea)}, въ морѣ \foreignlanguage{english}{(within the sea)}
 \foreignlanguage{english}{(I heal)}
 \end{itemize}
 \selectlanguage{english}%
-\item prononciation details (stress, \foreignlanguage{russian}{е/ё}) do
-not always disambiguate 
+\item prononciation details (stress, \foreignlanguage{russian}{е/ё}) sometimes
+help 
 \end{itemize}
 \end{frame}
 

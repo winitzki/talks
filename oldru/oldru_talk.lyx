@@ -253,6 +253,10 @@ simplify the spelling
 
 \end_layout
 
+\begin_layout Itemize
+Old orthography continued to be used outside Russia
+\end_layout
+
 \end_deeper
 \begin_layout Separator
 
@@ -533,11 +537,11 @@ Cannot print adequate critical editions of classic literature
 \end_layout
 
 \begin_layout Itemize
-Nobody wants to read even 100-year old books
+Nobody wants to read even 50-year old books
 \end_layout
 
 \begin_layout Itemize
-Converting each old book to new spelling is hard for editors
+Converting each book to new spelling is hard for editors
 \end_layout
 
 \end_deeper
@@ -567,7 +571,7 @@ No
 \emph on
  
 \emph default
-computers today support the old Russian orthography 
+computers today fully support the old Russian orthography
 \end_layout
 
 \end_deeper
@@ -581,7 +585,7 @@ computers today support the old Russian orthography
 status open
 
 \begin_layout Plain Layout
-Main challenges in processing old Russian orthography
+Processing old Russian orthography in 2000
 \end_layout
 
 \end_inset
@@ -590,6 +594,10 @@ Main challenges in processing old Russian orthography
 \end_layout
 
 \begin_deeper
+\begin_layout Standard
+Main challenges:
+\end_layout
+
 \begin_layout Itemize
 As of 2000, no 8-bit encodings contained the letters 
 \lang russian
@@ -605,12 +613,12 @@ Unicode support was not widespread
 
 \end_deeper
 \begin_layout Itemize
-No keyboard layouts, no screen fonts, few vector fonts had 
+No keyboard layouts, no screen fonts, few vector fonts had them
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-LaTeX font support: nonstandard font encoding by AMS
+LaTeX font support: nonstandard font encoding made by AMS
 \end_layout
 
 \end_deeper
@@ -642,7 +650,7 @@ The letters
 \lang russian
 Ѣѣ, Ѳѳ, Іі, Ѵѵ
 \lang english
- are present in most Cyrillic fonts 
+ are present in most (vector) Cyrillic fonts 
 \end_layout
 
 \begin_deeper
@@ -726,7 +734,7 @@ target "http://links.twibright.com/"
 \end_layout
 
 \begin_layout Itemize
-A keyboard layout for X-Window and MS Windows 95
+A keyboard layout for X-Window and MS Windows 9x
 \end_layout
 
 \begin_layout Itemize
@@ -752,6 +760,8 @@ target "http://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html"
 
 \family default
  and 
+\family typewriter
+
 \begin_inset CommandInset href
 LatexCommand href
 name "xfonts-cyrillic"
@@ -806,7 +816,7 @@ Viewing Nabokov,
 \emph on
 Despair
 \emph default
- (1934) in Netscape using KO8-C
+ (1934) in Netscape using KOI8-C
 \end_layout
 
 \begin_layout Frame
@@ -865,7 +875,7 @@ Red Terror in Russia
 status open
 
 \begin_layout Plain Layout
-Main linguistic challenges
+Main linguistic challenge: recover lost information
 \end_layout
 
 \end_inset
@@ -903,7 +913,7 @@ disambiguate word pairs that became homographs...
 
 \end_deeper
 \begin_layout Itemize
-restore old grammatical endings
+restore traditional word endings: requires parsing the grammar
 \end_layout
 
 \begin_deeper
@@ -1031,7 +1041,7 @@ rrhe)
 status open
 
 \begin_layout Plain Layout
-Main linguistic challenges
+Disambiguation tasks
 \end_layout
 
 \end_inset
@@ -1044,10 +1054,6 @@ Main linguistic challenges
 \end_layout
 
 \begin_deeper
-\begin_layout Standard
-Disambiguation requires:
-\end_layout
-
 \begin_layout Itemize
 identifying parts of speech
 \end_layout
@@ -1171,7 +1177,7 @@ prononciation details (stress,
 \lang russian
 е/ё
 \lang english
-) do not always disambiguate 
+) sometimes help 
 \end_layout
 
 \end_deeper
