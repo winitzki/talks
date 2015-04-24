@@ -123,7 +123,7 @@ Old Russian Orthography: what and why
 
 \begin_deeper
 \begin_layout Itemize
-Classic and modern Russian literature used the 
+Classic Russian literature used the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -786,7 +786,7 @@ A PostScript typesetter using BDF as Type 3 fonts (Perl)
 \end_layout
 
 \begin_layout Itemize
-A primitive converter, new 
+A dictionary-based converter, new 
 \begin_inset Formula $\rightleftarrows$
 \end_inset
 
