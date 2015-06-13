@@ -27,9 +27,7 @@ phoneS = subscribe phoneC
 
 make_checkbox b_channel b_data b_name = 
   flow right
-    [ container 30 30 middle (Input.checkbox (send b_channel) b_data)
-    , container 150 30 midLeft (plainText b_name)
-    ]
+    [ container 30 30 middle (Input.checkbox (send b_channel) b_data), container 150 30 midLeft (plainText b_name) ]
 
 draw { boss, phone, work } =
  let work_text = if work then "I am working" else "I am drinking tea" in
