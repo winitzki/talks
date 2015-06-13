@@ -1,0 +1,679 @@
+%% LyX 2.1.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english,hyperref]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\usepackage{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=true,
+ linkcolor=black,urlcolor=blue}
+  }
+\else
+  \hypersetup{unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=true,
+ linkcolor=black,urlcolor=blue}
+\fi
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+ \newenvironment{lyxcode}
+   {\par\begin{list}{}{
+     \setlength{\rightmargin}{\leftmargin}
+     \setlength{\listparindent}{0pt}% needed for AMS classes
+     \raggedright
+     \setlength{\itemsep}{0pt}
+     \setlength{\parsep}{0pt}
+     \normalfont\ttfamily}%
+    \def\{{\char`\{}
+    \def\}{\char`\}}
+    \def\textasciitilde{\char`\~}
+    \item[]}
+   {\end{list}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme[secheader]{Boadilla}
+\usecolortheme{seahorse}
+\title[FRP and Elm]{Functional Reactive Programming and Elm}
+\author{Sergei Winitzki}
+\date{June 14, 2015}
+\institute[Versal Group Inc.]{BayHac 2015}
+
+\makeatother
+
+\begin{document}
+\frame{\titlepage}
+\begin{frame}{Part 1. Functional reactive programming and\texttt{ Elm}}
+
+
+FRP has little to do with...
+\begin{itemize}
+\item multithreading, message-passing concurrency, ``actors''
+\item distributed computing on massively parallel, load-balanced clusters
+\item map/reduce, ``reactive extensions'', the ``reactive manifesto''
+\end{itemize}
+
+FRP means (in my definition)...
+\begin{itemize}
+\item \textbf{pure functions }using\textbf{ temporal types} as primitives
+
+\begin{itemize}
+\item (temporal type $\approx$ lazy stream of values)
+\end{itemize}
+\end{itemize}
+
+FRP is probably most useful for:
+\begin{itemize}
+\item GUI and event-driven programming
+\end{itemize}
+
+\texttt{Elm} is...
+\begin{itemize}
+\item a viable implementation of FRP geared for Web GUI apps
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Difficulties in reactive programming}
+
+
+Imperative implementation is one problem among many...
+\begin{itemize}
+\item Input signals may come at unpredictable times
+
+\begin{itemize}
+\item Imperative updates are difficult to keep in the correct order
+\item Flow of events becomes difficult to understand
+\end{itemize}
+\item Asynchronous (out-of-order) callback logic becomes opaque
+
+\begin{itemize}
+\item ``callback hell'': deeply nested callbacks, all mutating data
+\end{itemize}
+\item Inverted control (``the system will call you'') obscures the flow
+of data
+\item Some concurrency is usually required (e.g.~background tasks)
+
+\begin{itemize}
+\item Explicit multithreaded code is hard to write and debug
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{FRP basics}
+
+\begin{itemize}
+\item Reactive programs work on \textbf{infinite streams} of input/output
+values
+\item Main idea: make streams \textbf{implicit}, as a new ``temporal''
+type
+
+\begin{itemize}
+\item $\Sigma\alpha$ --- an infinite stream of values of type $\alpha$
+\item alternatively, $\Sigma\alpha$ is a value of type $\alpha$ that ``changes
+with time''
+\end{itemize}
+\item Reactive programs are viewed as \textbf{pure functions}
+
+\begin{itemize}
+\item a GUI is a pure function of type \texttt{$\Sigma$} \texttt{Inputs}
+$\rightarrow$ \texttt{$\Sigma$} \texttt{View} 
+\item a Web server is a pure function \texttt{$\Sigma$} \texttt{Request}
+$\rightarrow$ \texttt{$\Sigma$} \texttt{Response} 
+\item all mutation is \textbf{implicit} in the program
+
+\begin{itemize}
+\item instead of updating an \texttt{x:Int}, we define a value of type \texttt{$\Sigma$}
+\texttt{Int}
+\item our code is 100\% immutable, no side effects, no \texttt{IO} monads
+\end{itemize}
+\item asynchronous behavior is \textbf{implicit}: our code has no callbacks
+\item concurrency / parallelism is \textbf{implicit}
+
+\begin{itemize}
+\item the FRP runtime will provide the required scheduling of events
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Czaplicki's (2012) core \texttt{Elm} in a nutshell}
+
+\begin{itemize}
+\item \texttt{Elm} is a pure polymorphic $\lambda$-calculus with products
+and sums
+\item \textbf{Temporal type} $\Sigma\alpha$ --- a lazy sequence of values
+of type $\alpha$
+\item Temporal \textbf{combinators} in core \texttt{Elm}: \end{itemize}
+\begin{lyxcode}
+constant:~$\alpha\rightarrow\Sigma\alpha$
+
+map2:~$(\alpha\rightarrow\beta\rightarrow\gamma)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta\rightarrow\Sigma\gamma$
+
+scan:~\textrm{$\left(\alpha\rightarrow\beta\rightarrow\beta\right)\rightarrow\beta\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$}\end{lyxcode}
+\begin{itemize}
+\item \textbf{No nested} temporal types: \texttt{constant (constant x)}
+is ill-typed!
+\item Domain-specific primitive types: \texttt{Bool}, \texttt{Int}, \texttt{Float},
+\texttt{String}, \texttt{View}
+\item Standard library with data structures, HTML, HTTP, JSON, ...
+
+\begin{itemize}
+\item ...and signals \texttt{Time.every}, \texttt{Mouse.position}, \texttt{Window.dimensions},
+...
+\item ...and some utility functions: \texttt{map}, \texttt{merge}, \texttt{drop},
+\texttt{sampleOn}, ...
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Details: \texttt{Elm} type judgments {[}Czaplicki 2012{]}}
+
+\begin{itemize}
+\item Polymorphically typed $\lambda$-calculus (also with temporal types)
+\begin{align*}
+\frac{\Gamma,(x:\alpha)\vdash e:\beta}{\Gamma\vdash(\lambda x.e):\alpha\rightarrow\beta}\,\textsc{Lambda} & \quad\frac{\Gamma\vdash e_{1}:\alpha\rightarrow\beta\quad\Gamma\vdash e_{2}:\alpha}{\Gamma\vdash(e_{1}\,e_{2}):\beta}\,\textsc{Apply}
+\end{align*}
+
+\item Temporal types are denoted by $\Sigma\tau$
+
+\begin{itemize}
+\item In these rules, type variables $\alpha,\beta,\gamma$ \textbf{cannot}
+involve $\Sigma$:
+\begin{align*}
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\left(\mbox{constant}\,e\right):\Sigma\alpha} & \:\textsc{Const}\\
+\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash\left(\mbox{map2}\:m\:p\:q\right):\Sigma\gamma} & \:\textsc{Map2}\\
+\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash q:\Sigma\alpha}{\Gamma\vdash\left(\mbox{scan}\,u\,e\,q\right):\Sigma\beta} & \:\textsc{Scan}
+\end{align*}
+
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{Elm} operational semantics 0: Current values}
+
+\begin{itemize}
+\item An \texttt{Elm} program is a temporal expression of type $...\rightarrow\Sigma$\texttt{View}
+
+\begin{itemize}
+\item Temporal expressions are built from \textbf{input} \textbf{signals}
+and combinators
+\item It is not possible to ``consume'' a signal ($\Sigma\alpha\rightarrow\beta$)
+\item A value of type $\Sigma\Sigma\alpha$ is impossible in a well-typed
+expression
+\end{itemize}
+\item Every temporal expression has a \textbf{current value} denoted by
+$e^{\left[c\right]}$
+\[
+\frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}\:\textsc{CurVal}
+\]
+
+
+\begin{itemize}
+\item Denote a fresh value by asterisk: $e^{\left[c\right]^{*}}$
+\end{itemize}
+\item Some current values are ``freshly updated'' while others are ``stale'' 
+
+\begin{itemize}
+\item In \texttt{Elm}, current values are implemented with an \texttt{Either}
+type 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{Elm} operational semantics 1: Initial values}
+
+
+Every temporal expression has an initial (\emph{stale}) current value
+\begin{itemize}
+\item Every predefined \textbf{input} signal $i:\Sigma\alpha,i\in{\cal I}$
+has an initial value: $i^{[a]}$
+\item \textbf{Initial} current values for all expressions are derived:
+\begin{align*}
+\frac{\Gamma\vdash\left(\mbox{constant}\ c\right):\Sigma\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{ConstInit}\\
+\frac{\Gamma\vdash\left(\mbox{map2}\ m\ p^{\left[a\right]}\ q^{\left[b\right]}\right):\Sigma\gamma}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \:\textsc{Map2Init}\\
+\frac{\Gamma\vdash\left(\mbox{scan}\,u\,e\,q\right):\Sigma\beta}{\Gamma\vdash\left(\mbox{scan}\,u\,e\,q\right){}^{\left[e\right]}:\Sigma\beta} & \:\textsc{ScanInit}
+\end{align*}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{Elm} operational semantics 2: Updating signals}
+
+\begin{itemize}
+\item Update steps happen only to \textbf{input signals} $s\in{\cal I}$
+and \textbf{one at a time}
+\item Update steps $\mathbf{U}_{s\leftarrow a}\left\{ ...\right\} $ are
+applied to the \textbf{whole program} at once:
+\[
+\frac{\Gamma\vdash s:\Sigma\alpha\quad s\in{\cal I}\quad\Gamma\vdash a:\alpha\quad\Gamma\vdash e^{\left[c\right]}:\Sigma\beta\quad\Gamma\vdash c':\beta}{\Gamma\vdash\mathbf{U}_{s\leftarrow a}\left\{ e^{\left[c\right]}\right\} \Rightarrow e^{\left[c'\right]}}
+\]
+
+\item An update step on $s$ will leave all other \textbf{input} signals
+unchanged:
+\[
+\forall s\neq s'\in{\cal I}:\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s^{\left[a\right]}\right\} \Rightarrow s^{\left[b\right]^{*}}\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s'^{\left[c\right]}\right\} \Rightarrow s'^{\left[c\right]}
+\]
+
+\item \texttt{Elm} has an efficient implementation:
+
+\begin{itemize}
+\item The instances of input signals within expressions are not duplicated
+\item Stale current values are cached and not recomputed
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{Elm} operational semantics 3: Updating combinators}
+
+\begin{itemize}
+\item Operational semantics does not reduce temporal expressions:
+
+\begin{itemize}
+\item The whole program \textbf{remains} a static temporal expression tree
+\item Only the current values are updated in subexpressions
+\begin{align*}
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{constant}\ c\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
+ & \quad\quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[v\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[w\right]}\right)^{\left[m\ v\ w\right]} & \textsc{Map2Upd}\\
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{scan}\,u\,e\,q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{scan}\,u\,e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]^{*}}\right){}^{\left[u\ c\ b\right]^{*}} & \textsc{ScanPUpd}
+\end{align*}
+
+\end{itemize}
+\item All computations during an update step are \textbf{synchronous}
+
+\begin{itemize}
+\item The expression $\mathbf{U}_{s\leftarrow b}\left\{ e^{\left[c\right]}\right\} $
+is reduced \textbf{after} all subexpressions of $e$
+\item Current values are non-temporal and are evaluated \textbf{eagerly} 
+\item \texttt{scan} does not update unless its subexpression is freshly
+updated
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{GUI building: ``Hello, world'' in \texttt{Elm} }
+
+\begin{itemize}
+\item The value called \texttt{\textbf{main}} will be visualized by the
+runtime\end{itemize}
+\begin{lyxcode}
+import~Graphics.Element~(..)~
+
+import~Text~(..)~
+
+import~Signal~(..)
+
+~~
+
+text~:~Element
+
+text~=~plainText~\textquotedbl{}Hello,~World!\textquotedbl{}
+
+~~
+
+main~:~Signal~Element~
+
+main~=~constant~text\end{lyxcode}
+\begin{itemize}
+\item Try \texttt{Elm} online at \href{http://elm-lang.org/try}{http://elm-lang.org/try}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Example of using \texttt{scan} }
+
+\begin{itemize}
+\item Specification:
+
+\begin{itemize}
+\item \textcolor{blue}{\emph{I work only after the boss comes by and unless
+the phone rings}} 
+\end{itemize}
+\item Implementation:\end{itemize}
+\begin{lyxcode}
+after\_unless~:~(Bool,~Bool)~->~Bool~->~Bool
+
+after\_unless~(b,p)~w~=~(w~||~b)~\&\&~not~p
+
+~$\quad\quad$
+
+boss\_and\_phone~:~Signal~(Bool,Bool)
+
+~$\quad\quad$
+
+i\_work~:~Signal~Bool
+
+i\_work~=~scan~after\_unless~False~(boss\_and\_phone)\end{lyxcode}
+\begin{itemize}
+\item Demo (\href{https://github.com/winitzki/talks/blob/master/elm-talk/boss_phone_work.elm}{boss\_{}phone\_{}work.elm})
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Typical GUI boilerplate in \texttt{Elm} }
+
+\begin{itemize}
+\item A state machine with stepwise update:\end{itemize}
+\begin{lyxcode}
+update~:~Command~$\rightarrow$~State~$\rightarrow$~State\end{lyxcode}
+\begin{itemize}
+\item A rendering function (\texttt{View} is either \texttt{Element} or
+\texttt{Html}):\end{itemize}
+\begin{lyxcode}
+draw~:~State~$\rightarrow$~View\end{lyxcode}
+\begin{itemize}
+\item A manager that \textbf{merges} the required input signals into one:
+
+\begin{itemize}
+\item may use \texttt{Mouse}, \texttt{Keyboard}, \texttt{Time}, \texttt{HTML}
+stuff, etc.
+\end{itemize}
+\end{itemize}
+\begin{lyxcode}
+merge\_inputs~:~Signal~Command\end{lyxcode}
+\begin{itemize}
+\item Main boilerplate:\end{itemize}
+\begin{lyxcode}
+init\_state~:~State
+
+main~:~Signal~View
+
+main~=~map~draw~(scan~update~init\_state~merge\_inputs)
+\end{lyxcode}
+\end{frame}
+
+\begin{frame}{Some limitations of \texttt{Elm}-style FRP}
+
+\begin{itemize}
+\item No higher-order signals: $\Sigma(\Sigma\alpha)$ is disallowed by
+the type system
+\item No distinction between continuous time and discrete time
+\item The signal processing logic is fully specified statically
+\item No constructors for user-defined signals
+\item No recursion possible in signal definition!
+\item No full concurrency (e.g.~``dining philosophers'')
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{Elm}-style FRP: the good parts}
+
+\begin{itemize}
+\item Transparent, declarative modeling of data through ADTs
+\item Immutable and safe data structures (\texttt{Array}, \texttt{Dict},
+...) 
+\item No runtime errors or exceptions!
+\item Space/time leaks are impossible!
+\item Language is Haskell-like but simpler for beginners
+\item Full type inference
+\item Easy deployment and interop in Web applications
+\item Good support for HTML/CSS, HTTP requests, JSON
+\item Good performance of caching HTML views
+\item Support for Canvas and HTML-free UI building
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Part 2. Temporal logic and FRP}
+
+\begin{itemize}
+\item Reminder (Curry-Howard): logical expressions will be types
+
+\begin{itemize}
+\item ...and the axioms will be primitive terms
+\end{itemize}
+\item We only need to control the \textbf{order} of events: no ``hard real-time''
+\item How to understand temporal logic:
+
+\begin{itemize}
+\item classical propositional logic $\approx$ Boolean arithmetic
+\item intuitionistic propositional logic $\approx$ same but without \textbf{true}
+/ \textbf{false} dichotomy
+\item (linear-time) temporal logic LTL$\approx$ Boolean arithmetic for
+\emph{infinite sequences}
+\item intuitionistic temporal logic ITL$\approx$ same but without \textbf{true}
+/ \textbf{false} dichotomy
+\end{itemize}
+\item In other words:
+
+\begin{itemize}
+\item an ITL type represents a \textbf{single infinite sequence} of values
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Boolean arithmetic: notation}
+
+\begin{itemize}
+\item Classical propositional (Boolean) logic: $T$, $F$, $a\vee b$, $a\wedge b$,
+$\neg a$, $a\rightarrow b$
+\item A notation better adapted to school-level arithmetic: $1$, $0$,
+$a+b$, $ab$, $a'$
+\item The only ``new rule'' is $1+1=1$
+\item Define $a\rightarrow b=a'+b$
+\item Some identities: 
+\begin{align*}
+0a=0,\quad1a=a, & \quad a+0=a,\quad a+1=1,\\
+a+a=a,\quad aa=a, & \quad a+a'=1,\quad aa'=0,\\
+\left(a+b\right)'=a'b', & \quad\left(ab\right)'=a'+b',\quad\left(a'\right)'=a\\
+a\left(b+c\right)=ab+ac, & \quad\left(a+b\right)\left(a+c\right)=a+bc
+\end{align*}
+ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Boolean arithmetic: example}
+
+
+\textcolor{blue}{\emph{Of the three suspects $A$, $B$, $C$, only
+one is guilty of a crime. }}
+
+
+\textcolor{blue}{\emph{Suspect $A$ says: ``$B$ did it''. Suspect
+$B$ says: ``$C$ is innocent.''}}
+
+
+\textcolor{blue}{\emph{The guilty one is lying, the innocent ones
+tell the truth.}}
+\[
+\phi=\left(ab'c'+a'bc'+a'b'c\right)\left(a'b+ab'\right)\left(b'c'+bc\right)
+\]
+\textbf{Simplify}: expand the brackets, omit $aa'$, $bb'$, $cc'$,
+replace $aa=a$ etc.:
+\[
+\phi=ab'c'+0+0=ab'c'
+\]
+
+
+
+\textcolor{blue}{The guilty one is $A$.}
+
+\end{frame}
+
+\begin{frame}{Propositional linear-time temporal logic (LTL)}
+
+\begin{itemize}
+\item We work with\emph{ infinite boolean sequences} (``linear time'')\\
+\textbf{Boolean} operations:
+\begin{align*}
+a & =\left[a_{0},a_{1},a_{2},...\right];\quad b=\left[b_{0},b_{1},b_{2},...\right];\\
+a+b & =\left[a_{0}+b_{0},a_{1}+b_{1},...\right];\;a'=\left[a_{0}^{\prime},a_{1}^{\prime},...\right];\;ab=\left[a_{0}b_{0},a_{1}b_{1},...\right]
+\end{align*}
+\textbf{Temporal} operations:
+\begin{align*}
+\mbox{(Next)}\quad\mathbf{N}a & =\left[a_{1},a_{2},...\right]\\
+\mbox{(Sometimes)}\quad\mathbf{F}a & =\left[a_{0}+a_{1}+a_{2}+...,\ a_{1}+a_{2}+...,\ ...\right]\\
+\mbox{(Always)}\quad\mathbf{G}a & =\left[a_{0}a_{1}a_{2}a_{3}...,\ a_{1}a_{2}a_{3}...,\ a_{2}a_{3}...,\ ...\right]
+\end{align*}
+Other notation (from modal logic):
+\[
+\mathbf{N}a\equiv\bigcirc a;\;\mathbf{F}a\equiv\lozenge a;\;\mathbf{G}a\equiv\square a
+\]
+
+\item Weak Until: $p\mathbf{U}q$ = ``$p$ holds from now on until $q$
+first becomes true''
+\[
+p\mathbf{U}q=q+p\mathbf{N}\left(q+p\mathbf{N}\left(q+...\right)\right)
+\]
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Temporal logic redux}
+
+
+Designers of FRP languages must face some choices:
+\begin{itemize}
+\item LTL as type theory: do we use $\mathbf{N}\alpha$, $\mathbf{F}\alpha$,
+$\mathbf{G}\alpha$ as new types?
+\item Are they to be functors, monads, ...?
+\item Which temporal axioms to use as language primitives?
+\item What is the operational semantics? (I.e., how to compile this?)
+\end{itemize}
+
+A sophisticated example: {[}Krishnaswamy 2013{]}
+\begin{itemize}
+\item uses full LTL with higher-order temporal types and fixpoints
+\item uses linear types to control space/time leaks
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Interpreting values typed by LTL}
+
+\begin{itemize}
+\item What does it mean to have a value $x$ of type, say, $\mathbf{G}(\alpha\rightarrow\alpha\mathbf{U}\beta)$
+??
+
+\begin{itemize}
+\item $x:\mathbf{N}\alpha$ means that $x:\alpha$ will be available \emph{only}
+at the \emph{next} time tick \\
+($x$ is a \textbf{deferred value} of type $\alpha$)
+\item $x:\mathbf{F}\alpha$ means that $x:\alpha$ will be available at
+\emph{some} future tick(s)\\
+($x$ is an \textbf{event} of type $\alpha$)
+\item $x:\mathbf{G\alpha}$ means that a (different) value $x:\alpha$ is
+available at \emph{every} tick\\
+($x$ is an \textbf{infinite stream} of type $\alpha$)
+\item $x:\alpha\mathbf{U}\beta$ means a \textbf{finite stream} of $\alpha$
+that may end with a $\beta$ 
+\end{itemize}
+\item Some temporal \textbf{axioms} of intuitionistic LTL:
+\begin{align*}
+\mbox{(deferred apply)}\quad\mathbf{N}\left(\alpha\rightarrow\beta\right) & \rightarrow\left(\mathbf{N}\alpha\rightarrow\mathbf{N}\beta\right);\\
+\mathbf{\mbox{(streamed apply)}\quad G}\left(\alpha\rightarrow\beta\right) & \rightarrow\left(\mathbf{G}\alpha\rightarrow\mathbf{G}\beta\right);\\
+\mbox{(generate a stream)}\quad\mathbf{G}\left(\alpha\rightarrow\mathbf{N}\alpha\right) & \rightarrow\left(\alpha\rightarrow\mathbf{G}\alpha\right);\\
+\mbox{(read infinite stream)}\quad\mathbf{G}\alpha & \rightarrow\alpha\mathbf{N}(\mathbf{G}\alpha)\\
+\mbox{(read finite stream)}\quad\alpha\mathbf{U}\beta & \rightarrow\beta+\alpha\mathbf{N}(\alpha\mathbf{U}\beta)
+\end{align*}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{Elm} as an FRP language }
+
+\begin{itemize}
+\item $\lambda$-calculus with type $\mathbf{G}\alpha$, primitives \texttt{constant},
+\texttt{map2}, scan \end{itemize}
+\begin{lyxcode}
+map2~:~$\left(\alpha\rightarrow\beta\rightarrow\gamma\right)\rightarrow\mathbf{G}\alpha\rightarrow\mathbf{G}\beta\rightarrow\mathbf{G}\gamma$
+
+scan~:~$\left(\alpha\rightarrow\beta\rightarrow\beta\right)\rightarrow\beta\rightarrow\mathbf{G}\alpha\rightarrow\mathbf{G}\beta$
+
+constant~:~$\alpha\rightarrow\mathbf{G}\alpha$\end{lyxcode}
+\begin{itemize}
+\item (\texttt{map2} makes $\mathbf{G}$ an applicative functor)\emph{ }
+\item Limitations:
+
+\begin{itemize}
+\item Cannot have a type $\mathbf{G}(\mathbf{G}\alpha)$, also not using
+$\mathbf{N}$ or $\mathbf{F}$
+\item Cannot construct temporal values by hand
+\item This language is an \emph{incomplete} Curry-Howard image of LTL!
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusions}
+
+\begin{itemize}
+\item There are some languages that implement FRP in various \emph{ad hoc}
+ways
+\item The ideal is not (yet) reached
+\item \texttt{Elm}-style FRP is a promising step in the right direction
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Abstract}
+
+
+In my day job, most bugs come from implementing reactive programs
+imperatively. FRP is a declarative approach that promises to solve
+these problems. \medskip{}
+
+
+
+FRP can be defined as a $\lambda$-calculus that admits temporal types,
+i.e.\ types given by a propositional intuitionistic linear-time temporal
+logic (LTL). Although the \texttt{Elm} language uses only a subset
+of LTL, it achieves high expressivity for GUI programming. I will
+formally define the operational semantics of \texttt{Elm}. I discuss
+the advantages and the current limitations of \texttt{Elm}. I also
+review the connections between temporal logic, FRP, and \texttt{Elm}.
+\medskip{}
+
+
+
+My talk will be understandable to anyone familiar with Curry-Howard
+and functional programming. The first part of the talk is a self-contained
+presentation of \texttt{Elm} that does not rely on temporal logic
+or Curry-Howard. The second part of the talk will explain the basic
+intuitions behind temporal logic and its connection with FRP.
+
+\end{frame}
+
+\begin{frame}{Suggested reading }
+
+
+E. Czaplicki, S. Chong. \href{http://people.seas.harvard.edu/~chong/pubs/pldi13-elm.pdf}{Asynchronous FRP for GUIs}.
+(2013) 
+
+
+E. Czaplicki. \href{http://www.seas.harvard.edu/sites/default/files/files/archived/Czaplicki.pdf}{Concurrent FRP for functional GUI}
+(2012). 
+
+
+N. R. Krishnaswamy. \href{https://www.mpi-sws.org/~neelk/simple-frp.pdfHigher-order functional reactive programming without spacetime leaks}{https://www.mpi-sws.org/$\sim$neelk/simple-frp.pdfHigher-order functional reactive programming without spacetime leaks}(2013).
+
+
+M. F. Dam. Lectures on temporal logic. Slides: \href{http://www.csc.kth.se/~mfd/Courses/Temporal_logic/lecture1.pdf}{Syntax and semantics of LTL},
+\href{http://www.csc.kth.se/~mfd/Courses/Temporal_logic/lecture2.pdf}{A Hilbert-style proof system for LTL} 
+
+
+E. Bainomugisha, et al. \href{ftp://progftp.vub.ac.be/tech_report/2012/vub-soft-tr-12-13.pdf}{A survey of reactive programming}
+(2013).
+
+
+W. Jeltsch. \href{http://www.ioc.ee/~wolfgang/research/plpv-2013-paper.pdf}{Temporal logic with Until, Functional Reactive Programming with processes, and concrete process categories.}
+(2013).
+
+
+A. Jeffrey. \href{http://ect.bell-labs.com/who/ajeffrey/papers/plpv12.pdf}{LTL types FRP.}
+(2012).
+
+
+D. Marchignoli. \href{http://phd.di.unipi.it/Theses/PhDthesis_Marchignoli.pdf}{Natural deduction systems for temporal logic.}
+(2002). -- See Chapter 2 for a natural deduction system for modal
+and temporal logics. \end{frame}
+
+\end{document}

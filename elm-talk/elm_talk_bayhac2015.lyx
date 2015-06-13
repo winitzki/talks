@@ -755,14 +755,6 @@ cannot
 \end_layout
 
 \end_deeper
-\begin_layout Itemize
-A value of type 
-\begin_inset Formula $\Sigma\Sigma\alpha$
-\end_inset
-
- is impossible in a well-typed expression!
-\end_layout
-
 \end_deeper
 \begin_layout Separator
 
@@ -777,7 +769,7 @@ status open
 \family typewriter
 Elm
 \family default
- operational semantics 1: Current values
+ operational semantics 0: Current values
 \end_layout
 
 \end_inset
@@ -787,14 +779,32 @@ Elm
 
 \begin_deeper
 \begin_layout Itemize
+An 
+\family typewriter
+Elm
+\family default
+ program is a temporal expression of type 
+\begin_inset Formula $...\rightarrow\Sigma$
+\end_inset
+
+
+\family typewriter
+View
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
 Temporal expressions are built from 
 \series bold
 input
 \series default
- signals and combinators
+ 
+\series bold
+signals
+\series default
+ and combinators
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
 It is not possible to 
 \begin_inset Quotes eld
@@ -808,7 +818,15 @@ consume
 \begin_inset Formula $\Sigma\alpha\rightarrow\beta$
 \end_inset
 
-)!
+)
+\end_layout
+
+\begin_layout Itemize
+A value of type 
+\begin_inset Formula $\Sigma\Sigma\alpha$
+\end_inset
+
+ is impossible in a well-typed expression
 \end_layout
 
 \end_deeper
@@ -830,6 +848,81 @@ current value
 \end_inset
 
 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Denote a fresh value by asterisk: 
+\begin_inset Formula $e^{\left[c\right]^{*}}$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Some current values are 
+\begin_inset Quotes eld
+\end_inset
+
+freshly updated
+\begin_inset Quotes erd
+\end_inset
+
+ while others are 
+\begin_inset Quotes eld
+\end_inset
+
+stale
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+In 
+\family typewriter
+Elm
+\family default
+, current values are implemented with an 
+\family typewriter
+Either
+\family default
+ type 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+
+\family typewriter
+Elm
+\family default
+ operational semantics 1: Initial values
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Every temporal expression has an initial (
+\emph on
+stale
+\emph default
+) current value
 \end_layout
 
 \begin_layout Itemize
@@ -880,7 +973,7 @@ status open
 \family typewriter
 Elm
 \family default
- operational semantics 2: Update steps
+ operational semantics 2: Updating signals
 \end_layout
 
 \end_inset
@@ -935,7 +1028,7 @@ input
  signals unchanged:
 \begin_inset Formula 
 \[
-\forall s\neq s'\in{\cal I}:\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s^{\left[a\right]}\right\} \Rightarrow s^{\left[b\right]}\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s'^{\left[c\right]}\right\} \Rightarrow s'^{\left[c\right]}
+\forall s\neq s'\in{\cal I}:\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s^{\left[a\right]}\right\} \Rightarrow s^{\left[b\right]^{*}}\quad\quad\mathbf{U}_{s\leftarrow b}\left\{ s'^{\left[c\right]}\right\} \Rightarrow s'^{\left[c\right]}
 \]
 
 \end_inset
@@ -944,7 +1037,11 @@ input
 \end_layout
 
 \begin_layout Itemize
-Efficient implementation:
+
+\family typewriter
+Elm
+\family default
+ has an efficient implementation:
 \end_layout
 
 \begin_deeper
@@ -953,7 +1050,7 @@ The instances of input signals within expressions are not duplicated
 \end_layout
 
 \begin_layout Itemize
-Unchanged current values are cached and not recomputed
+Stale current values are cached and not recomputed
 \end_layout
 
 \end_deeper
@@ -994,13 +1091,13 @@ remains
 \end_layout
 
 \begin_layout Itemize
-Only the current values are updated in all subexpressions
+Only the current values are updated in subexpressions
 \begin_inset Formula 
 \begin{align*}
  & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{constant}\ c\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
  & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
  & \quad\quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[v\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[w\right]}\right)^{\left[m\ v\ w\right]} & \textsc{Map2Upd}\\
- & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\,u\,e\,q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\,u\,e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{scan}\,u\,e\,q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{scan}\,u\,e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]^{*}}\right){}^{\left[u\ c\ b\right]^{*}} & \textsc{ScanPUpd}
 \end{align*}
 
 \end_inset
@@ -1038,6 +1135,14 @@ Current values are non-temporal and are evaluated
 eagerly
 \series default
  
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+scan
+\family default
+ does not update unless its subexpression is freshly updated
 \end_layout
 
 \end_deeper
@@ -1146,7 +1251,7 @@ status open
 \begin_layout Plain Layout
 Example of using 
 \family typewriter
-foldp
+scan
 \family default
  
 \end_layout
@@ -1214,7 +1319,7 @@ i_work : Signal Bool
 \begin_layout LyX-Code
 i_work = 
 \family typewriter
-foldp after_unless False (boss_and_phone)
+scan after_unless False (boss_and_phone)
 \end_layout
 
 \begin_layout Itemize
@@ -1297,7 +1402,11 @@ draw : State
 \end_layout
 
 \begin_layout Itemize
-A manager that merges the required input signals into one:
+A manager that 
+\series bold
+merges
+\series default
+ the required input signals into one:
 \end_layout
 
 \begin_deeper
@@ -1353,227 +1462,7 @@ Signal View
 \begin_layout LyX-Code
 
 \family typewriter
-main = map draw (foldp update init_state merge_inputs)
-\end_layout
-
-\end_deeper
-\begin_layout Separator
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Asynchrony and concurrency in 
-\family typewriter
-Elm
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Long-running computations will delay signal updates!
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Example: 
-\family typewriter
-foldp
-\family default
- 
-\family typewriter
-f
-\family default
- 
-\family typewriter
-e
-\family default
- 
-\family typewriter
-s
-\family default
- where 
-\family typewriter
-f:
-\begin_inset Formula $\alpha\rightarrow\beta\rightarrow\beta$
-\end_inset
-
-
-\family default
- takes a long time
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-
-\family typewriter
-Elm
-\family default
-'s solution is to use 
-\family typewriter
-async
-\family default
- 
-\family typewriter
-:
-\family default
- 
-\begin_inset Formula $\Sigma\alpha\rightarrow\Sigma\alpha$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Operational semantics: (
-\begin_inset Formula $i$
-\end_inset
-
- is a 
-\series bold
-new
-\series default
- input signal for each 
-\family typewriter
-async
-\family default
-)
-\begin_inset Formula 
-\begin{align*}
-\frac{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}{\Gamma,\left(i:\Sigma\alpha\right)\vdash\left(\mbox{async}_{i}\ e\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{AsyncInit}\\
-\mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{async}_{i}\ e\right)^{\left[c\right]}\right\} \Rightarrow\mathbf{U}_{i\leftarrow c'}^{\dagger}\left(\mbox{async}_{i}\ \mathbf{U}_{s\leftarrow a}^{\dagger}\left\{ e\right\} ^{\left[c'\right]}\right)^{\left[c\right]} & \:\textsc{AsyncSched}\\
-\mathbf{U}_{i\leftarrow c'}\left\{ \left(\mbox{async}_{i}\ e\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{async}_{i}\ e\right)^{\left[c'\right]} & \:\textsc{AsyncUpd}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-The update computation 
-\begin_inset Formula $\mathbf{U}_{s\leftarrow a}^{\dagger}\left\{ e\right\} $
-\end_inset
-
- runs on another thread...
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-...while the current value 
-\begin_inset Formula $c$
-\end_inset
-
- remains unchanged
-\end_layout
-
-\begin_layout Itemize
-Another update 
-\begin_inset Formula $\mathbf{U}_{i\leftarrow c'}^{\dagger}$
-\end_inset
-
- is 
-\series bold
-scheduled
-\series default
- but not yet triggered
-\end_layout
-
-\begin_layout Itemize
-When 
-\begin_inset Formula $c'$
-\end_inset
-
- is ready, 
-\begin_inset Formula $\mathbf{U}_{i\leftarrow c'}\left\{ ...\right\} $
-\end_inset
-
- runs and sets the current value to 
-\begin_inset Formula $c'$
-\end_inset
-
-
-\end_layout
-
-\end_deeper
-\end_deeper
-\begin_layout Separator
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Example of using 
-\family typewriter
-async
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-UI that shows results of some long computations:
-\end_layout
-
-\begin_layout LyX-Code
-draw : Int -> Int -> View
-\end_layout
-
-\begin_layout LyX-Code
-draw x y = ...
-\end_layout
-
-\begin_layout LyX-Code
- 
-\end_layout
-
-\begin_layout LyX-Code
-s : Signal Int -- input values
-\end_layout
-
-\begin_layout LyX-Code
- 
-\end_layout
-
-\begin_layout LyX-Code
-fSlow : Int -> Int
-\end_layout
-
-\begin_layout LyX-Code
-res1 = async (map fSlow s)
-\end_layout
-
-\begin_layout LyX-Code
-fFast : Int -> Int
-\end_layout
-
-\begin_layout LyX-Code
-res2 = map fFast s
-\end_layout
-
-\begin_layout LyX-Code
- 
-\end_layout
-
-\begin_layout LyX-Code
-main : Signal View = map2 draw res1 res2
-\end_layout
-
-\begin_layout Itemize
-Both results are updated as soon as they are computed
+main = map draw (scan update init_state merge_inputs)
 \end_layout
 
 \end_deeper
@@ -1624,71 +1513,11 @@ No recursion possible in signal definition!
 \end_layout
 
 \begin_layout Itemize
-Incomplete semantics for 
-\family typewriter
-async
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\uuline off
-\uwave off
-\noun off
-\color none
- : 
-\begin_inset Formula $\Sigma\alpha\rightarrow\Sigma\alpha$
+No full concurrency (e.g.
+\begin_inset space ~
 \end_inset
 
 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Example: 
-\family typewriter
-async
-\family default
- 
-\family typewriter
-(map
-\family default
- 
-\family typewriter
-f
-\family default
- 
-\family typewriter
-s)
-\family default
- where 
-\family typewriter
-f
-\family default
- takes a long time
-\end_layout
-
-\begin_layout Itemize
-The initial value of this signal will not be available at initial time!
-\end_layout
-
-\begin_layout Itemize
-Need 
-\family typewriter
-async'
-\family default
- : 
-\begin_inset Formula $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
-\end_inset
-
- to specify initial value?
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-No full concurrency (e.g., 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1697,192 +1526,6 @@ dining philosophers
 \end_inset
 
 )
-\end_layout
-
-\end_deeper
-\begin_layout Separator
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-
-\family typewriter
-Elm
-\family default
- cannot simulate 
-\begin_inset Quotes eld
-\end_inset
-
-dining philosophers
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-A philosopher thinks for a random time, then eats for a random time
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Can a signal value 
-\family typewriter
-p
-\family default
- 
-\family typewriter
-:
-\family default
- 
-\family typewriter
-Signal
-\family default
- 
-\family typewriter
-Unit
-\family default
- update itself at random times? 
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-No! There is no way to delay the update times of a signal 
-\series bold
-at runtime
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Time.delay:
-\family default
- 
-\family typewriter
-Int
-\family default
-
-\begin_inset Formula $\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
-\end_inset
-
- cannot use a time-varying delay value 
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-Time.every:
-\family default
- 
-\family typewriter
-Int
-\family default
-
-\begin_inset Formula $\rightarrow\Sigma$
-\end_inset
-
-
-\family typewriter
-Int
-\family default
- also requires a fixed delay value
-\end_layout
-
-\begin_layout Itemize
-Cannot lift 
-\family typewriter
-Time.every
-\family default
- into 
-\family typewriter
-
-\begin_inset Formula $\Sigma$
-\end_inset
-
-Int
-\family default
-
-\begin_inset Formula $\rightarrow\Sigma\Sigma$
-\end_inset
-
-
-\family typewriter
-Int
-\family default
- to achieve variable delay
-\end_layout
-
-\end_deeper
-\begin_layout Separator
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-The JavaScript backend for 
-\family typewriter
-Elm
-\family default
- (2015)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-Features:
-\end_layout
-
-\begin_layout Itemize
-Good support for HTML/CSS, HTTP requests, JSON
-\end_layout
-
-\begin_layout Itemize
-Good performance of caching HTML views
-\end_layout
-
-\begin_layout Itemize
-Support for Canvas and HTML-free UI building
-\end_layout
-
-\begin_layout Standard
-Limitations:
-\end_layout
-
-\begin_layout Itemize
-No implementation for 
-\family typewriter
-async
-\family default
- (JavaScript lacks concurrency)
-\end_layout
-
-\begin_layout Itemize
-The lack of recursive signals is compensated by 
-\emph on
-ad hoc
-\emph default
- primitives
-\end_layout
-
-\begin_layout Itemize
-Ordinary recursion may generate invalid JavaScript!
 \end_layout
 
 \end_deeper
@@ -1944,149 +1587,18 @@ Full type inference
 Easy deployment and interop in Web applications
 \end_layout
 
-\end_deeper
-\begin_layout Separator
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Some conservative extensions of 
-\family typewriter
-Elm
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
 \begin_layout Itemize
-Fix initial value semantics for 
-\family typewriter
-async'
-\family default
- 
-\family typewriter
-:
-\family default
- 
-\begin_inset Formula $\alpha\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha$
-\end_inset
-
- 
+Good support for HTML/CSS, HTTP requests, JSON
 \end_layout
 
 \begin_layout Itemize
-Allow recursive definitions for signals
+Good performance of caching HTML views
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
-generate updates as 
-\family typewriter
-s0
-\family default
-, 
-\family typewriter
-f(s0)
-\family default
-, 
-\family typewriter
-f(f(s0))
-\family default
-, ...
- are being computed:
+Support for Canvas and HTML-free UI building
 \end_layout
 
-\begin_layout LyX-Code
-s = async' s0 (map f s)
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Add monadic signal combinator, 
-\family typewriter
-bind
-\family default
- 
-\family typewriter
-:
-\family default
- 
-\begin_inset Formula $(\alpha\rightarrow\Sigma\beta)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-use input signals from dynamically created UI:
-\end_layout
-
-\begin_layout LyX-Code
-viewS = map draw stateS
-\end_layout
-
-\begin_layout LyX-Code
-stateS = foldp update_on_click (bind get_clicks viewS)
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Allow user-defined signals constructed from asynchronous APIs
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Add a slide explaining applicative/monadic problems and how we solve them
- with these extension
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Generate signal updates whenever callback is called:
-\end_layout
-
-\begin_layout LyX-Code
-type 
-\begin_inset Formula $\mathbf{C}\alpha\beta=\alpha\rightarrow\left(\beta\rightarrow\bot\right)\rightarrow\bot$
-\end_inset
-
-
-\end_layout
-
-\begin_layout LyX-Code
-chain : 
-\begin_inset Formula $\mathbf{C}\alpha\beta\rightarrow\Sigma\alpha\rightarrow\Sigma\beta$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout LyX-Code
-some_async_api : 
-\begin_inset Formula $\mathbf{C}\alpha\beta$
-\end_inset
-
-
-\end_layout
-
-\begin_layout LyX-Code
-values_of_b = chain some_async_api values_of_a 
-\end_layout
-
-\end_deeper
 \end_deeper
 \begin_layout Separator
 
@@ -2819,17 +2331,13 @@ Elm
 
 , primitives 
 \family typewriter
+constant
+\family default
+, 
+\family typewriter
 map2
 \family default
-, 
-\family typewriter
-foldp
-\family default
-, 
-\family typewriter
-async
-\family default
- 
+, scan 
 \end_layout
 
 \begin_layout LyX-Code
@@ -2841,7 +2349,7 @@ map2 :
 \end_layout
 
 \begin_layout LyX-Code
-foldp : 
+scan : 
 \begin_inset Formula $\left(\alpha\rightarrow\beta\rightarrow\beta\right)\rightarrow\beta\rightarrow\mathbf{G}\alpha\rightarrow\mathbf{G}\beta$
 \end_inset
 
@@ -2849,8 +2357,8 @@ foldp :
 \end_layout
 
 \begin_layout LyX-Code
-async : 
-\begin_inset Formula $\mathbf{G}\alpha\rightarrow\mathbf{G}\alpha$
+constant : 
+\begin_inset Formula $\alpha\rightarrow\mathbf{G}\alpha$
 \end_inset
 
 
@@ -2866,20 +2374,8 @@ map2
 \end_inset
 
  an applicative functor)
-\end_layout
-
-\begin_layout Itemize
-
-\family typewriter
-async
-\family default
- is a special 
 \emph on
-scheduling
-\emph default
  
-\emph on
-instruction
 \end_layout
 
 \begin_layout Itemize
@@ -3006,11 +2502,11 @@ Elm
 Elm
 \family default
 .
- I discuss the current limitations of 
+ I discuss the advantages and the current limitations of 
 \family typewriter
 Elm
 \family default
- and outline possible extensions.
+.
  I also review the connections between temporal logic, FRP, and 
 \family typewriter
 Elm
@@ -3183,200 +2679,5 @@ target "http://phd.di.unipi.it/Theses/PhDthesis_Marchignoli.pdf"
 \end_layout
 
 \end_deeper
-\begin_layout Section
-Notes added after presenting the talk
-\end_layout
-
-\begin_layout Itemize
-What Evan calls 
-\begin_inset Quotes eld
-\end_inset
-
-syntax-directed initialization semantics
-\begin_inset Quotes erd
-\end_inset
-
- is perhaps an important optimization, making sure that no signal values
- are copied.
-\end_layout
-
-\begin_layout Itemize
-Either we update the signal tree bottom-up (as suggested in Evan's paper,
- even concurrently, with message passing), or we evaluate it top-down (as
- I presented).
- Synchronization does not pose problems, except for the async primitive.
- It remains to be seen which semantics is easier to formulate.
- The bottom-up semantics might be easier if we figure out how to denote
- the cascading update of expressions that depend on lower-level subexpressions.
- (The cascading update is easy to present in the top-down formulation of
- updates.)
-\end_layout
-
-\begin_layout Itemize
-The semantics of 
-\family typewriter
-async
-\family default
- still requires refinement.
- First, we need an initial value explicitly assigned to async expressions.
- (What are the typical ways these initial values can be determined?) Second,
- we need to denote the facts that the first update is scheduled on a background
- thread, the second update is scheduled but not run, and - more importantly
- - that the second update is scheduled to run on the entire Elm program
- being evaluated, not only on the local 
-\family typewriter
-async
-\family default
- expression being evaluated.
- This is perhaps easier to express with bottom-up evaluation?
-\end_layout
-
-\begin_layout Itemize
-The semantics of updates needs refinement to specify when current values
- remain unchanged but an update is scheduled, and when current values remain
- unchanged while no update is performed on that subexpression.
- This has implications only for 
-\family typewriter
-foldp
-\family default
-, which depends on the absence of 
-\begin_inset Quotes eld
-\end_inset
-
-stuttering
-\begin_inset Quotes erd
-\end_inset
-
- updates.
-\end_layout
-
-\begin_layout Itemize
-Need to present typical FRP primitives, such as those used in 
-\family typewriter
-Rx
-\family default
-; promises; futures; 
-\family typewriter
-async.js
-\family default
- library primitives; 
-\family typewriter
-bacon.js
-\family default
- library primitives, etc., through Elm primitives
-\end_layout
-
-\begin_layout Itemize
-It is necessary to make 
-\family typewriter
-chain
-\family default
- implicitly asynchronous, just like 
-\family typewriter
-bind
-\family default
- and recursion.
- But the 
-\family typewriter
-drop
-\family default
- primitive still cannot be expressed through 
-\family typewriter
-chain
-\family default
- - by omitting the callback invocation when the predicate returns 
-\family typewriter
-false
-\family default
- we will approximate 
-\family typewriter
-drop
-\family default
- but, when the predicate returns true, we will generate an asynchronous
- update of the second signal, while what we presumably wanted is a synchronous
- update.
-\end_layout
-
-\begin_layout Itemize
-However, 
-\family typewriter
-async
-\family default
- itself can be expressed through 
-\family typewriter
-chain
-\family default
-.
- Can 
-\family typewriter
-bind
-\family default
- be expressed through 
-\family typewriter
-chain
-\family default
-? I think it can't because we can't convert 
-\begin_inset Formula $\alpha\rightarrow\Sigma\beta$
-\end_inset
-
- into 
-\begin_inset Formula $\mathbf{C}\alpha\beta$
-\end_inset
-
-.
- And what if we could? Consider 
-\family typewriter
-react
-\family default
- 
-\family typewriter
-:
-\family default
- 
-\begin_inset Formula $\Sigma\alpha\rightarrow(\alpha\rightarrow\bot)\rightarrow\bot$
-\end_inset
-
- and 
-\family typewriter
-signal
-\family default
- 
-\family typewriter
-:
-\family default
- 
-\begin_inset Formula $(\left(\alpha\rightarrow\bot\right)\rightarrow\bot)\rightarrow\Sigma\alpha$
-\end_inset
-
-.
- These two terms can build operational equivalence of 
-\begin_inset Formula $\Sigma\alpha$
-\end_inset
-
- and 
-\begin_inset Formula $\left(\alpha\rightarrow\bot\right)\rightarrow\bot$
-\end_inset
-
-, since a callback can be called zero times or multiple times (simulating
- a signal update) - and then we would reimplement Elm's runtime by hand.
- It is not clear that this is desirable.
- The implementation in terms of 
-\begin_inset Formula $\mathbf{C}\alpha\beta$
-\end_inset
-
- definitely seems to be too low-level, and there is some advantage in restrictin
-g the signal primitives so that safety and clarity are maintained.
-\end_layout
-
-\begin_layout Itemize
-Perhaps the easiest and clearest way of presenting the semantics of Elm
- is to translate Elm into callback types?
-\end_layout
-
-\begin_layout Itemize
-What are the axioms of temporal logic in Ewald's old paper, and how do they
- translate to Elm primitives? What are the missing primitives?
-\end_layout
-
 \end_body
 \end_document
