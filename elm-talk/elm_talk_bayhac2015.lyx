@@ -1140,7 +1140,11 @@ eagerly
 \family typewriter
 scan
 \family default
- does not update unless its subexpression is freshly updated
+ does 
+\series bold
+not
+\series default
+ update unless its subexpression is freshly updated
 \end_layout
 
 \end_deeper
@@ -2062,6 +2066,105 @@ p\mathbf{U}q=q+p\mathbf{N}\left(q+p\mathbf{N}\left(q+...\right)\right)
 \end_inset
 
 
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+LTL: temporal specification 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\emph on
+\color blue
+Whenever the boss comes by my office, I will start working.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\color blue
+Once I start working, I will keep working until the telephone rings.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathbf{G}\left(\left(b\rightarrow\mathbf{F}w\right)\left(w\rightarrow w\mathbf{U}r\right)\right)=\mathbf{G}\left(\left(b'+\mathbf{F}w\right)\left(w'+w\mathbf{U}r\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\color blue
+Whenever the button is pressed, the dialog will appear.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\color blue
+The dialog will disappear after 1 minute of user inactivity.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathbf{G}\left(\left(b\rightarrow\mathbf{F}d\right)\left(d\rightarrow\mathbf{F}t\right)\left(d\rightarrow d\mathbf{U}td'\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The timer 
+\begin_inset Formula $t$
+\end_inset
+
+ is an external event and is 
+\emph on
+not specified
+\emph default
+ here
+\end_layout
+
+\begin_layout Itemize
+Difficult to say 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Formula $x$
+\end_inset
+
+ stays true until further notice
+\begin_inset Quotes erd
+\end_inset
+
+ 
 \end_layout
 
 \end_deeper

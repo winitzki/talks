@@ -297,8 +297,8 @@ unchanged:
 \item The expression $\mathbf{U}_{s\leftarrow b}\left\{ e^{\left[c\right]}\right\} $
 is reduced \textbf{after} all subexpressions of $e$
 \item Current values are non-temporal and are evaluated \textbf{eagerly} 
-\item \texttt{scan} does not update unless its subexpression is freshly
-updated
+\item \texttt{scan} does \textbf{not} update unless its subexpression is
+freshly updated
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -524,6 +524,41 @@ first becomes true''
 p\mathbf{U}q=q+p\mathbf{N}\left(q+p\mathbf{N}\left(q+...\right)\right)
 \]
 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{LTL: temporal specification }
+
+
+\textcolor{blue}{\emph{Whenever the boss comes by my office, I will
+start working. }}
+
+
+\textcolor{blue}{\emph{Once I start working, I will keep working until
+the telephone rings.}}
+
+
+\[
+\mathbf{G}\left(\left(b\rightarrow\mathbf{F}w\right)\left(w\rightarrow w\mathbf{U}r\right)\right)=\mathbf{G}\left(\left(b'+\mathbf{F}w\right)\left(w'+w\mathbf{U}r\right)\right)
+\]
+
+
+
+\textcolor{blue}{\emph{Whenever the button is pressed, the dialog
+will appear. }}
+
+
+\textcolor{blue}{\emph{The dialog will disappear after 1 minute of
+user inactivity.}}
+
+
+\[
+\mathbf{G}\left(\left(b\rightarrow\mathbf{F}d\right)\left(d\rightarrow\mathbf{F}t\right)\left(d\rightarrow d\mathbf{U}td'\right)\right)
+\]
+
+\begin{itemize}
+\item The timer $t$ is an external event and is \emph{not specified} here
+\item Difficult to say ``$x$ stays true until further notice'' 
 \end{itemize}
 \end{frame}
 
