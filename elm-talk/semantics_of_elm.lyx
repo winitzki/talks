@@ -1,0 +1,138 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Semantics of ELM-style FRP and its extensions
+\end_layout
+
+\begin_layout Author
+Sergei Winitzki
+\end_layout
+
+\begin_layout Abstract
+I consider a paradigm of functional reactive programming pioneered by the
+ Elm language [Czaplicki 2013].
+ Rather than discussing the current implementation of Elm (at version 0.15,
+ elm-lang.org), I focus on the core features of the proposed FRP paradigm.
+ I describe the formal semantics of a minimal language inspired by Elm and
+ propose some conservative extensions, with the intention of making a complete
+ FRP system for asynchronous UI.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+The Elm language [Czaplicki 2013, 2014] is a purely functional, eagerly
+ evaluated, strictly typed programming language that incorporates functional
+ reactive programming (FRP).
+ Broadly speaking, FRP is pure functional programming with temporal data
+ types.
+ The Elm language makes specific choices of the temporal types and primitives,
+ motivated by simplicity and practical applicability.
+\end_layout
+
+\begin_layout Standard
+The Elm language as described in the original papers is limited: it does
+ not accomodate user-changeable UIs or arbitrary asynchronous computations.
+ Some of the limitations of Elm are intentional, and motivated
+\end_layout
+
+\begin_layout Section
+Type system
+\end_layout
+
+\begin_layout Section
+Operational semantics
+\end_layout
+
+\begin_layout Section
+Async
+\end_layout
+
+\begin_layout Section
+Recursive signal definitions
+\end_layout
+
+\begin_layout Section
+Monadic bind
+\end_layout
+
+\begin_layout Section
+Asynchronous callbacks
+\end_layout
+
+\begin_layout Section
+Implementation considerations
+\end_layout
+
+\end_body
+\end_document
