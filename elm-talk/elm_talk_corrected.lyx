@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
 \textclass beamer
@@ -21,13 +21,13 @@
 \font_roman default
 \font_sans default
 \font_typewriter default
+\font_math auto
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
-
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -48,15 +48,24 @@
 \pdf_quoted_options "linkcolor=black,urlcolor=blue"
 \papersize default
 \use_geometry true
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 1
 \index Index
 \shortcut idx
@@ -97,13 +106,23 @@ titlepage}
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Part 1.
  Functional reactive programming in 
 \family typewriter
 Elm
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 FRP has little to do with...
 \end_layout
@@ -182,22 +201,33 @@ Elm
 a viable implementation of FRP geared for Web apps
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Transformational vs.
  reactive programs
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 \align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="10" columns="2">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top" width="0">
-<column alignment="center" valignment="top" width="0">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
@@ -460,14 +490,25 @@ temporal
 
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Difficulties in reactive programming
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 Usually, reactive programs are written imperatively...
 \end_layout
@@ -529,14 +570,25 @@ Explicit multithreaded code is hard to write and debug
 \end_layout
 
 \end_deeper
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Motivation for FRP
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Reactive programs work on 
 \series bold
@@ -719,11 +771,16 @@ the FRP runtime will provide the required scheduling of events
 
 \end_deeper
 \end_deeper
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Czaplicki's original 
 \family typewriter
 Elm
@@ -731,6 +788,12 @@ Elm
  2012 in a nutshell
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 
 \family typewriter
@@ -903,11 +966,16 @@ drop
 \end_layout
 
 \end_deeper
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Details: 
 \family typewriter
 Elm
@@ -915,6 +983,12 @@ Elm
  type judgments [Czaplicki 2012]
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Polymorphically typed 
 \begin_inset Formula $\lambda$
@@ -926,7 +1000,7 @@ Polymorphically typed
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\frac{\Gamma,(x:\alpha)\vdash e:\beta}{\Gamma\vdash(\lambda x.e):\alpha\rightarrow\beta}\,\textsc{Lambda} & \quad\frac{\Gamma\vdash e_{1}:\alpha\rightarrow\beta\quad\Gamma\vdash e_{2}:\alpha}{\Gamma\vdash(e_{1}\, e_{2}):\beta}\,\textsc{Apply}
+\frac{\Gamma,(x:\alpha)\vdash e:\beta}{\Gamma\vdash(\lambda x.e):\alpha\rightarrow\beta}\,\textsc{Lambda} & \quad\frac{\Gamma\vdash e_{1}:\alpha\rightarrow\beta\quad\Gamma\vdash e_{2}:\alpha}{\Gamma\vdash(e_{1}\,e_{2}):\beta}\,\textsc{Apply}
 \end{align*}
 
 \end_inset
@@ -963,9 +1037,9 @@ cannot
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\left(\mbox{constant}\, e\right):\Sigma\alpha} & \:\textsc{Const}\\
-\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash\left(\mbox{map2}\: m\: p\: q\right):\Sigma\gamma} & \:\textsc{Map2}\\
-\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash q:\Sigma\alpha}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right):\Sigma\beta} & \:\textsc{FoldP}
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\left(\mbox{constant}\,e\right):\Sigma\alpha} & \:\textsc{Const}\\
+\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash\left(\mbox{map2}\:m\:p\:q\right):\Sigma\gamma} & \:\textsc{Map2}\\
+\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash q:\Sigma\alpha}{\Gamma\vdash\left(\mbox{foldp}\,u\,e\,q\right):\Sigma\beta} & \:\textsc{FoldP}
 \end{align*}
 
 \end_inset
@@ -981,11 +1055,16 @@ A value of type
  is impossible in a well-typed expression!
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 
 \family typewriter
 Elm
@@ -993,6 +1072,12 @@ Elm
  operational semantics 1: Current values
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Temporal expressions are built from 
 \series bold
@@ -1071,7 +1156,7 @@ Initial
 \begin{align*}
 \frac{\Gamma\vdash\left(\mbox{constant}\ c\right):\Sigma\alpha}{\Gamma\vdash\left(\mbox{constant}\ c\right)^{\left[c\right]}:\Sigma\alpha} & \:\textsc{ConstInit}\\
 \frac{\Gamma\vdash\left(\mbox{map2}\ m\ p^{\left[a\right]}\ q^{\left[b\right]}\right):\Sigma\gamma}{\Gamma\vdash\left(\mbox{map2}\ m\ p\ q\right)^{\left[m\ a\ b\right]}:\Sigma\gamma} & \:\textsc{Map2Init}\\
-\frac{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right):\Sigma\beta}{\Gamma\vdash\left(\mbox{foldp}\, u\, e\, q\right){}^{\left[e\right]}:\Sigma\beta} & \:\textsc{FoldPInit}
+\frac{\Gamma\vdash\left(\mbox{foldp}\,u\,e\,q\right):\Sigma\beta}{\Gamma\vdash\left(\mbox{foldp}\,u\,e\,q\right){}^{\left[e\right]}:\Sigma\beta} & \:\textsc{FoldPInit}
 \end{align*}
 
 \end_inset
@@ -1079,11 +1164,16 @@ Initial
 
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 
 \family typewriter
 Elm
@@ -1091,6 +1181,12 @@ Elm
  operational semantics 2: Update steps
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Update steps happen only to 
 \series bold
@@ -1165,7 +1261,16 @@ Unchanged current values are cached and not recomputed
 \end_layout
 
 \end_deeper
-\begin_layout BeginFrame
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 
 \family typewriter
 Elm
@@ -1173,6 +1278,12 @@ Elm
  operational semantics 3: Updating combinators
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Operational semantics does not reduce temporal expressions:
 \end_layout
@@ -1197,7 +1308,7 @@ Only the current values are updated in all subexpressions
  & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{constant}\ c\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
  & \mathbf{U}_{s\leftarrow a}\left\{ \mbox{map2}\ m\ p\ q\right\} \\
  & \quad\quad\Rightarrow\left(\mbox{map2}\ m\ \mathbf{U}_{s\leftarrow a}\left\{ p\right\} ^{\left[v\right]}\ \mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[w\right]}\right)^{\left[m\ v\ w\right]} & \textsc{Map2Upd}\\
- & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\, u\, e\, q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\, u\, e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
+ & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{foldp}\,u\,e\,q\right)^{\left[b\right]}\right\} \Rightarrow\left(\mbox{foldp}\,u\,e\,\mathbf{U}_{s\leftarrow a}\left\{ q\right\} ^{\left[c\right]}\right){}^{\left[u\ c\ b\right]} & \textsc{FoldPUpd}
 \end{align*}
 
 \end_inset
@@ -1237,11 +1348,16 @@ eagerly
 \end_layout
 
 \end_deeper
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 GUI building: 
 \begin_inset Quotes eld
 \end_inset
@@ -1257,6 +1373,12 @@ Elm
  
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 The value called 
 \family typewriter
@@ -1319,11 +1441,16 @@ target "http://elm-lang.org/try"
 
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Example of using 
 \family typewriter
 foldp
@@ -1331,6 +1458,12 @@ foldp
  
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Specification:
 \end_layout
@@ -1403,11 +1536,16 @@ target "https://github.com/winitzki/talks/blob/master/elm-talk/boss_phone_work.e
 )
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Typical GUI boilerplate in 
 \family typewriter
 Elm
@@ -1415,6 +1553,12 @@ Elm
  
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 A state machine with stepwise update:
 \end_layout
@@ -1519,16 +1663,27 @@ Signal View
 main = map draw (foldp update init_state merge_inputs)
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Asynchrony and concurrency in 
 \family typewriter
 Elm
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Long-running computations will delay signal updates!
 \end_layout
@@ -1655,16 +1810,27 @@ When
 \end_layout
 
 \end_deeper
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Example of using 
 \family typewriter
 async
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 UI that shows results of some long computations:
 \end_layout
@@ -1717,11 +1883,16 @@ main : Signal View = map2 draw res1 res2
 Both results are updated as soon as they are computed
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Some limitations of 
 \family typewriter
 Elm
@@ -1729,6 +1900,12 @@ Elm
 -style FRP
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 No higher-order signals: 
 \begin_inset Formula $\Sigma(\Sigma\alpha)$
@@ -1829,11 +2006,16 @@ dining philosophers
 )
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 
 \family typewriter
 Elm
@@ -1849,6 +2031,12 @@ dining philosophers
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 A philosopher thinks for a random time, then eats for a random time
 \end_layout
@@ -1941,11 +2129,16 @@ Int
  to achieve variable delay
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 The JavaScript backend for 
 \family typewriter
 Elm
@@ -1953,6 +2146,12 @@ Elm
  (2015)
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 Features:
 \end_layout
@@ -1993,11 +2192,16 @@ ad hoc
 Ordinary recursion may generate invalid JavaScript!
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 
 \family typewriter
 Elm
@@ -2005,6 +2209,12 @@ Elm
 -style FRP: the good parts
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Transparent, declarative modeling of data through ADTs
 \end_layout
@@ -2041,16 +2251,27 @@ Full type inference
 Easy deployment and interop in Web applications
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Some conservative extensions of 
 \family typewriter
 Elm
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Fix initial value semantics for 
 \family typewriter
@@ -2173,15 +2394,26 @@ values_of_b = chain some_async_api values_of_a
 \end_layout
 
 \end_deeper
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Part 2.
  Temporal logic and FRP
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Reminder (Curry-Howard): logical expressions will be types
 \end_layout
@@ -2278,14 +2510,25 @@ single infinite sequence
 \end_layout
 
 \end_deeper
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Boolean arithmetic: notation
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 Classical propositional (Boolean) logic: 
 \begin_inset Formula $T$
@@ -2377,14 +2620,25 @@ a\left(b+c\right)=ab+ac, & \quad\left(a+b\right)\left(a+c\right)=a+bc
  
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Boolean arithmetic: example
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 
 \emph on
@@ -2501,14 +2755,25 @@ The guilty one is
 .
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Propositional linear-time temporal logic (LTL)
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 We work with
 \emph on
@@ -2534,7 +2799,7 @@ Boolean
 \begin_inset Formula 
 \begin{align*}
 a & =\left[a_{0},a_{1},a_{2},...\right];\quad b=\left[b_{0},b_{1},b_{2},...\right];\\
-a+b & =\left[a_{0}+b_{0},a_{1}+b_{1},...\right];\; a'=\left[a_{0}^{\prime},a_{1}^{\prime},...\right];\; ab=\left[a_{0}b_{0},a_{1}b_{1},...\right]
+a+b & =\left[a_{0}+b_{0},a_{1}+b_{1},...\right];\;a'=\left[a_{0}^{\prime},a_{1}^{\prime},...\right];\;ab=\left[a_{0}b_{0},a_{1}b_{1},...\right]
 \end{align*}
 
 \end_inset
@@ -2596,14 +2861,25 @@ p\mathbf{U}q=q+p\mathbf{N}\left(q+p\mathbf{N}\left(q+...\right)\right)
 
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Temporal logic redux
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 Designers of FRP languages must face some choices:
 \end_layout
@@ -2648,14 +2924,25 @@ uses full LTL with higher-order temporal types and fixpoints
 uses linear types to control space/time leaks
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Interpreting values typed by LTL
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 What does it mean to have a value 
 \begin_inset Formula $x$
@@ -2806,11 +3093,16 @@ axioms
 
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 
 \family typewriter
 Elm
@@ -2818,6 +3110,12 @@ Elm
  as an FRP language 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 \begin_inset Formula $\lambda$
 \end_inset
@@ -2925,14 +3223,25 @@ incomplete
 \end_layout
 
 \end_deeper
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Conclusions
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 There are some languages that implement FRP in various 
 \emph on
@@ -2953,14 +3262,25 @@ Elm
 -style FRP is a promising step in the right direction
 \end_layout
 
-\begin_layout EndFrame
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Abstract
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 In my day job, most bugs come from implementing reactive programs imperatively.
  FRP is a declarative approach that promises to solve these problems.
@@ -3022,15 +3342,25 @@ Elm
  logic and its connection with FRP.
 \end_layout
 
-\begin_layout EndFrame
-\start_of_appendix
+\end_deeper
+\begin_layout Separator
 
 \end_layout
 
-\begin_layout BeginFrame
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Suggested reading 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 E.
  Czaplicki, S.
@@ -3159,10 +3489,7 @@ target "http://phd.di.unipi.it/Theses/PhDthesis_Marchignoli.pdf"
  
 \end_layout
 
-\begin_layout EndFrame
-
-\end_layout
-
+\end_deeper
 \begin_layout Section
 Notes added after presenting the talk
 \end_layout
@@ -3356,6 +3683,11 @@ Perhaps the easiest and clearest way of presenting the semantics of Elm
 \begin_layout Itemize
 What are the axioms of temporal logic in Ewald's old paper, and how do they
  translate to Elm primitives? What are the missing primitives?
+\end_layout
+
+\begin_layout Itemize
+Elm actually has recursion for ordinary (non-temporal) functions; just no
+ recursive values since Elm is strict.
 \end_layout
 
 \end_body

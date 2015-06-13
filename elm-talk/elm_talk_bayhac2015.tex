@@ -222,13 +222,10 @@ $e^{\left[c\right]}$
 \frac{\Gamma\vdash e:\Sigma\alpha\quad\quad\Gamma\vdash c:\alpha}{\Gamma\vdash e^{\left[c\right]}:\Sigma\alpha}\:\textsc{CurVal}
 \]
 
-
-\begin{itemize}
-\item Denote a fresh value by asterisk: $e^{\left[c\right]^{*}}$
-\end{itemize}
 \item Some current values are ``freshly updated'' while others are ``stale'' 
 
 \begin{itemize}
+\item Denote a fresh value by asterisk: $e^{\left[c\right]^{*}}$
 \item In \texttt{Elm}, current values are implemented with an \texttt{Either}
 type 
 \end{itemize}

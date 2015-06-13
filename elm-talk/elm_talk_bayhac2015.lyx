@@ -850,16 +850,6 @@ current value
 
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Denote a fresh value by asterisk: 
-\begin_inset Formula $e^{\left[c\right]^{*}}$
-\end_inset
-
-
-\end_layout
-
-\end_deeper
 \begin_layout Itemize
 Some current values are 
 \begin_inset Quotes eld
@@ -881,6 +871,14 @@ stale
 \end_layout
 
 \begin_deeper
+\begin_layout Itemize
+Denote a fresh value by asterisk: 
+\begin_inset Formula $e^{\left[c\right]^{*}}$
+\end_inset
+
+
+\end_layout
+
 \begin_layout Itemize
 In 
 \family typewriter
