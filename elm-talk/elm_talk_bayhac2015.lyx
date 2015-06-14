@@ -1089,7 +1089,7 @@ remains
 \end_layout
 
 \begin_layout Itemize
-Only the current values are updated in subexpressions
+Only the current values are updated in subexpressions"
 \begin_inset Formula 
 \begin{align*}
  & \mathbf{U}_{s\leftarrow a}\left\{ \left(\mbox{constant}\ c\right)^{\left[c\right]}\right\} \Rightarrow\left(\mbox{constant}\ c\right)^{\left[c\right]} & \textsc{ConstUpd}\\
@@ -1138,13 +1138,17 @@ eagerly
 \begin_layout Itemize
 
 \family typewriter
+map2
+\family default
+ updates whenever one of its subexpressions update
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
 scan
 \family default
- does 
-\series bold
-not
-\series default
- update unless its subexpression is freshly updated
+ updates only if its subexpression is freshly updated
 \end_layout
 
 \end_deeper

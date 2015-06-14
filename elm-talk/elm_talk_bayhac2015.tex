@@ -297,8 +297,8 @@ unchanged:
 \item The expression $\mathbf{U}_{s\leftarrow b}\left\{ e^{\left[c\right]}\right\} $
 is reduced \textbf{after} all subexpressions of $e$
 \item Current values are non-temporal and are evaluated \textbf{eagerly} 
-\item \texttt{scan} does \textbf{not} update unless its subexpression is
-freshly updated
+\item \texttt{map2} updates whenever one of its subexpressions update
+\item \texttt{scan} updates only if its subexpression is freshly updated
 \end{itemize}
 \end{itemize}
 \end{frame}
