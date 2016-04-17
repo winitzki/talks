@@ -1098,7 +1098,7 @@ status open
 
 \begin_deeper
 \begin_layout Itemize
-Syn
+***
 \end_layout
 
 \end_deeper
@@ -1121,15 +1121,7 @@ Existential types
 
 \begin_deeper
 \begin_layout Itemize
-Unification is Prolog's way of 
-\begin_inset Quotes eld
-\end_inset
-
-assigning values to variables
-\begin_inset Quotes erd
-\end_inset
-
-
+***
 \end_layout
 
 \end_deeper
