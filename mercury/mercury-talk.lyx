@@ -1,0 +1,2390 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass beamer
+\begin_preamble
+\usetheme[secheader]{Boadilla}
+\usecolortheme{seahorse}
+\title[An introduction to Mercury]{Logic programming and types: An introduction to Mercury}
+\author{Sergei Winitzki}
+\date{April 18, 2016}
+\institute[]{\emph{Types, Theorems, and Programming Languages} meetup}
+\definecolor{mybgcolor}{rgb}{0.96,0.98,1}
+\setbeamercolor{background canvas}{bg=mybgcolor}
+\end_preamble
+\options hyperref
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_title "That scripting language called Prolog"
+\pdf_author "Sergei Winitzki, Ph.D."
+\pdf_subject "Prolog programming language"
+\pdf_keywords "programming languages, Prolog, logic programming"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered true
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\pdf_quoted_options "linkcolor=black,urlcolor=blue"
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+frame{
+\backslash
+titlepage}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Logic programming as a DSL for logic puzzles (PROLOG)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\emph on
+\color magenta
+All jumping creatures are green.
+ All small jumping creatures are martians.
+\emph default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+\color magenta
+All green martians are intelligent.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\color magenta
+Ngtrks is small and green.
+ Pgvdrk is a jumping martian.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\color magenta
+Who is intelligent?
+\emph default
+\color inherit
+ 
+\size footnotesize
+(inpired by S.
+ Lem, 
+\emph on
+Invasion from Aldebaran
+\emph default
+)
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+small(ngtrks).
+ green(ngtrks).
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+martian(pgvdrk).
+ jumping(pgvdrk).
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+green(X) :- jumping(X).
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+martian(X) :- small(X), jumping(X).
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+intelligent(X) :- green(X), martian(X).
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+?- intelligent(X)
+\color inherit
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\color blue
+X = pgvdrk
+\end_layout
+
+\begin_layout Itemize
+The runtime will perform a backtracking search for a proof
+\end_layout
+
+\begin_layout Itemize
+Classical logic limited to Horn clauses = executable logic program
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Mercury in a nutshell 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Mercury borrows these from Prolog: logical variables, predicates, rules
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+However, there are no symbols and no queries
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+All capitalized symbols are 
+\series bold
+quantified logical variables
+\series default
+ (LVs)
+\end_layout
+
+\begin_layout Itemize
+LVs on the left imply 
+\begin_inset Formula $\forall$
+\end_inset
+
+; free LVs on the right imply 
+\begin_inset Formula $\exists$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The symbol 
+\family typewriter
+\series bold
+\color blue
+:-
+\family default
+\series default
+\color inherit
+ means implication 
+\begin_inset Formula $\leftarrow$
+\end_inset
+
+, the comma means 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+and
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Rules can be given in any order; no declarations
+\end_layout
+
+\begin_layout Itemize
+Examples:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+green(X) :- jumping(X)
+\family default
+\color inherit
+ means 
+\begin_inset Formula $\forall X:green(X)\leftarrow jumping(X)$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+path(A,B) :- path(A,C), path(C,B)
+\family default
+\color inherit
+ means
+\begin_inset Newline newline
+\end_inset
+
+   
+\begin_inset Formula $\forall A,B:\left[\exists C:path(A,C)\wedge path(C,B)\rightarrow path(A,B)\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\color blue
+main :- intelligent(X)
+\family default
+\color inherit
+ means: prove that 
+\begin_inset Formula $\exists$
+\end_inset
+
+
+\family typewriter
+X:intelligent(X)
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Prolog in a nutshell 2: variables
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Martians
+\begin_inset Quotes erd
+\end_inset
+
+ recap:
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+small(ngtrks).
+ green(ngtrks).
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+martian(pgvdrk).
+ jumping(pgvdrk).
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+green(X) :- jumping(X).
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+martian(X) :- small(X), jumping(X).
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\color blue
+intelligent(X) :- green(X), martian(X).
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\color blue
+main :- intelligent(X)
+\family default
+\color inherit
+ means: prove that 
+\begin_inset Formula $\exists$
+\end_inset
+
+
+\family typewriter
+X:intelligent(X)
+\end_layout
+
+\begin_layout Itemize
+The Prolog engine will 
+\emph on
+prove existence
+\emph default
+ of 
+\begin_inset Formula $X$
+\end_inset
+
+ by backtracking search!
+\begin_inset Newline newline
+\end_inset
+
+(we can say 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+trace
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ and follow the search)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Prolog in a nutshell 2: backtracking search
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Box Frameless
+position "b"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "55col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+Martians
+\begin_inset Quotes erd
+\end_inset
+
+ recap:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size footnotesize
+\color blue
+small(ngtrks).
+ green(ngtrks).
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size footnotesize
+\color blue
+martian(pgvdrk).
+ jumping(pgvdrk).
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size footnotesize
+\color blue
+green(X) :- jumping(X).
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size footnotesize
+\color blue
+martian(X) :- small(X), jumping(X).
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size footnotesize
+\color blue
+intelligent(X) :- green(X), martian(X).
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size footnotesize
+\color blue
+?- intelligent(X).
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Phantom VPhantom
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\family typewriter
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Shadowbox
+position "b"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "44col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+[trace]  ?- intelligent(X).
+    
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Call: (6) intelligent(_G2442)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Call: (7) green(_G2442)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Exit: (7) green(ngtrks)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Call: (7) martian(ngtrks)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Call: (8) small(ngtrks)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Exit: (8) small(ngtrks)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Call: (8) jumping(ngtrks)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Fail: (8) jumping(ngtrks)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Fail: (7) martian(ngtrks)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Redo: (7) green(_G2442)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Call: (8) jumping(_G2442)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Exit: (8) jumping(pgvdrk)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Exit: (7) green(pgvdrk)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Call: (7) martian(pgvdrk)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Exit: (7) martian(pgvdrk)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+  Exit: (6) intelligent(pgvdrk)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family roman
+\size tiny
+\color red
+X = pgvdrk .
+
+\family default
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The proof may fail, or may succeed in more than one way
+\end_layout
+
+\begin_layout Itemize
+LVs are assigned by unification and unassigned on backtracking
+\end_layout
+
+\begin_layout Itemize
+Once assigned, a logical variable is 
+\emph on
+immutable
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+This is called 
+\begin_inset Quotes eld
+\end_inset
+
+resolution of Horn clauses
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+unification
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Horn clauses and 
+\begin_inset Quotes eld
+\end_inset
+
+resolution
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Consider a restricted fragment of predicate logic:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Expressions are conjunctions of 
+\begin_inset Quotes eld
+\end_inset
+
+Horn clauses
+\begin_inset Quotes erd
+\end_inset
+
+: 
+\begin_inset Formula 
+\[
+\left(a\wedge b\wedge...\wedge c\rightarrow d\right)\wedge\left(p\wedge q\wedge...\wedge r\rightarrow s\right)\wedge\left(\mbox{True}\rightarrow w\right)\wedge...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Disjunction is expressible through Horn clauses: 
+\begin_inset Formula 
+\[
+\left(a\vee b\right)\rightarrow c=\left(a\rightarrow c\right)\wedge\left(b\rightarrow c\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Only 
+\begin_inset Formula $\forall$
+\end_inset
+
+ quantifiers are allowed, and only outside: 
+\begin_inset Formula 
+\[
+\forall X\forall Y:a(X,Y)\wedge b(Y)\rightarrow c(X)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Prolog syntax: quantifiers are implicit; implication points leftward
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Resolution
+\begin_inset Quotes erd
+\end_inset
+
+: the 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Formula ${\color{blue}b}$
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ is eliminated from two clauses 
+\begin_inset Formula 
+\[
+\left(c\leftarrow a\wedge p\wedge q\right)\Leftarrow\begin{cases}
+{\color{blue}b}\leftarrow a\wedge p\\
+c\leftarrow{\color{blue}b}\wedge q
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Examples: recursive predicates
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Factorial predicate: 
+\color blue
+fact(N,F)
+\color inherit
+ holds if 
+\begin_inset Formula $F=N!$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\family default
+\color blue
+fact(1,1).
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\color blue
+
+\begin_inset space ~
+\end_inset
+
+ fact(N,F) :- M is N-1, fact(M,E), F is E*N.
+\end_layout
+
+\begin_layout Itemize
+Fibonacci predicate:
+\color blue
+ fibo(N,F)
+\color inherit
+ holds if 
+\begin_inset Formula $F$
+\end_inset
+
+ is 
+\begin_inset Formula $N$
+\end_inset
+
+-th Fibonacci number
+\begin_inset Newline newline
+\end_inset
+
+
+\color blue
+fibo(0,1).
+ fibo(1,1).
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\color blue
+fibo(N,F) :- M1 is N-1, fibo(M1,E1),
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\color blue
+
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+ M2 is N-2, fibo(M2,E2),  F is E1+E2.
+ 
+\end_layout
+
+\begin_layout Itemize
+Instead of computing 
+\begin_inset Formula $F$
+\end_inset
+
+ through calling a function, we 
+\emph on
+prove existence
+\emph default
+ of a value 
+\begin_inset Formula $F$
+\end_inset
+
+ such that some predicate holds.
+\end_layout
+
+\begin_layout Itemize
+Prolog has 
+\emph on
+only predicates
+\emph default
+ --- no declarations, expressions, functions, variables, or static types
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Note: 
+\family typewriter
+\color blue
+M is N-1
+\family default
+\color inherit
+ resembles an expression but is actually a predicate!
+\end_layout
+
+\begin_layout Itemize
+it means 
+\family typewriter
+\color blue
+is(M,'-'(N,1))
+\family default
+\color inherit
+ , where 
+\family typewriter
+\color blue
+'-'
+\family default
+\color inherit
+ is an infix data constructor! 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Prolog in a nutshell 2: syntax extensions
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Syntax for data structures: 
+\begin_inset Quotes eld
+\end_inset
+
+passive predicates
+\begin_inset Quotes erd
+\end_inset
+
+ (a distinct namespace)
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+left(pair(X,Y), X).
+ right(pair(X,Y), Y).
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+since 
+\family typewriter
+\color blue
+pair(X,Y)
+\family default
+\color inherit
+ is 
+\emph on
+inside
+\emph default
+ a predicate, it must be data
+\end_layout
+
+\begin_layout Itemize
+however, 
+\family typewriter
+\color blue
+pair(X,Y)
+\family default
+\color inherit
+ can contain 
+\emph on
+free
+\emph default
+ logical variables
+\end_layout
+
+\begin_layout Itemize
+and so can contain 
+\emph on
+any
+\emph default
+ other structures (no typechecking!): 
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\color blue
+pair(pair(X,Y),pair(Y,pair(Z,T)))
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Syntax sugar for lists: 
+\family typewriter
+\color blue
+[]
+\family default
+\color inherit
+ or 
+\family typewriter
+\color blue
+[a,b,c]
+\family default
+\color inherit
+ or 
+\family typewriter
+\color blue
+[a,b,c|[]]
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Similar to Haskell's 
+\family typewriter
+\color blue
+a:b:c:[]
+\end_layout
+
+\begin_layout Itemize
+Examples:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+head([X|Xs], X).
+ tail([X|Xs], Xs).
+ empty([]).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\color blue
+ length([], 0).
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ length([X|Xs],N) = length(Xs,M), N is M+1.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+User-defined syntax: infix, prefix, postfix
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\color blue
+ op(400, xfy, *).
+ op(300, yfx, ^).
+ op(200, xf, :!).
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What is 
+\begin_inset Quotes eld
+\end_inset
+
+unification
+\begin_inset Quotes erd
+\end_inset
+
+?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Unification is Prolog's way of 
+\begin_inset Quotes eld
+\end_inset
+
+assigning values to variables
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Pattern-matching of recursive structures, fitting unassigned variables
+\end_layout
+
+\begin_layout Itemize
+Assignment is propagated to other rules:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\family default
+\color blue
+like(1).
+ like(2).
+
+\color inherit
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\color blue
+
+\begin_inset space ~
+\end_inset
+
+ like(you_know(Y,X)) :- like(X), like(Y).
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\color blue
+
+\begin_inset space ~
+\end_inset
+
+ really(A,B) :- like(A), like(you_know(A,B).
+\end_layout
+
+\begin_layout Itemize
+The predicate
+\color blue
+ really(1,2)
+\color inherit
+ holds because
+\color blue
+ like(you_know(Y,X))
+\color inherit
+ is unified with 
+\color blue
+like(you_know(1,2))
+\color inherit
+ to set 
+\begin_inset Formula $Y=1$
+\end_inset
+
+ and 
+\begin_inset Formula $X=2$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+Pointers made safe
+\begin_inset Quotes erd
+\end_inset
+
+: difference lists
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Appending ordinary lists takes 
+\begin_inset Formula $O(n)$
+\end_inset
+
+ operations:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+l_append([], X, X).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\color blue
+ l_append([X|Xs], Y, [X|Zs]) :- l_append(Xs, Y, Zs).
+\end_layout
+
+\begin_layout Itemize
+To optimize, we need a 
+\begin_inset Quotes eld
+\end_inset
+
+pointer to the end of the list
+\begin_inset Quotes erd
+\end_inset
+
+!
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+having a pointer
+\begin_inset Quotes erd
+\end_inset
+
+ = a part of a data structure is 
+\emph on
+not yet assigned
+\end_layout
+
+\begin_layout Itemize
+solution: a free LV is exposed, unified with some part of the data
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Difference lists
+\series default
+: 
+\family typewriter
+\color blue
+pair([a,b,c|X],X)
+\family default
+\color inherit
+ or 
+\family typewriter
+\color blue
+[a,b,c|X]-X
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+op(500, xfy, -).
+ empty(X-X).
+ 
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\color blue
+ dl_append(X-Y,Y-Z,X-Z).
+ /* O(1) operations! */
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+[trace] ?- dl_append( [a,b,c|A]- A, [d,e|B]-B, C).
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+dl_append([a, b, c|_G2447]-_G2447, [d, e|_G2456]-_G2456, _G2463)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+dl_append([a, b, c, d, e|_G2456]-[d, e|_G2456], [d, e|_G2456]-_G2456,
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+    [a, b, c, d, e|_G2456]-_G2456)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+A = [d, e|B],   C = [a, b, c, d, e|B]-B.
+
+\size default
+\color inherit
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+Pointers made safe
+\begin_inset Quotes erd
+\end_inset
+
+: difference lists
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+How this works in more detail:
+\end_layout
+
+\begin_layout Itemize
+We have the program 
+\family typewriter
+\color blue
+dl_append(X-Y,Y-Z,X-Z).
+\end_layout
+
+\begin_layout Itemize
+We have the query
+\size scriptsize
+\color red
+ 
+\family typewriter
+\size default
+\color blue
+?- dl_append([a,b,c|A]-A, [d,e|B]-B, C).
+ 
+\end_layout
+
+\begin_layout Itemize
+The value of 
+\family typewriter
+\color blue
+Y
+\family default
+\color inherit
+ can be unified with the query structure only
+\begin_inset Newline newline
+\end_inset
+
+ if we assign 
+\family typewriter
+\color blue
+Y=A
+\family default
+\color inherit
+ and also 
+\family typewriter
+\color blue
+Y=[d,e|B]
+\family default
+\color inherit
+ and 
+\family typewriter
+\color blue
+Z=B
+\family default
+\color inherit
+.
+\end_layout
+
+\begin_layout Itemize
+Thus we must have 
+\family typewriter
+\color blue
+A=[d,e|B] 
+\end_layout
+
+\begin_layout Itemize
+Therefore 
+\family typewriter
+\color blue
+X
+\family default
+\color inherit
+ must be assigned 
+\family typewriter
+\color blue
+[a,b,c|A]=[a,b,c,d,e|B]
+\end_layout
+
+\begin_layout Itemize
+Finally 
+\family typewriter
+\color blue
+C=X-Z=[a,b,c,d,e|B]-B
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+Pointers made safe
+\begin_inset Quotes erd
+\end_inset
+
+: queues
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Implement insertion at end of queue:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+list_to_queue(L,Q-Y) :- l_append(L,Y,Q).
+ /* O(n) */
+\family default
+\color inherit
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+q_insert_at_end(E, Q-[E|Y], Q-Y).
+ /* O(1) */
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\color blue
+ q_head(E, [E|Q]-Y, Q-Y).
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+[trace]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+?- q_insert_at_end( n, [a,b,c|X]-X, Q ).
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+X = [n|_G1726],    Q = [a, b, c, n|_G1726]-_G1726.
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+?- q_head( X, [a,b,c,n|Y]-Y, Z).
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+X = a,     Z = [b, c, n|Y]-Y.
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+Pointers made safe
+\begin_inset Quotes erd
+\end_inset
+
+: iterators
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+A list iterator: set at begin, increment, check if at end
+\end_layout
+
+\begin_layout Itemize
+Split the list into a pair of queues
+\end_layout
+
+\begin_layout Itemize
+Effectively, we have a pointer to the 
+\emph on
+middle
+\emph default
+ of a list:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+:- op(600, xfx, ^^).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+plist_at_begin(X-X ^^ A-B).
+ plist_at_end(A-B ^^ X-X).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+plist_incr(A-[X|B] ^^ [X|C]-D, A-B ^^ C-D).
+\family default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+[trace]  ?- plist_incr([a,b|X]-X ^^ [c,d,e|Y]-Y, P).
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+plist_incr([a, b|_G1978]-_G1978 ^^ [c, d, e|_G1990]-_G1990, _G1999)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+plist_incr([a, b, c|_G2113]-[c|_G2113] ^^ [c, d, e|_G1990]-_G1990,
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+    [a, b, c|_G2113]-_G2113 ^^ [d, e|_G1990]-_G1990)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color red
+X = [c|_G2113],   P = [a, b, c|_G2113]-_G2113  ^^ [d, e|Y]-Y.
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Parsing with Definite Clause Grammars
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Top-down parsing with unlimited backtracking...
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+expr ::== term | term oper expr | '(' expr ')'
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+oper ::== 'and' | 'or' | ...
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+term ::== 'true' | 'false' | ...
+\end_layout
+
+\begin_layout Itemize
+...is similar to Prolog's evaluation strategy on 
+\emph on
+token queues
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+expr(Ts) :- term(Ts).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+expr(Ts-X) :- term(Ts-T1), op(T1-T2), expr(T2-X).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+oper([T|X]-X) :- T='and'.
+ oper([T|X]-X) :- T='or'.
+ /* etc.
+ */
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+term([T|X]-X) :- T='true'.
+ term([T|X]-X) :- T='false'.
+ /* etc.
+ */
+\end_layout
+
+\begin_layout Itemize
+Syntactic sugar (
+\family typewriter
+\size scriptsize
+\color blue
+-->
+\family default
+\size default
+\color inherit
+) is provided to avoid writing out the queues:
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+expr --> term.
+ expr --> term, oper, expr.
+ expr --> ['('], expr, [')'].
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+oper --> ['and'].
+ oper --> ['or'].
+ term --> ['true'].
+ term --> ['false'].
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+/* test: */
+\color blue
+ ?- expr(['true', 'and', 'false', 'or', 'true'], []).
+\end_layout
+
+\begin_layout Itemize
+Nonterminals can have extra arguments and call Prolog code
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+No need for Lex/Yacc (but they do other grammars...)
+\end_layout
+
+\begin_layout Itemize
+Can parse some non-CFG grammars (
+\begin_inset Quotes eld
+\end_inset
+
+attributed
+\begin_inset Quotes erd
+\end_inset
+
+ grammars)
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Functional-logic programming in Mercury
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Mercury is Prolog + some features of ML
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Immutable values, static type inference, algebraic polymorphism
+\end_layout
+
+\begin_layout Itemize
+all predicates and all arguments are labeled with 
+\begin_inset Quotes eld
+\end_inset
+
+modes
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+static detection of errors in predicate use
+\end_layout
+
+\begin_layout Itemize
+functions are deterministic predicates with strict modes
+\end_layout
+
+\begin_layout Itemize
+products, sums, labeled records, higher-order functions
+\end_layout
+
+\begin_layout Itemize
+I/O by unique types
+\end_layout
+
+\begin_layout Itemize
+modules and signatures 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+`a 
+\end_layout
+
+\end_inset
+
+ la Standard ML
+\end_layout
+
+\begin_layout Itemize
+type classes 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+`a 
+\end_layout
+
+\end_inset
+
+ la Haskell
+\end_layout
+
+\begin_layout Itemize
+standard library: arrays, multithreading, etc.
+\end_layout
+
+\begin_layout Itemize
+can compile to high-performance machine code, C, Java, Erlang
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+A taste of Mercury
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Read an integer and print its factorial
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- module f.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- interface.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- import_module io.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- pred main(io::di, io::uo) is det.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- implementation.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- import_module int.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- pred fact(int::in, int::out) is det.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- import_module list, string.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+fact(N,F) :- ( if N =< 1 then F = 1 else fact(N-1, A), F = A*N ).
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+main(!IO) :- io.read_line_as_string(Result, !IO),
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  ( if Result = ok(String), 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+       string.to_int(string.strip(String), N)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+    then
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+       io.format("fact(%d) = %d
+\backslash
+n", [i(N), i(fact(N))], !IO) 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+    else
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+       io.format("That isn’t a number...
+\backslash
+n", [], !IO) 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  ).
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Prolog: A perfect scripting language 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+No declarations, runtime (
+\begin_inset Quotes eld
+\end_inset
+
+dynamic
+\begin_inset Quotes erd
+\end_inset
+
+) typing, immutable values
+\end_layout
+
+\begin_layout Itemize
+Data constructors and predicates have user-defined infix syntax
+\end_layout
+
+\begin_layout Itemize
+Pattern-matching on recursive data structures, with backtracking 
+\end_layout
+
+\begin_layout Itemize
+Metaprogramming, reflection, self-modifying code
+\end_layout
+
+\begin_layout Itemize
+Easy to do embedded or external DSLs (monadic top-down parsing)
+\end_layout
+
+\begin_layout Itemize
+ISO standard since 1995, many free implementations
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+typically with a REPL and a compiler to high-performance VM
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Interface to databases, networking, multithreading, GUI, ...
+\end_layout
+
+\begin_layout Itemize
+Core language is 
+\begin_inset Quotes eld
+\end_inset
+
+small
+\begin_inset Quotes erd
+\end_inset
+
+; full language is hard to use?
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Summary
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+What is "logic programming" and "functional programming"
+\end_layout
+
+\begin_layout Itemize
+Mercury = Prolog + modes + types
+\end_layout
+
+\begin_layout Itemize
+Some limitations of Mercury
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "The Mercury programming language"
+target "http://www.mercurylang.org/information/features.html"
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_body
+\end_document

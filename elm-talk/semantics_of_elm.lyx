@@ -69,7 +69,7 @@
 \begin_body
 
 \begin_layout Title
-Semantics of ELM-style FRP and its extensions
+Semantics for extended Elm-style FRP
 \end_layout
 
 \begin_layout Author
@@ -77,13 +77,12 @@ Sergei Winitzki
 \end_layout
 
 \begin_layout Abstract
-I consider a paradigm of functional reactive programming pioneered by the
- Elm language [Czaplicki 2013].
- Rather than discussing the current implementation of Elm (at version 0.15,
- elm-lang.org), I focus on the core features of the proposed FRP paradigm.
- I describe the formal semantics of a minimal language inspired by Elm and
- propose some conservative extensions, with the intention of making a complete
- FRP system for asynchronous UI.
+I explore the functional reactive programming paradigm and describe the
+ operational semantics of a minimal FRP language inspired by Elm [Czaplicki
+ 2013].
+ I propose some conservative extensions, with the goal of designing a complete
+ FRP system for UI applications with support for concurrency, legacy asynchronou
+s APIs, and modular UI development.
 \end_layout
 
 \begin_layout Section
@@ -91,27 +90,410 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-The Elm language [Czaplicki 2013, 2014] is a purely functional, eagerly
- evaluated, strictly typed programming language that incorporates functional
- reactive programming (FRP).
- Broadly speaking, FRP is pure functional programming with temporal data
- types.
- The Elm language makes specific choices of the temporal types and primitives,
- motivated by simplicity and practical applicability.
+The paradigm of functional reactive programming (FRP) promises a principled
+ approach to user interface (UI) development.
+ The main idea of FRP is to write interactive programs as pure functions
+ operating on 
+\begin_inset Quotes eld
+\end_inset
+
+temporal
+\begin_inset Quotes erd
+\end_inset
+
+ data types.
+ A temporal data type represents conceptually a 
+\emph on
+stream of values
+\emph default
+.
+ In pure FRP, no mutation or explicit imperative updates are permitted.
+ Instead, an FRP program defines some streams whose successive values will
+ behave as desired.
+ All streams are considered to be immutable, and each value in a stream
+ is also immutable.
 \end_layout
 
 \begin_layout Standard
-The Elm language as described in the original papers is limited: it does
- not accomodate user-changeable UIs or arbitrary asynchronous computations.
- Some of the limitations of Elm are intentional, and motivated
+A typical FRP program may define a stream for UI inputs, a stream for the
+ program state, and a stream for the UI view.
+ The view stream will be a function of the state stream.
+ In turn, the state stream is a function of the UI input stream.
+ These functions are pure, and the streams themselves are immutable.
+\end_layout
+
+\begin_layout Standard
+Various implementations of FRP make specific choices of the temporal types,
+ language primitives, and operational semantics.
+ For example, some FRP implementations support discrete-time streams, continuous
+-time streams, or both; language primitives may include various choices
+ of stream operations.
+\end_layout
+
+\begin_layout Standard
+The Elm language [Czaplicki 2013, 2014] is a purely functional, eagerly
+ evaluated, strictly typed programming language.
+ Elm not just implements but actually 
+\emph on
+enforces
+\emph default
+ the FRP paradigm, in the sense that the only way of writing applications
+ in Elm is to write some pure functions operating on immutable streams.
+\end_layout
+
+\begin_layout Standard
+The Elm language as described in the original papers is limited: in particular,
+ it does not accomodate user-changeable UIs or asynchronous computations.
+ Some of the restrictions adopted in Elm are intentional, motivated by a
+ desire for simplicity.
+\end_layout
+
+\begin_layout Standard
+In this text, I aim to describe a complete FRP architecture for purely functiona
+l UI programming.
+ I take Elm as a point of departure and strive for a conservative extension
+ of that language to arrive at a more feature-complete Elm-style FRP.
+ For brevity, I will refer to the new language as 
+\family typewriter
+Elm'
+\family default
+.
 \end_layout
 
 \begin_layout Section
 Type system
 \end_layout
 
+\begin_layout Standard
+The Elm type system contains types of two levels: ordinary types (
+\family typewriter
+Bool
+\family default
+, 
+\family typewriter
+Int
+\family default
+, 
+\family typewriter
+String
+\family default
+, etc.) and temporal types, called 
+\series bold
+signal
+\series default
+ types in Elm.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+In the context of the Elm type system, I will talk about 
+\begin_inset Quotes eld
+\end_inset
+
+temporal types
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+signal types
+\begin_inset Quotes erd
+\end_inset
+
+ interchangeably.
+\end_layout
+
+\end_inset
+
+ A signal type 
+\begin_inset Formula $\Sigma\alpha$
+\end_inset
+
+ represents a stream of values of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, where 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ 
+\emph on
+must
+\emph default
+ 
+\emph on
+be
+\emph default
+ an ordinary (non-temporal) type.
+ 
+\end_layout
+
+\begin_layout Standard
+The typing rules include the simply typed 
+\begin_inset Formula $\lambda$
+\end_inset
+
+-calculus,
+\begin_inset Formula 
+\begin{align*}
+\frac{\Gamma,(x:\alpha)\vdash e:\beta}{\Gamma\vdash(\lambda x.e):\alpha\rightarrow\beta}\,\textsc{Lambda} & \quad\frac{\Gamma\vdash e_{1}:\alpha\rightarrow\beta\quad\Gamma\vdash e_{2}:\alpha}{\Gamma\vdash(e_{1}\,e_{2}):\beta}\,\textsc{Apply}
+\end{align*}
+
+\end_inset
+
+These rules apply to both ordinary and temporal types.
+ Thus, an expression can have a type such as 
+\begin_inset Formula $\alpha\rightarrow\Sigma\left(\beta\rightarrow\gamma\right)\rightarrow\Sigma\delta$
+\end_inset
+
+, mixing together temporal and non-temporal types.
+ The sum and product types are included in the usual way.
+\end_layout
+
+\begin_layout Standard
+In addition to this, the language contains some combinators operating on
+ temporal types:
+\begin_inset Formula 
+\begin{align*}
+\mbox{constant} & :\:\alpha\rightarrow\Sigma\alpha\\
+\mbox{map2} & :\:\left(\alpha\rightarrow\beta\rightarrow\gamma\right)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta\rightarrow\Sigma\gamma\\
+\mbox{scan} & :\:\left(\alpha\rightarrow\beta\rightarrow\beta\right)\rightarrow\beta\rightarrow\Sigma\alpha\rightarrow\Sigma\beta
+\end{align*}
+
+\end_inset
+
+The typing rules for these combinators are restricted such that the type
+ variables 
+\begin_inset Formula $\alpha,\beta,\gamma$
+\end_inset
+
+ must be ordinary types, that is, they 
+\emph on
+cannot
+\emph default
+ involve 
+\begin_inset Formula $\Sigma$
+\end_inset
+
+ anywhere in the following rules:
+\begin_inset Formula 
+\begin{align*}
+\frac{\Gamma\vdash e:\alpha}{\Gamma\vdash\left(\mbox{constant}\,e\right):\Sigma\alpha} & \:\textsc{Const}\\
+\frac{\Gamma\vdash m:\alpha\rightarrow\beta\rightarrow\gamma\quad\Gamma\vdash p:\Sigma\alpha\quad\Gamma\vdash q:\Sigma\beta}{\Gamma\vdash\left(\mbox{map2}\:m\:p\:q\right):\Sigma\gamma} & \:\textsc{Map2}\\
+\frac{\Gamma\vdash u:\alpha\rightarrow\beta\rightarrow\beta\quad\Gamma\vdash e:\beta\quad\Gamma\vdash q:\Sigma\alpha}{\Gamma\vdash\left(\mbox{scan}\,u\,e\,q\right):\Sigma\beta} & \:\textsc{Scan}
+\end{align*}
+
+\end_inset
+
+Thus it is a type error to write 
+\begin_inset Formula $\mbox{constant}\left(\mbox{constant}\,x\right)$
+\end_inset
+
+ or attempt in any other way to produce a value of type 
+\begin_inset Formula $\Sigma\left(\Sigma\alpha\right)$
+\end_inset
+
+.
+ In this way, the typing rules enforce the requirement that a signal type
+ should carry a 
+\emph on
+non-temporal
+\emph default
+ value.
+\end_layout
+
+\begin_layout Standard
+Some additional temporal combinators are
+\begin_inset Formula 
+\begin{align*}
+\mbox{filter} & :\:\left(\alpha\rightarrow\mbox{Bool}\right)\rightarrow\Sigma\alpha\rightarrow\Sigma\alpha\\
+\mbox{sample} & :\:\Sigma1\rightarrow\Sigma\beta\rightarrow\Sigma\beta\\
+\mbox{chain} & :\:\left(\alpha\rightarrow\left(\beta\rightarrow1\right)\rightarrow1\right)\rightarrow\Sigma\alpha\rightarrow\Sigma\beta\\
+\mbox{bind} & :\:\Sigma\alpha\rightarrow\left(\alpha\rightarrow\Sigma\beta\right)\rightarrow\Sigma\beta
+\end{align*}
+
+\end_inset
+
+The typing rules for these primitives are quite analogous to those for 
+\family typewriter
+constant
+\family default
+, 
+\family typewriter
+map2
+\family default
+, and 
+\family typewriter
+scan
+\family default
+: the type variables 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta$
+\end_inset
+
+ in these rules must be purely non-temporal.
+ 
+\end_layout
+
+\begin_layout Standard
+It follows from the typing rules that no expression will ever have a type
+ of the form 
+\begin_inset Formula $\Sigma(\Sigma\alpha)$
+\end_inset
+
+.
+ This was one of the design choices behind the Elm type system.
+\end_layout
+
+\begin_layout Standard
+An Elm program is a well-typed expression of a signal type 
+\begin_inset Formula $\Sigma\texttt{View}$
+\end_inset
+
+, where 
+\family typewriter
+View
+\family default
+ denotes the type of a graphical UI.
+ The only way to build such an expression in Elm is to apply some temporal
+ combinators to some predefined input signals.
+ The Elm library provides modules for constructing values of type 
+\family typewriter
+View
+\family default
+.
+\end_layout
+
 \begin_layout Section
 Operational semantics
+\end_layout
+
+\begin_layout Standard
+In Elm, a signal represents a stream of values that can change with time.
+ The changes occur at 
+\series bold
+update events
+\series default
+ (which are discrete).
+ A signal has a 
+\series bold
+current value
+\series default
+ of type 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, and the current value is available at any time.
+ The current value of a signal will remain constant between update events.
+ I will denote current value of a temporal expression 
+\begin_inset Formula $e$
+\end_inset
+
+ by 
+\begin_inset Formula $e^{[c]}$
+\end_inset
+
+.
+ (I will use this notation only to present the semantics.
+ This notation is not a part of the Elm language.)
+\end_layout
+
+\begin_layout Standard
+The evaluation of an Elm program treats temporal expressions in a special
+ way, in that evaluation does not 
+\emph on
+reduce
+\emph default
+ temporal combinators to simpler expressions, as it does with ordinary 
+\begin_inset Formula $\lambda$
+\end_inset
+
+-terms.
+ Instead, evaluation of an Elm program consists of recomputing the current
+ values of all stream subexpressions.
+ The Elm program itself remains unchanged during evaluation.
+\end_layout
+
+\begin_layout Standard
+Updates are performed one step at a time and are driven by update events
+ within 
+\series bold
+input signals
+\series default
+, which are a special subset of all signal values.
+ Input signals in Elm are either hardware signals such as mouse or keyboard
+ events, which are predefined by the runtime engine, or implicit input signals
+ that are created by asynchronous constructions (see below for details on
+ that).
+ Generally, an Elm program is an expression defined as a pure function of
+ some input signals.
+\end_layout
+
+\begin_layout Standard
+It is important that an update step is applied to the 
+\emph on
+entire
+\emph default
+ Elm program, whenever one of the input signals has an update event.
+ An update event of an 
+\emph on
+input
+\emph default
+ signal means that the current value of the input signal has been changed
+ by the system (e.g.
+\begin_inset space \space{}
+\end_inset
+
+the user has entered new text or pressed a button).
+\end_layout
+
+\begin_layout Standard
+During an update event, a signal's current value becomes either 
+\series bold
+fresh
+\series default
+ or 
+\series bold
+stale
+\series default
+.
+ The current value is fresh if it had to be recomputed (even though the
+ newly computed current value may happen to be equal to the previous current
+ value).
+  Fresh current values will be denoted by an additional asterisk: 
+\begin_inset Formula $e^{\left[c\right]^{*}}$
+\end_inset
+
+.
+ In this way, the Elm system marks values that need to be recomputed.
+ 
+\end_layout
+
+\begin_layout Standard
+A signal's current value is stale after an update event if the update does
+ not touch this signal, so that no new value needs to be computed.
+ A stale current value is always equal to the previous current value.
+ 
+\end_layout
+
+\begin_layout Standard
+and has the form.
+ 
+\end_layout
+
+\begin_layout Standard
+consists of ***The Elm language has no explicit representation for update
+ events or current values.
+ The updates are performed implicitly by the runtime engine, which also
+ needs to keep track of all dependencies between streams.
+ The runtime engine will also avoid needless recomputation of current values
+ for signals whose dependencies did not change.
 \end_layout
 
 \begin_layout Section
@@ -132,6 +514,10 @@ Asynchronous callbacks
 
 \begin_layout Section
 Implementation considerations
+\end_layout
+
+\begin_layout Section
+Modular UI
 \end_layout
 
 \end_body

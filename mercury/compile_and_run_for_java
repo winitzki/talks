@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Usage example: $0 factorial
+# to build and run factorial.jar from factorial.m
+
+main_module="$1"
+
+mmc --make --gc none --java "$main_module"
+java -cp "$main_module".jar:lib/mercury/lib/java/mer_std.jar:lib/mercury/lib/java/mer_rt.jar jmercury."$main_module"
+
