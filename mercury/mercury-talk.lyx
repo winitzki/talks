@@ -650,6 +650,111 @@ fact(N,F) :- ( if N =< 1 then F = 1 else F = A*N, fact(N-1, A) ).
 status open
 
 \begin_layout Plain Layout
+Static determinism
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Compilation fails if we define the predicate by clauses:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+:- pred fact(int::in, int::out) is det.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+fact(1,1).
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+fact(N,F) :- fact(N-1, A), F = A*N.
+\end_layout
+
+\begin_layout Itemize
+Error message:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+In `fact'(in, out): error: determinism declaration not satisfied.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+Declared `det', inferred `multi'.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+Disjunction has multiple clauses with solutions.
+\end_layout
+
+\begin_layout Itemize
+Similar error when defining a function by clauses
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+Error: invalid determinism for `fct'(in) = out:
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+the primary mode of a function cannot be `multi'.
+\end_layout
+
+\begin_layout Itemize
+This is why we need to use a less readable 
+\family typewriter
+\size footnotesize
+\color blue
+if-then-else
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Functions and expressions
 \end_layout
 
