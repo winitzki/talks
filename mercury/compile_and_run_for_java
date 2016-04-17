@@ -4,7 +4,9 @@
 # to build and run factorial.jar from factorial.m
 
 main_module="$1"
+jmlib="$HOME/Library/Mercury/lib/mercury/lib/java"
 
-mmc --make --gc none --java "$main_module"
-java -cp "$main_module".jar:lib/mercury/lib/java/mer_std.jar:lib/mercury/lib/java/mer_rt.jar jmercury."$main_module"
+
+mmc --make --infer-all --gc none --java "$main_module"
+java -cp "$main_module".jar:"$jmlib"/mer_std.jar:"$jmlib"/mer_rt.jar jmercury."$main_module"
 
