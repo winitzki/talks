@@ -9,15 +9,14 @@
 
 :- type unary ---> z; s(unary).
 
-% convert unary to built-in int.
+% convert between unary and native integers.
 :- pred unary_int(unary, int).
 :- mode unary_int(in, out). % is det.
 :- mode unary_int(out, in). % is multi.
 unary_int(C, N) :- 
 ( % match on C
   C = z, N = 0 ;
-  C = s(B), N = M+1, unary_int(B, M)
-% order of goals here depends on mode!
+  C = s(B), N = M+1, unary_int(B, M)  % goals here will be reordered depending on mode!
 ).
 
 main(!IO) :-

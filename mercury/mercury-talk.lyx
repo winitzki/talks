@@ -229,11 +229,148 @@ X = pgvdrk
 \end_layout
 
 \begin_layout Itemize
+Classical logic limited to Horn clauses = executable program
+\end_layout
+
+\begin_layout Itemize
+The legacy of Prolog: SQL, Datalog, ...
+ 
+\size footnotesize
+\color blue
+[ _ | X | Xs ]
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Logic programming refresher
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+All capitalized symbols are 
+\series bold
+quantified logical variables
+\series default
+ (LVs)
+\end_layout
+
+\begin_layout Itemize
+LVs on the left imply 
+\begin_inset Formula $\forall$
+\end_inset
+
+; free LVs on the right imply 
+\begin_inset Formula $\exists$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The symbol 
+\family typewriter
+\series bold
+\color blue
+:-
+\family default
+\series default
+\color inherit
+ means implication 
+\begin_inset Formula $\leftarrow$
+\end_inset
+
+, the comma means 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+and
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Rules can be given in any order; no declarations
+\end_layout
+
+\begin_layout Itemize
+Examples:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+green(X) :- jumping(X)
+\family default
+\color inherit
+ means 
+\begin_inset Formula $\forall X:\mbox{jumping}(X)\rightarrow\mbox{green}(X)$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ 
+\color blue
+path(A,B) :- path(A,C), path(C,B)
+\family default
+\color inherit
+ means
+\begin_inset Newline newline
+\end_inset
+
+   
+\begin_inset Formula $\forall A,B:\left[\exists C:path(A,C)\wedge path(C,B)\rightarrow path(A,B)\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+\color blue
+?- intelligent(X)
+\family default
+\color inherit
+ means: prove that 
+\begin_inset Formula $\exists$
+\end_inset
+
+
+\family typewriter
+X:intelligent(X)
+\end_layout
+
+\begin_layout Itemize
 The runtime will perform a backtracking search for a proof
 \end_layout
 
 \begin_layout Itemize
-Classical logic limited to Horn clauses = executable program
+LVs will be assigned/unassigned as needed during search
 \end_layout
 
 \end_deeper
@@ -963,26 +1100,16 @@ symbol literals
  as in Prolog
 \end_layout
 
-\end_deeper
 \begin_layout Itemize
-Predicate types, function types
-\end_layout
+Use union type instead, to make 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_deeper
-\begin_layout Itemize
-Type syntax: 
-\family typewriter
-\size footnotesize
-\color blue
-pred(int::in, int::out)
-\family default
-\size default
-\color inherit
- and 
-\family typewriter
-\size footnotesize
-\color blue
-func(int) = int
+martians
+\begin_inset Quotes erd
+\end_inset
+
+ type-safe! (demo)
 \end_layout
 
 \end_deeper
@@ -1050,6 +1177,28 @@ Records with accessors
 X = employee(...), if X ^ name = "myself" then ...
 \end_layout
 
+\begin_layout Itemize
+Predicate types, function types
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Type syntax: 
+\family typewriter
+\size footnotesize
+\color blue
+pred(int::in, int::out)
+\family default
+\size default
+\color inherit
+ and 
+\family typewriter
+\size footnotesize
+\color blue
+func(int) = int
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Separator
 
@@ -1156,7 +1305,7 @@ unary_int(C, N) :- (
 \end_layout
 
 \begin_layout Itemize
-The same code can unify 
+The same code will unify 
 \size footnotesize
 \color blue
 unary_int(s(s(z)), N) 
@@ -1185,6 +1334,10 @@ unary_int(C, N)
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+All predicates are functions in disguise
+\end_layout
+
 \end_deeper
 \begin_layout Separator
 
@@ -1289,13 +1442,20 @@ A type class defines a set of predicates and functions
 \size footnotesize
 \color blue
 :- pred show_list(list(T), io, io) <= showable(T).
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+show_list(L, !IO) :- ...
  
 \emph on
 % define it now
 \end_layout
 
 \begin_layout Itemize
-The methods of a typeclass are resolved at compile time
+The methods of a type class are resolved at compile time
 \end_layout
 
 \begin_deeper
@@ -1345,7 +1505,7 @@ monad
 
 \begin_deeper
 \begin_layout Itemize
-Typeclasses must be parameterized by simple types
+Type classes must be parameterized by simple types
 \end_layout
 
 \begin_layout Itemize
@@ -1354,7 +1514,7 @@ Instances are for concrete types or concrete type constructors
 
 \end_deeper
 \begin_layout Itemize
-Cannot parameterize a typeclass by an unknown type constructor
+Cannot parameterize a type class by an unknown type constructor
 \end_layout
 
 \begin_layout LyX-Code
@@ -1453,7 +1613,7 @@ monad
 \begin_inset Quotes erd
 \end_inset
 
- typeclasses)
+ type classes)
 \end_layout
 
 \end_deeper
@@ -1461,6 +1621,12 @@ monad
 No row polymorphism for records
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+(ad-hoc record accessors are provided)
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 No partially instantiated values (e.g.
 \begin_inset space ~
@@ -1484,7 +1650,7 @@ cut
 \begin_inset Quotes erd
 \end_inset
 
- operator
+ operator; determinism is controlled more explicitly
 \end_layout
 
 \begin_layout Itemize
@@ -1523,7 +1689,11 @@ Functions are predicates, and predicates are functions!
 \end_layout
 
 \begin_layout Itemize
-For more info on Mercury: 
+For more info on Mercury:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
 \begin_inset CommandInset href
 LatexCommand href
 name "Features of the Mercury programming language (online link)"
@@ -1534,6 +1704,7 @@ target "http://www.mercurylang.org/information/features.html"
 
 \end_layout
 
+\end_deeper
 \end_deeper
 \end_body
 \end_document
