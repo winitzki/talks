@@ -657,7 +657,7 @@ fact2(N,F) :- ( if N =< 1 then F = 1 else F = A*N, fact(N-1, A) ).
 status open
 
 \begin_layout Plain Layout
-Static determinism
+Static determinism analysis
 \end_layout
 
 \end_inset
@@ -1232,10 +1232,13 @@ A type class defines a set of predicates and functions
 
 \size footnotesize
 \color blue
-  show(T::in, io::di, io::uo) is det
+  pred show(T::in, io::di, io::uo) is det
 \end_layout
 
 \begin_layout LyX-Code
+
+\size footnotesize
+\color blue
 ].
 \end_layout
 
@@ -1311,7 +1314,7 @@ Only one instance declaration per type (as in Haskell)
 status open
 
 \begin_layout Plain Layout
-Higher-kinded types
+No higher-kinded types
 \end_layout
 
 \end_inset
@@ -1337,7 +1340,72 @@ monad
 \begin_inset Quotes erd
 \end_inset
 
- typeclass?
+ typeclass? (No!)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Typeclasses must be parameterized by simple types
+\end_layout
+
+\begin_layout Itemize
+Instances are for concrete types or concrete type constructors
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Cannot parameterize a typeclass by an unknown type constructor
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+:- typeclass functor(A,B, FA,FB) where [
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  func fmap(func(A)=B) = (func(FA)=FB)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+].
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+:- instance functor(A, B, list(A), list(B))
+\shape italic
+ % fails to compile!
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+where [
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+   fmap(F::(func(A)=B)) = (func(L) = FL :- FL = map(F, L))
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+].
 \end_layout
 
 \end_deeper
@@ -1369,23 +1437,23 @@ No higher-kind type constructors
 \begin_inset space ~
 \end_inset
 
-cannot easily define 
+cannot define 
 \begin_inset Quotes eld
 \end_inset
 
-traversable functor
+functor
 \begin_inset Quotes erd
 \end_inset
 
- parameterized by an 
+ or 
 \begin_inset Quotes eld
 \end_inset
 
-applicative functor
+monad
 \begin_inset Quotes erd
 \end_inset
 
-)
+ typeclasses)
 \end_layout
 
 \end_deeper
@@ -1451,6 +1519,11 @@ Mercury = Prolog + modes + types
 \end_layout
 
 \begin_layout Itemize
+Functions are predicates, and predicates are functions!
+\end_layout
+
+\begin_layout Itemize
+For more info on Mercury: 
 \begin_inset CommandInset href
 LatexCommand href
 name "Features of the Mercury programming language (online link)"
