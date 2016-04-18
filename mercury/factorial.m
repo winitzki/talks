@@ -36,4 +36,4 @@ factorial_pred(N, F) :- ( if N =< 1 then F = 1 else factorial_pred(N-1, G), F = 
 
 factorial_func(N) = (if N =< 1 then 1 else N*factorial_func(N-1) ).
 
-% Note that factorial_pred and factorial_func result in the identical compiled code.
+% Note that factorial_pred and factorial_func will result in the identical compiled code.

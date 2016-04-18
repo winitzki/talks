@@ -256,27 +256,7 @@ Mercury in a nutshell: a Prolog dialect with static types
 
 \begin_deeper
 \begin_layout Itemize
-Mercury borrows these from Prolog: logical variables, predicates, rules
-\end_layout
-
-\begin_layout Itemize
-Syntax and semantics is very close to Prolog
-\end_layout
-
-\begin_layout Itemize
-Data structures: list, queue, hash map
-\end_layout
-
-\begin_layout Itemize
-Flexible mode system, type checking, mode and type inference
-\end_layout
-
-\begin_layout Itemize
-Polymorphic types and type classes, type quantifiers
-\end_layout
-
-\begin_layout Itemize
-Termination analysis for predicates
+Logical variables, predicates, rules in Prolog-style syntax and semantics
 \end_layout
 
 \begin_layout Itemize
@@ -285,6 +265,34 @@ Functions as a primitive, on par with predicates
 
 \begin_layout Itemize
 Higher-order functions and higher-order predicates
+\end_layout
+
+\begin_layout Itemize
+Data structures: list, array, hash map; some support for 
+\emph on
+mutable
+\emph default
+ data
+\end_layout
+
+\begin_layout Itemize
+Flexible mode system, type checking, mode and type inference
+\end_layout
+
+\begin_layout Itemize
+Polymorphic types and type classes
+\end_layout
+
+\begin_layout Itemize
+Universal and existential type quantifiers
+\end_layout
+
+\begin_layout Itemize
+Termination and determinism analysis for predicates
+\end_layout
+
+\begin_layout Itemize
+Multithreading; parallel goals; exceptions
 \end_layout
 
 \begin_layout Itemize
@@ -317,7 +325,7 @@ Modes, determinism, types, I/O
 
 \begin_deeper
 \begin_layout Itemize
-Predicate arguments must have 
+Predicate arguments have 
 \series bold
 types
 \series default
@@ -628,8 +636,7 @@ Order of goals
 \family typewriter
 \size scriptsize
 \color blue
-:- pred fact(int::in, int::out) is det.
- 
+fact1(N,F) :- ( if N =< 1 then F = 1 else fact(N-1, A), F = A*N ).
 \end_layout
 
 \begin_layout LyX-Code
@@ -637,7 +644,7 @@ Order of goals
 \family typewriter
 \size scriptsize
 \color blue
-fact(N,F) :- ( if N =< 1 then F = 1 else F = A*N, fact(N-1, A) ).
+fact2(N,F) :- ( if N =< 1 then F = 1 else F = A*N, fact(N-1, A) ).
 \end_layout
 
 \end_deeper
@@ -660,7 +667,7 @@ Static determinism
 
 \begin_deeper
 \begin_layout Itemize
-Compilation fails if we define the predicate by clauses:
+Compilation fails if we define the predicate by writing two clauses:
 \end_layout
 
 \begin_layout LyX-Code
@@ -716,7 +723,11 @@ Disjunction has multiple clauses with solutions.
 \end_layout
 
 \begin_layout Itemize
-Similar error when defining a function by clauses
+Similar error when defining a 
+\emph on
+function
+\emph default
+ by clauses:
 \end_layout
 
 \begin_layout LyX-Code
@@ -739,6 +750,10 @@ This is why we need to use a less readable
 \size footnotesize
 \color blue
 if-then-else
+\family default
+\size default
+\color inherit
+ construct
 \end_layout
 
 \begin_layout LyX-Code
@@ -908,7 +923,7 @@ Primitive types:
 \family typewriter
 \size footnotesize
 \color blue
-char
+bool
 \family default
 \size default
 \color inherit
@@ -1203,9 +1218,89 @@ status open
 
 \begin_deeper
 \begin_layout Itemize
-***
+A type class defines a set of predicates and functions
 \end_layout
 
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+:- typeclass showable(T) where [
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  show(T::in, io::di, io::uo) is det
+\end_layout
+
+\begin_layout LyX-Code
+].
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+:- instance showable(int) where [
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  pred(show/3) is io.write_int
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+].
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+:- instance showable(list(T)) <= showable(T) where [ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  pred(show/3) is show_list
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+].
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+:- pred show_list(list(T), io, io) <= showable(T).
+ 
+\emph on
+% define it now
+\end_layout
+
+\begin_layout Itemize
+The methods of a typeclass are resolved at compile time
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Only one instance declaration per type (as in Haskell)
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Separator
 
@@ -1216,7 +1311,7 @@ status open
 status open
 
 \begin_layout Plain Layout
-Existential types
+Higher-kinded types
 \end_layout
 
 \end_inset
@@ -1226,7 +1321,23 @@ Existential types
 
 \begin_deeper
 \begin_layout Itemize
-***
+Can we define a 
+\begin_inset Quotes eld
+\end_inset
+
+functor
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+monad
+\begin_inset Quotes erd
+\end_inset
+
+ typeclass?
 \end_layout
 
 \end_deeper
@@ -1249,11 +1360,16 @@ Limitations of Mercury
 
 \begin_deeper
 \begin_layout Itemize
-No higher-order type constructors (e.g.
+No higher-kind type constructors
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+(e.g.
 \begin_inset space ~
 \end_inset
 
-cannot define 
+cannot easily define 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1261,7 +1377,7 @@ traversable functor
 \begin_inset Quotes erd
 \end_inset
 
- parameterized by 
+ parameterized by an 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1272,6 +1388,7 @@ applicative functor
 )
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
 No row polymorphism for records
 \end_layout
@@ -1281,7 +1398,29 @@ No partially instantiated values (e.g.
 \begin_inset space ~
 \end_inset
 
-difference lists)
+no difference lists)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Queues and other data types are provided by standard library
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+No 
+\begin_inset Quotes eld
+\end_inset
+
+cut
+\begin_inset Quotes erd
+\end_inset
+
+ operator
+\end_layout
+
+\begin_layout Itemize
+No REPL or interactive queries
 \end_layout
 
 \end_deeper
