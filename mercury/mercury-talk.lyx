@@ -1654,6 +1654,22 @@ cut
 \end_layout
 
 \begin_layout Itemize
+No 
+\size footnotesize
+\color blue
+assert
+\size default
+\color inherit
+ / 
+\size footnotesize
+\color blue
+retract
+\size default
+\color inherit
+; all code is statically checked, not self-modifying
+\end_layout
+
+\begin_layout Itemize
 No REPL or interactive queries
 \end_layout
 
