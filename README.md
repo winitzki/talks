@@ -1,3 +1,13 @@
+
+
+
+
+
+
+
+
+
+
 # Talk slides for various meetup presentations
 
 ## Join Calculus
@@ -64,6 +74,14 @@ Presented at [SF Types, Theorems, and Programming Languages meetup, June 16, 201
 [Talk slides](prolog/prolog_talk.pdf)
 
 [Video: animated slides with audio recording](http://youtu.be/Fhc7fPQF1iY­)
+
+## Logic and functional programming in Mercury
+
+* How "predicates are functions" and "functions are predicates" in Mercury
+* How Mercury optimizes code depending on predicate modes
+* What are some important limitations of Mercury's type system
+
+[Talk slides](mercury/mercury_talk.pdf)
 
 ## Elm-style Functional Reactive Programming demystified
 
