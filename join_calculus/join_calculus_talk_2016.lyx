@@ -111,7 +111,11 @@ titlepage}
 status open
 
 \begin_layout Plain Layout
-Motivation
+Concurrency vs.
+\begin_inset space ~
+\end_inset
+
+Parallelism
 \end_layout
 
 \end_inset
@@ -125,12 +129,11 @@ Motivation
 
 \begin_deeper
 \begin_layout Standard
-Concurrency vs.
- Parallelism
+Parallelism...
 \end_layout
 
 \begin_layout Itemize
-parallelism = a sequential computation made faster
+...means speeding up a sequential computation
 \end_layout
 
 \begin_deeper
@@ -143,12 +146,20 @@ parallelize
 \begin_inset Quotes erd
 \end_inset
 
- a sequential computation
+ a computation
+\end_layout
+
+\begin_layout Itemize
+parallel collections, Spark, ...
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+Concurrency...
+\end_layout
+
 \begin_layout Itemize
-concurrency = interacting computations running in unknown order
+...means interacting computations, running in unknown order
 \end_layout
 
 \begin_deeper
@@ -157,6 +168,32 @@ main problem: to decide when to run a process (or to wait)
 \end_layout
 
 \end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+How we cope with concurrency
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 Imperative concurrency is difficult:
 \end_layout
@@ -169,6 +206,11 @@ callbacks, semaphores, threads, shared mutable state
 testing is hard – race conditions, deadlocks, livelocks
 \end_layout
 
+\begin_layout Standard
+We try to avoid concurrency when possible.
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 Better models of concurrency:
 \end_layout
@@ -213,6 +255,36 @@ CSP,
 -calculus, join calculus (academic so far)
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "JoinRun"
+target "https://github.com/winitzki/joinrun-scala"
+
+\end_inset
+
+ -- a new Scala implementation (this talk)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Can use threads or Akka actors
+\end_layout
+
+\begin_layout Itemize
+More composability in architecting concurrency
+\end_layout
+
+\begin_layout Itemize
+Better syntax, more checks of code sanity
+\end_layout
+
+\begin_layout Itemize
+Automatic fault tolerance
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator parbreak
@@ -226,7 +298,81 @@ CSP,
 status open
 
 \begin_layout Plain Layout
-Join Calculus
+How we cope with concurrency
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Better approaches to concurrency:
+\end_layout
+
+\begin_layout Itemize
+STM
+\end_layout
+
+\begin_layout Itemize
+futures/promises = 
+\begin_inset Quotes eld
+\end_inset
+
+async monads
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Erlang's message-passing 
+\begin_inset Formula $\approx$
+\end_inset
+
+ Akka's 
+\begin_inset Quotes eld
+\end_inset
+
+actors
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+CSP, 
+\begin_inset Formula $\pi$
+\end_inset
+
+-calculus, 
+\series bold
+join calculus
+\series default
+ (academic so far)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What's in this talk
 \end_layout
 
 \end_inset
@@ -240,7 +386,62 @@ Join Calculus
 
 \begin_deeper
 \begin_layout Itemize
-Join Calculus = stateless, type-safe, channel-driven actors
+\begin_inset CommandInset href
+LatexCommand href
+name "JoinRun"
+target "https://github.com/winitzki/joinrun-scala"
+
+\end_inset
+
+ -- a new Scala implementation of Join Calculus
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Can use threads or Akka actors
+\end_layout
+
+\begin_layout Itemize
+More composability in architecting concurrency
+\end_layout
+
+\begin_layout Itemize
+Better syntax, more checks of code sanity
+\end_layout
+
+\begin_layout Itemize
+Automatic fault tolerance
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What's in this talk
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Join Calculus is ...
 \end_layout
 
 \begin_deeper
@@ -249,29 +450,94 @@ Declarative language for concurrent computations
 \end_layout
 
 \begin_layout Itemize
-No threads/semaphores/locks/forks, no shared mutable state
+\begin_inset Quotes eld
+\end_inset
+
+If actors were stateless, auto-started, and type-safe
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+No threads/semaphores/locks/mutexes/forks, no shared mutable state
+\end_layout
+
+\begin_layout Itemize
+Concurrency is data-driven, not scheduled 
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-Implementations:
+Metaphors for join calculus:
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Joinads (F#, Haskell) [
-\begin_inset CommandInset href
-LatexCommand href
-name "Petricek and Syme 2011"
-target "https://www.microsoft.com/en-us/research/publication/joinads-a-retargetable-control-flow-construct-for-reactive-parallel-and-concurrent-programming/"
-
+\begin_inset Quotes eld
 \end_inset
 
-]
+chemical reactions
+\begin_inset Quotes erd
+\end_inset
+
+ 
 \end_layout
 
 \begin_layout Itemize
-JoCaml (
+\begin_inset Quotes eld
+\end_inset
+
+concurrent pure functions
+\begin_inset Quotes erd
+\end_inset
+
+ applied to 
+\begin_inset Quotes eld
+\end_inset
+
+concurrent data
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Join Calculus in the wild
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Previous implementations:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+JOCaml  (
 \begin_inset CommandInset href
 LatexCommand href
 name "jocaml.inria.fr"
@@ -284,6 +550,18 @@ target "http://jocaml.inria.fr"
 LatexCommand href
 name "Fournet et al. 2003"
 target "http://research.microsoft.com/en-us/um/people/fournet/papers/jocaml-afp4-summer-school-02.pdf"
+
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Itemize
+Joinads (F#, Haskell) [
+\begin_inset CommandInset href
+LatexCommand href
+name "Petricek and Syme 2011"
+target "https://www.microsoft.com/en-us/research/publication/joinads-a-retargetable-control-flow-construct-for-reactive-parallel-and-concurrent-programming/"
 
 \end_inset
 
@@ -308,6 +586,26 @@ target "https://github.com/Jiansen/ScalaJoin"
 \end_inset
 
 ]
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "CocoaJoin (iOS)"
+target "https://github.com/winitzki/CocoaJoin"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "AndroJoin (Android)"
+target "https://github.com/winitzki/AndroJoin"
+
+\end_inset
+
+ [S.W.
+ 2013]
 \end_layout
 
 \end_deeper
