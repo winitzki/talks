@@ -132,45 +132,42 @@ Asynchrony
 \end_layout
 
 \begin_deeper
+\begin_layout FrameSubtitle
+Parallelism
+\end_layout
+
 \begin_layout Standard
-Concurrency means...
+Parallelism means...
 \end_layout
 
 \begin_layout Itemize
-...mutually interacting computations, running in unknown order
+...to use multithreading to speed up a 
+\emph on
+sequential
+\emph default
+ computation
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-main problem: to decide when to run a new process (or to wait)
+main problem: to 
+\begin_inset Quotes eld
+\end_inset
+
+parallelize
+\begin_inset Quotes erd
+\end_inset
+
+ a computation efficiently
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-
-\family typewriter
-Thread
-\family default
-, 
-\family typewriter
-synchronized
-\family default
-, 
-\family typewriter
-semaphore
-\family default
-, ..
+parallel collections, dataflow, Spark, ...
 \end_layout
 
 \begin_layout Standard
-\begin_inset VSpace vfill
-\end_inset
-
- 
-\begin_inset space ~
-\end_inset
-
-
+Typical task: count words in 10,000 text files
 \end_layout
 
 \end_deeper
@@ -207,158 +204,8 @@ Asynchrony
 \end_layout
 
 \begin_deeper
-\begin_layout Standard
-Concurrency means...
-\end_layout
-
-\begin_layout Itemize
-...mutually interacting computations, running in unknown order
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-main problem: to decide when to run a new process (or to wait)
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-
-\family typewriter
-Thread
-\family default
-, 
-\family typewriter
-synchronized
-\family default
-, 
-\family typewriter
-semaphore
-\family default
-, ...
-\end_layout
-
-\begin_layout Standard
-Parallelism means...
-\end_layout
-
-\begin_layout Itemize
-...using multithreading to speed up a 
-\emph on
-sequential
-\emph default
- computation
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-main problem: to 
-\begin_inset Quotes eld
-\end_inset
-
-parallelize
-\begin_inset Quotes erd
-\end_inset
-
- a computation
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-parallel collections, dataflow, Spark, ...
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Concurrency vs.
-\begin_inset space ~
-\end_inset
-
-Parallelism vs.
-\begin_inset space ~
-\end_inset
-
+\begin_layout FrameSubtitle
 Asynchrony
-\end_layout
-
-\end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-Concurrency means...
-\end_layout
-
-\begin_layout Itemize
-...mutually interacting computations, running in unknown order
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-main problem: to decide when to run a new process (or to wait)
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-
-\family typewriter
-Thread
-\family default
-, 
-\family typewriter
-synchronized
-\family default
-, 
-\family typewriter
-semaphore
-\family default
-, ...
-\end_layout
-
-\begin_layout Standard
-Parallelism means...
-\end_layout
-
-\begin_layout Itemize
-...using multithreading to speed up a 
-\emph on
-sequential
-\emph default
- computation
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-main problem: to 
-\begin_inset Quotes eld
-\end_inset
-
-parallelize
-\begin_inset Quotes erd
-\end_inset
-
- a computation
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-parallel collections, dataflow, Spark, ...
 \end_layout
 
 \begin_layout Standard
@@ -366,11 +213,11 @@ Asynchrony means...
 \end_layout
 
 \begin_layout Itemize
-...optimize 
+...to optimize 
 \emph on
 sequential
 \emph default
- computations that have long wait times
+ computations that may have long wait times
 \end_layout
 
 \begin_deeper
@@ -381,6 +228,147 @@ main problem: to interleave wait times on a single-thread runloop
 \end_deeper
 \begin_layout Itemize
 futures/promises, async/await, streams, FRP, coroutines, ...
+\end_layout
+
+\begin_layout Standard
+Typical task: implement interactive Excel tables with auto-updating cells
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Concurrency vs.
+\begin_inset space ~
+\end_inset
+
+Parallelism vs.
+\begin_inset space ~
+\end_inset
+
+Asynchrony
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Concurrency
+\end_layout
+
+\begin_layout Standard
+Concurrency means...
+\end_layout
+
+\begin_layout Itemize
+...mutually interacting computations, running in unknown order
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+main problem: to decide when to start a new process (or to wait)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\family typewriter
+Thread
+\family default
+, 
+\family typewriter
+synchronized
+\family default
+, 
+\family typewriter
+semaphore
+\family default
+, ...
+\end_layout
+
+\begin_layout Standard
+Typical task: simulate 
+\begin_inset Quotes eld
+\end_inset
+
+dining philosophers
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Dining philosophers
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+The exemplary problem of concurrency
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Five philosophers sit at a round table"
+target "https://en.wikipedia.org/wiki/Dining_philosophers_problem"
+
+\end_inset
+
+, taking turns eating and thinking for random time intervals
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename An_illustration_of_the_dining_philosophers_problem.png
+	display false
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Problem: run the process, avoiding deadlock
 \end_layout
 
 \end_deeper
@@ -418,9 +406,15 @@ callbacks, threads, semaphores, mutexes, shared mutable state...
 \end_layout
 
 \begin_layout Itemize
-testing is hard – race conditions, deadlocks, livelocks
+testing is hard – non-deterministic runtime behavior!
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+race conditions, deadlocks, livelocks
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 We try to 
 \emph on
@@ -456,9 +450,1824 @@ How I learned to forget deadlocks and to love concurrency
 
 \begin_deeper
 \begin_layout Standard
-Better approaches to concurrency:
+In this talk:
 \end_layout
 
+\begin_layout Itemize
+Introduction to the 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+join calculus
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ style of concurrency
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "JoinRun"
+target "https://github.com/winitzki/joinrun-scala"
+
+\end_inset
+
+ -- a new Scala implementation
+\end_layout
+
+\begin_layout Itemize
+Examples and demos
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Join Calculus: The new hope
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+...and some new hype
+\end_layout
+
+\begin_layout Standard
+Join Calculus is ...
+\end_layout
+
+\begin_layout Itemize
+...a declarative language for general-purpose concurrency
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+What if actors were stateless, auto-started, and type-safe
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+No threads/semaphores/locks/mutexes/forks, no shared mutable state
+\end_layout
+
+\begin_layout Itemize
+Concurrency is data-driven, not scheduled
+\end_layout
+
+\begin_layout Itemize
+Easier to use than anything I've seen so far!
+\end_layout
+
+\begin_layout Standard
+Metaphors for join calculus:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+chemical reactions
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+concurrent pure functions
+\begin_inset Quotes erd
+\end_inset
+
+ applied to 
+\begin_inset Quotes eld
+\end_inset
+
+concurrent data
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Join Calculus: The genesis
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+a.k.a.
+\begin_inset space ~
+\end_inset
+
+the 
+\begin_inset Quotes eld
+\end_inset
+
+Reflexive Chemical Abstract Machine
+\begin_inset Quotes erd
+\end_inset
+
+ [
+\begin_inset CommandInset href
+LatexCommand href
+name "Fournet & Gonthier 1996"
+target "http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.32.3078"
+
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Standard
+Abstract chemistry: 
+\begin_inset Quotes eld
+\end_inset
+
+molecules
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+reactions
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Chemical 
+\begin_inset Quotes eld
+\end_inset
+
+soup
+\begin_inset Quotes erd
+\end_inset
+
+ contains many 
+\begin_inset Quotes eld
+\end_inset
+
+molecules
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+A combination of certain molecules starts a 
+\begin_inset Quotes eld
+\end_inset
+
+chemical reaction
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "50col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Quotes eld
+\end_inset
+
+Chemical laws
+\begin_inset Quotes erd
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size footnotesize
+\color blue
+a + b 
+\begin_inset Formula ${\color{blue}\rightarrow}$
+\end_inset
+
+ c
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size footnotesize
+\color blue
+a + c 
+\begin_inset Formula ${\color{blue}\rightarrow}$
+\end_inset
+
+ 
+\begin_inset Formula ${\color{blue}\emptyset}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "30col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename cham1.eps
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Define molecules 
+\family typewriter
+\size scriptsize
+\color blue
+a
+\family default
+\size default
+\color inherit
+, 
+\family typewriter
+\size scriptsize
+\color blue
+b
+\family default
+\size default
+\color inherit
+, 
+\family typewriter
+\size scriptsize
+\color blue
+c
+\family default
+\size default
+\color inherit
+, ...
+ and arbitrary chemical laws
+\end_layout
+
+\begin_layout Itemize
+Inject some molecules into the 
+\begin_inset Quotes eld
+\end_inset
+
+soup
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The runtime system evolves the soup 
+\emph on
+concurrently
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Join Calculus in a nutshell
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+\begin_inset Quotes eld
+\end_inset
+
+Better concurrency through chemistry
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Translating the 
+\begin_inset Quotes eld
+\end_inset
+
+chemical metaphor
+\begin_inset Quotes erd
+\end_inset
+
+ into practice:
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "50col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Itemize
+Each molecule carries a 
+\series bold
+value
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+Each reaction computes a 
+\begin_inset Quotes eld
+\end_inset
+
+molecule-valued
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\series bold
+expression
+\series default
+ that depends on input values
+\end_layout
+
+\begin_layout Itemize
+Resulting molecules are injected back into the soup
+\end_layout
+
+\begin_layout Itemize
+Reactions start concurrently if input molecules are available
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename cham2.eps
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+join(
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ run { case 
+\series bold
+a
+\series default
+(x) + 
+\series bold
+b
+\series default
+(y) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+val z = compute_z(x,y); 
+\series bold
+a
+\series default
+(z) },
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ run { case 
+\series bold
+a
+\series default
+(x) + 
+\series bold
+c
+\series default
+() =>
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+ println(x) } )
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+When reaction starts: input molecules disappear, expression is computed,
+ output molecules are injected
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Using JoinRun: basic features
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Molecule injectors, reaction definitions
+\end_layout
+
+\begin_layout Standard
+Define some 
+\series bold
+molecule
+\series default
+ 
+\series bold
+injectors
+\series default
+:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val a = new JA[Int]
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val b = new JA[Option[Int]]
+\end_layout
+
+\begin_layout Standard
+Declare some 
+\series bold
+reactions
+\series default
+ using the known molecules:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val r0 = run { case a(0) => println(
+\begin_inset Quotes eld
+\end_inset
+
+finished
+\begin_inset Quotes erd
+\end_inset
+
+) }
+\family default
+\size default
+\color inherit
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val r1 = run { case a(x) + b(None) => a(x-1) }
+\family default
+\size default
+\color inherit
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val r2 = run { case a(x) + b(Some(y)) => a(x+y) }
+\end_layout
+
+\begin_layout Standard
+Activate a 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+join definition
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+ and inject some molecules:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+join(r0, r1, r2)
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+a(10)
+\family default
+\size default
+\color inherit
+ 
+\size footnotesize
+\color gray
+// non-blocking
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+b(Some(5))
+\family default
+\size default
+\color inherit
+ 
+\size footnotesize
+\color gray
+// non-blocking
+\size default
+\color inherit
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+b(None)
+\family default
+\size default
+\color inherit
+ 
+\size footnotesize
+\color gray
+// non-blocking; will have a(14)
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Using JoinRun: more features
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Blocking vs.
+\begin_inset space ~
+\end_inset
+
+non-blocking molecules
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Blocking
+\series default
+ molecule:
+\end_layout
+
+\begin_layout Itemize
+implicitly carries a 
+\begin_inset Quotes eld
+\end_inset
+
+reply
+\begin_inset Quotes erd
+\end_inset
+
+ injector
+\end_layout
+
+\begin_layout Itemize
+the 
+\begin_inset Quotes eld
+\end_inset
+
+reply
+\begin_inset Quotes erd
+\end_inset
+
+ value will be returned to caller
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val getN = new JS[Unit, Int]
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\size footnotesize
+\color gray
+// revise the join definition, appending this reaction:
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+...
+ val r3 = run { case r(x) + getN(_, reply) => reply(x) }
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+join(r0, r1, r2, r3)
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\size footnotesize
+\color gray
+// inject non-blocking molecules...
+ 
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\size footnotesize
+\color gray
+// now inject the blocking molecule:
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val x = getN()
+\family default
+\size footnotesize
+\color gray
+ // blocking call, returns 
+\family typewriter
+Int
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Join Calculus: Examples I
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+First benchmark: Counting to zero
+\end_layout
+
+\begin_layout Standard
+Non-blocking counter:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+
+\begin_inset space ~
+\end_inset
+
+
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val c = ja[Int]("counter")
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+val g = js[Unit,Int]("getValue")
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+val d = ja[Unit]("decr")
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+val f = js[LocalDateTime, Long]("finished")
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+join(
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+run { case c(0) + f(t, reply) =>
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+val elapsed = t.until(LocalDateTime.now, ChronoUnit.MILLIS)
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+reply(elapsed) },
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+run { case g(_,reply) + c(n) => c(n) + reply(n) },
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+run { case c(n) + d(_) if n > 0 => c(n-1) }
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+)
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+val initialTime = LocalDateTime.now
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+c(1000)
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+(1 to 1000).foreach{ _ => d() }
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size scriptsize
+\color blue
+val result = f(initialTime)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Join Calculus: Examples I
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Options, Futures, and Map/Reduce
+\end_layout
+
+\begin_layout Standard
+Future with blocking poll (
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+get
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+):
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+{ case fut( (f,x) ) => finished( f(x) ) }
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+{ case get(_, r) + finished(fx) => r(fx) }
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Map/Reduce:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+{ case res(list) + c(s) => res(s::list) } 
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+{ case get(_, reply) + res(list) => reply(list) }
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+res(Nil)
+\family default
+\size default
+\color inherit
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+Seq(1,2,3).foreach(x => c(x*2))
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+get()
+\family default
+\size footnotesize
+\color gray
+ // this returned Seq(4,6,2) in one test
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Join Calculus: Examples III
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Five Dining Philosophers
+\end_layout
+
+\begin_layout Standard
+Philosophers 
+\family typewriter
+\size scriptsize
+\color blue
+1, 2, 3, 4, 
+\family default
+5
+\size default
+\color inherit
+; forks 
+\family typewriter
+\size scriptsize
+\color blue
+f12, f23, f34, f45, f51
+\family default
+\size default
+\color inherit
+.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family sans
+\size footnotesize
+\color gray
+// ...
+ some declarations omitted for brevity
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+join (
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run{ case t1(_) => wait(); hA() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run{ case t2(_) => wait(); hB() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run{ case t3(_) => wait(); hC() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run{ case t4(_) => wait(); hD() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run{ case t5(_) => wait(); hE() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run{ case h1(_) + f12(_) + f51(_) => wait(); t1() + f12() + f51() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run{ case h2(_) + f23(_) + f12(_) => wait(); t2() + f23() + f12() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run{ case h3(_) + f34(_) + f23(_) => wait(); t3() + f34() + f23() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run{ case h4(_) + f45(_) + f34(_) => wait(); t4() + f45() + f34() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run{ case h5(_) + f51(_) + f45(_) => wait(); t5() + f51() + f45() }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+t1() + t2() + t3() + t4() + t5()
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+f12() + f23() + f34() + f45() + f51()
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Join Calculus: Examples IV
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Concurrent merge-sort
+\end_layout
+
+\begin_layout Standard
+The 
+\family typewriter
+\size scriptsize
+\color blue
+mergesort
+\family default
+\size default
+\color inherit
+ molecule is 
+\begin_inset Quotes eld
+\end_inset
+
+recursive
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+receives the upper-level 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+sortedResult
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+ molecule
+\end_layout
+
+\begin_layout Itemize
+defines its own 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+sorted
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+ molecules in 
+\emph on
+local scope
+\end_layout
+
+\begin_layout Itemize
+emits upper-level 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+sortedResult
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+ when done
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+val mergesort = ja[(Array[T], JA[Array[T]])]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+join(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run { case mergesort((arr, 
+\family typewriter
+sortedResult
+\family default
+)) =>
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+    if (arr.length <= 1) 
+\family typewriter
+sortedResult
+\family default
+(arr)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+      else {
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        val sorted1 = ja[Array[T]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        val sorted2 = ja[Array[T]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        join(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+          run { case sorted1(x) + sorted2(y) => 
+\family typewriter
+sortedResult
+\family default
+(arrayMerge(x,y)) }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        )
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        val (part1, part2) = arr.splitAt(arr.length/2)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        
+\family sans
+\size footnotesize
+\color gray
+// inject lower-level mergesort
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        mergesort(part1, sorted1) + mergesort(part2, sorted2)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+    }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  })
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Other approaches to concurrency
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Itemize
 STM
 \end_layout
@@ -489,6 +2298,245 @@ CSP,
 join calculus
 \series default
  (academic so far)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Join Calculus in the wild
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Previous implementations:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Funnel [
+\begin_inset CommandInset href
+LatexCommand href
+name "M. Odersky et al., 2000"
+target "http://lampwww.epfl.ch/funnel/"
+
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Itemize
+JOCaml  (
+\begin_inset CommandInset href
+LatexCommand href
+name "jocaml.inria.fr"
+target "http://jocaml.inria.fr"
+
+\end_inset
+
+) [
+\begin_inset CommandInset href
+LatexCommand href
+name "Fournet et al. 2003"
+target "http://research.microsoft.com/en-us/um/people/fournet/papers/jocaml-afp4-summer-school-02.pdf"
+
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Join in Scala
+\begin_inset Quotes erd
+\end_inset
+
+ compiler patch [
+\begin_inset CommandInset href
+LatexCommand href
+name "V. Cremet 2003"
+target "http://lampwww.epfl.ch/~cremet/misc/join_in_scala/index.html"
+
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Itemize
+Joinads (F#, Haskell) [
+\begin_inset CommandInset href
+LatexCommand href
+name "Petricek and Syme 2011"
+target "https://www.microsoft.com/en-us/research/publication/joinads-a-retargetable-control-flow-construct-for-reactive-parallel-and-concurrent-programming/"
+
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Itemize
+ScalaJoins [
+\begin_inset CommandInset href
+LatexCommand href
+name "P. Haller 2008"
+target "http://lampwww.epfl.ch/~phaller/joins/index.html"
+
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Itemize
+Scala Join [
+\begin_inset CommandInset href
+LatexCommand href
+name "J. He 2011"
+target "https://github.com/Jiansen/ScalaJoin"
+
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "CocoaJoin (iOS)"
+target "https://github.com/winitzki/CocoaJoin"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "AndroJoin (Android)"
+target "https://github.com/winitzki/AndroJoin"
+
+\end_inset
+
+ [S.W.
+ 2013]
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "JoinRun"
+target "https://github.com/winitzki/joinrun-scala"
+
+\end_inset
+
+ -- a new JC prototype in Scala (this talk)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Can use thread pools or Akka actor pools
+\end_layout
+
+\begin_layout Itemize
+Better syntax, more checks of code sanity
+\end_layout
+
+\begin_layout Itemize
+Automatic fault tolerance
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Comparison: Join Calculus vs.
+ Actor model
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Reaction 
+\begin_inset Formula $\approx$
+\end_inset
+
+ actor; injected molecule 
+\begin_inset Formula $\approx$
+\end_inset
+
+ message to actor.
+\end_layout
+
+\begin_layout Standard
+Actors: 
+\end_layout
+
+\begin_layout Itemize
+need to be created and managed explicitly
+\end_layout
+
+\begin_layout Itemize
+will process one message at a time
+\end_layout
+
+\begin_layout Itemize
+typically hold mutable state 
+\end_layout
+
+\begin_layout Standard
+Reactions:
+\end_layout
+
+\begin_layout Itemize
+autostart when required input molecules are available
+\end_layout
+
+\begin_layout Itemize
+many reactions can start at once, automatically concurrent
+\end_layout
+
+\begin_layout Itemize
+immutable, stateless, and type-safe
+\end_layout
+
+\begin_layout Itemize
+all reactions are defined statically, but locally scoped
 \end_layout
 
 \end_deeper
@@ -559,9 +2607,13 @@ Actor
 \family default
 , 
 \family typewriter
+ActorSystem
+\family default
+, 
+\family typewriter
 Props
 \family default
- (but note the 4 edge cases and a warning)
+ (but note the 4 edge cases and 2 warnings)
 \end_layout
 
 \begin_layout Standard
@@ -629,7 +2681,9 @@ receive
 \family typewriter
 receive
 \family default
- timeout
+ timeout, 
+\family typewriter
+forward
 \end_layout
 
 \begin_layout Standard
@@ -719,14 +2773,6 @@ There are 14 further items...
 \end_layout
 
 \end_deeper
-\begin_layout Frame
-
-\end_layout
-
-\begin_layout Frame
-
-\end_layout
-
 \begin_layout Standard
 \begin_inset Separator parbreak
 \end_inset
@@ -739,7 +2785,7 @@ There are 14 further items...
 status open
 
 \begin_layout Plain Layout
-What's in this talk
+Everything you need to know about JC...
 \end_layout
 
 \end_inset
@@ -751,2229 +2797,290 @@ What's in this talk
 
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Introduction to the 
-\begin_inset Quotes eld
-\end_inset
-
-
-\series bold
-join calculus
-\series default
-
-\begin_inset Quotes erd
-\end_inset
-
- style of concurrency
-\end_layout
-
-\begin_layout Itemize
-\begin_inset CommandInset href
-LatexCommand href
-name "JoinRun"
-target "https://github.com/winitzki/joinrun-scala"
-
-\end_inset
-
- -- a new Scala implementation
-\end_layout
-
-\begin_layout Itemize
-Examples and demos
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Join Calculus, the new hope
-\end_layout
-
-\end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Join Calculus is ...
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-...a declarative language for general-purpose concurrency
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-What if actors were stateless, auto-started, and type-safe
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-No threads/semaphores/locks/mutexes/forks, no shared mutable state
-\end_layout
-
-\begin_layout Itemize
-Concurrency is data-driven, not scheduled
-\end_layout
-
-\begin_layout Itemize
-Easier to use than anything I've seen so far
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Metaphors for join calculus:
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-chemical reactions
-\begin_inset Quotes erd
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-concurrent pure functions
-\begin_inset Quotes erd
-\end_inset
-
- applied to 
-\begin_inset Quotes eld
-\end_inset
-
-concurrent data
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_deeper
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Join Calculus in the wild
-\end_layout
-
-\end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Previous implementations:
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-JOCaml  (
-\begin_inset CommandInset href
-LatexCommand href
-name "jocaml.inria.fr"
-target "http://jocaml.inria.fr"
-
-\end_inset
-
-) [
-\begin_inset CommandInset href
-LatexCommand href
-name "Fournet et al. 2003"
-target "http://research.microsoft.com/en-us/um/people/fournet/papers/jocaml-afp4-summer-school-02.pdf"
-
-\end_inset
-
-]
-\end_layout
-
-\begin_layout Itemize
-Joinads (F#, Haskell) [
-\begin_inset CommandInset href
-LatexCommand href
-name "Petricek and Syme 2011"
-target "https://www.microsoft.com/en-us/research/publication/joinads-a-retargetable-control-flow-construct-for-reactive-parallel-and-concurrent-programming/"
-
-\end_inset
-
-]
-\end_layout
-
-\begin_layout Itemize
-ScalaJoins [
-\begin_inset CommandInset href
-LatexCommand href
-name "P. Haller 2008"
-target "http://lampwww.epfl.ch/~phaller/joins/index.html"
-
-\end_inset
-
-] [
-\begin_inset CommandInset href
-LatexCommand href
-name "J. He 2011"
-target "https://github.com/Jiansen/ScalaJoin"
-
-\end_inset
-
-]
-\end_layout
-
-\begin_layout Itemize
-\begin_inset CommandInset href
-LatexCommand href
-name "CocoaJoin (iOS)"
-target "https://github.com/winitzki/CocoaJoin"
-
-\end_inset
-
-, 
-\begin_inset CommandInset href
-LatexCommand href
-name "AndroJoin (Android)"
-target "https://github.com/winitzki/AndroJoin"
-
-\end_inset
-
- [S.W.
- 2013]
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-\begin_inset CommandInset href
-LatexCommand href
-name "JoinRun"
-target "https://github.com/winitzki/joinrun-scala"
-
-\end_inset
-
- -- a new JC prototype in Scala (this talk)
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Can use thread pools or Akka actor pools
-\end_layout
-
-\begin_layout Itemize
-Better syntax, more checks of code sanity
-\end_layout
-
-\begin_layout Itemize
-Automatic fault tolerance
-\end_layout
-
-\end_deeper
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Join Calculus in a nutshell
-\end_layout
-
-\end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
 \begin_layout FrameSubtitle
-a.k.a.
- the 
-\begin_inset Quotes eld
-\end_inset
-
-Chemical Abstract Machine
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Abstract chemistry: 
-\begin_inset Quotes eld
-\end_inset
-
-molecules
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-reactions
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Chemical 
-\begin_inset Quotes eld
-\end_inset
-
-soup
-\begin_inset Quotes erd
-\end_inset
-
- contains many 
-\begin_inset Quotes eld
-\end_inset
-
-molecules
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-A combination of certain molecules starts a 
-\begin_inset Quotes eld
-\end_inset
-
-chemical reaction
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Box Boxed
-position "c"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-use_makebox 0
-width "50col%"
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "black"
-backgroundcolor "none"
-status open
-
-\begin_layout Plain Layout
-
-\family typewriter
-\size scriptsize
-\color blue
-\begin_inset space ~
-\end_inset
-
-join(
-\color black
-
-\begin_inset Newline newline
-\end_inset
-
-
-\color blue
-
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset space ~
-\end_inset
-
- run { case a() + b() => c() }
-\color black
-,
-\begin_inset Newline newline
-\end_inset
-
-
-\color blue
-
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset space ~
-\end_inset
-
- run { case a() + c() => }
-\color black
-
-\begin_inset Newline newline
-\end_inset
-
-
-\color blue
-
-\begin_inset space ~
-\end_inset
-
-)
-\end_layout
-
-\end_inset
-
-
-\begin_inset space \hfill{}
-\end_inset
-
-
-\begin_inset Box Frameless
-position "c"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-use_makebox 0
-width "30col%"
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "black"
-backgroundcolor "none"
-status open
-
-\begin_layout Plain Layout
-\begin_inset Graphics
-	filename cham1.eps
-	width 100col%
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset space \hfill{}
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Using the chemical machine:
-\end_layout
-
-\begin_layout Itemize
-Define molecules 
-\family typewriter
-\size scriptsize
-\color blue
-a
-\family default
-\size default
-\color inherit
-, 
-\family typewriter
-\size scriptsize
-\color blue
-b
-\family default
-\size default
-\color inherit
-, 
-\family typewriter
-\size scriptsize
-\color blue
-c
-\family default
-\size default
-\color inherit
-, ...
- and arbitrary chemical laws
-\end_layout
-
-\begin_layout Itemize
-Inject some molecules into the 
-\begin_inset Quotes eld
-\end_inset
-
-soup
-\begin_inset Quotes erd
-\end_inset
-
-: 
-\family typewriter
-\size scriptsize
-\color blue
-a() + a() + b()
-\family default
-\size default
-\color inherit
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Note: 
-\family typewriter
-\size scriptsize
-\color blue
-a() + a() + b()
-\family default
-\size default
-\color inherit
- is the syntax for 
-\begin_inset Quotes eld
-\end_inset
-
-molecule-valued
-\begin_inset Quotes erd
-\end_inset
-
- expressions
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-The runtime system evolves the soup 
-\emph on
-asynchronously
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Join Calculus in a nutshell
-\end_layout
-
-\end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout FrameSubtitle
-Better concurrent computations through chemistry
-\end_layout
-
-\begin_layout Standard
-Sequential computation = evaluating an expression
-\end_layout
-
-\begin_layout Standard
-Concurrent computation = evaluating several expressions at once
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Box Boxed
-position "c"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-use_makebox 0
-width "50col%"
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "black"
-backgroundcolor "none"
-status open
-
-\begin_layout Itemize
-Each molecule carries a 
-\series bold
-value
-\series default
- 
-\end_layout
-
-\begin_layout Itemize
-Each reaction computes a 
-\begin_inset Quotes eld
-\end_inset
-
-molecule-valued
-\begin_inset Quotes erd
-\end_inset
-
- 
-\series bold
-expression
-\series default
- from input values
-\end_layout
-
-\begin_layout Itemize
-Results of computation are injected back into the soup
-\end_layout
-
-\begin_layout Itemize
-Reactions start concurrently whenever molecules are available
-\end_layout
-
-\end_inset
-
-
-\begin_inset space \hfill{}
-\end_inset
-
-
-\begin_inset Box Frameless
-position "c"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-use_makebox 0
-width "45col%"
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "black"
-backgroundcolor "none"
-status open
-
-\begin_layout Plain Layout
-\begin_inset Graphics
-	filename cham2.eps
-	width 100col%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\family typewriter
-\size scriptsize
-\color blue
-join(
-\end_layout
-
-\begin_layout Plain Layout
-
-\family typewriter
-\size scriptsize
-\color blue
-\begin_inset space ~
-\end_inset
-
- run { case a(x) + b(y) =>
-\end_layout
-
-\begin_layout Plain Layout
-
-\family typewriter
-\size scriptsize
-\color blue
-\begin_inset space ~
-\end_inset
-
- 
-\begin_inset space ~
-\end_inset
-
-val z = compute_z(x,y); a(z) },
-\end_layout
-
-\begin_layout Plain Layout
-
-\family typewriter
-\size scriptsize
-\color blue
-\begin_inset space ~
-\end_inset
-
- run { case a(x) + c() =>
-\end_layout
-
-\begin_layout Plain Layout
-
-\family typewriter
-\size scriptsize
-\color blue
-\begin_inset space ~
-\end_inset
-
- 
-\begin_inset space ~
-\end_inset
-
- 
-\begin_inset space ~
-\end_inset
-
- println(x) } )
-\end_layout
-
-\end_inset
-
-
-\begin_inset space \hfill{}
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-When reaction starts: input molecules disappear, expression is computed,
- output molecules are injected
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Join Calculus in a nutshell
-\end_layout
-
-\end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout FrameSubtitle
-More features of JoinRun
-\end_layout
-
-\begin_layout Itemize
-Molecule injectors are local values:
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-val q = new JA[Option[Int]]
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-val r = new JA[Int]
-\end_layout
-
-\begin_layout Itemize
-Pattern-matching on molecule's payload values:
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-join(
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-
-\begin_inset space ~
-\end_inset
-
- run { case q(Some x) + r(y) => r(x+y) }
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-
-\begin_inset space ~
-\end_inset
-
- run { case q(None) + r(y) => r(y) }
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-)
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-Blocking
-\series default
- molecule (injection will return a 
-\begin_inset Quotes eld
-\end_inset
-
-reply
-\begin_inset Quotes erd
-\end_inset
-
- value):
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-val getN = new JS[Unit, Int]
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
 ...
- run { case r(x) + getN(_, reply) => reply(x) }...
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-val x = getN()
-\end_layout
-
-\begin_layout Itemize
-Injection as side-effect: 
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-
-\begin_inset space ~
-\end_inset
-
- (1 to 10) foreach { i => r(i) }
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Join Calculus: Examples
-\end_layout
-
-\end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout FrameSubtitle
-Options, Futures, and Map/Reduce
+ but were afraid to ask
 \end_layout
 
 \begin_layout Standard
-Future with synchronous poll (
+Most descriptions of JC use the 
 \begin_inset Quotes eld
 \end_inset
 
-
-\family typewriter
-\size scriptsize
-\color blue
-get
-\family default
-\size default
-\color inherit
-
+message/channel
 \begin_inset Quotes erd
 \end_inset
 
-):
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-# def fut(f,x) = let res = f x in finished(res)
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-
-\begin_inset space ~
-\end_inset
-
- and get() & finished(res) = reply res to get;;
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-val get : unit -> '_a = <fun>
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-val finished : '_a Join.chan = <abstr>
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-val fut : (('a -> '_b) * 'a) Join.chan = <abstr>
-\end_layout
-
-\begin_layout Standard
-Future with synchronous callback:
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-def fut(f,x,c) = let res = f x in ( c(res); finished(res) )
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-
-\begin_inset space ~
-\end_inset
-
- and get() & finished(res) = reply res to get
-\end_layout
-
-\begin_layout Standard
-Future with asynchronous callback:
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-def fut(f,x,m) = let res = f x in ( m(res) & finished(res) )
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-
-\begin_inset space ~
-\end_inset
-
- and get() & finished(res) = reply res to get
-\end_layout
-
-\begin_layout Itemize
-Exercise: implement a 
-\begin_inset Quotes eld
-\end_inset
-
-future with cancellable callback
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Join Calculus: Examples
-\end_layout
-
-\end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout FrameSubtitle
-Options, Futures, and Map/Reduce
-\end_layout
-
-\begin_layout Standard
-Asynchronous counter:
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-# def inc() & c(n) = c(n+1) 
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-or get() & c(n) = reply n to get & c(n);; 
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-val inc : unit Join.chan = <abstr> 
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-val get : unit -> int = <fun> 
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-val c : int Join.chan = <abstr> 
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-# spawn c(0) & inc() & inc() & inc();; 
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-- : unit = () 
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-# get();; 
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-- : int = 3 
-\end_layout
-
-\begin_layout Standard
-Map/Reduce:
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-def res(list) & c(s) = res (s::list) or get() & res(list) = reply list to
- get;;
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-spawn res([]);;
-\family default
-\size default
-\color inherit
+ metaphor...
  
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-List.map (fun x-> spawn c(x*2)) [1; 2; 3];;
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-get();; (* this returned [4; 6; 2] in one test *)
 \end_layout
 
-\begin_layout Itemize
-Exercise: implement a concurrent 
-\begin_inset Quotes eld
-\end_inset
-
-fold
-\begin_inset Quotes erd
-\end_inset
-
- (e.g.
- sum of int list)
-\end_layout
-
-\end_deeper
 \begin_layout Standard
-\begin_inset Separator parbreak
+
+\family typewriter
+\size footnotesize
+\begin_inset VSpace bigskip
 \end_inset
 
 
 \end_layout
 
-\begin_layout Frame
-\begin_inset Argument 4
-status open
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
 
 \begin_layout Plain Layout
-Join Calculus: Examples
-\end_layout
-
-\end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout FrameSubtitle
-Five Dining Philosophers
-\end_layout
-
-\begin_layout Standard
-Philosophers 
-\size scriptsize
-\color blue
-A
-\family typewriter
-, 
-\family default
-B
-\family typewriter
-, 
-\family default
-C
-\family typewriter
-, 
-\family default
-D
-\family typewriter
-, 
-\family default
-E
-\size default
-\color inherit
-; forks 
-\family typewriter
-\size scriptsize
-\color blue
-fAB, fBC, fCD, fDE, fEA
-\family default
-\size default
-\color inherit
-.
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-let report(message) = Printf.printf 
 \begin_inset Quotes eld
 \end_inset
 
-%s
-\backslash
-n
+Chemistry
 \begin_inset Quotes erd
 \end_inset
 
- message;
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-                           Unix.sleep (Random.int 3600) ;;
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-def hA() & fEA() & fAB() = report(
-\begin_inset Quotes eld
-\end_inset
-
-A is eating
-\begin_inset Quotes erd
-\end_inset
-
-); tA() & fEA() & fAB() 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-or  hB() & fAB() & fBC() = report(
-\begin_inset Quotes eld
-\end_inset
-
-B is eating
-\begin_inset Quotes erd
-\end_inset
-
-); tB() & fAB() & fBC() 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-or  hC() & fBC() & fCD() = report(
-\begin_inset Quotes eld
-\end_inset
-
-C is eating
-\begin_inset Quotes erd
-\end_inset
-
-); tC() & fBC() & fCD() 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-or  hD() & fCD() & fDE() = report(
-\begin_inset Quotes eld
-\end_inset
-
-D is eating
-\begin_inset Quotes erd
-\end_inset
-
-); tD() & fCD() & fDE() 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-or  hE() & fDE() & fEA() = report(
-\begin_inset Quotes eld
-\end_inset
-
-E is eating
-\begin_inset Quotes erd
-\end_inset
-
-); tE() & fDE() & fEA() 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-and tA() = report(
-\begin_inset Quotes eld
-\end_inset
-
-A is thinking
-\begin_inset Quotes erd
-\end_inset
-
-); hA() 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-and tB() = report(
-\begin_inset Quotes eld
-\end_inset
-
-B is thinking
-\begin_inset Quotes erd
-\end_inset
-
-); hB() 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-and tC() = report(
-\begin_inset Quotes eld
-\end_inset
-
-C is thinking
-\begin_inset Quotes erd
-\end_inset
-
-); hC() 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-and tD() = report(
-\begin_inset Quotes eld
-\end_inset
-
-D is thinking
-\begin_inset Quotes erd
-\end_inset
-
-); hD() 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-and tE() = report(
-\begin_inset Quotes eld
-\end_inset
-
-E is thinking
-\begin_inset Quotes erd
-\end_inset
-
-); hE() ;; 
-\end_layout
-
-\begin_layout LyX-Code
 
 \end_layout
 
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-spawn fAB() & fBC() & fCD() & fDE() & fEA()
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-     & tA() & tB() & tC() & tD() & tE() ;; 
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
 \end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
 
 \begin_layout Plain Layout
-Limitations and restrictions of Join Calculus
+JC terminology
 \end_layout
 
 \end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout FrameSubtitle
-Less is more!
-\end_layout
-
-\begin_layout Itemize
-Reactions are defined 
-\series bold
-statically
-\series default
- and with 
-\series bold
-local scope
-\series default
-:
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-no molecules with computed names: 
-\family typewriter
-\size scriptsize
-\color blue
-
-\begin_inset Newline newline
-\end_inset
-
-a(x) & molecule_named(
-\begin_inset Quotes eld
-\end_inset
-
-b
-\begin_inset Quotes erd
-\end_inset
-
-)(x) = (not allowed!)
-\end_layout
-
-\begin_layout Itemize
-cannot dynamically add a new reaction to a previously defined molecule:
-\family typewriter
-\size scriptsize
-\color blue
-
-\begin_inset Newline newline
-\end_inset
-
-def a(x) & b(y) = ...
- ;;
-\begin_inset Newline newline
-\end_inset
-
-def b(y) & c(z) = ...
- shadows the old definition of b()!
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-No 
-\begin_inset Quotes eld
-\end_inset
-
-guard conditions
-\begin_inset Quotes erd
-\end_inset
-
- for reactions:
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-def a(x) & b(y) & start_if (x==y) = ...
- (not allowed!)
-\end_layout
-
-\begin_layout Itemize
-No duplicated input values: 
-\family typewriter
-\size scriptsize
-\color blue
-a(x) & b(x) = (not allowed!)
-\end_layout
-
-\begin_layout Itemize
-No duplicated input molecules: 
-\family typewriter
-\size scriptsize
-\color blue
-a(x) & a(y) = (not allowed!)
-\end_layout
-
-\begin_layout Itemize
-No way to test dynamically for the presence/absence of a molecule!
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-def a(x) & b(y) = if have_molecules(c & d) then ...
- else ...
- (not allowed!)
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
 
 \begin_layout Plain Layout
-Limitations and restrictions of Join Calculus
+JoinRun
 \end_layout
 
 \end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout FrameSubtitle
-It seems they do not limit the expressive power!
-\end_layout
-
-\begin_layout Standard
-What if we 
-\emph on
-need
-\emph default
- a reaction with pairs of molecules?
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-a(x) & a(y) = a(x+y) 
-\end_layout
-
-\begin_layout Itemize
-Solution: use two "
-\family typewriter
-\size scriptsize
-\color blue
-or
-\family default
-\size default
-\color inherit
-"-coupled reactions with new molecules 
-\family typewriter
-\size scriptsize
-\color blue
-a'
-\family default
-\size default
-\color inherit
- and 
-\family typewriter
-\size scriptsize
-\color blue
-b
-\family default
-\size default
-\color inherit
-:
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-\size scriptsize
-\color blue
-def a(x) & b() = a'(x) or a(x) & a'(y) = whatever(x,y) 
-\end_layout
-
-\begin_layout Itemize
-Make sure that one 
-\family typewriter
-\size scriptsize
-\color blue
-b()
-\family default
-\size default
-\color inherit
- is injected together with each 
-\family typewriter
-\size scriptsize
-\color blue
-a(x)
-\end_layout
-
-\begin_layout Standard
-Questions:
-\end_layout
-
-\begin_layout Itemize
-Can we prevent the error of not injecting 
-\family typewriter
-\size scriptsize
-\color blue
-b()
-\family default
-\size default
-\color inherit
-?
-\end_layout
-
-\begin_layout Itemize
-Can we do a reaction with 
-\begin_inset Formula $n$
-\end_inset
-
- molecules, where 
-\begin_inset Formula $n$
-\end_inset
-
- is dynamic?
-\end_layout
-
-\begin_layout Itemize
-Can we do 
-\begin_inset Quotes eld
-\end_inset
-
-
-\begin_inset Formula $n$
-\end_inset
-
- dining philosophers
-\begin_inset Quotes erd
-\end_inset
-
-?
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
 
 \begin_layout Plain Layout
-Local scope and recursion
+molecule
 \end_layout
 
 \end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout FrameSubtitle
-Skeleton code for concurrent merge-sort
-\end_layout
-
-\begin_layout Standard
-The 
-\family typewriter
-mergesort
-\family default
- molecule:
-\end_layout
-
-\begin_layout Itemize
-receives the upper-level 
-\begin_inset Quotes eld
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-sorted_result
-\family default
-\size default
-\color inherit
-
-\begin_inset Quotes erd
-\end_inset
-
- molecule
-\end_layout
-
-\begin_layout Itemize
-defines its own 
-\begin_inset Quotes eld
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-sorted
-\family default
-\size default
-\color inherit
-
-\begin_inset Quotes erd
-\end_inset
-
- molecule in 
-\emph on
-local scope
-\end_layout
-
-\begin_layout Itemize
-emits upper-level 
-\begin_inset Quotes eld
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-sorted_result
-\family default
-\size default
-\color inherit
-
-\begin_inset Quotes erd
-\end_inset
-
- when done
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-def mergesort(arr, sorted_result) = 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-  if Array.length arr <= 1 then sorted_result(arr)
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-  else 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-   let (part1, part2) = array_split arr
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-   in 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-   def sorted(x) & sorted'(y) = sorted_result(array_merge x y) 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-   in 
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-   mergesort(part1, sorted) & mergesort(part2, sorted')
-\end_layout
-
-\begin_layout Standard
-Note  
-\begin_inset Quotes eld
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-sorted(x) & sorted'(y)
-\family default
-\size default
-\color inherit
-
-\begin_inset Quotes erd
-\end_inset
-
-: need different molecules.
-\end_layout
-
-\begin_layout Standard
-See tutorial for complete working JoCaml code.
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
 
 \begin_layout Plain Layout
-Comparison: Join Calculus vs.
- Actor model
+message on channel
 \end_layout
 
 \end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-Reaction 
-\begin_inset Formula $\approx$
-\end_inset
-
- actor; injected molecule 
-\begin_inset Formula $\approx$
-\end_inset
-
- message to actor.
-\end_layout
-
-\begin_layout Standard
-Actors: 
-\end_layout
-
-\begin_layout Itemize
-need to be created and managed explicitly
-\end_layout
-
-\begin_layout Itemize
-will process one message at a time
-\end_layout
-
-\begin_layout Itemize
-typically hold mutable state 
-\end_layout
-
-\begin_layout Standard
-Reactions:
-\end_layout
-
-\begin_layout Itemize
-autostart when required input molecules are available
-\end_layout
-
-\begin_layout Itemize
-many reactions can start at once, automatically concurrent
-\end_layout
-
-\begin_layout Itemize
-immutable, stateless, and type-safe
-\end_layout
-
-\begin_layout Itemize
-all reactions are defined statically, but locally scoped
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
 
 \begin_layout Plain Layout
-Implementation of Join Calculus
+
+\family typewriter
+\size footnotesize
+\color blue
+a(123)
+\family default
+\color gray
+ // side effect
 \end_layout
 
 \end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
 
+\begin_layout Plain Layout
+injector
+\end_layout
 
-\begin_inset Separator latexpar
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+channel (port) name
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size footnotesize
+\color blue
+val a : JA[Int]
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+blocking injector
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+blocking channel
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size footnotesize
+\color blue
+val q : JS[Int]
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+reaction
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+process
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size footnotesize
+\color blue
+run { case a(x) + ...
+ }
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+injecting a molecule
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+sending a message
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size footnotesize
+\color blue
+a(123)
+\family default
+\color gray
+ // side effect
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+join definition
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+join definition
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size footnotesize
+\color blue
+join(r1, r2, ...)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
 \end_inset
 
 
 \end_layout
 
-\begin_deeper
-\begin_layout FrameSubtitle
-JC = a DSL + run-time library
-\end_layout
-
-\begin_layout Standard
-Implement Join Calculus using Actors (Akka)?
-\end_layout
-
-\begin_layout Itemize
-Each reaction has 
-\begin_inset Formula $1$
-\end_inset
-
- 
-\begin_inset Quotes eld
-\end_inset
-
-monitor actor
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Formula $\geq1$
-\end_inset
-
- 
-\begin_inset Quotes eld
-\end_inset
-
-worker actors
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Monitor receives messages for each 
-\begin_inset Quotes eld
-\end_inset
-
-spawn
-\begin_inset Quotes erd
-\end_inset
-
-, keeps track of molecules
-\end_layout
-
-\begin_layout Itemize
-Monitor starts a worker actor when all molecules are present
-\end_layout
-
-\begin_layout Itemize
-Monitors have to talk to competing monitors - 
-\begin_inset Quotes eld
-\end_inset
-
-use up
-\begin_inset Quotes erd
-\end_inset
-
- molecules
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-but all competitions are statically defined!
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Monitors / workers need to be locally scoped!
-\end_layout
-
-\begin_layout Itemize
-No globally shared state of the 
-\begin_inset Quotes eld
-\end_inset
-
-soup
-\begin_inset Quotes erd
-\end_inset
-
- is needed!
-\end_layout
-
-\begin_layout Itemize
-Discuss
-\end_layout
-
-\end_deeper
 \begin_layout Standard
 \begin_inset Separator parbreak
 \end_inset
@@ -3000,14 +3107,7 @@ Conclusions and outlook
 
 \begin_deeper
 \begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-Join Calculus
-\begin_inset Quotes erd
-\end_inset
-
- enables concurrent programming in pure functional style
+Join Calculus = declarative, purely functional concurrency
 \end_layout
 
 \begin_layout Itemize
@@ -3019,7 +3119,7 @@ Actors
 \begin_inset Quotes erd
 \end_inset
 
-, but easier and 
+, but far easier and 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3035,7 +3135,7 @@ Very little known, and very little used in practice
 \end_layout
 
 \begin_layout Itemize
-Existing literature is not suitable as introduction to practical programming
+Existing literature is not suitable as introduction to practical use
 \end_layout
 
 \begin_layout Itemize
