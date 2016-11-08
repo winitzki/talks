@@ -1482,7 +1482,11 @@ Int
 status open
 
 \begin_layout Plain Layout
-Join Calculus: Examples I
+
+\family typewriter
+JoinRun
+\family default
+: Examples I
 \end_layout
 
 \end_inset
@@ -1714,7 +1718,11 @@ val result = f(initialTime)
 status open
 
 \begin_layout Plain Layout
-Join Calculus: Examples I
+
+\family typewriter
+JoinRun
+\family default
+: Examples II
 \end_layout
 
 \end_inset
@@ -1856,7 +1864,11 @@ get()
 status open
 
 \begin_layout Plain Layout
-Join Calculus: Examples III
+
+\family typewriter
+JoinRun
+\family default
+: Examples III
 \end_layout
 
 \end_inset
@@ -2022,7 +2034,11 @@ f12() + f23() + f34() + f45() + f51()
 status open
 
 \begin_layout Plain Layout
-Join Calculus: Examples IV
+
+\family typewriter
+JoinRun
+\family default
+: Examples IV
 \end_layout
 
 \end_inset
@@ -2125,7 +2141,7 @@ sortedResult
 
 \size scriptsize
 \color blue
-val mergesort = ja[(Array[T], JA[Array[T]])]
+val mergesort = new JA[(Array[T], JA[Array[T]])]
 \end_layout
 
 \begin_layout LyX-Code
@@ -2168,14 +2184,14 @@ sortedResult
 
 \size scriptsize
 \color blue
-        val sorted1 = ja[Array[T]]
+        val sorted1 = new JA[Array[T]]
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-        val sorted2 = ja[Array[T]]
+        val sorted2 = new JA[Array[T]]
 \end_layout
 
 \begin_layout LyX-Code
@@ -2243,6 +2259,141 @@ sortedResult
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Additional features of 
+\family typewriter
+JoinRun
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Need more bells and whistles
+\end_layout
+
+\begin_layout Itemize
+Per-reaction thread pools:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val tp1 = new JProcessPool(threads = 1)
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val tp8 = new JProcessPool(threads = 8)
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+join( run { case a(x) => ...
+ } onThreads tp1,
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+ 
+\begin_inset space ~
+\end_inset
+
+ run { case b(x) => ...
+ } onThreads tp8
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+)
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Auto-resume failed reactions:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+run { case a(x) + b(y) => if (bad) throw new Exception(); ...
+ } 
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+JoinRun
+\family default
+ will reinject input molecules if exception is thrown
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\end_layout
+
 \begin_layout Standard
 \begin_inset Separator parbreak
 \end_inset
@@ -2863,6 +3014,8 @@ JC terminology
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\family typewriter
 JoinRun
 \end_layout
 
@@ -3139,7 +3292,11 @@ Existing literature is not suitable as introduction to practical use
 \end_layout
 
 \begin_layout Itemize
-A new Scala implementation is in the works
+A new Scala implementation, 
+\family typewriter
+JoinRun
+\family default
+, is in the works
 \end_layout
 
 \end_deeper
