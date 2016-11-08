@@ -111,15 +111,15 @@ titlepage}
 status open
 
 \begin_layout Plain Layout
-Concurrency vs.
-\begin_inset space ~
-\end_inset
-
 Parallelism vs.
 \begin_inset space ~
 \end_inset
 
-Asynchrony
+Asynchrony vs.
+\begin_inset space ~
+\end_inset
+
+Concurrency
 \end_layout
 
 \end_inset
@@ -630,23 +630,7 @@ target "http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.32.3078"
 \end_layout
 
 \begin_layout Standard
-Abstract chemistry: 
-\begin_inset Quotes eld
-\end_inset
-
-molecules
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-reactions
-\begin_inset Quotes erd
-\end_inset
-
-
+Abstract chemistry:
 \end_layout
 
 \begin_layout Itemize
@@ -1113,7 +1097,7 @@ c
 \begin_inset Newline newline
 \end_inset
 
-When reaction starts: input molecules disappear, expression is computed,
+When a reaction starts: input molecules disappear, expression is computed,
  output molecules are injected
 \end_layout
 
@@ -1130,7 +1114,11 @@ When reaction starts: input molecules disappear, expression is computed,
 status open
 
 \begin_layout Plain Layout
-Using JoinRun: basic features
+Using 
+\family typewriter
+JoinRun
+\family default
+: basic features
 \end_layout
 
 \end_inset
@@ -1267,7 +1255,7 @@ a(10)
  
 \size footnotesize
 \color gray
-// non-blocking
+// non-blocking side-effect
 \size default
 \color inherit
 
@@ -1285,7 +1273,10 @@ b(Some(5))
  
 \size footnotesize
 \color gray
-// non-blocking
+// ditto; now we have 
+\family typewriter
+a(15)
+\family default
 \size default
 \color inherit
  
@@ -1303,14 +1294,25 @@ b(None)
  
 \size footnotesize
 \color gray
-// non-blocking; will have a(14)
-\size default
-\color inherit
+// now we have 
+\family typewriter
+a(14)
+\end_layout
 
-\begin_inset Newline newline
+\begin_layout Itemize
+A molecule – e.g.
+\begin_inset space ~
 \end_inset
 
 
+\family typewriter
+\size scriptsize
+\color blue
+a(14)
+\family default
+\size default
+\color inherit
+ – is a side-effect, not a value
 \end_layout
 
 \end_deeper
@@ -1326,7 +1328,11 @@ b(None)
 status open
 
 \begin_layout Plain Layout
-Using JoinRun: more features
+Using 
+\family typewriter
+JoinRun
+\family default
+: more features
 \end_layout
 
 \end_inset
@@ -2283,7 +2289,7 @@ JoinRun
 
 \begin_deeper
 \begin_layout FrameSubtitle
-Need more bells and whistles
+More bells and whistles
 \end_layout
 
 \begin_layout Itemize
@@ -2390,10 +2396,58 @@ JoinRun
 \end_layout
 
 \end_deeper
-\begin_layout Frame
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
 
 \end_layout
 
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Roadmap for 
+\family typewriter
+JoinRun
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Need still more bells and whistles
+\end_layout
+
+\begin_layout Itemize
+Graceful global shutdown
+\end_layout
+
+\begin_layout Itemize
+Diagnostics, health monitoring
+\end_layout
+
+\begin_layout Itemize
+Run on a cluster (
+\begin_inset Quotes eld
+\end_inset
+
+Distributed Join Calculus
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+What else is needed for industry-readiness?
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 \begin_inset Separator parbreak
 \end_inset
