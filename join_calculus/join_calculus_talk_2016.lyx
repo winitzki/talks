@@ -163,7 +163,7 @@ parallelize
 
 \end_deeper
 \begin_layout Itemize
-parallel collections, dataflow, Spark, ...
+examples: parallel collections, map/reduce, Spark, ...
 \end_layout
 
 \begin_layout Standard
@@ -227,7 +227,7 @@ main problem: to interleave wait times on a single-thread runloop
 
 \end_deeper
 \begin_layout Itemize
-futures/promises, async/await, streams, FRP, coroutines, ...
+examples: futures/promises, async/await, streams, FRP, coroutines, ...
 \end_layout
 
 \begin_layout Standard
@@ -287,7 +287,7 @@ main problem: to decide when to start a new process (or to wait)
 
 \end_deeper
 \begin_layout Itemize
-
+examples: 
 \family typewriter
 Thread
 \family default
@@ -2325,7 +2325,23 @@ val tp8 = new JProcessPool(threads = 8)
 \family typewriter
 \size scriptsize
 \color blue
-join( run { case a(x) => ...
+join(
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+ 
+\begin_inset space ~
+\end_inset
+
+ run { case a(x) + b(y) => ...
  } onThreads tp1,
 \family default
 \size default
@@ -2342,7 +2358,7 @@ join( run { case a(x) => ...
 \begin_inset space ~
 \end_inset
 
- run { case b(x) => ...
+ run { case a(x) + c(y) => ...
  } onThreads tp8
 \family default
 \size default
@@ -2428,7 +2444,11 @@ Graceful global shutdown
 \end_layout
 
 \begin_layout Itemize
-Diagnostics, health monitoring
+Resilience to failure in join definitions
+\end_layout
+
+\begin_layout Itemize
+Runtime diagnostics, health monitoring
 \end_layout
 
 \begin_layout Itemize
@@ -2657,15 +2677,19 @@ target "https://github.com/winitzki/joinrun-scala"
 
 \begin_deeper
 \begin_layout Itemize
-Can use thread pools or Akka actor pools
-\end_layout
-
-\begin_layout Itemize
 Better syntax, more checks of code sanity
 \end_layout
 
 \begin_layout Itemize
-Automatic fault tolerance
+(Some) automatic fault tolerance
+\end_layout
+
+\begin_layout Itemize
+Fair scheduling of reactions
+\end_layout
+
+\begin_layout Itemize
+Can use thread pools or Akka event-driven actor pools
 \end_layout
 
 \end_deeper
@@ -2697,15 +2721,26 @@ Comparison: Join Calculus vs.
 
 \begin_deeper
 \begin_layout Standard
+\begin_inset space \hfill{}
+\end_inset
+
 Reaction 
 \begin_inset Formula $\approx$
 \end_inset
 
- actor; injected molecule 
+ actor
+\begin_inset space \hfill{}
+\end_inset
+
+Injected molecule 
 \begin_inset Formula $\approx$
 \end_inset
 
- message to actor.
+ message to actor
+\begin_inset space \hfill{}
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
