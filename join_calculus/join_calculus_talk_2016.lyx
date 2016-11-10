@@ -216,7 +216,7 @@ parallelize
 
 \end_deeper
 \begin_layout Itemize
-examples: parallel collections, map/reduce, Spark, ...
+parallel collections, map/reduce, Spark
 \end_layout
 
 \begin_layout Standard
@@ -280,7 +280,7 @@ main problem: to interleave wait times on a single-thread runloop
 
 \end_deeper
 \begin_layout Itemize
-examples: futures/promises, async/await, streams, FRP, coroutines, ...
+futures/promises, async/await, streams, FRP, coroutines
 \end_layout
 
 \begin_layout Standard
@@ -340,7 +340,7 @@ main problem: to decide when to start a new process (or to wait)
 
 \end_deeper
 \begin_layout Itemize
-examples: 
+
 \family typewriter
 Thread
 \family default
@@ -351,8 +351,6 @@ synchronized
 , 
 \family typewriter
 semaphore
-\family default
-, ...
 \end_layout
 
 \begin_layout Standard
@@ -421,7 +419,7 @@ target "https://en.wikipedia.org/wiki/Dining_philosophers_problem"
 \end_layout
 
 \begin_layout Standard
-Problem: run the process, avoiding deadlock
+Problem: run the process, avoiding deadlock and starvation
 \end_layout
 
 \end_deeper
@@ -451,7 +449,7 @@ Problems with concurrency
 
 \begin_deeper
 \begin_layout Standard
-Imperative concurrency is difficult:
+Imperative concurrency is difficult to reason about:
 \end_layout
 
 \begin_layout Itemize
@@ -599,7 +597,7 @@ Easier to use than anything I've seen so far!
 \end_layout
 
 \begin_layout Standard
-Metaphors for join calculus:
+Metaphor for join calculus:
 \end_layout
 
 \begin_layout Itemize
@@ -611,25 +609,6 @@ chemical reactions
 \end_inset
 
  
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-concurrent pure functions
-\begin_inset Quotes erd
-\end_inset
-
- applied to 
-\begin_inset Quotes eld
-\end_inset
-
-concurrent data
-\begin_inset Quotes erd
-\end_inset
-
-
 \end_layout
 
 \end_deeper
@@ -1167,6 +1146,61 @@ When a reaction starts: input molecules disappear, expression is computed,
 status open
 
 \begin_layout Plain Layout
+Example: concurrent counter
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Chemical laws:
+\end_layout
+
+\begin_layout Itemize
+
+\size scriptsize
+\color blue
+counter(n) + decr() => counter(n-1)
+\end_layout
+
+\begin_layout Itemize
+
+\size scriptsize
+\color blue
+counter(n) + incr() => counter(n+1)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Data stays on the molecules
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Using 
 \family typewriter
 JoinRun
@@ -1189,7 +1223,7 @@ Molecule injectors, reaction definitions
 \end_layout
 
 \begin_layout Standard
-Define some 
+Define 
 \series bold
 molecule
 \series default
@@ -1205,7 +1239,7 @@ injectors
 \family typewriter
 \size scriptsize
 \color blue
-val a = new JA[Int]
+val counter = jA[Int]
 \family default
 \size default
 \color inherit
@@ -1217,7 +1251,19 @@ val a = new JA[Int]
 \family typewriter
 \size scriptsize
 \color blue
-val b = new JA[Option[Int]]
+val decr = jA[Unit]
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+val incr = jA[Unit]
 \end_layout
 
 \begin_layout Standard
@@ -1233,7 +1279,7 @@ reactions
 \family typewriter
 \size scriptsize
 \color blue
-val r0 = run { case a(0) => println("finished") }
+val r0 = run { case counter(n) + decr() => counter(n-1) }
 \family default
 \size default
 \color inherit
@@ -1245,19 +1291,11 @@ val r0 = run { case a(0) => println("finished") }
 \family typewriter
 \size scriptsize
 \color blue
-val r1 = run { case a(x) + b(None) => a(x-1) }
+val r1 = run { case counter(n) + incr() => counter(n+1) }
 \family default
 \size default
 \color inherit
  
-\begin_inset Newline newline
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-val r2 = run { case a(x) + b(Some(y)) => a(x+y) }
 \end_layout
 
 \begin_layout Standard
@@ -1281,7 +1319,7 @@ join definition
 \family typewriter
 \size scriptsize
 \color blue
-join(r0, r1, r2)
+join(r0, r1)
 \family default
 \size default
 \color inherit
@@ -1293,7 +1331,7 @@ join(r0, r1, r2)
 \family typewriter
 \size scriptsize
 \color blue
-a(10)
+counter(10)
 \family default
 \size default
 \color inherit
@@ -1311,16 +1349,16 @@ a(10)
 \family typewriter
 \size scriptsize
 \color blue
-b(Some(5))
+incr()
 \family default
 \size default
 \color inherit
  
 \size footnotesize
 \color gray
-// ditto; now we have 
+// ditto; now we have
 \family typewriter
-a(15)
+ counter(11)
 \family default
 \size default
 \color inherit
@@ -1332,7 +1370,7 @@ a(15)
 \family typewriter
 \size scriptsize
 \color blue
-b(None)
+incr()
 \family default
 \size default
 \color inherit
@@ -1341,23 +1379,27 @@ b(None)
 \color gray
 // now we have 
 \family typewriter
-a(14)
+counter(12)
 \end_layout
 
 \begin_layout Itemize
-A molecule – e.g.
-\begin_inset space ~
-\end_inset
-
-
+Calling 
 \family typewriter
 \size scriptsize
 \color blue
-a(14)
+counter(10)
 \family default
 \size default
 \color inherit
- – is a side-effect, not a value
+ returns 
+\family typewriter
+\size scriptsize
+\color blue
+Unit
+\family default
+\size default
+\color inherit
+ and injects molecule as a side-effect
 \end_layout
 
 \end_deeper
@@ -1411,7 +1453,7 @@ injection will block until reply is received
 \end_layout
 
 \begin_layout Itemize
-implicitly carries a 
+implicitly carries a pseudo-molecule injector: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1419,7 +1461,7 @@ reply
 \begin_inset Quotes erd
 \end_inset
 
- pseudo-molecule injector
+
 \end_layout
 
 \begin_layout Itemize
@@ -1432,6 +1474,18 @@ reply
 \end_inset
 
  is injected, the value will be returned to caller
+\end_layout
+
+\begin_layout Itemize
+Example:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+f(x, replyToF) + c(y) => val z = ...; replyToF(z) 
 \end_layout
 
 \end_deeper
@@ -1471,11 +1525,19 @@ JoinRun
 \end_layout
 
 \begin_layout Standard
-Implement blocking access to the value of 
+Implement blocking access to the value 
 \family typewriter
 \size scriptsize
 \color blue
-a(x)
+x
+\family default
+\size default
+\color inherit
+ in 
+\family typewriter
+\size scriptsize
+\color blue
+counter(x)
 \end_layout
 
 \begin_layout Standard
@@ -1490,7 +1552,7 @@ a(x)
 \family typewriter
 \size scriptsize
 \color blue
-val getN = new JS[Unit, Int]
+val getN = jS[Unit, Int]
 \family default
 \size default
 \color inherit
@@ -1513,7 +1575,7 @@ val getN = new JS[Unit, Int]
 \size scriptsize
 \color blue
 ...
- val r3 = run { case a(x) + getN(_, reply) => reply(x) }
+ val r2 = run { case counter(x) + getN(_, reply) => reply(x) }
 \family default
 \size default
 \color inherit
@@ -1525,7 +1587,7 @@ val getN = new JS[Unit, Int]
 \family typewriter
 \size scriptsize
 \color blue
-join(r0, r1, r2, r3)
+join(r0, r1, r2)
 \family default
 \size default
 \color inherit
@@ -1610,7 +1672,7 @@ First benchmark: Counting to zero
 \end_layout
 
 \begin_layout Standard
-Non-blocking counter:
+Concurrent non-blocking counter:
 \begin_inset Newline newline
 \end_inset
 
@@ -1870,7 +1932,7 @@ get
 \family typewriter
 \size scriptsize
 \color blue
-{ case fut( (f,x) ) => finished( f(x) ) }
+fut( (f,x) ) => finished( f(x) )
 \family default
 \size default
 \color inherit
@@ -1882,7 +1944,7 @@ get
 \family typewriter
 \size scriptsize
 \color blue
-{ case get(_, r) + finished(fx) => r(fx) }
+get(_, r) + finished(fx) => r(fx)
 \family default
 \size default
 \color inherit
@@ -2152,243 +2214,6 @@ f12() + f23() + f34() + f45() + f51()
 status open
 
 \begin_layout Plain Layout
-
-\family typewriter
-JoinRun
-\family default
-: Examples IV
-\end_layout
-
-\end_inset
-
-
-\begin_inset Separator latexpar
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout FrameSubtitle
-Concurrent merge-sort
-\end_layout
-
-\begin_layout Standard
-The 
-\family typewriter
-\size scriptsize
-\color blue
-mergesort
-\family default
-\size default
-\color inherit
- molecule is 
-\begin_inset Quotes eld
-\end_inset
-
-recursive
-\begin_inset Quotes erd
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Itemize
-receives the upper-level 
-\begin_inset Quotes eld
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-sortedResult
-\family default
-\size default
-\color inherit
-
-\begin_inset Quotes erd
-\end_inset
-
- molecule
-\end_layout
-
-\begin_layout Itemize
-defines its own 
-\begin_inset Quotes eld
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-sorted
-\family default
-\size default
-\color inherit
-
-\begin_inset Quotes erd
-\end_inset
-
- molecules in 
-\emph on
-local scope
-\end_layout
-
-\begin_layout Itemize
-emits upper-level 
-\begin_inset Quotes eld
-\end_inset
-
-
-\family typewriter
-\size scriptsize
-\color blue
-sortedResult
-\family default
-\size default
-\color inherit
-
-\begin_inset Quotes erd
-\end_inset
-
- when done
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-val mergesort = new JA[(Array[T], JA[Array[T]])]
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-join(
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-  run { case mergesort((arr, 
-\family typewriter
-sortedResult
-\family default
-)) =>
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-    if (arr.length <= 1) 
-\family typewriter
-sortedResult
-\family default
-(arr)
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-      else {
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-        val sorted1 = new JA[Array[T]]
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-        val sorted2 = new JA[Array[T]]
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-        join(
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-          run { case sorted1(x) + sorted2(y) => 
-\family typewriter
-sortedResult
-\family default
-(arrayMerge(x,y)) }
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-        )
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-        val (part1, part2) = arr.splitAt(arr.length/2)
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-        
-\family sans
-\size footnotesize
-\color gray
-// inject lower-level mergesort
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-        mergesort(part1, sorted1) + mergesort(part2, sorted2)
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-    }
-\end_layout
-
-\begin_layout LyX-Code
-
-\size scriptsize
-\color blue
-  })
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator parbreak
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
 Additional features of 
 \family typewriter
 JoinRun
@@ -2413,7 +2238,7 @@ Per-reaction thread pools:
 \family typewriter
 \size scriptsize
 \color blue
-val tp1 = new JProcessPool(threads = 1)
+val tp1 = new JReactionPool(threads = 1)
 \family default
 \size default
 \color inherit
@@ -2425,7 +2250,7 @@ val tp1 = new JProcessPool(threads = 1)
 \family typewriter
 \size scriptsize
 \color blue
-val tp8 = new JProcessPool(threads = 8)
+val tp8 = new JReactionPool(threads = 8)
 \family default
 \size default
 \color inherit
@@ -2575,8 +2400,339 @@ Distributed Join Calculus
 )
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Standard
 What else is needed for industry-readiness?
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+
+\family typewriter
+JoinRun
+\family default
+: Examples IV
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Concurrent merge-sort: chemistry
+\end_layout
+
+\begin_layout Standard
+The 
+\family typewriter
+\size scriptsize
+\color blue
+mergesort
+\family default
+\size default
+\color inherit
+ molecule is 
+\begin_inset Quotes eld
+\end_inset
+
+recursive
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+receives the upper-level 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+sortedResult
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+ molecule
+\end_layout
+
+\begin_layout Itemize
+defines its own 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+sorted
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+ molecules in 
+\emph on
+local scope
+\end_layout
+
+\begin_layout Itemize
+emits upper-level 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+sortedResult
+\family default
+\size default
+\color inherit
+
+\begin_inset Quotes erd
+\end_inset
+
+ when done
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+mergesort( (arr, 
+\family typewriter
+sortedResult
+\family default
+) ) =>
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+       val (part1, part2) = arr.splitAt(arr.length/2)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+       sorted1(x) + sorted2(y) => 
+\family typewriter
+sortedResult
+\family default
+( arrayMerge(x,y) )
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\family sans
+\size footnotesize
+\color gray
+       // inject lower-level mergesort
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+       mergesort(part1, sorted1) + mergesort(part2, sorted2)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+
+\family typewriter
+JoinRun
+\family default
+: Examples IV
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Concurrent merge-sort: 
+\family typewriter
+JoinRun
+\family default
+ code
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+val mergesort = new JA[(Array[T], JA[Array[T]])]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+join(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  run { case mergesort((arr, 
+\family typewriter
+sortedResult
+\family default
+)) =>
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+    if (arr.length <= 1) 
+\family typewriter
+sortedResult
+\family default
+(arr)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+      else {
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        val sorted1 = new JA[Array[T]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        val sorted2 = new JA[Array[T]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        join(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+          run { case sorted1(x) + sorted2(y) => 
+\family typewriter
+sortedResult
+\family default
+(arrayMerge(x,y)) }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        )
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        val (part1, part2) = arr.splitAt(arr.length/2)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        
+\family sans
+\size footnotesize
+\color gray
+// inject lower-level mergesort
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        mergesort(part1, sorted1) + mergesort(part2, sorted2)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+    }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  })
 \end_layout
 
 \end_deeper
@@ -2662,11 +2818,11 @@ target "http://lampwww.epfl.ch/~cremet/misc/join_in_scala/index.html"
 \end_layout
 
 \begin_layout Itemize
-Joinads (F#, Haskell) [
+ScalaJoins [
 \begin_inset CommandInset href
 LatexCommand href
-name "Petricek and Syme 2011"
-target "https://www.microsoft.com/en-us/research/publication/joinads-a-retargetable-control-flow-construct-for-reactive-parallel-and-concurrent-programming/"
+name "P. Haller 2008"
+target "http://lampwww.epfl.ch/~phaller/joins/index.html"
 
 \end_inset
 
@@ -2674,11 +2830,11 @@ target "https://www.microsoft.com/en-us/research/publication/joinads-a-retargeta
 \end_layout
 
 \begin_layout Itemize
-ScalaJoins [
+Joinads (F#, Haskell) [
 \begin_inset CommandInset href
 LatexCommand href
-name "P. Haller 2008"
-target "http://lampwww.epfl.ch/~phaller/joins/index.html"
+name "Petricek and Syme 2011"
+target "https://www.microsoft.com/en-us/research/publication/joinads-a-retargetable-control-flow-construct-for-reactive-parallel-and-concurrent-programming/"
 
 \end_inset
 
@@ -2714,7 +2870,18 @@ target "https://github.com/winitzki/AndroJoin"
 \end_inset
 
  [S.W.
- 2013]
+\family typewriter
+\size scriptsize
+\color blue
+
+\begin_inset space ~
+\end_inset
+
+
+\family default
+\size default
+\color inherit
+2013]
 \end_layout
 
 \end_deeper
@@ -2778,7 +2945,11 @@ STM
 \end_layout
 
 \begin_layout Itemize
-Erlang's message-passing 
+
+\family typewriter
+Erlang's
+\family default
+ message-passing 
 \begin_inset Formula $\approx$
 \end_inset
 
@@ -2794,7 +2965,14 @@ actors
 \end_layout
 
 \begin_layout Itemize
-CSP, 
+CSP / 
+\family typewriter
+Go
+\family default
+ language
+\end_layout
+
+\begin_layout Itemize
 \begin_inset Formula $\pi$
 \end_inset
 
