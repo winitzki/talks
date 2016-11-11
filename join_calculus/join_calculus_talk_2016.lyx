@@ -2830,6 +2830,18 @@ target "http://lampwww.epfl.ch/~cremet/misc/join_in_scala/index.html"
 \end_layout
 
 \begin_layout Itemize
+Joins library for .NET [
+\begin_inset CommandInset href
+LatexCommand href
+name "P. Crusso 2006"
+target "http://research.microsoft.com/en-us/um/people/crusso/joins/"
+
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Itemize
 ScalaJoins [
 \begin_inset CommandInset href
 LatexCommand href
