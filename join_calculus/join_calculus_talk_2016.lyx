@@ -2779,6 +2779,18 @@ target "http://lampwww.epfl.ch/funnel/"
 \end_layout
 
 \begin_layout Itemize
+Join Java [
+\begin_inset CommandInset href
+LatexCommand href
+name "von Itzstein et al., 2001-2005"
+target "http://www.vonitzstein.com/Project_JoinJava.html"
+
+\end_inset
+
+]
+\end_layout
+
+\begin_layout Itemize
 JOCaml  (
 \begin_inset CommandInset href
 LatexCommand href
@@ -2842,7 +2854,7 @@ target "https://www.microsoft.com/en-us/research/publication/joinads-a-retargeta
 \end_layout
 
 \begin_layout Itemize
-Scala Join [
+ScalaJoin [
 \begin_inset CommandInset href
 LatexCommand href
 name "J. He 2011"
