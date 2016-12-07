@@ -1066,7 +1066,7 @@ b
 \begin_inset space ~
 \end_inset
 
-val z = computeZ(x,y); 
+val z = compute_z(x,y); 
 \series bold
 a
 \series default
@@ -1089,7 +1089,7 @@ a
 \series bold
 c
 \series default
-() =>
+(_) =>
 \end_layout
 
 \begin_layout Plain Layout
