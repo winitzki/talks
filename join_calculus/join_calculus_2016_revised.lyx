@@ -1032,7 +1032,7 @@ status open
 \family typewriter
 \size scriptsize
 \color blue
-join(
+site(
 \end_layout
 
 \begin_layout Plain Layout
@@ -1305,7 +1305,7 @@ Activate a
 
 
 \series bold
-join definition
+reaction site
 \series default
 
 \begin_inset Quotes erd
@@ -1319,7 +1319,7 @@ join definition
 \family typewriter
 \size scriptsize
 \color blue
-join(r0, r1)
+site(r0, r1)
 \family default
 \size default
 \color inherit
@@ -1587,7 +1587,7 @@ val getN = b[Unit, Int]
 \family typewriter
 \size scriptsize
 \color blue
-join(r0, r1, r2)
+site(r0, r1, r2)
 \family default
 \size default
 \color inherit
@@ -1739,7 +1739,7 @@ val f = b[LocalDateTime, Long]("finished")
 \family typewriter
 \size scriptsize
 \color blue
-join(
+site(
 \end_layout
 
 \begin_layout Standard
@@ -2099,7 +2099,7 @@ f12, f23, f34, f45, f51
 
 \size scriptsize
 \color blue
-join (
+site (
 \end_layout
 
 \begin_layout LyX-Code
@@ -2262,7 +2262,7 @@ val tp8 = new FixedPool(threads = 8)
 \family typewriter
 \size scriptsize
 \color blue
-join(
+site(
 \family default
 \size default
 \color inherit
@@ -2625,7 +2625,7 @@ val mergesort = m[(Array[T], M[Array[T]])]
 
 \size scriptsize
 \color blue
-join(
+site(
 \end_layout
 
 \begin_layout LyX-Code
@@ -2675,7 +2675,7 @@ sortedResult
 
 \size scriptsize
 \color blue
-        join(
+        site(
 \end_layout
 
 \begin_layout LyX-Code
@@ -3603,7 +3603,7 @@ a(123)
 \begin_inset Text
 
 \begin_layout Plain Layout
-join definition
+reaction site
 \end_layout
 
 \end_inset
@@ -3625,7 +3625,7 @@ join definition
 \family typewriter
 \size footnotesize
 \color blue
-join(r1, r2, ...)
+site(r1, r2, ...)
 \end_layout
 
 \end_inset
