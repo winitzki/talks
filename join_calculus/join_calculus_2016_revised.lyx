@@ -856,7 +856,7 @@ c
 \end_layout
 
 \begin_layout Itemize
-Inject some molecules into the 
+Emit some molecules into the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -978,7 +978,7 @@ expression
 \end_layout
 
 \begin_layout Itemize
-Resulting molecules are injected back into the soup
+Resulting molecules are emitted back into the soup
 \end_layout
 
 \begin_layout Itemize
@@ -1043,7 +1043,7 @@ site(
 \begin_inset space ~
 \end_inset
 
- run { case 
+ go { case 
 \series bold
 a
 \series default
@@ -1081,7 +1081,7 @@ a
 \begin_inset space ~
 \end_inset
 
- run { case 
+ go { case 
 \series bold
 a
 \series default
@@ -1130,7 +1130,7 @@ c
 \end_inset
 
 When a reaction starts: input molecules disappear, expression is computed,
- output molecules are injected
+ output molecules are emitted
 \end_layout
 
 \end_deeper
@@ -1219,7 +1219,7 @@ JoinRun
 
 \begin_deeper
 \begin_layout FrameSubtitle
-Molecule injectors, reaction definitions
+Molecule emitters, reaction definitions
 \end_layout
 
 \begin_layout Standard
@@ -1229,7 +1229,7 @@ molecule
 \series default
  
 \series bold
-injectors
+emitters
 \series default
 :
 \begin_inset Newline newline
@@ -1279,7 +1279,7 @@ reactions
 \family typewriter
 \size scriptsize
 \color blue
-val r0 = run { case counter(n) + decr() => counter(n-1) }
+val r0 = go { case counter(n) + decr() => counter(n-1) }
 \family default
 \size default
 \color inherit
@@ -1291,7 +1291,7 @@ val r0 = run { case counter(n) + decr() => counter(n-1) }
 \family typewriter
 \size scriptsize
 \color blue
-val r1 = run { case counter(n) + incr() => counter(n+1) }
+val r1 = go { case counter(n) + incr() => counter(n+1) }
 \family default
 \size default
 \color inherit
@@ -1311,7 +1311,7 @@ reaction site
 \begin_inset Quotes erd
 \end_inset
 
- and inject some molecules:
+ and emit some molecules:
 \begin_inset Newline newline
 \end_inset
 
@@ -1399,7 +1399,7 @@ Unit
 \family default
 \size default
 \color inherit
- and injects molecule as a side-effect
+ and emits a molecule as a side-effect
 \end_layout
 
 \end_deeper
@@ -1449,11 +1449,11 @@ Blocking
 \end_layout
 
 \begin_layout Itemize
-injection will block until reply is received
+emitter will block until reply is received
 \end_layout
 
 \begin_layout Itemize
-implicitly carries a pseudo-molecule injector: 
+implicitly carries a pseudo-emitter 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1473,7 +1473,7 @@ reply
 \begin_inset Quotes erd
 \end_inset
 
- is injected, the value will be returned to caller
+ is emitted, the value will be returned to caller
 \end_layout
 
 \begin_layout Itemize
@@ -1575,7 +1575,7 @@ val getN = b[Unit, Int]
 \size scriptsize
 \color blue
 ...
- val r2 = run { case counter(x) + getN(_, reply) => reply(x) }
+ val r2 = go { case counter(x) + getN(_, reply) => reply(x) }
 \family default
 \size default
 \color inherit
@@ -1598,7 +1598,7 @@ site(r0, r1, r2)
 
 \size footnotesize
 \color gray
-// inject non-blocking molecules...
+// Emit non-blocking molecules...
  
 \size default
 \color inherit
@@ -1609,7 +1609,7 @@ site(r0, r1, r2)
 
 \size footnotesize
 \color gray
-// now inject the blocking molecule:
+// Now emit the blocking molecule:
 \size default
 \color inherit
 
@@ -1696,7 +1696,7 @@ Concurrent non-blocking counter:
 \family typewriter
 \size scriptsize
 \color blue
-val c = m[Int]("counter")
+val c = new M[Int]("counter")
 \end_layout
 
 \begin_layout Standard
@@ -1704,7 +1704,7 @@ val c = m[Int]("counter")
 \family typewriter
 \size scriptsize
 \color blue
-val g = b[Unit,Int]("getValue")
+val g = new B[Unit, Int]("getValue")
 \end_layout
 
 \begin_layout Standard
@@ -1712,7 +1712,7 @@ val g = b[Unit,Int]("getValue")
 \family typewriter
 \size scriptsize
 \color blue
-val d = m[Unit]("decr")
+val d = new M[Unit]("decr")
 \end_layout
 
 \begin_layout Standard
@@ -1720,7 +1720,7 @@ val d = m[Unit]("decr")
 \family typewriter
 \size scriptsize
 \color blue
-val f = b[LocalDateTime, Long]("finished")
+val f = new B[LocalDateTime, Long]("finished")
 \end_layout
 
 \begin_layout Standard
@@ -1754,7 +1754,7 @@ site(
 \begin_inset space ~
 \end_inset
 
-run { case c(0) + f(t, reply) =>
+go { case c(0) + f(t, reply) =>
 \end_layout
 
 \begin_layout Standard
@@ -1815,7 +1815,7 @@ reply(elapsed) },
 \begin_inset space ~
 \end_inset
 
-run { case g(_,reply) + c(n) => c(n) + reply(n) },
+go { case g(_,reply) + c(n) => c(n) + reply(n) },
 \end_layout
 
 \begin_layout Standard
@@ -1830,7 +1830,7 @@ run { case g(_,reply) + c(n) => c(n) + reply(n) },
 \begin_inset space ~
 \end_inset
 
-run { case c(n) + d(_) if n > 0 => c(n-1) }
+go { case c(n) + d(_) if n > 0 => c(n-1) }
 \end_layout
 
 \begin_layout Standard
@@ -2106,35 +2106,35 @@ site (
 
 \size scriptsize
 \color blue
-  run{ case t1(_) => wait(); h1() },
+  go{ case t1(_) => wait(); h1() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  run{ case t2(_) => wait(); h2() },
+  go{ case t2(_) => wait(); h2() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  run{ case t3(_) => wait(); h3() },
+  go{ case t3(_) => wait(); h3() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  run{ case t4(_) => wait(); h4() },
+  go{ case t4(_) => wait(); h4() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  run{ case t5(_) => wait(); h5() },
+  go{ case t5(_) => wait(); h5() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -2145,35 +2145,35 @@ site (
 
 \size scriptsize
 \color blue
-  run{ case h1(_) + f12(_) + f51(_) => wait(); t1() + f12() + f51() },
+  go{ case h1(_) + f12(_) + f51(_) => wait(); t1() + f12() + f51() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  run{ case h2(_) + f23(_) + f12(_) => wait(); t2() + f23() + f12() },
+  go{ case h2(_) + f23(_) + f12(_) => wait(); t2() + f23() + f12() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  run{ case h3(_) + f34(_) + f23(_) => wait(); t3() + f34() + f23() },
+  go{ case h3(_) + f34(_) + f23(_) => wait(); t3() + f34() + f23() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  run{ case h4(_) + f45(_) + f34(_) => wait(); t4() + f45() + f34() },
+  go{ case h4(_) + f45(_) + f34(_) => wait(); t4() + f45() + f34() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  run{ case h5(_) + f51(_) + f45(_) => wait(); t5() + f51() + f45() }
+  go{ case h5(_) + f51(_) + f45(_) => wait(); t5() + f51() + f45() }
 \end_layout
 
 \begin_layout LyX-Code
@@ -2278,7 +2278,11 @@ site(
 \begin_inset space ~
 \end_inset
 
- run { case a(x) + b(y) => ...
+ 
+\family default
+go
+\family typewriter
+ { case a(x) + b(y) => ...
  } onThreads tp1,
 \family default
 \size default
@@ -2295,7 +2299,11 @@ site(
 \begin_inset space ~
 \end_inset
 
- run { case a(x) + c(y) => ...
+ 
+\family default
+go
+\family typewriter
+ { case a(x) + c(y) => ...
  } onThreads tp8
 \family default
 \size default
@@ -2332,7 +2340,7 @@ Auto-resume failed reactions:
 \family typewriter
 \size scriptsize
 \color blue
-run { case a(x) + b(y) => if (bad) throw new Exception(); ...
+go { case a(x) + b(y) => if (bad) throw new Exception(); ...
  } 
 \family default
 \size default
@@ -2345,7 +2353,7 @@ run { case a(x) + b(y) => if (bad) throw new Exception(); ...
 \family typewriter
 JoinRun
 \family default
- will reinject input molecules if exception is thrown
+ will re-emit input molecules if exception is thrown
 \end_layout
 
 \end_deeper
@@ -2562,7 +2570,11 @@ sortedResult
 \family sans
 \size footnotesize
 \color gray
-       // inject lower-level mergesort
+       // Emit lower-level 
+\family default
+mergesort
+\family sans
+ molecules:
 \end_layout
 
 \begin_layout LyX-Code
@@ -2632,7 +2644,7 @@ site(
 
 \size scriptsize
 \color blue
-  run { case mergesort((arr, 
+  go { case mergesort((arr, 
 \family typewriter
 sortedResult
 \family default
@@ -2682,7 +2694,7 @@ sortedResult
 
 \size scriptsize
 \color blue
-          run { case sorted1(x) + sorted2(y) => 
+          go { case sorted1(x) + sorted2(y) => 
 \family typewriter
 sortedResult
 \family default
@@ -2711,7 +2723,11 @@ sortedResult
 \family sans
 \size footnotesize
 \color gray
-// inject lower-level mergesort
+// Emit lower-level 
+\family default
+mergesort
+\family sans
+ molecules:
 \end_layout
 
 \begin_layout LyX-Code
@@ -3046,7 +3062,7 @@ Reaction
 \begin_inset space \hfill{}
 \end_inset
 
-Injected molecule 
+Emitted molecule 
 \begin_inset Formula $\approx$
 \end_inset
 
@@ -3467,7 +3483,7 @@ a(123)
 \begin_inset Text
 
 \begin_layout Plain Layout
-injector
+emitter
 \end_layout
 
 \end_inset
@@ -3500,7 +3516,7 @@ val a : M[Int]
 \begin_inset Text
 
 \begin_layout Plain Layout
-blocking injector
+blocking emitter
 \end_layout
 
 \end_inset
@@ -3555,7 +3571,7 @@ process
 \family typewriter
 \size footnotesize
 \color blue
-run { case a(x) + ...
+go { case a(x) + ...
  }
 \end_layout
 
@@ -3567,7 +3583,7 @@ run { case a(x) + ...
 \begin_inset Text
 
 \begin_layout Plain Layout
-injecting a molecule
+emitting a molecule
 \end_layout
 
 \end_inset
