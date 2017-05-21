@@ -1,0 +1,936 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass sigplanconf
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Declarative concurrent programming with Chymyst
+\end_layout
+
+\begin_layout Author
+Sergei Winitzki
+\end_layout
+
+\begin_layout Conference
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Scala 2017
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+
+\family typewriter
+Chymyst
+\family default
+ is a new open-source framework for declarative, purely functional, industry-str
+ength concurrent programming in Scala.
+ 
+\family typewriter
+Chymyst
+\family default
+ implements the Join Calculus concurrency paradigm, which can be seen as
+ an improvement upon the well-known Actor model whereby actors become type-safe,
+ stateless, immutable, and automatically managed.
+ I demonstrate concise and fully declarative 
+\family typewriter
+Chymyst
+\family default
+ solutions for classic concurrency problems such as the 
+\begin_inset Quotes eld
+\end_inset
+
+dining philosophers
+\begin_inset Quotes erd
+\end_inset
+
+ or recursive 
+\begin_inset Quotes eld
+\end_inset
+
+fork/join
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Taking advantage of the embedding into the Scala language, 
+\family typewriter
+Chymyst
+\family default
+ enhances Join Calculus by allowing arbitrary non-linear join patterns with
+ guard conditions, synchronous rendezvous, and run-time construction of
+ join definitions.
+ The current implementation performs static analysis of user code, early
+ error detection, and automatic performance optimizations.
+ The project is in active development; next steps on the roadmap include
+ providing comprehensive industry-friendly features such as APIs for unit
+ testing, performance monitoring, and fault tolerance.
+\end_layout
+
+\begin_layout Section
+Introduction and summary
+\end_layout
+
+\begin_layout Standard
+Advanced programming models developed by the theoretical computer science
+ community are often ignored by software practitioners.
+ One such case is Join Calculus (JC)
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FouGon1996"
+
+\end_inset
+
+, which can be seen as a DSL (domain-specific language) for declarative,
+ functional concurrent programming.
+ Given the high importance of concurrent programming and a growing adoption
+ of functional languages, one would expect that software practitioners would
+ take advantage of this high-level and type-safe concurrency paradigm.
+ However, there appears to be no practical adoption of JC by the software
+ industry.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+A Google search yields several academic projects but no mentions of industrial
+ JC use.
+\end_layout
+
+\end_inset
+
+ Correspondingly, there are very few working open-source implementations
+ of JC available.
+ The only fully maintained implementation of JC is the JoCaml language from
+ INRIA
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FouEA2003"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In this paper, I present a new open-source implementation of JC as an embedded
+ Scala DSL, called 
+\family typewriter
+Chymyst
+\family default
+.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The name is borrowed from the early treatise
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Boy1661"
+
+\end_inset
+
+ by Robert Boyle, who was one of the founders of the science of chemistry.
+\end_layout
+
+\end_inset
+
+ The main design focus of 
+\family typewriter
+Chymyst
+\family default
+ is to enable high-level, declarative concurrency in idiomatic Scala, using
+ the JC paradigm.
+ At the same time, I aim to provide industry-strength features (such as
+ performance tuning, fault tolerance, or unit testing) that are typically
+ not considered by academic presentations of JC.
+ In this way, I hope to enable industry adoption of this promising concurrency
+ paradigm.
+\end_layout
+
+\begin_layout Subsection
+Previous work
+\end_layout
+
+\begin_layout Standard
+Since its invention more than 20 years ago, Join Calculus has been implemented
+ by a number of academic researchers, typically by creating an entirely
+ new JC-based programming language or by patching an existing language.
+ It is hard to assess the scope and practical use of these implementations,
+ since most of them appear to be proof-of-concept projects developed to
+ accompany academic publications.
+ 
+\end_layout
+
+\begin_layout Standard
+Here I will not attempt to survey the theoretical advances made by those
+ researchers.
+ Since the main goal of the 
+\family typewriter
+Chymyst
+\family default
+ project is to enable industry acceptance of JC, I will focus on the practical
+ availability and usability of the existing JC implementations.
+\end_layout
+
+\begin_layout Standard
+JoCaml was one of the first implementations of JC
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FouEA2003"
+
+\end_inset
+
+, and remains today the best-supported one.
+ This implementation is a patch for the OCaml compiler, but remains fully
+ compatible with the OCaml library ecosystem and is supported by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "OPAM package manager"
+target "http://www.ocamlpro.com/2013/03/14/opam-1-0-0-released/"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+M.
+\begin_inset space ~
+\end_inset
+
+Odersky created a new language called 
+\family typewriter
+Funnel
+\family default
+, based on JC
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ode2000"
+
+\end_inset
+
+.
+ The 
+\family typewriter
+Funnel
+\family default
+ project appears to be abandoned, since M.
+\begin_inset space ~
+\end_inset
+
+Odersky went on to develop Scala, which does not include any concepts or
+ features of JC.
+\end_layout
+
+\begin_layout Standard
+G.
+\begin_inset space ~
+\end_inset
+
+S.
+\begin_inset space ~
+\end_inset
+
+von Itzstein implemented JC as a patch for the early Java compiler
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ItzKea2001"
+
+\end_inset
+
+.
+ The project appears to be abandoned.
+\end_layout
+
+\begin_layout Standard
+The first appearance of JC in Scala was a “Join in Scala” compiler patch
+ by V.
+\begin_inset space ~
+\end_inset
+
+Cremet (2003), see 
+\begin_inset CommandInset href
+LatexCommand href
+name "lampwww.epfl.ch/~cremet/misc/join_in_scala/index.html"
+target "http://lampwww.epfl.ch/~cremet/misc/join_in_scala/index.html"
+
+\end_inset
+
+ for details.
+ The syntax of Scala has changed radically since 2003, rendering the project
+ unusable.
+\end_layout
+
+\begin_layout Standard
+T.
+\begin_inset space ~
+\end_inset
+
+Rompf implemented an experimental (unnamed) language based on JC and illustrated
+ its use for important application design patterns, such as 
+\begin_inset Quotes eld
+\end_inset
+
+fork/join
+\begin_inset Quotes erd
+\end_inset
+
+ synchronization or asynchronous continuations
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rom2007"
+
+\end_inset
+
+.
+ The project appears to be abandoned, as T.
+\begin_inset space ~
+\end_inset
+
+Rompf moved on to research on multi-stage compilation
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rom2012"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Creating a new programming language has been a common pattern in JC projects;
+ the reason seems to be the difficulty of accommodating join definitions
+ within the syntax of existing languages.
+ Experimental new languages such as Funnel
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ode2000"
+
+\end_inset
+
+, Polyphonic C#
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "BenFou2002"
+
+\end_inset
+
+, 
+\begin_inset Formula $C\omega$
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rus2007"
+
+\end_inset
+
+, T.
+\begin_inset space ~
+\end_inset
+
+Rompf's language
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rom2007"
+
+\end_inset
+
+, JErlang
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "PloEis2009"
+
+\end_inset
+
+, and Hume
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "HamEA2006"
+
+\end_inset
+
+ fall into this category.
+ All these languages have been abandoned by their creators.
+ Maintaining and supporting a completely new research language for JC appears
+ to be impossible, even for a corporation such as Microsoft.
+ Therefore, we turn our attention to implementing JC as an embedded DSL
+ in a well-established programming language.
+ 
+\end_layout
+
+\begin_layout Standard
+C.
+\begin_inset space ~
+\end_inset
+
+Russo created the 
+\begin_inset Quotes eld
+\end_inset
+
+ScalableJoins
+\begin_inset Quotes erd
+\end_inset
+
+ library for the .NET platform
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rus2007"
+
+\end_inset
+
+.
+ The library appears to be unsupported.
+ The latest version is available from Github as 
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/JoinPatterns/ScalableJoins"
+target "https://github.com/JoinPatterns/ScalableJoins"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Y.
+\begin_inset space ~
+\end_inset
+
+Liu implemented the basic JC primitives in 2007-2009 as part of the C++
+ Boost library; see 
+\begin_inset CommandInset href
+LatexCommand href
+name "channel.sourceforge.net"
+target "http://channel.sourceforge.net/"
+
+\end_inset
+
+ for details.
+\end_layout
+
+\begin_layout Standard
+In 2014, S.
+\begin_inset space ~
+\end_inset
+
+Yallop implemented JoCaml-style 
+\begin_inset Quotes eld
+\end_inset
+
+Join Language
+\begin_inset Quotes erd
+\end_inset
+
+ as a library in Haskell, available from Github as 
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/syallop/Join-Language"
+target "https://github.com/syallop/Join-Language"
+
+\end_inset
+
+.
+ The implementation uses advanced features of Haskell's type system to provide
+ a concise syntax for join definitions.
+\end_layout
+
+\begin_layout Standard
+The present author created experimental JC prototypes for Objective-C on
+ iOS and for Java on Android.
+ The source code is available from Github at 
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/winitzki"
+target "https://github.com/winitzki"
+
+\end_inset
+
+; these projects are unsupported.
+\end_layout
+
+\begin_layout Standard
+The first embedded DSL implementation of JC in Scala was P.
+\begin_inset space ~
+\end_inset
+
+Haller's 
+\begin_inset Quotes eld
+\end_inset
+
+Scala Joins
+\begin_inset Quotes erd
+\end_inset
+
+ library
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "HalCut2008"
+
+\end_inset
+
+.
+ Thereafter, J.
+\begin_inset space ~
+\end_inset
+
+He significantly improved upon 
+\begin_inset Quotes eld
+\end_inset
+
+Scala Joins
+\begin_inset Quotes erd
+\end_inset
+
+ by streamlining the syntax, removing restrictions on pattern matching,
+ and implementing remote molecules
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "He2014"
+
+\end_inset
+
+.
+ 
+\family typewriter
+Chymyst
+\family default
+ is a further development of P.
+\begin_inset space ~
+\end_inset
+
+Haller and J.
+\begin_inset space ~
+\end_inset
+
+He's ideas, correcting the shortcomings of those earlier projects.
+\end_layout
+
+\begin_layout Subsection
+Contributions
+\end_layout
+
+\begin_layout Standard
+I describe the design decisions made while implementing Join Calculus in
+ the 
+\family typewriter
+Chymyst
+\family default
+ project as an embedded DSL in Scala.
+ Chymyst lifts several restrictions of JC that are present in most other
+ renditions.
+\end_layout
+
+\begin_layout Section
+Programming in Chymyst
+\end_layout
+
+\begin_layout Subsection
+Terminology and concepts
+\end_layout
+
+\begin_layout Subsection
+Syntax
+\end_layout
+
+\begin_layout Subsection
+Additional features
+\end_layout
+
+\begin_layout Subsection
+Roadmap
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "HalCut2008"
+
+\end_inset
+
+Haller, Philipp; Van Cutsem, Tom.
+ 
+\emph on
+Implementing Joins using Extensible Pattern Matching
+\emph default
+.
+ Proceedings of the 10th International Conference on Coordination Models
+ and Languages, p.
+\begin_inset space ~
+\end_inset
+
+135-152.
+ Lecture Notes in Computer Science 5052, Springer, 2008 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "He2014"
+
+\end_inset
+
+He, Jiansen.
+ 
+\emph on
+Type-parameterized actors and their supervision
+\emph default
+.
+ M.
+\begin_inset space ~
+\end_inset
+
+Sc.
+\begin_inset space ~
+\end_inset
+
+thesis.
+ University of Edinburgh, 2014
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "FouGon1996"
+
+\end_inset
+
+Fournet, Cédric; Gonthier, Georges.
+ 
+\emph on
+The reflexive CHAM and the join-calculus
+\emph default
+.
+ Proceedings of the 23rd ACM SIGPLAN-SIGACT symposium on Principles of programmi
+ng languages, p.
+\begin_inset space ~
+\end_inset
+
+372-385.
+ ACM, 1996
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "FouEA2003"
+
+\end_inset
+
+Fournet, Cédric; Le Fessant, Fabrice; Maranget, Luc; Schmitt, Alan.
+ 
+\emph on
+JoCaml: A Language for Concurrent Distributed and Mobile Programming
+\emph default
+.
+ In: Advanced Functional Programming, Lecture Notes in Computer Science
+ 2638, pp.
+\begin_inset space ~
+\end_inset
+
+129-158.
+ Springer, 2003
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Boy1661"
+
+\end_inset
+
+Boyle, Robert.
+ 
+\emph on
+The Sceptical Chymyst
+\emph default
+.
+ J.
+ Cadwell, London, 1661
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Rom2007"
+
+\end_inset
+
+Rompf, Tiark.
+ 
+\emph on
+Design and Implementation of a Programming Language for Concurrent Interactive
+ Systems
+\emph default
+.
+ Master Thesis, Institute of Software Technology and Programming Languages,
+ University of Lübeck, 2007
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Rom2012"
+
+\end_inset
+
+Rompf, Tiark.
+ 
+\emph on
+Lightweight Modular Staging and Embedded Compilers: Abstraction Without
+ Regret for High-Level High-Performance Programming
+\emph default
+.
+ PhD Thesis, LAMP, EPFL, 2012
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Rus2007"
+
+\end_inset
+
+Russo, Claudio (2007).
+ 
+\emph on
+The Joins Concurrency Library
+\emph default
+.
+ Cambridge: Practical Aspects of Declarative Languages: 260–274.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "ItzKea2001"
+
+\end_inset
+
+von Itzstein, G.
+ S.; Kearney, D.
+ (2001).
+ 
+\emph on
+Join Java: An alternative concurrency semantics for Java
+\emph default
+.
+ Technical Report ACRC-01-001, University of South Australia, 2001.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Ode2000"
+
+\end_inset
+
+ Odersky M.
+ (2000) 
+\emph on
+Functional Nets
+\emph default
+.
+ In: Smolka G.
+ (eds) Programming Languages and Systems.
+ ESOP 2000.
+ pp.
+\begin_inset space ~
+\end_inset
+
+1-25.
+ Lecture Notes in Computer Science 1782.
+ Springer 2000
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "PloEis2009"
+
+\end_inset
+
+Plociniczak, Hubert; Eisenbach, Susan.
+ 
+\emph on
+JErlang: Erlang with Joins
+\emph default
+.
+ Technical report, Imperial College London, 2009.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "HamEA2006"
+
+\end_inset
+
+Kevin Hammond, Greg J.
+ Michaelson, Meng Sun.
+ Programming Reactive Systems in Hume.
+ Proceedings of symposium: Trends in Functional Programming, Nottingham,
+ 2006.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "BenFou2002"
+
+\end_inset
+
+Benton, N.; Fournet, C.
+ (2002).
+ "Modern concurrency abstractions for C#.".
+ In Proceedings of the 16th European Conference on Object-Oriented Programming
+ (ECOOP 2002), number 2374 in LNCS.
+ Pages 415-440
+\end_layout
+
+\end_body
+\end_document
