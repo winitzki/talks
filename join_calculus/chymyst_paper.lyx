@@ -41,8 +41,8 @@
 \use_package stackrel 1
 \use_package stmaryrd 1
 \use_package undertilde 1
-\cite_engine natbib
-\cite_engine_type authoryear
+\cite_engine basic
+\cite_engine_type default
 \biblio_style plain
 \use_bibtopic false
 \use_indices false
@@ -72,7 +72,10 @@
 \begin_body
 
 \begin_layout Title
-Declarative concurrent programming with Chymyst
+Industry-strength join calculus: Declarative concurrent programming with
+ 
+\family typewriter
+Chymyst
 \end_layout
 
 \begin_layout Author
@@ -84,7 +87,7 @@ Sergei Winitzki
 status open
 
 \begin_layout Plain Layout
-Scala 2017
+Scala 2017, Vancouver
 \end_layout
 
 \end_inset
@@ -93,52 +96,41 @@ Scala 2017
 \end_layout
 
 \begin_layout Abstract
-
+Join calculus (JC) is a declarative message-passing concurrency formalism
+ that has been ignored by the software engineering community, despite its
+ significant promise as a means of solving the problems of concurrent programmin
+g.
+ I introduce 
 \family typewriter
 Chymyst
 \family default
- is a new open-source framework for declarative, purely functional, industry-str
-ength concurrent programming in Scala.
- 
+, a new open-source framework that aims to bring industry-strength JC programmin
+g to Scala practitioners.
+ Taking advantage of its embedding into the Scala language, 
 \family typewriter
 Chymyst
 \family default
- implements the Join Calculus concurrency paradigm, which can be seen as
- an improvement upon the well-known Actor model whereby actors become type-safe,
- stateless, immutable, and automatically managed.
- I demonstrate concise and fully declarative 
+ enhances JC with features such as arbitrary non-linear join patterns with
+ guard conditions, synchronous rendezvous, time-outs, and incremental constructi
+on of join definitions.
+ The current implementation also performs static analysis of user code,
+ early error detection, and automatic performance optimizations.
+ To ease the learning curve for engineers unfamiliar with the concepts of
+ JC, I develop a pedagogical presentation of JC as an improvement upon the
+ well-known Actor model whereby actors are made type-safe, immutable, and
+ automatically managed.
+ After a comparison of 
 \family typewriter
 Chymyst
 \family default
- solutions for classic concurrency problems such as the 
-\begin_inset Quotes eld
-\end_inset
-
-dining philosophers
-\begin_inset Quotes erd
-\end_inset
-
- or recursive 
-\begin_inset Quotes eld
-\end_inset
-
-fork/join
-\begin_inset Quotes erd
-\end_inset
-
-.
- Taking advantage of the embedding into the Scala language, 
+ with the popular Akka library, I identify a comprehensive set of additional
+ features necessary to make JC an industry-strength concurrency paradigm.
+ These features include APIs for unit testing, performance monitoring, and
+ fault tolerance, and are next steps on the 
 \family typewriter
 Chymyst
 \family default
- enhances Join Calculus by allowing arbitrary non-linear join patterns with
- guard conditions, synchronous rendezvous, and run-time construction of
- join definitions.
- The current implementation performs static analysis of user code, early
- error detection, and automatic performance optimizations.
- The project is in active development; next steps on the roadmap include
- providing comprehensive industry-friendly features such as APIs for unit
- testing, performance monitoring, and fault tolerance.
+ project's development roadmap.
 \end_layout
 
 \begin_layout Section
@@ -148,7 +140,7 @@ Introduction and summary
 \begin_layout Standard
 Advanced programming models developed by the theoretical computer science
  community are often ignored by software practitioners.
- One such case is Join Calculus (JC)
+ One such case is join calculus (JC)
 \begin_inset space ~
 \end_inset
 
@@ -159,12 +151,12 @@ key "FouGon1996"
 
 \end_inset
 
-, which can be seen as a DSL (domain-specific language) for declarative,
- functional concurrent programming.
+, which can be seen as a DSL (domain-specific language) for high-level,
+ declarative, functional concurrent programming.
  Given the high importance of concurrent programming and a growing adoption
  of functional languages, one would expect that software practitioners would
  take advantage of this high-level and type-safe concurrency paradigm.
- However, there appears to be no practical adoption of JC by the software
+ Nevertheless, there appears to be no practical adoption of JC by the software
  industry.
 \begin_inset Foot
 status open
@@ -176,10 +168,13 @@ A Google search yields several academic projects but no mentions of industrial
 
 \end_inset
 
- Correspondingly, there are very few working open-source implementations
- of JC available.
- The only fully maintained implementation of JC is the JoCaml language from
- INRIA
+ Perhaps not coincidentally, there are very few open-source implementations
+ of JC available for download and use.
+ The only fully maintained implementation of JC is the 
+\family typewriter
+JoCaml
+\family default
+ language from INRIA
 \begin_inset space ~
 \end_inset
 
@@ -191,6 +186,49 @@ key "FouEA2003"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+Another barrier for software practitioners is the lack of suitable documentation
+ and example code.
+ The existing documentation and tutorials for JC, such as the 
+\family typewriter
+JoCaml
+\family default
+ user's manual
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+See 
+\begin_inset CommandInset href
+LatexCommand href
+name "jocaml.inria.fr/doc/index.html"
+target "http://jocaml.inria.fr/doc/index.html"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+ or the original authors' introduction to JC
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand citet
+key "FouGon2000"
+
+\end_inset
+
+, were intended for graduate students in computer science and are largely
+ incomprehensible to software engineers.
+ Effective JC programming requires a certain paradigm shift and facility
+ with JC-specific design patterns, which is not readily achieved without
+ working through numerous examples.
 \end_layout
 
 \begin_layout Standard
@@ -227,9 +265,15 @@ Chymyst
  is to enable high-level, declarative concurrency in idiomatic Scala, using
  the JC paradigm.
  At the same time, I aim to provide industry-strength features (such as
- performance tuning, fault tolerance, or unit testing) that are typically
+ performance tuning, fault tolerance, or unit testing APIs) that are typically
  not considered by academic presentations of JC.
- In this way, I hope to enable industry adoption of this promising concurrency
+ Finally, the 
+\family typewriter
+Chymyst
+\family default
+ project offers tutorial documentation adapted to the software developer
+ audience.
+ In these ways, I hope to enable industry adoption of this promising concurrency
  paradigm.
 \end_layout
 
@@ -238,7 +282,7 @@ Previous work
 \end_layout
 
 \begin_layout Standard
-Since its invention more than 20 years ago, Join Calculus has been implemented
+Since its invention more than 20 years ago, join calculus has been implemented
  by a number of academic researchers, typically by creating an entirely
  new JC-based programming language or by patching an existing language.
  It is hard to assess the scope and practical use of these implementations,
@@ -259,7 +303,11 @@ Chymyst
 \end_layout
 
 \begin_layout Standard
-JoCaml was one of the first implementations of JC
+
+\family typewriter
+JoCaml
+\family default
+ was one of the first implementations of JC
 \begin_inset space ~
 \end_inset
 
@@ -272,15 +320,7 @@ key "FouEA2003"
 
 , and remains today the best-supported one.
  This implementation is a patch for the OCaml compiler, but remains fully
- compatible with the OCaml library ecosystem and is supported by the 
-\begin_inset CommandInset href
-LatexCommand href
-name "OPAM package manager"
-target "http://www.ocamlpro.com/2013/03/14/opam-1-0-0-released/"
-
-\end_inset
-
-.
+ compatible with the OCaml library ecosystem.
  
 \end_layout
 
@@ -347,17 +387,53 @@ The first appearance of JC in Scala was a “Join in Scala” compiler patch
 \begin_inset space ~
 \end_inset
 
-Cremet (2003), see 
+Cremet (2003).
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+See 
 \begin_inset CommandInset href
 LatexCommand href
-name "lampwww.epfl.ch/~cremet/misc/join_in_scala/index.html"
+name "lampwww.epfl.ch/~cremet/misc/join_in_scala/"
 target "http://lampwww.epfl.ch/~cremet/misc/join_in_scala/index.html"
 
 \end_inset
 
- for details.
+.
+\end_layout
+
+\end_inset
+
  The syntax of Scala has changed radically since 2003, rendering the project
  unusable.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Joinads
+\begin_inset Quotes erd
+\end_inset
+
+ are compiler patches for F# and Haskell, as developed by T.
+\begin_inset space ~
+\end_inset
+
+Petricek
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand citet
+key "PetSym2011"
+
+\end_inset
+
+.
+ The project is not maintained.
 \end_layout
 
 \begin_layout Standard
@@ -405,21 +481,11 @@ key "Rom2012"
 \end_layout
 
 \begin_layout Standard
-Creating a new programming language has been a common pattern in JC projects;
- the reason seems to be the difficulty of accommodating join definitions
- within the syntax of existing languages.
- Experimental new languages such as Funnel
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Ode2000"
-
-\end_inset
-
-, Polyphonic C#
+Creating a new programming language, either from scratch or via compiler
+ patches, has been a common pattern in JC projects; the reason seems to
+ be the difficulty of accommodating join definitions within the syntax of
+ existing languages.
+ Short-lived projects such as Polyphonic C#
 \begin_inset space ~
 \end_inset
 
@@ -430,8 +496,8 @@ key "BenFou2002"
 
 \end_inset
 
-, 
-\begin_inset Formula $C\omega$
+, C
+\begin_inset Formula $\omega$
 \end_inset
 
 
@@ -445,18 +511,14 @@ key "Rus2007"
 
 \end_inset
 
-, T.
-\begin_inset space ~
-\end_inset
-
-Rompf's language
+, Join Diesel
 \begin_inset space ~
 \end_inset
 
 
 \begin_inset CommandInset citation
-LatexCommand cite
-key "Rom2007"
+LatexCommand citet
+key "Ose2005"
 
 \end_inset
 
@@ -482,12 +544,12 @@ key "HamEA2006"
 
 \end_inset
 
- fall into this category.
- All these languages have been abandoned by their creators.
- Maintaining and supporting a completely new research language for JC appears
- to be impossible, even for a corporation such as Microsoft.
- Therefore, we turn our attention to implementing JC as an embedded DSL
- in a well-established programming language.
+ also follow that pattern.
+ All these new languages have since been abandoned by their creators.
+ It appears that maintaining and supporting a completely new research language
+ for JC is hardly possible, even for a corporation such as Microsoft.
+ Therefore, we turn our attention to implementations of JC as an embedded
+ DSL in a well-established programming language.
  
 \end_layout
 
@@ -517,7 +579,12 @@ key "Rus2007"
 
 .
  The library appears to be unsupported.
- The latest version is available from Github as 
+ The latest version is available from Github.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+ See 
 \begin_inset CommandInset href
 LatexCommand href
 name "github.com/JoinPatterns/ScalableJoins"
@@ -528,13 +595,23 @@ target "https://github.com/JoinPatterns/ScalableJoins"
 .
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 Y.
 \begin_inset space ~
 \end_inset
 
 Liu implemented the basic JC primitives in 2007-2009 as part of the C++
- Boost library; see 
+ Boost library.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+ See 
 \begin_inset CommandInset href
 LatexCommand href
 name "channel.sourceforge.net"
@@ -545,12 +622,21 @@ target "http://channel.sourceforge.net/"
  for details.
 \end_layout
 
+\end_inset
+
+ 
+\end_layout
+
 \begin_layout Standard
 In 2014, S.
 \begin_inset space ~
 \end_inset
 
-Yallop implemented JoCaml-style 
+Yallop implemented 
+\family typewriter
+JoCaml
+\family default
+-style 
 \begin_inset Quotes eld
 \end_inset
 
@@ -574,11 +660,21 @@ target "https://github.com/syallop/Join-Language"
 \begin_layout Standard
 The present author created experimental JC prototypes for Objective-C on
  iOS and for Java on Android.
- The source code is available from Github at 
+ The source code is available from Github
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+ See 
 \begin_inset CommandInset href
 LatexCommand href
 name "github.com/winitzki"
 target "https://github.com/winitzki"
+
+\end_inset
+
+.
+\end_layout
 
 \end_inset
 
@@ -647,42 +743,1104 @@ Haller and J.
 \begin_inset space ~
 \end_inset
 
-He's ideas, correcting the shortcomings of those earlier projects.
-\end_layout
-
-\begin_layout Subsection
-Contributions
+He's syntax for embedding JC in Scala.
 \end_layout
 
 \begin_layout Standard
-I describe the design decisions made while implementing Join Calculus in
- the 
+C.
+\begin_inset space ~
+\end_inset
+
+Russo's 
+\begin_inset Quotes eld
+\end_inset
+
+ScalableJoins
+\begin_inset Quotes erd
+\end_inset
+
+ library
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rus2007"
+
+\end_inset
+
+ allowed synchronous rendezvous in join patterns, while T.
+\begin_inset space ~
+\end_inset
+
+Rompf's language
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rom2007"
+
+\end_inset
+
+ showed how to use a continuation-passing syntax for synchronous channels,
+ rather than the traditional 
+\begin_inset Quotes eld
+\end_inset
+
+reply to
+\begin_inset Quotes erd
+\end_inset
+
+ syntax.
+ 
 \family typewriter
 Chymyst
 \family default
- project as an embedded DSL in Scala.
- Chymyst lifts several restrictions of JC that are present in most other
- renditions.
+ also adopts these JC innovations.
+\end_layout
+
+\begin_layout Subsection
+Contributions of this paper
+\end_layout
+
+\begin_layout Standard
+I describe the main design decisions made in the 
+\family typewriter
+Chymyst
+\family default
+ project while implementing join calculus as an embedded DSL in Scala.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+Chymyst
+\family default
+ lifts several restrictions that are present in most other JC projects,
+ and offers some additional features:
+\end_layout
+
+\begin_layout Itemize
+arbitrary non-linear patterns and guards in process definitions
+\end_layout
+
+\begin_layout Itemize
+synchronous rendezvous
+\end_layout
+
+\begin_layout Itemize
+separate definition of channel names and processes
+\end_layout
+
+\begin_layout Itemize
+first-class processes with arbitrary process bodies
+\end_layout
+
+\begin_layout Itemize
+incremental construction of join definitions from processes
+\end_layout
+
+\begin_layout Itemize
+automatic performance optimizations
+\end_layout
+
+\begin_layout Itemize
+static code analysis and early error detection
+\end_layout
+
+\begin_layout Standard
+I argue that certain new facilities need to be added to a JC implementation
+ in order to make it viable for industry adoption.
+ These facilities include:
+\end_layout
+
+\begin_layout Itemize
+explicit thread pools for performance tuning
+\end_layout
+
+\begin_layout Itemize
+time-outs for synchronous channels
+\end_layout
+
+\begin_layout Itemize
+interoperability with 
+\family typewriter
+Future
+\family default
+s
+\end_layout
+
+\begin_layout Itemize
+APIs for unit testing and debugging
+\end_layout
+
+\begin_layout Itemize
+per-process fault tolerance settings
+\end_layout
+
+\begin_layout Itemize
+message pipelining
+\end_layout
+
+\begin_layout Standard
+I describe the current implementation of these facilities in 
+\family typewriter
+Chymyst
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+To better explain the concepts of JC to new software developers, I avoid
+ the traditional academic terminology (message / channel / process / join
+ definition).
+ Instead, I show how to describe JC as an evolution of the Actor model,
+ which is ideal for developers already familiar with the Akka library.
+ When introducing JC from scratch, I rely on the 
+\begin_inset Quotes eld
+\end_inset
+
+abstract chemical machine
+\begin_inset Quotes erd
+\end_inset
+
+ metaphor and use the corresponding terminology (molecule / emitter / reaction
+ / reaction site), which is more visual and intuitive.
+ Synchronous channels (
+\begin_inset Quotes eld
+\end_inset
+
+blocking emitters
+\begin_inset Quotes erd
+\end_inset
+
+) are most easily understood by carrying out a continuation-passing code
+ transformation and reducing them to asynchronous channels; the syntax used
+ by 
+\family typewriter
+Chymyst
+\family default
+ makes this transparent.
 \end_layout
 
 \begin_layout Section
-Programming in Chymyst
+Programming in 
+\family typewriter
+Chymyst
+\end_layout
+
+\begin_layout Standard
+In my experience, the absolute majority of software developers are unfamiliar
+ with join calculus or its 
+\begin_inset Quotes eld
+\end_inset
+
+channel
+\begin_inset Quotes erd
+\end_inset
+
+ / 
+\begin_inset Quotes eld
+\end_inset
+
+message
+\begin_inset Quotes erd
+\end_inset
+
+ / 
+\begin_inset Quotes eld
+\end_inset
+
+process
+\begin_inset Quotes erd
+\end_inset
+
+ terminology, but the majority of Scala concurrency practitioners know about
+ the Actor model.
+ Accordingly, I would argue that introducing JC concepts to the Scala developer
+ audience should build upon the Actor model knowledge.
+ However, reasoning about JC programs is most direct and convenient when
+ using the visual metaphors and the terminology of the Abstract Chemical
+ Machine (
+\begin_inset Quotes eld
+\end_inset
+
+emitter
+\begin_inset Quotes erd
+\end_inset
+
+ / 
+\begin_inset Quotes eld
+\end_inset
+
+molecule
+\begin_inset Quotes erd
+\end_inset
+
+ / 
+\begin_inset Quotes eld
+\end_inset
+
+reaction
+\begin_inset Quotes erd
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Subsection
-Terminology and concepts
+The chemical metaphor for concurrency
+\end_layout
+
+\begin_layout Standard
+Neither of the words 
+\begin_inset Quotes eld
+\end_inset
+
+join
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+calculus
+\begin_inset Quotes erd
+\end_inset
+
+ are particularly explanatory or visually suggestive.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+chemical machine
+\begin_inset Quotes erd
+\end_inset
+
+, on the other hand, is a visually concrete execution model that can be
+ directly used for designing and reasoning about a JC program.
+\end_layout
+
+\begin_layout Standard
+Within the chemical machine metaphor, one imagines a 
+\series bold
+reaction site
+\series default
+, i.e.
+\begin_inset space ~
+\end_inset
+
+a virtual place where many molecules are floating around and reacting with
+ each other.
+ Each molecule has a chemical designation (such as 
+\family typewriter
+a
+\family default
+, 
+\family typewriter
+b
+\family default
+, 
+\family typewriter
+c
+\family default
+) and also 
+\emph on
+carries a value
+\emph default
+ of a fixed type.
+ Since the 
+\begin_inset Quotes eld
+\end_inset
+
+chemistry
+\begin_inset Quotes erd
+\end_inset
+
+ here is completely imaginary, the programmer is free to declare any number
+ of chemical designations and to specify the corresponding value types.
+ In 
+\family typewriter
+Chymyst
+\family default
+, these declarations have the form
+\begin_inset Formula 
+\begin{align*}
+\text{\texttt{val a }} & \text{\texttt{= m[Unit]}}\\
+\text{\texttt{val c }} & \text{\texttt{= m[List[Int]]}}
+\end{align*}
+
+\end_inset
+
+ and result in creating new 
+\series bold
+molecule emitters
+\series default
+ 
+\family typewriter
+a
+\family default
+ and 
+\family typewriter
+c
+\family default
+.
+ Emitters can be seen as functions that are called in order to 
+\series bold
+emit
+\series default
+ the corresponding molecules into the reaction site:
+\begin_inset Formula 
+\begin{align*}
+ & \text{\texttt{a()}}\\
+ & \text{\texttt{c(List(1,2,3))}}
+\end{align*}
+
+\end_inset
+
+The newly emitted molecules will carry the specified values of the correct
+ types.
+\end_layout
+
+\begin_layout Standard
+Further, the programmer must specify the 
+\begin_inset Quotes eld
+\end_inset
+
+chemical laws
+\begin_inset Quotes erd
+\end_inset
+
+ describing the permitted reactions between molecules.
+ 
+\family typewriter
+Chymyst
+\family default
+ describes reactions using the syntax of Scala partial functions with a
+ single 
+\family typewriter
+case
+\family default
+ clause, wrapped into an auxiliary method called 
+\family typewriter
+go()
+\family default
+:
+\begin_inset Formula 
+\[
+\text{\texttt{go \{ case a(\_) + c(x :: xs) \ensuremath{\Rightarrow} c(xs) \}}}
+\]
+
+\end_inset
+
+This reaction consumes two input molecules, 
+\family typewriter
+a
+\family default
+ and 
+\family typewriter
+c
+\family default
+, and evaluates the reaction body (the Scala code within the 
+\family typewriter
+case
+\family default
+ clause).
+ In this example, the reaction body simply emits one output molecule, 
+\family typewriter
+c
+\family default
+, with a computed new value 
+\family typewriter
+xs
+\family default
+.
+ In 
+\family typewriter
+Chymyst
+\family default
+, reaction definitions can use all features of Scala partial functions,
+ including arbitrary guard conditions and pattern matching on molecule values.
+\end_layout
+
+\begin_layout Standard
+Reactions are first-class values:
+\begin_inset Formula 
+\[
+\text{\texttt{val r1 = go \{ case a(\_) \ensuremath{\Rightarrow} ??? \}}}
+\]
+
+\end_inset
+
+Creating the reaction value 
+\family typewriter
+r1
+\family default
+ does not schedule any computations; it merely defines the available computation
+ declaratively.
+ In order to make the chemical machine run reactions, the programmer needs
+ to create a reaction site using the 
+\family typewriter
+site()
+\family default
+ call, such as 
+\family typewriter
+site(r1)
+\family default
+.
+ A reaction site typically includes several reactions that may be declared
+ inline for brevity:
+\begin_inset Formula 
+\begin{align*}
+\text{\texttt{site( }} & \text{\texttt{go \{ case a(\_) + c(x :: xs) \ensuremath{\Rightarrow} c(xs) \},}}\\
+ & \text{\text{\texttt{go \{ case c(Nil) }}\texttt{\ensuremath{\Rightarrow} done() \} }}\\
+\text{\texttt{) }}
+\end{align*}
+
+\end_inset
+
+Once a reaction site is created, the code can emit any number of molecules
+ a() or c().
+ The chemical machine will interpret the declared 
+\begin_inset Quotes eld
+\end_inset
+
+chemical laws
+\begin_inset Quotes erd
+\end_inset
+
+ and start reactions whenever appropriate input molecules are available
+ at the reaction site.
 \end_layout
 
 \begin_layout Subsection
-Syntax
+Design decisions in 
+\family typewriter
+Chymyst
 \end_layout
 
 \begin_layout Subsection
-Additional features
+Industry-friendly features
 \end_layout
 
 \begin_layout Subsection
-Roadmap
+Pedagogical considerations
+\end_layout
+
+\begin_layout Standard
+The choice of terminology and notation is important if we aim to explain
+ an unfamiliar paradigm clearly and comprehensibly to newcomers.
+ Here we again encounter difficulties when it comes to learning about join
+ calculus.
+ 
+\end_layout
+
+\begin_layout Standard
+The Wikipedia page on join calculus
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+ See 
+\begin_inset CommandInset href
+LatexCommand href
+name "en.wikipedia.org/wiki/Join-calculus"
+target "https://en.wikipedia.org/wiki/Join-calculus"
+
+\end_inset
+
+, as of December 2016.
+\end_layout
+
+\end_inset
+
+ describes it as 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+an asynchronous 
+\begin_inset Formula $\pi$
+\end_inset
+
+-calculus with several strong restrictions: 1) Scope restriction, reception,
+ and replicated reception are syntactically merged into a single construct,
+ the 
+\emph default
+definition
+\emph on
+; 2) Communication occurs only on defined names; 3) For every defined name
+ there is exactly one replicated reception.
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Explanations using technical jargon such as 
+\begin_inset Quotes eld
+\end_inset
+
+replicated reception
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+communication on defined names
+\begin_inset Quotes erd
+\end_inset
+
+ are impossible to understand for anyone not already well-versed in the
+ concurrency research literature.
+ Since Wikipedia (deservedly or not) is a popular go-to resource for learning
+ new concepts, it is quite understandable if software practitioners remain
+ unaware of JC even 20+ years after its invention.
+\end_layout
+
+\begin_layout Standard
+Another hurdle for comprehending JC is that academic literature typically
+ uses terms such as “channel”, 
+\begin_inset Quotes eld
+\end_inset
+
+message
+\begin_inset Quotes erd
+\end_inset
+
+, and 
+\begin_inset Quotes eld
+\end_inset
+
+process
+\begin_inset Quotes erd
+\end_inset
+
+, which are inherited from 
+\begin_inset Formula $\pi$
+\end_inset
+
+-calculus but are not helpful for understanding how JC works and how to
+ write concurrent programs in it.
+\end_layout
+
+\begin_layout Standard
+Indeed, a “channel” in JC holds an 
+\emph on
+unordered
+\emph default
+ collection of messages, rather than an ordered queue or mailbox, as the
+ word “channel” suggests.
+ Another meaning of “channel” is a persistent path for exchanging messages
+ between fixed locations, but this is far from what a JC “channel” actually
+ does.
+\end_layout
+
+\begin_layout Standard
+The phrase “sending a message” usually implies that a fixed recipient will
+ consume the sent messages one by one.
+ But this is very different from what happens in JC, where a 
+\begin_inset Quotes eld
+\end_inset
+
+process
+\begin_inset Quotes erd
+\end_inset
+
+ may wait for several “messages” at once, different 
+\begin_inset Quotes eld
+\end_inset
+
+processes
+\begin_inset Quotes erd
+\end_inset
+
+ may contend on several “messages” they wait for, and several 
+\begin_inset Quotes eld
+\end_inset
+
+processes
+\begin_inset Quotes erd
+\end_inset
+
+ may start concurrently, consuming their input 
+\begin_inset Quotes eld
+\end_inset
+
+messages
+\begin_inset Quotes erd
+\end_inset
+
+ in random order.
+\end_layout
+
+\begin_layout Standard
+The word 
+\begin_inset Quotes eld
+\end_inset
+
+process
+\begin_inset Quotes erd
+\end_inset
+
+ suggests a fixed, persistent thread of computation with which we may communicat
+e.
+ However, JC does not have persistent threads of computation; instead, 
+\begin_inset Quotes eld
+\end_inset
+
+processes
+\begin_inset Quotes erd
+\end_inset
+
+ are spawned on demand, as input 
+\begin_inset Quotes eld
+\end_inset
+
+messages
+\begin_inset Quotes erd
+\end_inset
+
+ become available.
+\end_layout
+
+\begin_layout Standard
+The JoCaml documentation
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+See 
+\begin_inset CommandInset href
+LatexCommand href
+name "jocaml.inria.fr/doc/index.html"
+target "http://jocaml.inria.fr/doc/index.html"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+ is especially confusing as regards the semantics of “channels”, “messages”,
+ “processes”, and 
+\begin_inset Quotes eld
+\end_inset
+
+spawning
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It is ill-suited as a pedagogical introduction to using JoCaml or to understand
+ing join calculus.
+\end_layout
+
+\begin_layout Standard
+Instead of using academic terminology, I follow the chemical machine metaphor
+ and terminology when giving tutorial presentations about 
+\family typewriter
+Chymyst
+\family default
+ programming.
+ Here is a dictionary:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Academic join calculus
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Abstract chemical machine
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Chymyst
+\family default
+ code example
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+message on a channel
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+input molecule
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+case a(123)
+\family default
+ 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ ...
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+channel or name
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+molecule emitter
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+val a: M[Int]
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+synchronous channel
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+blocking emitter
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+val q: B[Unit, Int]
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+process
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+reaction
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+go { case a(x) + 
+\family default
+...
+
+\family typewriter
+ 
+\family default
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family typewriter
+ 
+\family default
+...
+
+\family typewriter
+ }
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+sending a message
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+emitting a molecule
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+a(123)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+sending a synchronous message
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+emitting a blocking molecule
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+val x: Int = q()
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+join definition
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+reaction site
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+site(r1, r2, ...)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With this approach, I have had success in conveying effectively both the
+ basics and the subtleties of JC semantics to developers who were previously
+ unfamiliar with it.
+\end_layout
+
+\begin_layout Subsection
+From actors to molecules***
+\end_layout
+
+\begin_layout Standard
+Most Scala developers interested in concurrent programming are already familiar
+ with the Actor model.
+ In this subsection, I outline how the chemical machine paradigm can be
+ introduced to such developers.
+\end_layout
+
+\begin_layout Standard
+An actor receives messages and reacts to them by running a computation.
+ An actor-based program declares several actors, defines the computations
+ for them, stores references to the actors, and starts sending messages
+ to some of the actors.
+ Messages are sent either synchronously or asynchronously, enabling communicatio
+n between different concurrent actors.
+ 
+\end_layout
+
+\begin_layout Standard
+The chemical machine paradigm is in certain ways similar to the Actor model.
+ A chemical program also consists of concurrent processes, or "chemical
+ actors", that communicate by sending messages.
+ To arrive at the chemical machine paradigm, we need to modify the Actor
+ model as follows:
+\end_layout
+
+\begin_layout Standard
+- Messages are statically typed, and each chemical actor receives messages
+ of a fixed type.
+ - A chemical actor can be defined to wait for _several_ input messages
+ (of specified different types) at once, rather than just waiting for one
+ message at a time.
+ Accordingly, messages are not sent to a linearly ordered queue or a mailbox
+ — instead, messages are kept in an unordered bag and consumed in an unknown
+ order.
+ - Chemical actors are not persistent and are not created explicitly by
+ the user's program.
+ Instead, the runtime engine will automatically instantiate and run one
+ or more copies of a chemical actor whenever enough input messages are available
+ for these actors to consume.
+ These actors will automatically disappear when their computations are finished.
+\end_layout
+
+\begin_layout Standard
+The last two features - the joint consumption of messages and the implicit
+ creation/annihilation of chemical actors - make for a radical departure
+ from the Actor model:
+\end_layout
+
+\begin_layout Standard
+- Whenever there are sufficiently many input messages available for processing
+ without contention, the runtime engine will automatically instantiate several
+ concurrent copies of the same actor.
+ and process all these messages concurrently.
+ This is the main mechanism for achieving parallelism in the chemical paradigm.
+ The users do not need to concern themselves with the details of how many
+ concurrent actors to instantiate at any given time.
+ Since chemical actors are not persistent but are instantiated automatically
+ on demand, users do not need to implement actor lifecycle management or
+ supervision mechanisms.
+ - Whenever two or more chemical actors consume the same type of message,
+ "input message contention" is created.
+ If only one copy of this message has been emitted, the runtime engine will
+ automatically instantiate and run _one_ of the appropriate actors to process
+ the message, while the other actors will not be instantiated.
+ Input contention is used in the chemical machine paradigm as a mechanism
+ for synchronization and mutual exclusion.
+ Since the runtime engine will arbitrarily decide which actor to run, input
+ contention will result in nondeterminism.
+ This is quite similar to the nondeterminism in the usual models of concurrent
+ programming: Mutual exclusion allows the programmer to implement safe exclusive
+ access to a resource for any number of concurrent processes, but the order
+ of access among the concurrent processes remains unspecified.
+ 
+\end_layout
+
+\begin_layout Standard
+In the rest of this book, "chemical actors" are called **reactions**, their
+ input messages are called **input molecules**, and messages sent by an
+ actor's process are called **output molecules** of the reaction.
+ 
+\end_layout
+
+\begin_layout Section
+Future roadmap
 \end_layout
 
 \begin_layout Bibliography
@@ -930,6 +2088,39 @@ Benton, N.; Fournet, C.
  In Proceedings of the 16th European Conference on Object-Oriented Programming
  (ECOOP 2002), number 2374 in LNCS.
  Pages 415-440
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "PetSym2011"
+
+\end_inset
+
+Petricek and Syme 2011 Retargetable control flow
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Ose2005"
+
+\end_inset
+
+Peter-Michael Osera.
+ Join diesel: Concurrency primitives for diesel.
+ Undergraduate research thesis, University of Washington, 2005.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "FouGon2000"
+
+\end_inset
+
+Fournet, Gonthier.
+ Join calculus 2000
 \end_layout
 
 \end_body
