@@ -2313,8 +2313,8 @@ chemical actors
 \end_layout
 
 \begin_layout Enumerate
-Chemical actors are automatically started and stopped; the user code only
- sends the appropriate messages.
+Chemical actors are automatically started and stopped; the user's code only
+ sends messages and no longer needs to work with actor references.
 \end_layout
 
 \begin_layout Enumerate
