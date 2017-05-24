@@ -1428,34 +1428,23 @@ a(x) & b(y)
 \end_layout
 
 \begin_layout Standard
-Sending several messages within one expression is also available via the
- 
-\begin_inset Quotes eld
-\end_inset
-
-chemical
-\begin_inset Quotes erd
-\end_inset
-
- syntax such as 
-\begin_inset Quotes eld
-\end_inset
-
-
-\family typewriter
-a(1) + b(2)
-\family default
-
-\begin_inset Quotes erd
-\end_inset
-
-.
- Sending a message in 
+Sending a message in 
 \family typewriter
 Chymyst
 \family default
- is implemented as a function call and does not require a special keyword
- such as JoCaml's 
+ is implemented as a function call such as 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+a(1)
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ and does not require a special keyword such as JoCaml's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1496,7 +1485,8 @@ val a = m[Unit]
 \begin_inset Quotes erd
 \end_inset
 
-) and separate from process definitions.
+) and written separately from process definitions.
+ This is a common design in most embedded DSL implementations of JC.
 \end_layout
 
 \begin_layout Standard
