@@ -2607,14 +2607,23 @@ Different chemical actors are now distinguished only by their input message
 \begin_inset Formula 
 \begin{align*}
 \text{} & \text{\texttt{go \{ x:~Int \textnormal{from} c1 \ensuremath{\Rightarrow} ...~\}}}\\
-\text{} & \text{\texttt{go \{ z:~Int \textnormal{from} e1 \ensuremath{\Rightarrow} ...~\}}}\\
+\text{} & \text{\texttt{go \{ x:~Int \textnormal{from} d1 \ensuremath{\Rightarrow} ...~\}}}\\
  & \text{\texttt{c1 !~123 }}\\
- & \text{\texttt{e1 !~456 }}
+ & \text{\texttt{d1 !~456 }}
 \end{align*}
 
 \end_inset
 
-
+Actor references have disappeared from the code.
+ Instead, input message labels such as 
+\family typewriter
+c1
+\family default
+, 
+\family typewriter
+d1
+\family default
+ determine which computation will be started.
 \end_layout
 
 \begin_layout Standard
@@ -2639,7 +2648,11 @@ c1
 c2
 \family default
  respectively.
- The computation starts only after both messages have been sent.
+ The computation starts only after 
+\emph on
+both
+\emph default
+ messages have been sent.
 \end_layout
 
 \begin_layout Standard
@@ -2649,7 +2662,7 @@ It follows that messages cannot be sent to a linearly ordered queue or a
 \end_layout
 
 \begin_layout Standard
-It also follows that we may now define several computations that 
+It also follows that we may define several computations that 
 \emph on
 contend
 \emph default
@@ -2657,13 +2670,13 @@ contend
 \begin_inset Formula 
 \begin{align*}
 \text{} & \text{\texttt{go \{ x:~Int \textnormal{from} c1, y:~String \textnormal{from} c2 \ensuremath{\Rightarrow} ...~\}}}\\
- & \text{\texttt{go \{ x:~Int \textnormal{from} c1, z:~Unit \textnormal{from} d1 \ensuremath{\Rightarrow} ...~\}}}
+ & \text{\texttt{go \{ x:~Int \textnormal{from} c1, z:~Unit \textnormal{from} e1 \ensuremath{\Rightarrow} ...~\}}}
 \end{align*}
 
 \end_inset
 
-We find that messages that carry data are now completely decoupled from
- computations that consume the data.
+Messages that carry data are now completely decoupled from computations
+ that consume the data.
  All computations start concurrently whenever their input messages become
  available.
  The runtime engine needs to resolve message contention by making a non-determin
@@ -2674,6 +2687,11 @@ istic choice of the messages that will be actually consumed.
 \begin_layout Standard
 This concludes the second and final step towards the chemical machine paradigm.
  It remains to use the Scala syntax instead of pseudo-code.
+\end_layout
+
+\begin_layout Standard
+In Scala, we need to declare message types explicitly and to register each
+ chemical computation with the runtime engine as a separate step.
  The syntax used by 
 \family typewriter
 Chymyst
@@ -2683,7 +2701,7 @@ Chymyst
 \begin{align*}
 \text{} & \text{\texttt{val c1 = m[Int]}}\\
  & \text{\texttt{val c2 = m[String]}}\\
- & \text{\texttt{go \{ case c1(x) + c2(y) \ensuremath{\Rightarrow} ...~\}}}\\
+ & \text{\texttt{site(go \{ case c1(x) + c2(y) \ensuremath{\Rightarrow} ...~\})}}\\
  & \text{\texttt{c1(123); }\texttt{c2("abc")}}
 \end{align*}
 
@@ -2712,7 +2730,7 @@ Whenever there are sufficiently many input messages available for processing,
 \begin_layout Itemize
 Since chemical actors are stateless and instantiated automatically on demand,
  users do not need to implement actor lifecycle management, actor supervision
- hierarchies, backup and recovery of internal state of actors, or a special
+ hierarchies, backup and recovery of actors' internal state, or a special
  
 \begin_inset Quotes eld
 \end_inset
@@ -2753,16 +2771,47 @@ chemical actor
 \series bold
 reactions
 \series default
-, their input messages are called 
+, their input messages are 
 \series bold
 input molecules
 \series default
-, and messages sent by a chemical computation are called 
+, messages sent by a chemical computation are 
 \series bold
 output molecules
 \series default
- of the reaction.
- 
+ of the reaction, while input message labels are 
+\series bold
+molecule emitters
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+In the academic literature, chemical computations are called 
+\begin_inset Quotes eld
+\end_inset
+
+processes
+\begin_inset Quotes erd
+\end_inset
+
+ and input message labels are 
+\begin_inset Quotes eld
+\end_inset
+
+channels
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+channel names
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
