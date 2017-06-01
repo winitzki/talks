@@ -1,0 +1,13 @@
+Declarative concurrent programming with Chymyst
+
+Chymyst is a new open-source framework for declarative, purely functional, industry-strength concurrent programming in Scala. Chymyst implements the Abstract Chemical Machine (Join Calculus) concurrency paradigm, which radically improves upon the well-known Actor model by making actors type-safe, stateless, and automatically managed. I demonstrate concise and fully declarative Chymyst solutions for classic concurrency problems such as the "dining philosophers" or recursive "fork/join". Chymyst is in active development; next steps on the roadmap include providing comprehensive industry-friendly features such as APIs for unit testing, performance monitoring, and fault tolerance.
+
+Motivation for the talk
+
+Advanced declarative concurrency models, such as Join Calculus, are actively studied by the theoretical computer science community but often ignored by the software industry. In my talk, I will present a new open-source implementation of Join Calculus as an embedded Scala DSL, called `Chymyst`. Join Calculus can be seen as an embedding of a high-level, purely functional, declarative concurrent programming DSL into a (functional) host language. However, the only currently supported implementation of the Join Calculus paradigm is the [JoCaml language from INRIA](http://jocaml.inria.fr/), which is a compiler patch for OCaml.
+
+The main design focus of `Chymyst` is to enable high-level, declarative concurrency in Scala, and at the same time to provide industry-strength features (such as performance tuning, fault tolerance, or unit testing) that are typically not considered by academic presentations of Join Calculus. In this way, I hope to enable industry adoption of this high-level concurrency paradigm.
+
+Based on my experience presenting Join Calculus and `Chymyst` to audiences of software engineers, I think that there will be significant interest both for the new concurrency concepts inherent in Join Calculus, and for the details of the Scala implementation.
+
+In my talk, I will not dwell on the theoretical side of Join Calculus but instead describe, in a hands-on manner and with short live-coding demos, how the `Chymyst`project enables declarative concurrent programming in Scala. My presentation will be suitable for intermediate-level software engineers with some knowledge of JVM concurrency and the Actor model.
