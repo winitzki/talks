@@ -82,28 +82,6 @@ Chymyst
 Sergei Winitzki
 \end_layout
 
-\begin_layout Conference
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-\begin_inset Argument 1
-status open
-
-\begin_layout Plain Layout
-Scala 2017, Vancouver
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Abstract
 Join calculus (JC) is a declarative message-passing concurrency formalism
  that has been ignored by the software engineering community, despite its
@@ -752,7 +730,11 @@ target "https://github.com/JoinPatterns/ScalableJoins"
 \end_layout
 
 \begin_layout Standard
-In 2009, F.
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+(This is not actually JC but CSP!) In 2009, F.
 \begin_inset space ~
 \end_inset
 
@@ -779,6 +761,11 @@ target "https://github.com/fredokun/LuaPi"
 \end_inset
 
 .
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -1106,11 +1093,11 @@ chemical machine
 , on the other hand, is a visually concrete execution model that can be
  directly used for designing and reasoning about a JC program.
  This subsection is a brief overview of core JC as seen through the chemical
- machine metaphor.
+ machine metaphor, in order to establish terminology.
 \end_layout
 
 \begin_layout Standard
-First, one imagines a 
+To begin, one imagines a 
 \series bold
 reaction site
 \series default
@@ -1146,7 +1133,7 @@ chemistry
 \end_inset
 
  here is completely imaginary, the programmer is free to declare any number
- of chemical designations and to specify the corresponding value types.
+ of chemical designations and to choose the corresponding value types.
  In 
 \family typewriter
 Chymyst
@@ -1160,7 +1147,7 @@ Chymyst
 
 \end_inset
 
- and result in creating new 
+and result in creating new 
 \series bold
 molecule emitters
 \series default
@@ -2371,14 +2358,15 @@ From actors to molecules***
 \end_layout
 
 \begin_layout Standard
-Most Scala developers interested in concurrent programming are already familiar
+Many Scala developers interested in concurrent programming are already familiar
  with the Actor model.
  In this subsection, I outline how the chemical machine paradigm can be
  introduced to those developers.
 \end_layout
 
 \begin_layout Standard
-An actor receives messages and reacts to them by running a computation.
+In the Actor model, an actor receives messages and reacts to them by running
+ a computation.
  An actor-based program declares several actors, defines the computations
  for them, stores references to the actors, and starts sending messages
  to some of the actors.
@@ -2417,47 +2405,232 @@ If we examine these requirements and determine what should logically follow
 \end_layout
 
 \begin_layout Standard
-***
-\end_layout
-
-\begin_layout Standard
-We would like to auto-create and auto-start actors.
- Chemical actors are no longer persistent in memory and are not created
- explicitly by the user's program.
+The first requirement means that chemical actors are not created explicitly
+ by the user's program.
  Instead, the chemical machine runtime will automatically instantiate and
- run one or more copies of a chemical actor whenever enough input messages
- are available for these actors to consume.
- These actors will automatically disappear when their computations are finished.
+ run a chemical actor whenever an input message is available for consumption.
+ A chemical actor will be automatically stopped and deleted when its computation
+ is finished.
+ Therefore, the user's code now does not create an instance of an actor
+ but merely 
+\emph on
+defines the computation
+\emph default
+ that an auto-created actor will perform after consuming a message.
+ As a consequence, chemical actors must be 
+\emph on
+stateless
+\emph default
+, and their computations must be functions of the input message values.
 \end_layout
 
 \begin_layout Standard
-- Messages are statically typed, and each chemical actor receives messages
- of a fixed type.
- - A chemical actor can be defined to wait for _several_ input messages
- (of specified different types) at once, rather than just waiting for one
- message at a time.
- Accordingly, messages are not sent to a linearly ordered queue or a mailbox
- — instead, messages are kept in an unordered bag and consumed in an unknown
- order.
- - 
+Implementing this functionality will allow us to write pseudo-code like
+ this,
+\begin_inset Formula 
+\begin{align*}
+\text{} & \texttt{val c1 }\text{\texttt{= go \{ x:~Int \ensuremath{\Rightarrow} ...~\}}}\\
+ & \text{\texttt{c1 !~123 }}
+\end{align*}
+
+\end_inset
+
+The computation labeled as 
+\family typewriter
+c1
+\family default
+ receives a message with an 
+\family typewriter
+Int
+\family default
+ value and performs some processing on it.
+ The computation will be instantiated and run concurrently, whenever a message
+ is sent.
+ In this way, we made the first step towards the full chemical machine paradigm.
+ 
 \end_layout
 
 \begin_layout Standard
-The last two features - the joint consumption of messages and the implicit
- creation/annihilation of chemical actors - make for a radical departure
+What should happen if we quickly send many messages? 
+\begin_inset Formula 
+\begin{align*}
+\text{} & \texttt{val c1 }\text{\texttt{= go \{ x:~Int \ensuremath{\Rightarrow} ...~\}}}\\
+ & \text{\texttt{(1 to 100).foreach(c1 !~\_) }}
+\end{align*}
+
+\end_inset
+
+Since our computations are stateless, the runtime engine may choose to run
+ several instances of the computation 
+\family typewriter
+c1
+\family default
+ concurrently, depending on run-time conditions.
+\end_layout
+
+\begin_layout Standard
+Note that 
+\family typewriter
+c1
+\family default
+ is not a reference to a particular instance of a computation.
+ Rather, the computation 
+\family typewriter
+{ x: Int 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ ...
+ }
+\family default
+ is being defined 
+\emph on
+declaratively
+\emph default
+, as a description of what needs to be done with any message sent via 
+\family typewriter
+c1
+\family default
+.
+ Thus, the value 
+\family typewriter
+c1
+\family default
+ plays the role of a label attached to the value 
+\family typewriter
+123
+\family default
+ specifying that the value 
+\family typewriter
+123
+\family default
+ should be used as the input value 
+\family typewriter
+x
+\family default
+ in the particular computation.
+ To express this semantics more clearly, let us change our pseudo-code notation
+ to 
+\begin_inset Formula 
+\begin{align*}
+\text{} & \text{\texttt{go \{ x:~Int \textnormal{from} c1 \ensuremath{\Rightarrow} ...~\}}}\\
+ & \text{\texttt{c1 !~123 }}
+\end{align*}
+
+\end_inset
+
+Different chemical actors are now distinguished only by their input message
+ labels, for example:
+\begin_inset Formula 
+\begin{align*}
+\text{} & \text{\texttt{go \{ x:~Int \textnormal{from} c1 \ensuremath{\Rightarrow} ...~\}}}\\
+\text{} & \text{\texttt{go \{ z:~Int \textnormal{from} e1 \ensuremath{\Rightarrow} ...~\}}}\\
+ & \text{\texttt{c1 !~123 }}\\
+ & \text{\texttt{e1 !~456 }}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The second requirement means that a chemical actor should be able to wait
+ for, say, two messages at once, allowing us to write pseudo-code like this,
+ 
+\begin_inset Formula 
+\begin{align*}
+\text{} & \text{\texttt{go \{ x:~Int \textnormal{from} c1, y:~String \textnormal{from} c2 \ensuremath{\Rightarrow} ...~\}}}\\
+ & \text{\texttt{c1 !~123}}\\
+ & \text{\texttt{c2 !~"abc"}}
+\end{align*}
+
+\end_inset
+
+The two messages are of different types and are labeled by 
+\family typewriter
+c1
+\family default
+ and 
+\family typewriter
+c2
+\family default
+ respectively.
+ The computation starts only after both messages have been sent.
+\end_layout
+
+\begin_layout Standard
+It follows that messages cannot be sent to a linearly ordered queue or a
+ mailbox; instead, messages must be kept in an unordered bag, as they will
+ be consumed in an unknown order.
+\end_layout
+
+\begin_layout Standard
+It also follows that we may now define several computations that 
+\emph on
+contend
+\emph default
+ on input messages:
+\begin_inset Formula 
+\begin{align*}
+\text{} & \text{\texttt{go \{ x:~Int \textnormal{from} c1, y:~String \textnormal{from} c2 \ensuremath{\Rightarrow} ...~\}}}\\
+ & \text{\texttt{go \{ x:~Int \textnormal{from} c1, z:~Unit \textnormal{from} d1 \ensuremath{\Rightarrow} ...~\}}}
+\end{align*}
+
+\end_inset
+
+We find that messages that carry data are now completely decoupled from
+ computations that consume the data.
+ All computations start concurrently whenever their input messages become
+ available.
+ The runtime engine needs to resolve message contention by making a non-determin
+istic choice of the messages that will be actually consumed.
+ Among the several contending computations, only one will be actually started.
+\end_layout
+
+\begin_layout Standard
+This concludes the second and final step towards the chemical machine paradigm.
+ It remains to use the Scala syntax instead of pseudo-code.
+ The syntax used by 
+\family typewriter
+Chymyst
+\family default
+ looks like this:
+\begin_inset Formula 
+\begin{align*}
+\text{} & \text{\texttt{val c1 = m[Int]}}\\
+ & \text{\texttt{val c2 = m[String]}}\\
+ & \text{\texttt{go \{ case c1(x) + c2(y) \ensuremath{\Rightarrow} ...~\}}}\\
+ & \text{\texttt{c1(123); }\texttt{c2("abc")}}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As we have just seen, the chemical machine paradigm is a radical departure
  from the Actor model:
 \end_layout
 
-\begin_layout Standard
-- Whenever there are sufficiently many input messages available for processing
- without contention, the runtime engine will automatically instantiate several
- concurrent copies of the same actor and process all these messages concurrently.
- This is the main mechanism for achieving parallelism in the chemical paradigm.
+\begin_layout Itemize
+Whenever there are sufficiently many input messages available for processing,
+ the runtime engine may automatically instantiate several concurrent copies
+ of the same computation that will consume the input messages concurrently.
+ This is the main method for achieving parallelism in the chemical paradigm.
+ The runtime engine is in the best position to optimize the CPU load using
+ low-level OS threads.
  The users do not need to concern themselves with the details of how many
  concurrent actors to instantiate at any given time.
- Since chemical actors are not persistent but are instantiated automatically
- on demand, users do not need to implement actor lifecycle management or
- supervision mechanisms, and there is no need for a special 
+ 
+\end_layout
+
+\begin_layout Itemize
+Since chemical actors are stateless and instantiated automatically on demand,
+ users do not need to implement actor lifecycle management, actor supervision
+ hierarchies, backup and recovery of internal state of actors, or a special
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2466,26 +2639,46 @@ dead letter
 \end_inset
 
  actor.
- - Whenever two or more chemical actors consume the same type of message,
- "input message contention" is created.
- If only one copy of this message has been emitted, the runtime engine will
- automatically instantiate and run _one_ of the appropriate actors to process
- the message, while the other actors will not be instantiated.
- Input contention is used in the chemical machine paradigm as a mechanism
- for synchronization and mutual exclusion.
- Since the runtime engine will arbitrarily decide which actor to run, input
- contention will result in nondeterminism.
+ This removes a significant amount of complexity from the architecture of
+ concurrent applications.
+\end_layout
+
+\begin_layout Itemize
+Input message contention is used in the chemical machine paradigm as a general
+ mechanism for synchronization and mutual exclusion.
+ (In the Actor model, these features are implemented by creating a fixed
+ number of actor instances that alone can consume certain messages.) Since
+ the runtime engine will arbitrarily decide which actor to run, input contention
+ will result in nondeterminism.
  This is quite similar to the nondeterminism in the usual models of concurrent
- programming: Mutual exclusion allows the programmer to implement safe exclusive
+ programming.
+ For example, mutual exclusion allows the programmer to implement safe exclusive
  access to a resource for any number of concurrent processes, but the order
- of access among the concurrent processes remains unspecified.
- 
+ of access among the contending processes remains unspecified.
 \end_layout
 
 \begin_layout Standard
-In the rest of this book, "chemical actors" are called **reactions**, their
- input messages are called **input molecules**, and messages sent by an
- actor's process are called **output molecules** of the reaction.
+In the rest of this paper, 
+\begin_inset Quotes eld
+\end_inset
+
+chemical actor
+\begin_inset Quotes erd
+\end_inset
+
+ computations are called 
+\series bold
+reactions
+\series default
+, their input messages are called 
+\series bold
+input molecules
+\series default
+, and messages sent by a chemical computation are called 
+\series bold
+output molecules
+\series default
+ of the reaction.
  
 \end_layout
 
