@@ -1203,14 +1203,14 @@ go()
 :
 \begin_inset Formula 
 \[
-\text{\texttt{go \{ case t(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \}}}
+\text{\texttt{go \{ case tail(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \}}}
 \]
 
 \end_inset
 
 This reaction consumes two input molecules, 
 \family typewriter
-a
+tail
 \family default
  and 
 \family typewriter
@@ -1268,23 +1268,23 @@ site(r1, r2)
  inline for brevity:
 \begin_inset Formula 
 \begin{align*}
-\text{\texttt{site( }} & \text{\texttt{go \{ case t(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \},}}\\
+\text{\texttt{site( }} & \text{\texttt{go \{ case tail(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \},}}\\
  & \text{\text{\texttt{go \{ case c(Nil) }}\texttt{\ensuremath{\Rightarrow} done() \} }}\\
 \text{\texttt{) }}
 \end{align*}
 
 \end_inset
 
-Once a reaction site is created, the code can emit any number of molecules
- 
+Once a reaction site is created, the code can emit any number of molecules,
+ such as 
 \family typewriter
-t()
+tail()
 \family default
  or 
 \family typewriter
 c()
 \family default
-.
+, or molecules defined in other reaction sites.
  The chemical machine will interpret the declared 
 \begin_inset Quotes eld
 \end_inset
@@ -1294,7 +1294,7 @@ chemical laws
 \end_inset
 
  and start reactions whenever appropriate input molecules are available
- at the reaction site.
+ at each reaction site.
  According to the operational semantics of JC, any number of different reactions
  may start concurrently if sufficiently many input molecules are available.
 \end_layout
@@ -1304,8 +1304,7 @@ The
 \family typewriter
 Chymyst
 \family default
- project source code and documentation embrace the chemical metaphor and
- its visually suggestive terminology.
+ project embraces the chemical metaphor and its visually suggestive terminology.
  In most academic literature on JC, molecule emitters are called 
 \begin_inset Quotes eld
 \end_inset
@@ -1348,7 +1347,7 @@ join definitions
 
 .
  To make the reading of the present paper easier for academic researchers,
- I will use the accepted terminology in what follows, except when describing
+ I will use the academic terminology in what follows, except when describing
  pedagogical approaches to JC.
  
 \end_layout
@@ -1792,7 +1791,32 @@ early
 
 \begin_layout Standard
 An additional benefit of static analysis is a performance optimization for
- processes that use pattern matching or guard conditions.***
+ processes that use pattern matching or guard conditions.
+ Scala macros are used to determine whether process definitions impose any
+ guard conditions on input message values.
+ If not, a quicker scheduling algorithm can be used.
+ Additionally, complicated guard conditions such as
+\begin_inset Formula 
+\[
+\text{\texttt{go \{ case c(x) + d(y) if x>0 \&\& y<1 \ensuremath{\Rightarrow} ...~\}}}
+\]
+
+\end_inset
+
+are converted into the Conjuctive Normal Form and split between molecules
+ if possible.
+ For instance, the example above is converted to (pseudo-code)
+\begin_inset Formula 
+\[
+\text{\texttt{\{ case c(x if x>0) + d(y if y<1) \ensuremath{\Rightarrow} ...~\}}}
+\]
+
+\end_inset
+
+In many cases, this transformation allows the process scheduler to select
+ message values faster, without enumerating combinatorially many combinations
+ of message values while searching for suitable inputs for a process.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -2658,7 +2682,7 @@ Input message contention is used in the chemical machine paradigm as a general
 \end_layout
 
 \begin_layout Standard
-In the rest of this paper, 
+In the chemical machine paradigm, 
 \begin_inset Quotes eld
 \end_inset
 
