@@ -490,7 +490,7 @@ von Itzstein implemented JC as a patch for the early Java compiler
 
 
 \begin_inset CommandInset citation
-LatexCommand cite
+LatexCommand citep
 key "Von2004"
 
 \end_inset
@@ -553,7 +553,7 @@ Petricek
 
 
 \begin_inset CommandInset citation
-LatexCommand citet
+LatexCommand citep
 key "PetSym2011"
 
 \end_inset
@@ -582,7 +582,7 @@ fork/join
 
 
 \begin_inset CommandInset citation
-LatexCommand cite
+LatexCommand citep
 key "Rom2007"
 
 \end_inset
@@ -647,7 +647,7 @@ key "Rus2007"
 
 
 \begin_inset CommandInset citation
-LatexCommand citet
+LatexCommand citep
 key "Ose2005"
 
 \end_inset
@@ -702,7 +702,7 @@ Scalable Joins
 
 
 \begin_inset CommandInset citation
-LatexCommand cite
+LatexCommand citep
 key "Rus2007"
 
 \end_inset
@@ -788,7 +788,7 @@ Boost
 status open
 
 \begin_layout Plain Layout
-See 
+ See 
 \begin_inset CommandInset href
 LatexCommand href
 name "channel.sourceforge.net"
@@ -1092,7 +1092,7 @@ chemical machine
 
 , on the other hand, is a visually concrete execution model that can be
  directly used for designing and reasoning about a JC program.
- This subsection is a brief overview of core JC as seen through the chemical
+ This subsection is a brief overview of JC as seen through the chemical
  machine metaphor, in order to establish terminology.
 \end_layout
 
@@ -1167,8 +1167,8 @@ emit
  the corresponding molecules into the reaction site:
 \begin_inset Formula 
 \begin{align*}
- & \text{\texttt{t()}}\\
- & \text{\texttt{c(List(1,2,3))}}
+ & \text{\texttt{c(List(1,2,3))}}\\
+ & \text{\texttt{t()}}
 \end{align*}
 
 \end_inset
@@ -1278,13 +1278,13 @@ site(r1, r2)
 Once a reaction site is created, the code can emit any number of molecules,
  such as 
 \family typewriter
-tail()
+tail
 \family default
  or 
 \family typewriter
-c()
+c
 \family default
-, or molecules defined in other reaction sites.
+, or molecules bound to other reaction sites.
  The chemical machine will interpret the declared 
 \begin_inset Quotes eld
 \end_inset
@@ -1347,7 +1347,7 @@ join definitions
 
 .
  To make the reading of the present paper easier for academic researchers,
- I will use the academic terminology in what follows, except when describing
+ I use the academic terminology in what follows, except when describing
  pedagogical approaches to JC.
  
 \end_layout
@@ -1365,8 +1365,11 @@ Chymyst
 \end_layout
 
 \begin_layout Standard
-In this section, I will compare the implementation of JC in Chymyst to that
- of JoCaml and motivate the relevant design choices and enhancements.
+In this section, I compare the implementation of JC in 
+\family typewriter
+Chymyst
+\family default
+ to that of JoCaml and motivate the relevant design choices and enhancements.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1445,6 +1448,26 @@ spawn
 .
 \end_layout
 
+\begin_layout Standard
+Synchronous channels have special syntax that resembles continuation-passing:
+\begin_inset Formula 
+\[
+\text{\texttt{go \{ case a(x) + f(y, cont) \ensuremath{\Rightarrow} cont(x+y) \}}}
+\]
+
+\end_inset
+
+The same process is defined in JoCaml as
+\begin_inset Formula 
+\[
+\text{\texttt{def a(x) \& f(y) = reply x+y to f}}
+\]
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Separate channel and process definitions
 \end_layout
@@ -1472,14 +1495,26 @@ val a = m[Unit]
 \end_inset
 
 ) and written separately from process definitions.
- This is a common design in most embedded DSL implementations of JC.
+ This is a common design in embedded DSL implementations of JC.
 \end_layout
 
 \begin_layout Standard
 The separation of channel definitions from process definitions brings several
  advantages.
- One is the ability to create a user-defined number of new channels at run
- time and to define processes for them incrementally at a later time.
+ One is the ability to create a user-specified number of new channels and
+ to define processes for them incrementally (see Sec.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:First-class-process-definitions"
+
+\end_inset
+
+ below), removing the requirement to specify all processes in a join definition
+ at compile time.
  Another is an increased code clarity due to the explicit labeling of blocking
  vs.
 \begin_inset space ~
@@ -1513,35 +1548,58 @@ Non-linear join patterns
 \end_layout
 
 \begin_layout Standard
-Another departure from JoCaml is lifting the linearity restriction for join
+Another enhancement is the lifting of the linearity restriction for join
  patterns.
  In 
 \family typewriter
 Chymyst
 \family default
-, a process may wait on any number of repeated channels, including synchronous
+, a process may wait on any number of repeated channels:
+\begin_inset Formula 
+\[
+\text{\texttt{go \{ case a(x) + a(y) + a(z) \ensuremath{\Rightarrow} a(x+y+z) \}}}
+\]
+
+\end_inset
+
+A linear-pattern JC implementation, such as JoCaml, would require cumbersome
+ auxiliary definitions to implement this functionality.
+\end_layout
+
+\begin_layout Standard
+Processes may also wait on repeated 
+\emph on
+synchronous
+\emph default
  channels.
- This last feature enables a declarative implementation of a 
+ This last feature, together with the continuation-passing syntax for those
+ channels, enables a declarative implementation of a 
 \series bold
 synchronous rendezvous
 \series default
- where two copies of the same blocking channel will synchronously exchange
- their values:
+ where two distinct users of the same channel will exchange values:
 \begin_inset Formula 
 \begin{align*}
- & \text{\texttt{go \{ case a(p1, reply1) + a(p2, reply2) \ensuremath{\Rightarrow}}}\\
+ & \text{\texttt{go \{ case f(p1, reply1) + f(p2, reply2) \ensuremath{\Rightarrow}}}\\
  & \text{\texttt{ ~ ~ ~ reply2(p1); reply1(p2)}}\\
  & \text{\texttt{\}}}
 \end{align*}
 
 \end_inset
 
-JoCaml can express this behavior only by using two auxiliary channels and
- an additional process with a synchronous reply.
+JoCaml can express this behavior only at the cost of using two auxiliary
+ channels and an additional process with a synchronous reply.
 \end_layout
 
 \begin_layout Subsubsection
 First-class process definitions
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:First-class-process-definitions"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1846,7 +1904,7 @@ The choice of terminology and notation is important if we aim to explain
 \end_layout
 
 \begin_layout Standard
-The Wikipedia page on join calculus
+The Wikipedia page on JC
 \begin_inset Foot
 status open
 
@@ -1911,7 +1969,7 @@ communication on defined names
  research literature.
  Since Wikipedia (deservedly or not) is a popular go-to resource for learning
  new concepts, it is quite understandable that software practitioners today
- remain unaware of JC even 20+ years after its invention.
+ remain unaware of join calculus even 20+ years after its invention.
 \end_layout
 
 \begin_layout Standard
@@ -1971,11 +2029,12 @@ processes
 \begin_inset Quotes erd
 \end_inset
 
- may contend on several “messages” they wait for, and several 
+ may contend on several “messages” they wait for, and several copies of
+ a 
 \begin_inset Quotes eld
 \end_inset
 
-processes
+process
 \begin_inset Quotes erd
 \end_inset
 
@@ -2009,7 +2068,7 @@ processes
 \begin_inset Quotes erd
 \end_inset
 
- are spawned on demand, as input 
+ are spawned on demand as input 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2021,7 +2080,8 @@ messages
 \end_layout
 
 \begin_layout Standard
-The JoCaml documentation
+While JoCaml remains today the only well-maintained standard implementation
+ of JC, its developer documentation
 \begin_inset Foot
 status open
 
@@ -2378,7 +2438,7 @@ With this approach, I have had success in conveying effectively both the
 \end_layout
 
 \begin_layout Subsection
-From actors to molecules***
+From actors to molecules
 \end_layout
 
 \begin_layout Standard
