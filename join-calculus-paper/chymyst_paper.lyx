@@ -1020,7 +1020,7 @@ process
  terminology, but the majority of Scala concurrency practitioners know about
  the Actor model.
  Accordingly, I would argue that introducing JC concepts to the Scala developer
- audience should build upon the Actor model knowledge.
+ audience should build upon the existing Actor model knowledge.
  However, reasoning about JC programs is most direct and convenient when
  using the visual metaphors and the terminology of the Abstract Chemical
  Machine (
@@ -1057,6 +1057,8 @@ The next subsection is a brief introduction to programming in join calculus
 Chymyst
 \family default
 .
+ This introduction is suitable for readers not already familiar with either
+ join calculus or the Actor model.
 \end_layout
 
 \begin_layout Subsection
@@ -1152,11 +1154,11 @@ molecule emitters
 \series default
  
 \family typewriter
-a
+c
 \family default
  and 
 \family typewriter
-c
+t
 \family default
 .
  Emitters can be seen as functions that are called in order to 
@@ -1173,11 +1175,11 @@ emit
 \end_inset
 
 The newly emitted molecules will carry the specified values of the correct
- types.
+ types since the emitters are statically typed.
 \end_layout
 
 \begin_layout Standard
-Further, the programmer must specify the 
+Further, the programmer defines the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1186,12 +1188,11 @@ chemical laws
 \end_inset
 
  describing the permitted reactions between molecules.
- 
+ For reactions, 
 \family typewriter
 Chymyst
 \family default
- describes reactions using the syntax of Scala partial functions with a
- single 
+ uses the syntax of Scala partial functions with a single 
 \family typewriter
 case
 \family default
@@ -1202,20 +1203,20 @@ go()
 :
 \begin_inset Formula 
 \[
-\text{\texttt{go \{ case tail(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \}}}
+\text{\texttt{go \{ case t(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \}}}
 \]
 
 \end_inset
 
 This reaction consumes two input molecules, 
 \family typewriter
-tail
+t
 \family default
  and 
 \family typewriter
 c
 \family default
-, and evaluates the reaction body (the Scala code within the 
+, and evaluates the reaction body (the Scala code in the body of the 
 \family typewriter
 case
 \family default
@@ -1229,13 +1230,23 @@ c
 xs
 \family default
 .
- In 
+ The effect of this reaction is to compute the tail of a list.
+ Due to the pattern-matching requirement, this reaction will start only
+ when the molecule 
+\family typewriter
+c
+\family default
+ carries a non-empty list value.
+\end_layout
+
+\begin_layout Standard
+In 
 \family typewriter
 Chymyst
 \family default
 , reaction definitions can use all features of Scala partial functions,
  including arbitrary guard conditions and pattern matching on molecule values,
- as well as arbitrary Scala code within the function body.
+ and include arbitrary Scala code within the function body.
 \end_layout
 
 \begin_layout Standard
@@ -1251,8 +1262,8 @@ Creating the reaction value
 \family typewriter
 r1
 \family default
- does not schedule any computations; it merely defines the available computation
- declaratively.
+ does not actually schedule a computation; it merely defines the available
+ computation declaratively.
  In order to make the chemical machine run reactions, the programmer needs
  to create a reaction site using the 
 \family typewriter
@@ -1262,14 +1273,14 @@ site()
 \family typewriter
 site(r1, r2)
 \family default
-.
+, which activates the reactions listed in its arguments.
  A reaction site typically includes several reactions that may be declared
  inline for brevity:
 \begin_inset Formula 
 \begin{align*}
-\text{\texttt{site( }} & \text{\texttt{go \{ case tail(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \},}}\\
+\text{\texttt{site(}} & \text{\texttt{go \{ case t(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \},}}\\
  & \text{\text{\texttt{go \{ case c(Nil) }}\texttt{\ensuremath{\Rightarrow} done() \} }}\\
-\text{\texttt{) }}
+\text{\texttt{)}}
 \end{align*}
 
 \end_inset
@@ -1277,7 +1288,7 @@ site(r1, r2)
 Once a reaction site is created, the code can emit any number of molecules,
  such as 
 \family typewriter
-tail
+t
 \family default
  or 
 \family typewriter
@@ -1304,7 +1315,7 @@ The
 Chymyst
 \family default
  project embraces the chemical metaphor and its visually suggestive terminology.
- In most academic literature on JC, molecule emitters are called 
+ In the academic literature on JC, molecule emitters are called 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1340,11 +1351,10 @@ processes
 \begin_inset Quotes eld
 \end_inset
 
-join definitions
+join definitions.
 \begin_inset Quotes erd
 \end_inset
 
-.
  To make the reading of the present paper easier for academic researchers,
  I use the academic terminology in what follows, except when describing
  pedagogical approaches to JC.
@@ -1352,7 +1362,100 @@ join definitions
 \end_layout
 
 \begin_layout Subsubsection
-Synchronous channels as shorthand for continuations***
+Synchronous channels as shorthand for continuations
+\end_layout
+
+\begin_layout Standard
+In a completely asynchronous, non-blocking programming style, a continuation
+ can be used in order to simulate waiting until some concurrent computations
+ are finished.
+ The typical JC pattern implementing asynchronous continuations is a bit
+ cumbersome: The continuation function must be explicitly created as a closure
+ and passed as a message value.
+ Manually creating a continuation results in 
+\begin_inset Quotes eld
+\end_inset
+
+scope ripping,
+\begin_inset Quotes erd
+\end_inset
+
+ which disrupts the normal code flow.
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+Chymyst's
+\family default
+ syntax for synchronous channels imitates continuations:
+\begin_inset Formula 
+\begin{align*}
+\text{} & \text{\texttt{val f = b[Int, Int]}}\\
+ & \text{\texttt{site( go \{ case f(x, cont) \ensuremath{\Rightarrow}}}\\
+ & \text{\text{\texttt{ val y = ... }// compute some value}}\\
+ & \text{\texttt{ cont(y) }// reply, i.e.~invoke continuation}\\
+ & \text{\texttt{\} )}}\\
+ & \text{\texttt{val z = f(123) }// wait for reply}
+\end{align*}
+
+\end_inset
+
+Note that the message 
+\family typewriter
+f(123)
+\family default
+ is sent without specifying the continuation argument 
+\family typewriter
+cont
+\family default
+, which is nevertheless available in the reaction body.
+ The semantics of the blocking call 
+\family typewriter
+f(123)
+\family default
+ is essentially to construct the current continuation as 
+\family typewriter
+cont
+\family default
+ and to send it to the process as a message on the channel 
+\family typewriter
+f
+\family default
+, together with the ordinary payload 
+\family typewriter
+123
+\family default
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The syntax 
+\family typewriter
+cont(y)
+\family default
+ for sending a reply is used in 
+\family typewriter
+Chymyst
+\family default
+ instead of the traditional JC syntax (
+\family typewriter
+reply y to f
+\family default
+).
+ As I will show below in Sec.
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Non-linear-join-patterns"
+
+\end_inset
+
+, this syntax yields additional flexibility in defining synchronous processes.
 \end_layout
 
 \begin_layout Subsection
@@ -1544,6 +1647,13 @@ Chymyst
 
 \begin_layout Subsubsection
 Non-linear join patterns
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Non-linear-join-patterns"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1819,8 +1929,8 @@ c()
 \family typewriter
 i()
 \family default
- messages are present, the runtime has a free choice of whether to run the
- first or the second process.
+ messages are present, the runtime engine has a free choice of whether to
+ run the first or the second process.
  The programmer has no control over this choice, since there are no conditions
  on the values of the 
 \family typewriter
@@ -1860,7 +1970,7 @@ An additional benefit of static analysis is a performance optimization for
 
 \end_inset
 
-are converted into the Conjuctive Normal Form and split between molecules
+are converted into the conjuctive normal form and split between molecules
  if possible.
  For instance, the example above is converted to (pseudo-code)
 \begin_inset Formula 
@@ -1873,11 +1983,55 @@ are converted into the Conjuctive Normal Form and split between molecules
 In many cases, this transformation allows the process scheduler to select
  message values faster, without enumerating combinatorially many combinations
  of message values while searching for suitable inputs for a process.
- 
+\end_layout
+
+\begin_layout Subsubsection
+Time-outs
+\end_layout
+
+\begin_layout Standard
+When a synchronous message is sent, the emitting process is blocked until
+ a reply is received.
+ In 
+\family typewriter
+Chymyst
+\family default
+, it is possible to specify a time-out for this blocking call: 
+\begin_inset Formula 
+\[
+\text{\texttt{f.timeout()(2 seconds)}}
+\]
+
+\end_inset
+
+A reaction that sends the reply can also check whether the waiting process
+ received the reply value or timed out.
+ This is implemented as a 
+\family typewriter
+Boolean
+\family default
+ return value from the reply emitter:
+\begin_inset Formula 
+\[
+\text{\texttt{go \{ case f(\_,r) \ensuremath{\Rightarrow} if (r("done")) ...~\}}}
+\]
+
+\end_inset
+
+The timeout-checking functionality may be sometimes required to avoid race
+ conditions when using timeouts on synchronous channels.
 \end_layout
 
 \begin_layout Subsection
-Industry-friendly features***
+What it means to be 
+\begin_inset Quotes eld
+\end_inset
+
+industry ready
+\begin_inset Quotes erd
+\end_inset
+
+***
 \end_layout
 
 \begin_layout Standard
