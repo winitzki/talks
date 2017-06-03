@@ -515,10 +515,10 @@ The first appearance of JC in Scala was a “Join in Scala” compiler patch
 
 Cremet (2003).
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
-See 
+ See 
 \begin_inset CommandInset href
 LatexCommand href
 name "lampwww.epfl.ch/~cremet/misc/join_in_scala/"
@@ -1369,9 +1369,9 @@ Synchronous channels as shorthand for continuations
 In a completely asynchronous, non-blocking programming style, a continuation
  can be used in order to simulate waiting until some concurrent computations
  are finished.
- The typical JC pattern implementing asynchronous continuations is a bit
- cumbersome: The continuation function must be explicitly created as a closure
- and passed as a message value.
+ However, using asynchronous channels with continuations is a bit cumbersome:
+ The continuation function must be explicitly created as a closure and passed
+ as a message value.
  Manually creating a continuation results in 
 \begin_inset Quotes eld
 \end_inset
@@ -1381,14 +1381,65 @@ scope ripping,
 \end_inset
 
  which disrupts the normal code flow.
+ 
 \end_layout
 
 \begin_layout Standard
-
+The JoCaml implementation of JC uses synchronous channels to mitigate this
+ problem.
+ 
+\family typewriter
+Chymyst
+\family default
+ also implements synchronous channels as a language feature.
+ 
 \family typewriter
 Chymyst's
 \family default
- syntax for synchronous channels imitates continuations:
+ chosen syntax for synchronous channels resembles continuation-passing style
+ and looks like this:
+\begin_inset Formula 
+\[
+\text{\texttt{go \{ case a(x) + f(y, cont) \ensuremath{\Rightarrow} cont(x+y) \}}}
+\]
+
+\end_inset
+
+The same process is defined in JoCaml as
+\begin_inset Formula 
+\[
+\text{\texttt{def a(x) \& f(y) = reply x+y to f}}
+\]
+
+\end_inset
+
+The 
+\begin_inset Quotes eld
+\end_inset
+
+reply
+\begin_inset Quotes erd
+\end_inset
+
+ expression can be seen to resume the continuation in the process that sent
+ the 
+\family typewriter
+f()
+\family default
+ message.
+ The syntax of 
+\family typewriter
+Chymyst
+\family default
+ makes this semantics more explicit.
+\end_layout
+
+\begin_layout Standard
+Here is a more extended example of a 
+\family typewriter
+Chymyst
+\family default
+ process with a synchronous channel:
 \begin_inset Formula 
 \begin{align*}
 \text{} & \text{\texttt{val f = b[Int, Int]}}\\
@@ -1431,20 +1482,7 @@ f
 \end_layout
 
 \begin_layout Standard
-The syntax 
-\family typewriter
-cont(y)
-\family default
- for sending a reply is used in 
-\family typewriter
-Chymyst
-\family default
- instead of the traditional JC syntax (
-\family typewriter
-reply y to f
-\family default
-).
- As I will show below in Sec.
+As I will show below in Sec.
 \begin_inset space ~
 \end_inset
 
@@ -1455,7 +1493,11 @@ reference "subsec:Non-linear-join-patterns"
 
 \end_inset
 
-, this syntax yields additional flexibility in defining synchronous processes.
+, the 
+\family typewriter
+Chymyst
+\family default
+ syntax yields additional flexibility in defining synchronous processes.
 \end_layout
 
 \begin_layout Subsection
@@ -1550,28 +1592,8 @@ spawn
 .
 \end_layout
 
-\begin_layout Standard
-Synchronous channels have special syntax that resembles continuation-passing:
-\begin_inset Formula 
-\[
-\text{\texttt{go \{ case a(x) + f(y, cont) \ensuremath{\Rightarrow} cont(x+y) \}}}
-\]
-
-\end_inset
-
-The same process is defined in JoCaml as
-\begin_inset Formula 
-\[
-\text{\texttt{def a(x) \& f(y) = reply x+y to f}}
-\]
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Subsubsection
-Separate channel and process definitions
+Explicit channel definitions
 \end_layout
 
 \begin_layout Standard
@@ -1682,7 +1704,7 @@ synchronous
 \emph default
  channels.
  This last feature, together with the continuation-passing syntax for those
- channels, enables a declarative implementation of a 
+ channels, enables a declarative implementation of 
 \series bold
 synchronous rendezvous
 \series default
@@ -1696,8 +1718,18 @@ synchronous rendezvous
 
 \end_inset
 
-JoCaml can express this behavior only at the cost of using two auxiliary
+The traditional JC reply syntax (
+\family typewriter
+reply x to f
+\family default
+) does not allow users to specify the copy of 
+\family typewriter
+f()
+\family default
+ to which the reply is sent.
+ JoCaml can express this behavior only at the cost of using two auxiliary
  channels and an additional process with a synchronous reply.
+ 
 \end_layout
 
 \begin_layout Subsubsection
@@ -1741,7 +1773,7 @@ key "VarAgh2013"
 \begin_inset space ~
 \end_inset
 
-5.4.3) where the number of philosophers needs to be defined statically.
+5.4.3) where, however, the number of philosophers needs to be defined statically.
  In 
 \family typewriter
 Chymyst
@@ -1764,6 +1796,21 @@ Chymyst
 
  processes into a join definition.
  
+\end_layout
+
+\begin_layout Standard
+A run-time dependent number of channels and processes can be defined like
+ this,
+\begin_inset Formula 
+\begin{align*}
+ & \text{\texttt{val cs = (1 to n).map(\_ \ensuremath{\Rightarrow} m[Int])}}\\
+ & \text{\texttt{val rs = (1 to n).map(i \ensuremath{\Rightarrow} go \{ ... \})}}\\
+ & \text{\texttt{site(rs: \_*) \textnormal{//join definition}}}
+\end{align*}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1796,8 +1843,8 @@ go()
 
 \end_inset
 
-produces a set of flags indicating that the process waits on the channels
- 
+internally produces a rich information structure indicating, for instance,
+ that the process waits on the channels 
 \family typewriter
 t
 \family default
@@ -1862,15 +1909,15 @@ Chymyst
 \emph on
 compile-time
 \emph default
- error, indicating unavoidable livelock.
+ error, with a message indicating unavoidable livelock.
 \end_layout
 
 \begin_layout Standard
 Deadlocks can only happen when using synchronous channels and are harder
  to detect reliably.
- A possible deadlock warning is given when the process sends a synchronous
- message followed by another message that is consumed together with the
- synchronous one:
+ A deadlock warning is given when the process sends a synchronous message
+ followed by another message that is consumed together with the synchronous
+ one:
 \begin_inset Formula 
 \[
 \text{\texttt{go \{ case c(x) + f(\_, r) \ensuremath{\Rightarrow} c(f() + 1); r(x) \}}}
@@ -1910,8 +1957,9 @@ c()
 \end_layout
 
 \begin_layout Standard
-Unavoidable non-determinism within a join definition occurs when one process
- waits on a subset of messages that another process is waiting on, for instance
+Unavoidable nondeterminism within a join definition occurs when one process
+ waits on a subset of messages that another process is also waiting on,
+ for instance
 \begin_inset Formula 
 \begin{align*}
 \text{\texttt{site( }} & \text{\texttt{go \{ case i(\_) + c(x) \ensuremath{\Rightarrow} c(x + 1) \},}}\\
@@ -1929,8 +1977,8 @@ c()
 \family typewriter
 i()
 \family default
- messages are present, the runtime engine has a free choice of whether to
- run the first or the second process.
+ messages are present, the runtime engine has a choice of whether to run
+ the first or the second process.
  The programmer has no control over this choice, since there are no conditions
  on the values of the 
 \family typewriter
@@ -1980,9 +2028,9 @@ are converted into the conjuctive normal form and split between molecules
 
 \end_inset
 
-In many cases, this transformation allows the process scheduler to select
- message values faster, without enumerating combinatorially many combinations
- of message values while searching for suitable inputs for a process.
+In many cases, this transformation allows the runtime engine to select message
+ values faster, without enumerating all combinations of message values in
+ a search for suitable inputs for a process.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2591,7 +2639,7 @@ With this approach, I have had success in conveying effectively both the
 \end_layout
 
 \begin_layout Subsection
-From actors to molecules
+From actors to reactions
 \end_layout
 
 \begin_layout Standard
@@ -2629,11 +2677,12 @@ chemical actors
 
 \begin_layout Enumerate
 Chemical actors are automatically started and stopped; the user's code only
- sends messages and no longer needs to work with actor references.
+ sends messages and does not manipulate actor references.
 \end_layout
 
 \begin_layout Enumerate
-Chemical actors may wait for and consume several messages at once.
+Chemical actors may wait for a set of different messages to be received
+ atomically.
 \end_layout
 
 \begin_layout Standard
@@ -2645,7 +2694,7 @@ If we examine these requirements and determine what should logically follow
 The first requirement means that chemical actors are not created explicitly
  by the user's program.
  Instead, the chemical machine runtime will automatically instantiate and
- run a chemical actor whenever an input message is available for consumption.
+ run a chemical actor whenever some process sends a relevant input message.
  A chemical actor will be automatically stopped and deleted when its computation
  is finished.
  Therefore, the user's code now does not create an instance of an actor
@@ -2697,12 +2746,14 @@ What should happen if we quickly send many messages?
 
 \end_inset
 
-Since our computations are stateless, the runtime engine may choose to run
- several instances of the computation 
+Since our computations are stateless, it is safe to run several instances
+ of the computation 
 \family typewriter
 c1
 \family default
- concurrently, depending on run-time conditions.
+ concurrently.
+ The runtime engine may automatically adjust the degree of parallelism depending
+ on CPU load.
 \end_layout
 
 \begin_layout Standard
@@ -2729,23 +2780,28 @@ declaratively
 c1
 \family default
 .
- Thus, the value 
+ We could say that the value 
 \family typewriter
 c1
 \family default
- plays the role of a label attached to the value 
+ plays the role of a 
+\emph on
+label
+\emph default
+ attached to the value 
 \family typewriter
 123
 \family default
- specifying that the value 
+.
+ The label implies that the value 
 \family typewriter
 123
 \family default
- should be used as the input value 
+ should be used as the input parameter 
 \family typewriter
 x
 \family default
- in the particular computation.
+ in a particular computation.
  To express this semantics more clearly, let us change our pseudo-code notation
  to 
 \begin_inset Formula 
@@ -2777,7 +2833,7 @@ c1
 \family typewriter
 d1
 \family default
- determine which computation will be started.
+ select the computation that will be started.
 \end_layout
 
 \begin_layout Standard
@@ -2806,19 +2862,21 @@ c2
 \emph on
 both
 \emph default
- messages have been sent.
+ messages have been sent, and consumes both messages atomically.
 \end_layout
 
 \begin_layout Standard
 It follows that messages cannot be sent to a linearly ordered queue or a
- mailbox; instead, messages must be kept in an unordered bag, as they will
- be consumed in an unknown order.
+ mailbox.
+ Instead, messages must be kept in an unordered bag, as they will be consumed
+ in an unknown order.
 \end_layout
 
 \begin_layout Standard
-It also follows that we may define several computations that 
+It also follows from the atomicity requirement that we may define several
+ computations that 
 \emph on
-contend
+jointly contend
 \emph default
  on input messages:
 \begin_inset Formula 
@@ -2844,8 +2902,8 @@ This concludes the second and final step towards the chemical machine paradigm.
 \end_layout
 
 \begin_layout Standard
-In Scala, we need to declare message types explicitly and to register each
- chemical computation with the runtime engine as a separate step.
+In Scala, we need to declare message types explicitly and to register chemical
+ computations with the runtime engine as a separate step.
  The syntax used by 
 \family typewriter
 Chymyst
@@ -2876,8 +2934,8 @@ Whenever there are sufficiently many input messages available for processing,
  This is the main method for achieving parallelism in the chemical paradigm.
  The runtime engine is in the best position to optimize the CPU load using
  low-level OS threads.
- The users do not need to concern themselves with the details of how many
- concurrent actors to instantiate at any given time.
+ The application code does not need to decide how many concurrent actors
+ to instantiate at any given time.
  
 \end_layout
 
@@ -2902,9 +2960,13 @@ dead letter
 Input message contention is used in the chemical machine paradigm as a general
  mechanism for synchronization and mutual exclusion.
  (In the Actor model, these features are implemented by creating a fixed
- number of actor instances that alone can consume certain messages.) Since
- the runtime engine will arbitrarily decide which actor to run, input contention
- will result in nondeterminism.
+ number of actor 
+\emph on
+instances
+\emph default
+ that alone can consume certain messages.) Since the runtime engine will
+ arbitrarily decide which actor to run, input contention will result in
+ nondeterminism.
  This is quite similar to the nondeterminism in the usual models of concurrent
  programming.
  For example, mutual exclusion allows the programmer to implement safe exclusive
