@@ -1661,10 +1661,27 @@ unbound
  channels is an error that can only be detected at run time because channels
  are first-class values.
  
+\end_layout
+
+\begin_layout Standard
+
 \family typewriter
 Chymyst
 \family default
- throws an exception in that case.
+ throws an exception if the application code attempts to send a message
+ to an unbound channel.
+ An exception is also thrown when a new process is being defined that uses
+ a channel already bound to another join definition.
+ These exceptions are generated at 
+\begin_inset Quotes eld
+\end_inset
+
+early
+\begin_inset Quotes erd
+\end_inset
+
+ run time, immediately after creating the join definition and before running
+ any processes.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2000,8 +2017,7 @@ early
 \begin_inset Quotes erd
 \end_inset
 
- run time, immediately after creating the join definition and before running
- any processes.
+ run time.
 \end_layout
 
 \begin_layout Standard
@@ -2052,7 +2068,7 @@ Chymyst
 
 \end_inset
 
-A reaction that sends the reply can also check whether the waiting process
+A process that sends the reply can also check whether the waiting process
  received the reply value or timed out.
  This is implemented as a 
 \family typewriter
@@ -2068,6 +2084,70 @@ Boolean
 
 The timeout-checking functionality may be sometimes required to avoid race
  conditions when using timeouts on synchronous channels.
+\end_layout
+
+\begin_layout Subsection
+Implementation details
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+Chymyst
+\family default
+ implements each join definition as a separate instance of class 
+\family typewriter
+ReactionSite
+\family default
+.
+ A reaction site is visualized as a virtual place where messages arrive
+ and wait to be consumed by auto-created JC processes.
+ A 
+\family typewriter
+ReactionSite
+\family default
+ instance contains the list of available processes and their properties,
+ a JVM thread pool for running the processes, a message multiset holding
+ the message values currently present, and a single JVM thread dedicated
+ to bookkeeping operations.
+ Since join definitions are local values, the application code may create
+ new join definitions dynamically at run time.
+ Nevertheless, join definitions are immutable since the user cannot see
+ the join definition object and cannot manipulate the contents of the reaction
+ site.
+\end_layout
+
+\begin_layout Standard
+Each channel is an instance of class 
+\family typewriter
+M
+\family default
+ for asynchronous channels or 
+\family typewriter
+B
+\family default
+ for blocking (synchronous) channels.
+ A channel holds a reference to the join definition where its messages are
+ consumed (according to the JC semantics, each channel must be bound to
+ a unique join definition).
+\end_layout
+
+\begin_layout Standard
+When a message is sent on a channel, the message's value is appended to
+ the message multiset at the channel's join definition.
+ At the same time, a process search action is queued to be run on the scheduler
+ thread of that join definition.
+ A process search action will examine the messages currently present in
+ the multiset and determine which processes (if any) will be scheduled to
+ run.
+ These processes will then be queued on the reaction site's thread pool,
+ while the consumed messages are atomically removed from the message multiset.
+ 
+\end_layout
+
+\begin_layout Standard
+Due to using separate threads, sending a message as well as running a process
+ are asynchronous, concurrent operations, as they should be in JC.
 \end_layout
 
 \begin_layout Subsection
@@ -2090,6 +2170,32 @@ Chymyst
 \family default
  guarantees that reactions declared at different reaction sites will be
  scheduled concurrently, on independent threads.
+\end_layout
+
+\begin_layout Subsubsection
+Thread pools
+\end_layout
+
+\begin_layout Standard
+To enable users to fine-tune the performance of their concurrent applications,
+ 
+\family typewriter
+Chymyst
+\family default
+ offers control over the thread pools used by various join definitions.
+ There is a default thread pool available, but users may create other thread
+ pools and assign them to join definitions.
+ There are two types of thread pools: a 
+\family typewriter
+FixedPool
+\family default
+ holds a fixed specified number of JVM threads, while a 
+\family typewriter
+BlockingPool
+\family default
+ is aware of blocking operations (such as sending synchronous messages)
+ and will increase and decrease the number of threads dynamically at run
+ time in order to maintain a given parallelism.
 \end_layout
 
 \begin_layout Subsection
