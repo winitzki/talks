@@ -2326,6 +2326,60 @@ BlockingPool
  time in order to maintain a given parallelism.
 \end_layout
 
+\begin_layout Standard
+A typical use case for separate thread pools is an application with two
+ join definitions, one having a large number of slow processes and another
+ with a small number of fast processes.
+ For instance, the 
+\begin_inset Quotes eld
+\end_inset
+
+fast
+\begin_inset Quotes erd
+\end_inset
+
+ join definition might be reporting the progress achieved by the 
+\begin_inset Quotes eld
+\end_inset
+
+slow
+\begin_inset Quotes erd
+\end_inset
+
+ processes.
+ Since it is desirable to obtain timely progress reports, the 
+\begin_inset Quotes eld
+\end_inset
+
+fast
+\begin_inset Quotes erd
+\end_inset
+
+ join definition is typically required to have low latency as compared with
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+slow
+\begin_inset Quotes erd
+\end_inset
+
+ join definition.
+ The application code achieves this by using separate thread pools for the
+ two join definitions:
+\begin_inset Formula 
+\begin{align*}
+ & \text{\texttt{val tpFast = FixedPool(1)}}\\
+ & \text{\texttt{val tpSlow = FixedPool(cpuCores)}}\\
+ & \text{\texttt{site(tpFast)(...) \textnormal{//first join definition}}}\\
+ & \text{\texttt{site(tpSlow)(...) \textnormal{//second join definition}}}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Time-outs
 \end_layout
