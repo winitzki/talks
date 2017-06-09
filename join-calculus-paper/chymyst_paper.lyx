@@ -147,6 +147,19 @@ key "FouGon1996"
  Given the high importance of concurrent programming and a growing adoption
  of functional languages, one would expect that software practitioners would
  take advantage of this high-level and type-safe concurrency paradigm.
+ The message-passing idiom is particularly suitable for implementing distributed
+ algorithms (see, e.g.,
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand citep
+key "BarEA2007"
+
+\end_inset
+
+).
  Nevertheless, there appears to be no practical adoption of JC by the software
  industry.
 \begin_inset Foot
@@ -176,8 +189,8 @@ key "FouEA2003"
 \end_layout
 
 \begin_layout Standard
-A significant barrier for industry adoption is the lack of suitable documentatio
-n and example code.
+Another significant barrier for software practitioners is the lack of suitable
+ documentation and example code.
  The existing documentation and tutorials for JC, such as the JoCaml user's
  manual
 \begin_inset Foot
@@ -227,6 +240,18 @@ key "FouEA2003"
 \end_layout
 
 \begin_layout Standard
+Industry-ready frameworks must provide a number of important facilities
+ such as integration with legacy asynchronous interfaces, fault tolerance
+ and process supervision, performance tuning and performance metrics, or
+ features for unit testing, to name just a few.
+ Unfortunately, academic presentations of JC usually do not consider these
+ features and do not describe how they are to be integrated into the JC
+ paradigm.
+ Neither do any of the existing JC implementations provide such features.
+ This may be the biggest obstacle for industry acceptance of JC.
+\end_layout
+
+\begin_layout Standard
 In this paper, I present a new open-source implementation of JC as a library
  called 
 \family typewriter
@@ -260,9 +285,8 @@ Chymyst
 \family default
  is to enable high-level, declarative concurrency in idiomatic Scala, using
  the JC paradigm.
- At the same time, I aim to provide industry-strength features that are
- typically not considered by academic presentations of JC, such as performance
- tuning, fault tolerance, or unit testing APIs.
+ An equally important goal is to provide industry-strength features such
+ as performance tuning, fault tolerance, or unit testing APIs.
  Finally, the 
 \family typewriter
 Chymyst
@@ -330,7 +354,7 @@ I argue that certain new facilities need to be added to a JC implementation
 \end_layout
 
 \begin_layout Itemize
-explicit thread pools for performance tuning
+thread pool management for performance tuning
 \end_layout
 
 \begin_layout Itemize
@@ -342,7 +366,7 @@ interoperability with
 \family typewriter
 Future
 \family default
-s
+'s and other asynchronous APIs
 \end_layout
 
 \begin_layout Itemize
@@ -358,7 +382,8 @@ message pipelining
 \end_layout
 
 \begin_layout Standard
-I describe the current implementation of these facilities in 
+I outline the ways these facilities can be embedded in the JC paradigm and
+ describe their current implementation in 
 \family typewriter
 Chymyst
 \family default
@@ -472,7 +497,7 @@ key "Ode2000"
 \end_inset
 
 Odersky went on to develop Scala, which does not include any concepts or
- features of JC.
+ features of JC in the language itself or in its standard libraries.
 \end_layout
 
 \begin_layout Standard
@@ -2049,6 +2074,258 @@ In many cases, this transformation allows the runtime engine to select message
  a search for suitable inputs for a process.
 \end_layout
 
+\begin_layout Subsection
+Implementation details
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+Chymyst
+\family default
+ implements each join definition as a separate instance of class 
+\family typewriter
+ReactionSite
+\family default
+.
+ A reaction site is visualized as a virtual place where messages arrive
+ and wait to be consumed by auto-created JC processes.
+ A 
+\family typewriter
+ReactionSite
+\family default
+ instance contains the list of available processes and their properties,
+ a JVM thread pool for running the processes, a message multiset holding
+ the message values currently present, and a 
+\emph on
+single
+\emph default
+ JVM thread dedicated to process scheduling and bookkeeping operations.
+ The decision to make scheduling single-threaded was motivated by the desire
+ to avoid thread contention and to make process scheduling faster.
+\end_layout
+
+\begin_layout Standard
+Since join definitions are local 
+\emph on
+values
+\emph default
+ (although they are not directly available to the application code), new
+ join definitions can be created dynamically at run time.
+ Nevertheless, join definitions are immutable since the user cannot see
+ the join definition object and cannot manipulate the contents of the reaction
+ site.
+\end_layout
+
+\begin_layout Standard
+Channels are local values available to the application code.
+ Each channel is an instance of class 
+\family typewriter
+M
+\family default
+ for asynchronous channels or 
+\family typewriter
+B
+\family default
+ for blocking (synchronous) channels.
+ A channel holds a reference to the join definition where its messages are
+ consumed (according to the JC semantics, each channel must be bound to
+ a unique join definition).
+\end_layout
+
+\begin_layout Standard
+When a message is sent on a channel, the message's value is appended to
+ the message multiset at the channel's join definition.
+ At the same time, a process search action is queued to be run on the scheduler
+ thread of that join definition.
+ A process search action will examine the messages currently present in
+ the multiset and determine which processes (if any) will be scheduled to
+ run.
+ These processes will then be queued on the reaction site's thread pool,
+ while the consumed messages are atomically removed from the message multiset.
+ 
+\end_layout
+
+\begin_layout Standard
+Due to using separate threads, sending a message as well as running a process
+ are asynchronous, concurrent operations, as they should be in JC.
+ The number of available concurrent execution threads can be specified per
+ join definition.
+ 
+\family typewriter
+Chymyst
+\family default
+ guarantees that processes declared in separate join definitions will be
+ scheduled concurrently, on independent threads.
+\end_layout
+
+\begin_layout Subsection
+What it means to be 
+\begin_inset Quotes eld
+\end_inset
+
+industry ready
+\begin_inset Quotes erd
+\end_inset
+
+***
+\end_layout
+
+\begin_layout Standard
+Rather than try to guess what feature set constitutes 
+\begin_inset Quotes eld
+\end_inset
+
+industry readiness
+\begin_inset Quotes erd
+\end_inset
+
+, I have reviewed the widely used Akka actor framework as described in
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand citep
+key "AIA2016"
+
+\end_inset
+
+ and other similar books intended for sofware engineering audiences.
+ These books suggest that the industry may expect a concurrency framework
+ to implement features such as:
+\end_layout
+
+\begin_layout Itemize
+logging facilities for execution tracing and for performance metrics 
+\end_layout
+
+\begin_layout Itemize
+support for unit testing with assertions about asynchronous behavior of
+ messages 
+\end_layout
+
+\begin_layout Itemize
+fault tolerance, various scenarios of recovery from errors, per-process
+ supervision
+\end_layout
+
+\begin_layout Itemize
+timers and timeouts for blocking messages
+\end_layout
+
+\begin_layout Itemize
+graceful stop and graceful restart, possibly separately for each join definition
+ 
+\end_layout
+
+\begin_layout Itemize
+a standard library of join definitions that establishes the relevant design
+ patterns
+\end_layout
+
+\begin_layout Itemize
+thread pool management, thread priority, configurable performance tuning
+\end_layout
+
+\begin_layout Itemize
+message pipelining (ordered vs.
+\begin_inset space ~
+\end_inset
+
+unordered mailboxes) for improved performance
+\end_layout
+
+\begin_layout Itemize
+interoperability with other asynchronous APIs such as 
+\family typewriter
+Future's
+\family default
+, Actors, Tasks, and a standard library of adapters to other async frameworks
+\end_layout
+
+\begin_layout Itemize
+deployment-time configuration facilities for distributed and remote execution
+ (e.g.
+\begin_inset space ~
+\end_inset
+
+cluster deployment)
+\end_layout
+
+\begin_layout Itemize
+consistent distributed data management (CRDT) support
+\end_layout
+
+\begin_layout Standard
+No currently available descriptions or implementation of join calculus include
+ 
+\emph on
+any
+\emph default
+ of these features.
+ JoCaml provides a remote messaging facility
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+ See 
+\begin_inset CommandInset href
+LatexCommand href
+name "jocaml.inria.fr/doc/distributed.html"
+target "http://jocaml.inria.fr/doc/distributed.html"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+, however the burden of implementing a robust distributed deployment environment
+ rests on the application code.
+ There does not appear to be any JoCaml-based industrial implementations
+ of any distributed applications.
+\end_layout
+
+\begin_layout Standard
+***
+\end_layout
+
+\begin_layout Standard
+I will now describe the features that 
+\family typewriter
+Chymyst
+\family default
+ currently implements.
+\end_layout
+
+\begin_layout Subsubsection
+Thread pools
+\end_layout
+
+\begin_layout Standard
+To enable users to fine-tune the performance of their concurrent applications,
+ 
+\family typewriter
+Chymyst
+\family default
+ offers control over the thread pools used by various join definitions.
+ There is a default thread pool available, but users may create other thread
+ pools and assign them to join definitions.
+ There are two types of thread pools: a 
+\family typewriter
+FixedPool
+\family default
+ holds a fixed specified number of JVM threads, while a 
+\family typewriter
+BlockingPool
+\family default
+ is aware of blocking operations (such as sending synchronous messages)
+ and will increase and decrease the number of threads dynamically at run
+ time in order to maintain a given parallelism.
+\end_layout
+
 \begin_layout Subsubsection
 Time-outs
 \end_layout
@@ -2084,118 +2361,6 @@ Boolean
 
 The timeout-checking functionality may be sometimes required to avoid race
  conditions when using timeouts on synchronous channels.
-\end_layout
-
-\begin_layout Subsection
-Implementation details
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-Chymyst
-\family default
- implements each join definition as a separate instance of class 
-\family typewriter
-ReactionSite
-\family default
-.
- A reaction site is visualized as a virtual place where messages arrive
- and wait to be consumed by auto-created JC processes.
- A 
-\family typewriter
-ReactionSite
-\family default
- instance contains the list of available processes and their properties,
- a JVM thread pool for running the processes, a message multiset holding
- the message values currently present, and a single JVM thread dedicated
- to bookkeeping operations.
- Since join definitions are local values, the application code may create
- new join definitions dynamically at run time.
- Nevertheless, join definitions are immutable since the user cannot see
- the join definition object and cannot manipulate the contents of the reaction
- site.
-\end_layout
-
-\begin_layout Standard
-Each channel is an instance of class 
-\family typewriter
-M
-\family default
- for asynchronous channels or 
-\family typewriter
-B
-\family default
- for blocking (synchronous) channels.
- A channel holds a reference to the join definition where its messages are
- consumed (according to the JC semantics, each channel must be bound to
- a unique join definition).
-\end_layout
-
-\begin_layout Standard
-When a message is sent on a channel, the message's value is appended to
- the message multiset at the channel's join definition.
- At the same time, a process search action is queued to be run on the scheduler
- thread of that join definition.
- A process search action will examine the messages currently present in
- the multiset and determine which processes (if any) will be scheduled to
- run.
- These processes will then be queued on the reaction site's thread pool,
- while the consumed messages are atomically removed from the message multiset.
- 
-\end_layout
-
-\begin_layout Standard
-Due to using separate threads, sending a message as well as running a process
- are asynchronous, concurrent operations, as they should be in JC.
-\end_layout
-
-\begin_layout Subsection
-What it means to be 
-\begin_inset Quotes eld
-\end_inset
-
-industry ready
-\begin_inset Quotes erd
-\end_inset
-
-***
-\end_layout
-
-\begin_layout Standard
-The number of available concurrent execution threads is implementation-dependent.
- 
-\family typewriter
-Chymyst
-\family default
- guarantees that reactions declared at different reaction sites will be
- scheduled concurrently, on independent threads.
-\end_layout
-
-\begin_layout Subsubsection
-Thread pools
-\end_layout
-
-\begin_layout Standard
-To enable users to fine-tune the performance of their concurrent applications,
- 
-\family typewriter
-Chymyst
-\family default
- offers control over the thread pools used by various join definitions.
- There is a default thread pool available, but users may create other thread
- pools and assign them to join definitions.
- There are two types of thread pools: a 
-\family typewriter
-FixedPool
-\family default
- holds a fixed specified number of JVM threads, while a 
-\family typewriter
-BlockingPool
-\family default
- is aware of blocking operations (such as sending synchronous messages)
- and will increase and decrease the number of threads dynamically at run
- time in order to maintain a given parallelism.
 \end_layout
 
 \begin_layout Subsection
