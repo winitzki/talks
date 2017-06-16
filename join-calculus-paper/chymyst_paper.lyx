@@ -1962,7 +1962,7 @@ Deadlocks can only happen when using synchronous channels and are harder
  one:
 \begin_inset Formula 
 \[
-\text{\texttt{go \{ case c(x) + f(\_, r) \ensuremath{\Rightarrow} c(f() + 1); r(x) \}}}
+\text{\texttt{go \{ case a(\_) + c(x) + f(\_, r) \ensuremath{\Rightarrow} c(f() + 1); r(x) \}}}
 \]
 
 \end_inset
@@ -2385,8 +2385,11 @@ Time-outs
 \end_layout
 
 \begin_layout Standard
-When a synchronous message is sent, the emitting process is blocked until
- a reply is received.
+When a synchronous message is sent, such as 
+\family typewriter
+f()
+\family default
+, the emitting process is blocked until a reply is received.
  In 
 \family typewriter
 Chymyst
@@ -2394,7 +2397,7 @@ Chymyst
 , it is possible to specify a time-out for this blocking call: 
 \begin_inset Formula 
 \[
-\text{\texttt{f.timeout()(2 seconds)}}
+\text{\texttt{f.timeout(2 seconds)()}}
 \]
 
 \end_inset
