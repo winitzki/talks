@@ -1492,10 +1492,10 @@ Chymyst
 \begin{align*}
 \text{} & \text{\texttt{val f = b[Int, Int]}}\\
  & \text{\texttt{site( go \{ case f(x, reply) \ensuremath{\Rightarrow}}}\\
- & \text{\text{\texttt{ val y = ... }// compute some value}}\\
- & \text{\texttt{ reply(y) }// resume continuation}\\
+ & \text{\text{\texttt{ val y = ... }//compute some value}}\\
+ & \text{\texttt{ reply(y) }//resume continuation}\\
  & \text{\texttt{\} )}}\\
- & \text{\texttt{val z = f(123) }// wait for reply}
+ & \text{\texttt{val z = f(123) }//wait for reply}
 \end{align*}
 
 \end_inset
@@ -2116,6 +2116,42 @@ In many cases, this transformation allows the runtime engine to select message
  a search for suitable inputs for a process.
 \end_layout
 
+\begin_layout Standard
+Static analysis is also used to enforce the linear type discipline on synchronou
+s channels.
+ For instance, this 
+\family typewriter
+Chymyst
+\family default
+ code will generate a compile-time error:
+\begin_inset Formula 
+\begin{align*}
+\text{\texttt{go \{ case f(x, reply) \ensuremath{\Rightarrow}}} & \text{\texttt{ if (x>0) reply(x)}}\\
+ & \text{\text{\texttt{ else false \}}}}
+\end{align*}
+
+\end_inset
+
+Correct usage of synchronous channels requires that a reply is sent in all
+ clauses of an 
+\family typewriter
+if
+\family default
+ / 
+\family typewriter
+else
+\family default
+ or 
+\family typewriter
+match
+\family default
+ / 
+\family typewriter
+case
+\family default
+ expression.
+\end_layout
+
 \begin_layout Subsection
 Implementation details
 \end_layout
@@ -2214,27 +2250,19 @@ vely long time to schedule because the process search may need to enumerate
 \end_layout
 
 \begin_layout Subsection
-What it means to be 
-\begin_inset Quotes eld
-\end_inset
-
-industry-strength
-\begin_inset Quotes erd
-\end_inset
-
-
+What it means to be industry-strength
 \end_layout
 
 \begin_layout Standard
-Rather than try to guess what feature set is required for 
+To assess the feature set required for 
 \begin_inset Quotes eld
 \end_inset
 
-industry strength
+industry strength,
 \begin_inset Quotes erd
 \end_inset
 
-, I have reviewed the widely used Akka actor framework as described in
+ I have reviewed the widely used Akka actor framework as described in
 \begin_inset space ~
 \end_inset
 
@@ -2478,6 +2506,10 @@ The timeout-checking functionality may be sometimes required to avoid race
 \end_layout
 
 \begin_layout Subsubsection
+Message pipelining
+\end_layout
+
+\begin_layout Subsubsection
 Logging and unit testing
 \end_layout
 
@@ -2485,8 +2517,49 @@ Logging and unit testing
 Process supervision
 \end_layout
 
-\begin_layout Subsubsection
-Pipelining
+\begin_layout Standard
+Since processes run on separate JVM threads, the application will not automatica
+lly receive a notification when a process throws an exception and fails.
+ 
+\family typewriter
+Chymyst
+\family default
+ supervises all processes and catches their run-time exceptions, reporting
+ them to the user via the logging mechanism.
+ Additionally, 
+\family typewriter
+Chymyst
+\family default
+ will warn the user if a process fails to reply to a synchronous channel.
+\end_layout
+
+\begin_layout Standard
+If it is expected that an exception will occur, and the failure is transient,
+ the user may specify an option to retry running the process:
+\begin_inset Formula 
+\[
+\text{\texttt{go \{ case ...~\}.withRetry}}
+\]
+
+\end_inset
+
+A more general supervision mechanism is to attach a supervisor process that
+ recovers from a failure in some way:
+\begin_inset Formula 
+\[
+\text{\texttt{go \{ case ...~\}.onError(e \ensuremath{\Rightarrow} go \{ case ...~\}) }}
+\]
+
+\end_inset
+
+The supervisor process receives the same input messages as the failed process
+ and additionally may use the exception value 
+\family typewriter
+e
+\family default
+ in its body.
+ The supervisor process will run on the same thread and is visualized as
+ a replacement for the failed process.
 \end_layout
 
 \begin_layout Subsection
@@ -3490,8 +3563,7 @@ possible support for Scala.js (with no multithreading)
 \end_layout
 
 \begin_layout Itemize
-compile-time code transformation to replace all synchronous messages by
- asynchronous ones
+compile-time code transformations for performance optimization
 \end_layout
 
 \begin_layout Itemize
