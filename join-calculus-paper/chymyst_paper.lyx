@@ -2506,11 +2506,237 @@ The timeout-checking functionality may be sometimes required to avoid race
 \end_layout
 
 \begin_layout Subsubsection
-Message pipelining
+Ordered channels
+\end_layout
+
+\begin_layout Standard
+The order of consuming messages is not specified in JC, and may be chosen
+ arbitrarily by the implementation.
+ However, certain applications — notably, asynchronous streaming pipelines
+ — require messages to be processed in the order sent.
+ Because of the practical importance of asynchronous pipelines, it appears
+ that an implementation of JC should have direct support for ordered channels.
+ It would be too inefficient to implement ordered message processing on
+ top of unordered JC by adding a number to each message and by using process
+ guards to enforce the ordering.
+\end_layout
+
+\begin_layout Standard
+Not all JC programs are compatible with ordered channel semantics.
+ Consider the case of several processes waiting on the same channel with
+ different conditions on the message value, 
+\begin_inset Formula 
+\begin{align*}
+\text{\texttt{site( }} & \text{\texttt{go \{ case c(0) + a(x) \ensuremath{\Rightarrow} ...~\},}}\\
+ & \text{\text{\texttt{go \{ case c(y) if y>0 }}\texttt{\ensuremath{\Rightarrow} ...~\} )}}
+\end{align*}
+
+\end_inset
+
+If the channel 
+\family typewriter
+c
+\family default
+ is implemented as an ordered message queue, a message 
+\family typewriter
+c(0)
+\family default
+ will block the queue and prevent any processes from running until a message
+ 
+\family typewriter
+a(x)
+\family default
+ becomes available so that 
+\family typewriter
+c(0)
+\family default
+ may be consumed.
+ This behavior is certainly undesirable.
+ For programs like this, it is necessary to allow the processes to consume
+ messages out of order.
+\end_layout
+
+\begin_layout Standard
+Given a JC program, 
+\family typewriter
+Chymyst
+\family default
+ automatically assigns ordered queues to 
+\emph on
+all
+\emph default
+ channels that could admit ordered semantics without adverse effects.
+ Such channels are called 
+\begin_inset Quotes eld
+\end_inset
+
+pipelined
+\begin_inset Quotes erd
+\end_inset
+
+ in the 
+\family typewriter
+Chymyst
+\family default
+ source code.
+\end_layout
+
+\begin_layout Standard
+For a channel 
+\family typewriter
+c
+\family default
+ to be pipelined, the processes waiting on 
+\family typewriter
+c
+\family default
+ must be such that, at any time and for any message 
+\family typewriter
+c(x)
+\family default
+ on the channel, one of the three statements is true:
+\end_layout
+
+\begin_layout Enumerate
+the message 
+\family typewriter
+c(x)
+\family default
+ can be consumed immediately by some process
+\end_layout
+
+\begin_layout Enumerate
+it can be determined that 
+\family typewriter
+c(x)
+\family default
+ will never be consumed by any process
+\end_layout
+
+\begin_layout Enumerate
+at this time, no messages on channel 
+\family typewriter
+c
+\family default
+ can be consumed at all
+\end_layout
+
+\begin_layout Standard
+This is equivalent to the requirement that the condition for 
+\family typewriter
+c(x)
+\family default
+ to be potentially consumable is independent of the presence of other messages
+ on this or other channels.
+\end_layout
+
+\begin_layout Standard
+In mathematical notation, each of the defined processes 
+\begin_inset Formula $P_{1}$
+\end_inset
+
+, ..., 
+\begin_inset Formula $P_{n}$
+\end_inset
+
+ introduces a predicate 
+\begin_inset Formula $p_{i}(x,a,b,...)$
+\end_inset
+
+ that determines whether the process can start, depending on the presence
+ of its input messages and on their values.
+ Here we denote by 
+\begin_inset Formula $x$
+\end_inset
+
+ the value of the message 
+\family typewriter
+c(x)
+\family default
+ on channel 
+\family typewriter
+c
+\family default
+, while 
+\begin_inset Formula $a,b,...$
+\end_inset
+
+ are some variables that describe other channels on which the 
+\begin_inset Formula $i$
+\end_inset
+
+-th process is waiting.
+ The condition for 
+\emph on
+some
+\emph default
+ process to start is
+\begin_inset Formula 
+\[
+\bigvee_{i=1}^{n}p_{i}(x,a,b,...).
+\]
+
+\end_inset
+
+ 
+\family typewriter
+Chymyst
+\family default
+ uses static analysis to try factorizing this Boolean expression as
+\begin_inset Formula 
+\[
+\bigvee_{i=1}^{n}p_{i}(x,a,b,...)=p_{c}(x)\wedge q(a,b,...)
+\]
+
+\end_inset
+
+for some predicates 
+\begin_inset Formula $p_{c}$
+\end_inset
+
+ and 
+\begin_inset Formula $q$
+\end_inset
+
+.
+ If this factorization exists, 
+\family typewriter
+Chymyst
+\family default
+ marks 
+\family typewriter
+c
+\family default
+ as a pipelined channel with the predicate 
+\begin_inset Formula $p_{c}$
+\end_inset
+
+.
+ The significance of 
+\begin_inset Formula $p_{c}$
+\end_inset
+
+ is that 
+\family typewriter
+Chymyst
+\family default
+ will discard all messages 
+\family typewriter
+c(x)
+\family default
+ for which 
+\begin_inset Formula $p_{c}(x)$
+\end_inset
+
+ does not hold: these messages will never be consumed by any processes.
 \end_layout
 
 \begin_layout Subsubsection
 Logging and unit testing
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \begin_layout Subsubsection
