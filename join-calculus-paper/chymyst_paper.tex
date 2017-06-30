@@ -31,11 +31,12 @@ automatic performance optimizations. To ease the learning curve for
 engineers unfamiliar with the concepts of JC, I develop a pedagogical
 presentation of JC as an evolution of the well-known Actor model whereby
 actors are made type-safe, immutable, and are automatically managed.
-After a comparison of \texttt{Chymyst} with the popular \texttt{Akka}
-library, I identify a comprehensive set of additional features necessary
-to make JC an industry-ready concurrency paradigm. These features
-include APIs for unit testing, performance monitoring, and fault tolerance,
-and are next steps on the \texttt{Chymyst} project's development roadmap.
+By comparison with the popular Akka library, I identify a comprehensive
+set of additional features necessary to make JC an industry-ready
+concurrency paradigm. These features include ordered channels, APIs
+for unit testing, thread pool control, and fault tolerance. I present
+ways of embedding such features in JC without sacrificing its ease
+of use and elegance.
 \end{abstract}
 
 \section{Introduction and summary}
@@ -43,19 +44,21 @@ and are next steps on the \texttt{Chymyst} project's development roadmap.
 Advanced programming models developed by the theoretical computer
 science community are often ignored by software practitioners. One
 such case is join calculus (JC)~\citep{FouGon1996}, which can be
-seen as a DSL (domain-specific language) for high-level, declarative,
-functional concurrent programming. Given the high importance of concurrent
-programming and a growing adoption of functional languages, one would
-expect that software practitioners would take advantage of this high-level
-and type-safe concurrency paradigm. Nevertheless, there appears to
-be no practical adoption of JC by the software industry.\footnote{A Google search yields several academic projects but no mentions of
-industrial JC use.} Perhaps not coincidentally, there are very few open-source implementations
-of JC available for download and use. The only fully maintained implementation
-of JC is the JoCaml language~\citep{FouEA2003}.
+seen as a DSL (domain-specific language) for declarative, functional
+concurrent programming. Given the high importance of concurrent programming
+and a growing adoption of functional languages, one would expect that
+software practitioners would take advantage of this high-level and
+type-safe concurrency paradigm. The message-passing idiom is particularly
+suitable for implementing distributed algorithms (see, e.g.,~\citep{BarEA2007}).
+Nevertheless, there appears to be no practical adoption of JC by the
+software industry.\footnote{ A Google search yields a number of academic projects but no mentions
+of industrial JC use.} Perhaps not coincidentally, there are very few open-source implementations
+of JC available for download and use. To date, the only fully maintained
+implementation of JC is the JoCaml language~\citep{FouEA2003}.
 
-A significant barrier for industry adoption is the lack of suitable
-documentation and example code. The existing documentation and tutorials
-for JC, such as the JoCaml user's manual\footnote{ See \href{http://jocaml.inria.fr/doc/index.html}{jocaml.inria.fr/doc/index.html}.},
+Another significant barrier for software practitioners is the lack
+of suitable documentation and example code. The existing documentation
+and tutorials for JC, such as the JoCaml user's manual\footnote{ See \href{http://jocaml.inria.fr/doc/index.html}{jocaml.inria.fr/doc/index.html}.},
 the original authors' introduction to JC~\citep{FouGon2000}, and
 the lecture notes~\citep{FouEA2003} were intended for graduate students
 in computer science and are largely incomprehensible to software engineers.
@@ -63,31 +66,41 @@ Effective JC programming requires a certain paradigm shift and facility
 with JC-specific design patterns, which is not readily achieved without
 working through numerous examples.
 
+Industry-strength frameworks must provide a number of important facilities
+such as integration with other asynchronous interfaces, fault tolerance
+and process supervision, performance tuning and performance metrics,
+or unit testing and debugging, to name just a few. Existing academic
+presentations of JC do not consider these features and do not describe
+how they are to be integrated into the JC paradigm. Neither do any
+of the existing JC implementations provide such features. This may
+be the biggest obstacle for industry acceptance of JC.
+
 In this paper, I present a new open-source implementation of JC as
-a library called \texttt{Chymyst},\footnote{The name is borrowed from the early treatise~\citep{Boy1661} by
-Robert Boyle, who was one of the founders of the science of chemistry.} providing an embedded Scala DSL and a light-weight runtime. The main
-design focus of \texttt{Chymyst} is to enable high-level, declarative
-concurrency in idiomatic Scala, using the JC paradigm. At the same
-time, I aim to provide industry-strength features that are typically
-not considered by academic presentations of JC, such as performance
-tuning, fault tolerance, or unit testing APIs. Finally, the \texttt{Chymyst}
-project offers tutorial documentation adapted to the software developer
-audience. In these ways, I hope to enable industry adoption of this
-promising concurrency paradigm.
+a library called \texttt{Chymyst},\footnote{ The name is borrowed from the early treatise~\citep{Boy1661} by
+Robert Boyle, who was one of the founders of the science of chemistry.} consisting of an embedded Scala DSL and a light-weight runtime engine.
+The main design focus of \texttt{Chymyst} is to enable high-level,
+declarative concurrency in idiomatic Scala, using the JC paradigm.
+An equally important goal is to provide industry-strength features
+such as performance tuning, fault tolerance, and unit testing APIs.
+Finally, the \texttt{Chymyst} project offers tutorial documentation
+adapted to the software developer audience, presenting numerous examples
+that illustrate the patterns of programming in join calculus. In these
+ways, I hope to enable industry adoption of this powerful concurrency
+paradigm.
 
 \subsection{Contributions of this paper}
 
 I describe the main design decisions made in the \texttt{Chymyst}
 project while implementing join calculus as an embedded DSL in Scala. 
 
-\texttt{Chymyst} lifts several restrictions that are present in most
-other JC projects, and offers some additional features:
+\texttt{Chymyst} lifts several restrictions that are present in other
+JC projects, and offers some additional features:
 \begin{itemize}
 \item separate definition of channel names and processes
 \item arbitrary non-linear patterns and guards in process definitions
 \item synchronous rendezvous
-\item first-class processes with arbitrary process bodies
-\item incremental construction of join definitions from processes
+\item incremental construction of join definitions from first-class process
+definitions
 \item automatic performance optimizations
 \item static code analysis and early error detection
 \end{itemize}
@@ -95,35 +108,37 @@ I argue that certain new facilities need to be added to a JC implementation
 in order to make it viable for industry adoption. These facilities
 include:
 \begin{itemize}
-\item explicit thread pools for performance tuning
+\item thread pool management for performance tuning
 \item time-outs for synchronous channels
-\item interoperability with \texttt{Future}s
+\item interoperability with \texttt{Future}'s and other asynchronous APIs
 \item APIs for unit testing and debugging
 \item per-process fault tolerance settings
 \item message pipelining
 \end{itemize}
-I describe the current implementation of these facilities in \texttt{Chymyst}.
+I outline the ways these facilities can be embedded in the JC paradigm
+and describe their current implementation in \texttt{Chymyst}.
 
-To better explain the concepts of JC to new software developers, I
-avoid the traditional academic terminology (message / channel / process
-/ join definition). Instead, I show how to describe JC as an evolution
-of the Actor model, which is ideal for developers already familiar
-with the Akka library. When introducing JC from scratch, I rely on
-the ``abstract chemical machine'' metaphor and use the corresponding
-terminology (molecule / emitter / reaction / reaction site), which
-is more visual and intuitive. Synchronous channels (``blocking emitters'')
-are most easily understood by carrying out a continuation-passing
+I point out specific deficiencies of the academic terminology of JC
+(message / channel / process / join definition) that make it unhelpful
+for explaining the concepts of JC to software developers. Instead,
+I show how to describe JC as an evolution of the Actor model, which
+is ideal for developers already familiar with the Akka library. When
+introducing JC from scratch, I rely on the ``chemical machine''
+metaphor and use the corresponding terminology (molecule / emitter
+/ reaction / reaction site), which is more visual and intuitive. Synchronous
+channels are presented as a shorthand for carrying out a continuation-passing
 code transformation from blocking code to code that uses only asynchronous,
-non-blocking channels. The syntax used by \texttt{Chymyst} for blocking
-channels makes this code transformation more transparent.
+non-blocking channels. The continuation-passing syntax used by \texttt{Chymyst}
+for synchronous channels (instead of the traditional ``\texttt{reply
+to}'' syntax) makes this code transformation more transparent.
 
 \subsection{Previous work}
 
 Since its invention more than 20 years ago, join calculus has been
-implemented by a number of academic researchers, typically by creating
-an entirely new JC-based programming language or by patching an existing
-language. It is hard to assess the scope and practical use of these
-implementations, since most of them appear to be proof-of-concept
+implemented by a number of researchers, typically by creating an entirely
+new JC-based programming language or by modifying an existing language
+compiler. It is hard to assess the scope and practical use of these
+implementations, since most of them appear to be unmaintained proof-of-concept
 projects developed to accompany academic publications. 
 
 Here I will not attempt to survey the theoretical advances made by
@@ -133,31 +148,31 @@ availability and usability of the existing JC implementations.
 
 JoCaml was one of the first implementations of JC~\citep{FouEA2003},
 and remains today the best-supported one. This implementation is a
-patch for the OCaml compiler, which is fully compatible with the OCaml
-library ecosystem. 
+patch for the OCaml compiler, which is, however, fully compatible
+with the OCaml library ecosystem. 
 
 M.~Odersky created a new language called ``Funnel'', based on the
 JC paradigm~\citep{Ode2000}. The Funnel project appears to be abandoned,
 since M.~Odersky went on to develop Scala, which does not include
-any concepts or features of JC.
+any concepts or features of JC \textemdash{} either in the language
+itself or in its standard libraries.
 
-G.~S.~von Itzstein implemented JC as a patch for the early Java
-compiler~\citep{Von2004}. The ``Join Java'' project appears to
-be abandoned.
+G.~S.~von Itzstein implemented JC as a patch for the Java compiler~\citep{Von2004}.
+The ``Join Java'' project appears to be abandoned.
 
 The first appearance of JC in Scala was a \textquotedblleft Join in
 Scala\textquotedblright{} compiler patch by V.~Cremet (2003).\footnote{ See \href{http://lampwww.epfl.ch/~cremet/misc/join_in_scala/index.html}{lampwww.epfl.ch/$\sim$cremet/misc/join\_{}in\_{}scala/}.}
-The syntax of Scala has changed radically since 2003, rendering the
-project unusable.
+The project is unmaintained, and the Scala language has changed radically
+since 2003, rendering the project unusable.
 
 T.~Rompf implemented an experimental (unnamed) language based on
 JC and illustrated its use for important application design patterns,
-such as ``fork/join'' synchronization or asynchronous continuations~\citep{Rom2007}.
+such as ``fork/join'' synchronization and asynchronous continuations~\citep{Rom2007}.
 The project appears to be abandoned, as T.~Rompf moved on to research
 on multi-stage compilation~\citep{Rom2012}.
 
 ``Joinads'' is a set of compiler patches for F\# and Haskell, developed
-by T.~Petricek~\citep{PetSym2011}. The project is not maintained.
+by T.~Petricek~\citep{PetSym2011}. The project is unmaintained.
 
 Creating a \emph{new} programming language, either from scratch or
 via compiler patches, has been a common pattern in JC implementations.
@@ -167,10 +182,10 @@ as Polyphonic C\#~\citep{BenFou2002}, C$\omega$~\citep{Rus2007},
 Join Diesel~\citep{Ose2005}, JErlang~\citep{PloEis2009}, and Hume~\citep{HamEA2006}
 also follow that pattern. All these new languages have since been
 abandoned by their creators. It appears that maintaining and supporting
-a completely new research language for JC is hardly possible, even
-for a corporation such as Microsoft. Therefore, we turn our attention
-to implementations of JC as an embedded DSL in a well-established
-programming language. 
+a completely new research language is hardly possible, even for a
+corporation such as Microsoft. Therefore, we turn our attention to
+implementations of JC as an embedded DSL in a well-established programming
+language. 
 
 C.~Russo created the ``Scalable Joins'' library for the .NET platform~\citep{Rus2007}.
 The library appears to be unsupported.\footnote{ See \href{https://github.com/JoinPatterns/ScalableJoins}{github.com/JoinPatterns/ScalableJoins}.}
@@ -186,9 +201,8 @@ the C++ \texttt{Boost} library.\footnote{ See \href{http://channel.sourceforge.n
 
 In 2013, the present author created experimental JC prototypes for
 Objective-C on iOS and for Java on Android\footnote{ See \href{https://github.com/winitzki}{github.com/winitzki}.};
-these projects are unmaintained. However, the present \texttt{Chymyst}
-implementation reuses some design decisions made in these earlier
-projects.
+these projects are unmaintained. However, the \texttt{Chymyst} project
+reuses some design decisions made in these earlier works.
 
 In 2014, S.~Yallop implemented ``Join Language'' as a DSL embedded
 in Haskell.\footnote{ See \href{https://github.com/syallop/Join-Language}{github.com/syallop/Join-Language}.}
@@ -211,34 +225,27 @@ also adopts these design choices.
 
 \section{Programming in \texttt{Chymyst}}
 
-In my experience, the absolute majority of software developers are
-unfamiliar with join calculus or its ``channel'' / ``message''
-/ ``process'' terminology, but the majority of Scala concurrency
-practitioners know about the Actor model. Accordingly, I would argue
-that introducing JC concepts to the Scala developer audience should
-build upon the existing Actor model knowledge. However, reasoning
-about JC programs is most direct and convenient when using the visual
-metaphors and the terminology of the Abstract Chemical Machine (``emitter''
-/ ``molecule'' / ``reaction'').
-
-The next subsection is a brief introduction to programming in join
-calculus using \texttt{Chymyst}. This introduction is suitable for
-readers not already familiar with either join calculus or the Actor
-model.
+Neither of the words ``join'' and ``calculus'' are particularly
+explanatory or visually suggestive. In my experience, the absolute
+majority of software developers are unfamiliar with join calculus
+or its terminology (channel / message / process), but the majority
+of Scala concurrency practitioners know about the Actor model through
+the Akka library. Accordingly, I would argue that introducing JC concepts
+to the Scala developer audience should build upon the existing Actor
+model knowledge. However, reasoning about JC programs is most direct
+and convenient when using the visual metaphors and the terminology
+of the ``chemical machine'' (molecule / reaction). The next subsection
+is a brief overview of JC as seen through the chemical machine metaphor,
+in order to establish terminology. This introduction is suitable also
+for readers not already familiar with either JC or the Actor model.
 
 \subsection{The chemical metaphor for concurrency}
 
-Neither of the words ``join'' and ``calculus'' are particularly
-explanatory or visually suggestive. The ``chemical machine'', on
-the other hand, is a visually concrete execution model that can be
-directly used for designing and reasoning about a JC program. This
-subsection is a brief overview of JC as seen through the chemical
-machine metaphor, in order to establish terminology.
-
 To begin, one imagines a \textbf{reaction site}, i.e.~a virtual place
-where many molecules are floating around and reacting with each other.
-Each molecule has a chemical designation (such as \texttt{a}, \texttt{b},
-\texttt{c}) and also \emph{carries a value} of a fixed type. Since
+where many molecules are floating around and possibly reacting with
+each other. Each molecule has a chemical designation (such as \texttt{a},
+\texttt{b}, \texttt{c}) and also \emph{carries a value} of a fixed
+ground type (such as \texttt{Unit} or \texttt{List{[}Int{]}}). Since
 the ``chemistry'' here is completely imaginary, the programmer is
 free to declare any number of chemical designations and to choose
 the corresponding value types. In \texttt{Chymyst}, these declarations
@@ -247,12 +254,13 @@ have the form
 \text{\texttt{val c }} & \text{\texttt{= m[List[Int]]}}\\
 \text{\texttt{val t }} & \text{\texttt{= m[Unit]}}
 \end{align*}
-and result in creating new \textbf{molecule emitters} \texttt{c} and
-\texttt{t}. Emitters can be seen as functions that are called in order
-to \textbf{emit} the corresponding molecules into the reaction site:
+and result in creating new \textbf{molecule emitters} as local values
+\texttt{c} and \texttt{t}. Emitters can be seen as functions that
+are called in order to emit the corresponding molecules into the reaction
+site:
 \begin{align*}
  & \text{\texttt{c(List(1,2,3))}}\\
- & \text{\texttt{t()}}
+ & \text{\texttt{t() }//unit value implicit}
 \end{align*}
 The newly emitted molecules will carry the specified values of the
 correct types since the emitters are statically typed.
@@ -260,46 +268,55 @@ correct types since the emitters are statically typed.
 Further, the programmer defines the ``chemical laws'' describing
 the permitted reactions between molecules. For reactions, \texttt{Chymyst}
 uses the syntax of Scala partial functions with a single \texttt{case}
-clause, wrapped into an auxiliary method called \texttt{go()}:
+clause, wrapped into an auxiliary method called \texttt{go()}, for
+example:
 \[
 \text{\texttt{go \{ case t(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \}}}
 \]
-This reaction consumes two input molecules, \texttt{t} and \texttt{c},
+This reaction consumes two input molecules, \texttt{t()} and \texttt{c()},
 and evaluates the reaction body (the Scala code in the body of the
 \texttt{case} clause). In this example, the reaction body simply emits
-one output molecule, \texttt{c}, with a computed new value \texttt{xs}.
-The effect of this reaction is to compute the tail of a list. Due
-to the pattern-matching requirement, this reaction will start only
-when the molecule \texttt{c} carries a non-empty list value.
+one molecule, \texttt{c()}, carrying a computed new value \texttt{xs}.
+So, the effect of this reaction is to compute the tail of a list.
+Due to the pattern-matching condition, this reaction will start only
+when the molecule \texttt{c()} carries a non-empty list value.
 
-In \texttt{Chymyst}, reaction definitions can use all features of
+In \texttt{Chymyst}, reaction definitions may use all features of
 Scala partial functions, including arbitrary guard conditions and
-pattern matching on molecule values, and include arbitrary Scala code
-within the function body.
+pattern matching constructs.
 
 Reactions are first-class values:
 \[
-\text{\texttt{val r1 = go \{ case t(\_) \ensuremath{\Rightarrow} ??? \}}}
+\text{\texttt{val r1 = go \{ case t(\_) \ensuremath{\Rightarrow} println("done") \}}}
 \]
-Creating the reaction value \texttt{r1} does not actually schedule
-a computation; it merely defines the available computation declaratively.
-In order to make the chemical machine run reactions, the programmer
-needs to create a reaction site using the \texttt{site()} call, such
-as \texttt{site(r1, r2)}, which activates the reactions listed in
-its arguments. A reaction site typically includes several reactions
-that may be declared inline for brevity:
+Creating the reaction value \texttt{r1} does not actually run a computation;
+it merely defines the available computation declaratively. In order
+to make the chemical machine run reactions, the programmer needs to
+create a reaction site using the \texttt{site()} call, such as \texttt{site(r1,
+r2)}, which activates the reactions listed as the arguments. A reaction
+site typically includes several reactions that may be declared inline
+for brevity:
 \begin{align*}
-\text{\texttt{site(}} & \text{\texttt{go \{ case t(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \},}}\\
- & \text{\text{\texttt{go \{ case c(Nil) }}\texttt{\ensuremath{\Rightarrow} done() \} }}\\
+\text{\texttt{site(}}\\
+ & \text{\texttt{go \{ case t(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \},}}\\
+ & \text{\text{\texttt{go \{ case c(Nil) }}\texttt{\ensuremath{\Rightarrow} done() \}}}\\
 \text{\texttt{)}}
 \end{align*}
-Once a reaction site is created, the code can emit any number of molecules,
-such as \texttt{t} or \texttt{c}, or molecules bound to other reaction
-sites. The chemical machine will interpret the declared ``chemical
-laws'' and start reactions whenever appropriate input molecules are
-available at each reaction site. According to the operational semantics
-of JC, any number of different reactions may start concurrently if
-sufficiently many input molecules are available.
+Once a reaction site with these reactions is created, the molecules
+\texttt{t()} and \texttt{c()} can be emitted into it. The chemical
+machine will interpret the declared ``chemical laws'' and start
+reactions whenever appropriate input molecules are available. Typically,
+reactions will emit new molecules, and the chemical machine will continue
+monitoring all declared reaction sites, looking for further reactions
+to run. According to the operational semantics of JC, any number of
+different reactions may start concurrently if their input molecules
+are available.
+
+Thus, JC application code defines a number of molecule emitters and
+reaction sites with reactions, and then emits a number of initial
+molecules. Emitting a molecule is a non-blocking operation: reactions
+will start concurrently with the emitting process. In this way, JC
+models arbitrary asynchronous and concurrent computations.
 
 The \texttt{Chymyst} project embraces the chemical metaphor and its
 visually suggestive terminology. In the academic literature on JC,
@@ -318,40 +335,43 @@ can be used in order to simulate waiting until some concurrent computations
 are finished. However, using asynchronous channels with continuations
 is a bit cumbersome: The continuation function must be explicitly
 created as a closure and passed as a message value. Manually creating
-a continuation results in ``scope ripping,'' which disrupts the
-normal code flow. 
+a continuation results in ``stack ripping''~\citep{Ady2002}, which
+disrupts the normal code flow. 
 
 The JoCaml implementation of JC uses synchronous channels to mitigate
-this problem. \texttt{Chymyst} also implements synchronous channels
-as a language feature. \texttt{Chymyst's} chosen syntax for synchronous
-channels resembles continuation-passing style and looks like this:
-\[
-\text{\texttt{go \{ case a(x) + f(y, cont) \ensuremath{\Rightarrow} cont(x+y) \}}}
-\]
-The same process is defined in JoCaml as
+this problem. For example, a JoCaml process 
 \[
 \text{\texttt{def a(x) \& f(y) = reply x+y to f}}
+\]
+defines \texttt{f()} as a synchronous channel. \texttt{Chymyst} also
+implements synchronous channels as a first-class language feature.
+\texttt{Chymyst's} chosen syntax for synchronous channels resembles
+continuation-passing style and looks like this:
+\[
+\text{\texttt{go \{ case a(x) + f(y, reply) \ensuremath{\Rightarrow} reply(x+y) \}}}
 \]
 The ``reply'' expression can be seen to resume the continuation
 in the process that sent the \texttt{f()} message. The syntax of \texttt{Chymyst}
 makes this semantics more explicit.
 
-Here is a more extended example of a \texttt{Chymyst} process with
-a synchronous channel:
+Synchronous channels are defined using the syntax \texttt{val f =
+b{[}T, R{]}}, where \texttt{T} is the type of the message value and
+\texttt{R} is the type of the reply value. Here is a more detailed
+example of a \texttt{Chymyst} process with a synchronous channel:
 \begin{align*}
 \text{} & \text{\texttt{val f = b[Int, Int]}}\\
- & \text{\texttt{site( go \{ case f(x, cont) \ensuremath{\Rightarrow}}}\\
- & \text{\text{\texttt{ val y = ... }// compute some value}}\\
- & \text{\texttt{ cont(y) }// reply, i.e.~invoke continuation}\\
+ & \text{\texttt{site( go \{ case f(x, reply) \ensuremath{\Rightarrow}}}\\
+ & \text{\text{\texttt{  val y = ...} //compute some value}}\\
+ & \text{\texttt{  reply(y) }//resume continuation}\\
  & \text{\texttt{\} )}}\\
- & \text{\texttt{val z = f(123) }// wait for reply}
+ & \text{\texttt{val z = f(123) }//wait for reply}
 \end{align*}
 Note that the message \texttt{f(123)} is sent without specifying the
-continuation argument \texttt{cont}, which is nevertheless available
+continuation argument \texttt{reply}, which is nevertheless available
 in the reaction body. The semantics of the blocking call \texttt{f(123)}
-is essentially to construct the current continuation as \texttt{cont}
-and to send it to the process as a message on the channel \texttt{f},
-together with the ordinary payload \texttt{123}. 
+is equivalent to capturing the current continuation as \texttt{reply}
+and sending the tuple \texttt{(123, reply)} as a message on the channel
+\texttt{f}.
 
 As I will show below in Sec.~\ref{subsec:Non-linear-join-patterns},
 the \texttt{Chymyst} syntax yields additional flexibility in defining
@@ -375,27 +395,35 @@ such as JoCaml's ``\texttt{spawn}''.
 \subsubsection{Explicit channel definitions}
 
 JoCaml defines new channels implicitly, as soon as a new join definition
-is written. Unfortunately, implicit declaration of new channels is
-not possible in \texttt{Chymyst} because Scala macros do not allow
-us to insert a new top-level symbol declaration into the code. So,
-channel declarations need to be explicit (``\texttt{val a = m{[}Unit{]}}'')
-and written separately from process definitions. This is a common
-design in embedded DSL implementations of JC.
+is written. However, implicit declaration of new channels is not possible
+in \texttt{Chymyst} because Scala macros cannot insert a new top-level
+symbol declaration into the code. So, channel declarations and their
+types need to be explicit (``\texttt{val a = m{[}Unit{]}}'') and
+written separately from process definitions. This is a common design
+in embedded DSL implementations of JC.
 
 The separation of channel definitions from process definitions brings
-several advantages. One is the ability to create a user-specified
-number of new channels and to define processes for them incrementally
-(see Sec.~\ref{subsec:First-class-process-definitions} below), removing
-the requirement to specify all processes in a join definition at compile
-time. Another is an increased code clarity due to the explicit labeling
-of blocking vs.~non-blocking channel types, which remains implicit
-in JoCaml.
+several advantages. One is the ability to create a number of new channels
+at run time and to define processes for them incrementally (see Sec.~\ref{subsec:First-class-process-definitions}
+below), which removes the requirement to specify all processes in
+a join definition at compile time. Another is an increased code clarity
+due to the explicit labeling of blocking vs.~non-blocking channel
+types, which remains implicit in JoCaml.
 
-A drawback of this separation is that programmers may create a new
+A drawback of this separation is that programmers might define a new
 channel but forget to define any processes waiting on that channel.
 Sending messages to such ``unbound'' channels is an error that can
-only be detected at run time because channels are first-class values.
-\texttt{Chymyst} throws an exception in that case.
+only be detected at run time because channels are first-class values
+and, for instance, can be passed as parameters to functions that send
+messages on those channels. 
+
+\texttt{Chymyst} throws an exception if the application code attempts
+to send a message to an unbound channel. An exception is also thrown
+when a new process is being defined that uses a channel already bound
+to another join definition. (In that case, JoCaml silently redefines
+the channel name, creating a potential for bugs.) These exceptions
+are generated at ``early'' run time, immediately after creating
+the join definition and before running any processes.
 
 \subsubsection{Non-linear join patterns\label{subsec:Non-linear-join-patterns}}
 
@@ -405,23 +433,25 @@ of repeated channels:
 \[
 \text{\texttt{go \{ case a(x) + a(y) + a(z) \ensuremath{\Rightarrow} a(x+y+z) \}}}
 \]
-A linear-pattern JC implementation, such as JoCaml, would require
-cumbersome auxiliary definitions to implement this functionality.
+Some computations (such as unordered map/reduce) are most directly
+expressed in this form. A strictly linear-pattern JC implementation,
+such as JoCaml, would require cumbersome auxiliary definitions to
+implement an equivalent process.
 
 Processes may also wait on repeated \emph{synchronous} channels. This
 last feature, together with the continuation-passing syntax for those
-channels, enables a declarative implementation of \textbf{synchronous
-rendezvous} where two distinct users of the same channel will exchange
-values:
+channels, enables a declarative implementation of synchronous rendezvous~\citep{Mil1999}
+where two distinct users of the same channel can exchange values:
 \begin{align*}
  & \text{\texttt{go \{ case f(p1, reply1) + f(p2, reply2) \ensuremath{\Rightarrow}}}\\
  & \text{\texttt{ ~ ~ ~ reply2(p1); reply1(p2)}}\\
  & \text{\texttt{\}}}
 \end{align*}
 The traditional JC reply syntax (\texttt{reply x to f}) does not allow
-users to specify the copy of \texttt{f()} to which the reply is sent.
-JoCaml can express this behavior only at the cost of using two auxiliary
-channels and an additional process with a synchronous reply. 
+the code to select the specific copy of \texttt{f()} to which a reply
+is sent. JoCaml can express equivalent behavior only at the cost of
+using two additional channels and an additional process that also
+performs a synchronous reply. 
 
 \subsubsection{First-class process definitions\label{subsec:First-class-process-definitions}}
 
@@ -432,9 +462,9 @@ the well-known ``dining philosophers'' problem has a simple declarative
 solution in join calculus (see e.g.~\citep{VarAgh2013}, Sec.~5.4.3)
 where, however, the number of philosophers needs to be defined statically.
 In \texttt{Chymyst}, this solution can be easily extended to $n$
-philosophers by creating $n$ philosopher and fork channels at run
-time, defining an array of $n$ processes for these channels, and
-aggregating the $n$ processes into a join definition. 
+philosophers by creating $n$ philosopher channels at run time, defining
+an array of $n$ processes for these channels, and aggregating the
+$n$ processes into a join definition. 
 
 A run-time dependent number of channels and processes can be defined
 like this,
@@ -451,99 +481,385 @@ processes or to add more processes waiting on the same channels.
 \subsubsection{Static code analysis}
 
 Scala's macros are used extensively in \texttt{Chymyst} for user code
-analysis. The \texttt{go()} macro gathers detailed compile-time information
-about input and output channels of each defined process. For example,
-the process definition
+analysis. The \texttt{go()} method is a macro that gathers detailed
+compile-time information about input and output channels of each defined
+process. For example, the process definition
 \[
 \text{\texttt{go \{ case t(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \}}}
 \]
-internally produces a rich information structure indicating, for instance,
-that the process waits on the channels \texttt{t} and \texttt{c},
-that the channel \texttt{t} may have arbitrary message values while
-\texttt{c} requires a pattern match, and that the process will finally
-send a message on channel \texttt{c} but not on \texttt{t}.
+internally produces a rich information structure indicating that the
+process waits on the channels \texttt{t} and \texttt{c}, that the
+channel \texttt{t} may have arbitrary message values while \texttt{c}
+requires a nontrivial pattern match with two pattern variables, and
+that the process will finally send a message on channel \texttt{c}
+(but not on \texttt{t}).
 
-Using this information, \texttt{Chymyst} can then detect many cases
-of unavoidable livelock, deadlock, and non-determinism in user code.
-An example of unavoidable livelock is the process
+Using this information, \texttt{Chymyst} detects certain errors in
+user code, such as unavoidable livelock and non-determinism. An example
+of unavoidable livelock is the process
 \[
-\text{\texttt{go \{ case c(x) \ensuremath{\Rightarrow} ???; c(x + 1) \}}}
+\text{\texttt{go \{ case c(x) \ensuremath{\Rightarrow} c(x+1) \}}}
 \]
 Since the process accepts messages \texttt{c(x)} with any value \texttt{x},
 the programmer has no means of stopping the infinite loop that follows
-once a single message is sent on channel \texttt{c}. This \texttt{Chymyst}
+once a message is sent on channel \texttt{c}. This \texttt{Chymyst}
 code generates a \emph{compile-time} error, with a message indicating
 unavoidable livelock.
 
+\begin{comment}
 Deadlocks can only happen when using synchronous channels and are
 harder to detect reliably. A deadlock warning is given when the process
 sends a synchronous message followed by another message that is consumed
 together with the synchronous one:
 \[
-\text{\texttt{go \{ case c(x) + f(\_, r) \ensuremath{\Rightarrow} c(f() + 1); r(x) \}}}
+\text{\texttt{go \{ case a(\_) + c(x) + f(\_, r) \ensuremath{\Rightarrow} c(f() + 1); r(x) \}}}
 \]
 This code is suspicious because the process waits for a reply to \texttt{f()}
 and \emph{then} sends \texttt{c()}, while a reply to \texttt{f()}
 happens only \emph{after} both \texttt{f()} and \texttt{c()} are sent.
+\end{comment}
 
-Unavoidable nondeterminism within a join definition occurs when one
-process waits on a subset of messages that another process is also
-waiting on, for instance
+Unavoidable nondeterminism occurs when one process waits on a subset
+of messages that another process is also waiting on, for instance
 \begin{align*}
-\text{\texttt{site( }} & \text{\texttt{go \{ case i(\_) + c(x) \ensuremath{\Rightarrow} c(x + 1) \},}}\\
- & \text{\text{\texttt{go \{ case i(\_) }}\texttt{\ensuremath{\Rightarrow} done() \} }}\\
-\text{\texttt{) }}
+\text{\texttt{site( }} & \text{\texttt{go \{ case c(x) + i(\_) \ensuremath{\Rightarrow} c(x+1) \},}}\\
+ & \text{\text{\texttt{go \{ case c(x) }}\texttt{\ensuremath{\Rightarrow} done() \} )}}
 \end{align*}
 If both \texttt{c()} and \texttt{i()} messages are present, the runtime
 engine has a choice of whether to run the first or the second process.
 The programmer has no control over this choice, since there are no
-conditions on the values of the \texttt{i()} message. It is unlikely
-that the resulting non-determinism would be useful in any practical
-application. \texttt{Chymyst} assumes that this is a programmer's
-error and throws an exception. The exception is thrown at ``early''
-run time, immediately after creating the join definition and before
-running any processes.
+conditions on the value \texttt{x} of the \texttt{c(x)} message. It
+is unlikely that the resulting non-determinism would be useful in
+any practical application. \texttt{Chymyst} assumes that this is a
+programmer's error and throws an exception. The exception is thrown
+at ``early'' run time.
 
 An additional benefit of static analysis is a performance optimization
-for processes that use pattern matching or guard conditions. Scala
-macros are used to determine whether process definitions impose any
-guard conditions on input message values. If not, a quicker scheduling
-algorithm can be used. Additionally, complicated guard conditions
-such as
+for processes that use pattern matching or guard conditions. For process
+definitions that impose no conditions on input message values, a quicker
+scheduling algorithm is used. Additionally, complicated cross-molecule
+guard conditions such as
 \[
 \text{\texttt{go \{ case c(x) + d(y) if x>0 \&\& y<1 \ensuremath{\Rightarrow} ...~\}}}
 \]
-are converted into the conjuctive normal form and split between molecules
-if possible. For instance, the example above is converted to (pseudo-code)
+are converted into the conjuctive normal form and factorized if possible.
+For instance, the example above is converted to (pseudo-code)
 \[
-\text{\texttt{\{ case c(x if x>0) + d(y if y<1) \ensuremath{\Rightarrow} ...~\}}}
+\text{\texttt{c(x if x>0) + d(y if y<1) \ensuremath{\Rightarrow} ...}}
 \]
-In many cases, this transformation allows the runtime engine to select
-message values faster, without enumerating all combinations of message
-values in a search for suitable inputs for a process.
+In many cases, this transformation allows the runtime engine to find
+new runnable processes faster.
 
-\subsubsection{Time-outs}
+Static analysis is also used to enforce the linear type discipline
+on synchronous channels. For instance, this \texttt{Chymyst} code
+will generate a compile-time error:
+\begin{align*}
+\text{\texttt{go \{ case f(x, reply) \ensuremath{\Rightarrow}}} & \text{\texttt{ if (x>0) reply(x)}}\\
+ & \text{\text{\texttt{ else false \}}}}
+\end{align*}
+Correct usage of synchronous channels requires that a reply is sent
+in all clauses of an \texttt{if} / \texttt{else} or \texttt{match}
+/ \texttt{case} expression.
 
-When a synchronous message is sent, the emitting process is blocked
-until a reply is received. In \texttt{Chymyst}, it is possible to
-specify a time-out for this blocking call: 
+\subsection{Details of the current implementation}
+
+\texttt{Chymyst} implements each join definition as a separate instance
+of class \texttt{ReactionSite}. A reaction site is a virtual place
+where messages arrive and wait to be consumed by auto-created JC processes.
+A \texttt{ReactionSite} instance contains the list of available processes
+and their properties, a JVM thread pool for running the processes,
+a message multiset holding the message values currently present, and
+a separate JVM thread dedicated to process scheduling and bookkeeping
+operations. The decision to make scheduling single-threaded was motivated
+by the desire to avoid thread contention and to make process scheduling
+faster.
+
+Since join definitions are local \emph{values} (although they are
+not directly available to the application code), new join definitions
+can be created dynamically at run time. Nevertheless, join definitions
+are immutable since the user cannot access a reaction site.
+
+Channels are local values available to the application code. Each
+channel is an instance of class \texttt{M} for asynchronous channels
+or \texttt{B} for blocking (synchronous) channels. A channel holds
+a reference to the join definition where its messages are consumed;
+according to the JC semantics, each channel must be bound to a unique
+join definition.
+
+When a message is sent on a channel, the message's value is appended
+to the message multiset at the respective join definition. At the
+same time, a ``process search'' job is queued to be run on the scheduler
+thread of that join definition. The process search will examine the
+messages currently present in the multiset and determine which processes
+(if any) will be scheduled to run. These processes will then be queued
+on the reaction site's thread pool, after the consumed messages are
+atomically removed from the message multiset. 
+
+Due to using separate threads, sending a message as well as running
+a process are asynchronous, concurrent operations, as they should
+be in JC. The number of available concurrent execution threads can
+be specified per join definition (see Sec.~\ref{subsec:Thread-pools}).
+
+Reactions that impose complicated cross-molecule conditions may take
+a comparatively long time to schedule because the process search may
+need to enumerate many possibilities before it finds appropriate molecule
+values. Since the process search is performed asynchronously on a
+dedicated scheduler thread, sending a message is always a quick operation.
+The downside is a somewhat slower scheduling of all processes due
+to additional thread switching.
+
+\subsection{What it means to be industry-strength}
+
+To determine the feature set required for ``industry strength,''
+I have reviewed the widely used Akka actor framework as described
+in~\citep{AIA2016} and other similar books intended for sofware
+engineering audiences. These books suggest that the industry expects
+a concurrency framework to implement features such as:
+\begin{itemize}
+\item logging facilities for execution tracing and for performance metrics 
+\item unit testing with assertions about asynchronous behavior of messages 
+\item fault tolerance, various scenarios of recovery from errors, per-process
+supervision
+\item timeouts for blocking calls
+\item graceful stop and graceful restart, possibly separately for each join
+definition 
+\item a standard library of join definitions that establishes the relevant
+design patterns
+\item thread pool management, thread priority, configurable performance
+tuning
+\item ordered message queues for asynchronous pipelines
+\item interoperability with other asynchronous APIs such as \texttt{Future's},
+Actors, Tasks, or a library of adapters to other async frameworks
+\item deployment-time configuration facilities for distributed and remote
+execution (e.g.~cluster deployment)
+\item consistent distributed data management (CRDT) support
+\end{itemize}
+No currently available descriptions or implementation of join calculus
+include \emph{any} of these features. JoCaml provides a remote messaging
+facility\footnote{ See \href{http://jocaml.inria.fr/doc/distributed.html}{jocaml.inria.fr/doc/distributed.html}.},
+but the burden of implementing a robust distributed application and
+configuring its deployment rests fully on the JoCaml application code.
+There does not appear to be any JoCaml-based industrial implementations
+of distributed applications.
+
+I will now describe the features that \texttt{Chymyst} currently supports.
+
+\subsubsection{Thread pools\label{subsec:Thread-pools}}
+
+To enable users to fine-tune the performance of their concurrent applications,
+\texttt{Chymyst} offers control over the JVM thread pools used by
+join definitions. There is a default thread pool available, but users
+may create other thread pools and assign them to join definitions.
+Application code can create two types of thread pools: a \texttt{FixedPool}
+holds a fixed specified number of JVM threads, while a \texttt{BlockingPool}
+is aware of blocking operations (such as sending synchronous messages)
+and will increase and decrease the number of threads dynamically at
+run time in order to maintain a given parallelism. Optionally, application
+code can set a specific thread priority for the thread pool's processes.
+
+A typical use case for separate thread pools is an application with
+two join definitions, one having a large number of slow processes
+and another with a small number of fast processes. For instance, the
+``fast'' join definition might be reporting the progress achieved
+by the ``slow'' processes. Since it is desirable to obtain timely
+progress reports, the ``fast'' join definition is typically required
+to have low latency as compared with the ``slow'' join definition.
+The application code achieves this by using separate thread pools
+for the two join definitions:
+\begin{align*}
+ & \text{\texttt{val tpFast = FixedPool(1)}}\\
+ & \text{\texttt{val tpSlow = FixedPool(cpuCores)}}\\
+ & \text{\texttt{site(tpFast)(...) \textnormal{//first join definition}}}\\
+ & \text{\texttt{site(tpSlow)(...) \textnormal{//second join definition}}}
+\end{align*}
+
+A thread pool can be shut down, which will cause the join definition(s)
+using it to stop processing messages.
+
+\subsubsection{Timeouts}
+
+When a message is sent on a synchronous channel, the sending call,
+e.g.~\texttt{f(x)}, will be blocked until a reply is received. In
+\texttt{Chymyst}, it is possible to specify a time-out for this blocking
+call: 
 \[
-\text{\texttt{f.timeout()(2 seconds)}}
+\text{\texttt{f.timeout(2 seconds)(x)}}
 \]
-A reaction that sends the reply can also check whether the waiting
+A process that sends the reply can also check whether the waiting
 process received the reply value or timed out. This is implemented
-as a \texttt{Boolean} return value from the reply emitter:
+as a \texttt{Boolean} return value from a reply function \texttt{r}:
 \[
 \text{\texttt{go \{ case f(\_,r) \ensuremath{\Rightarrow} if (r("done")) ...~\}}}
 \]
-The timeout-checking functionality may be sometimes required to avoid
-race conditions when using timeouts on synchronous channels.
+The reply-sending call \texttt{r()} returns \texttt{true} only if
+the waiting process did not time out. This timeout-checking functionality
+may be sometimes required to avoid race conditions when using timeouts
+on synchronous channels.
 
-\subsection{What it means to be ``industry ready''{*}{*}{*}}
+\subsubsection{Ordered channels}
 
-The number of available concurrent execution threads is implementation-dependent.
-\texttt{Chymyst} guarantees that reactions declared at different reaction
-sites will be scheduled concurrently, on independent threads.
+In JC, the message consumption order is not specified and may be chosen
+arbitrarily by the implementation. However, certain applications\textemdash notably,
+asynchronous streaming pipelines\textemdash require messages to be
+processed in the order sent. Because of the practical importance of
+asynchronous pipelines, it appears that an implementation of JC should
+have direct support for ordered channels. It would be too inefficient
+to implement ordered message processing on top of unordered JC by,
+say, attaching an extra timestamp to each message and enforcing message
+order via process guards.
+
+Not all JC programs are compatible with ordered channel semantics.
+Consider the case of several processes waiting on the same channel
+with different conditions on the message value, 
+\begin{align*}
+\text{\texttt{site( }} & \text{\texttt{go \{ case c(0) + a(x) \ensuremath{\Rightarrow} ...~\},}}\\
+ & \text{\text{\texttt{go \{ case c(y) if y>0 }}\texttt{\ensuremath{\Rightarrow} ...~\} )}}
+\end{align*}
+If the channel \texttt{c} is implemented as an ordered message queue,
+a message \texttt{c(0)} will block the queue and prevent any processes
+from running until a message \texttt{a(x)} becomes available so that
+\texttt{c(0)} may be consumed. This behavior is certainly undesirable.
+Programs like this one can achieve satisfactory performance only if
+processes are able to consume messages out of order.
+
+Given a JC program, \texttt{Chymyst} automatically assigns ordered
+queues to \emph{all} channels that could admit ordered semantics without
+adverse effects. Such channels are called ``pipelined'' in the \texttt{Chymyst}
+source code.
+
+For a channel \texttt{c} to be pipelined, the processes waiting on
+\texttt{c} must be such that, at any time and for any message \texttt{c(x)}
+on the channel, one of the three statements is true:
+\begin{enumerate}
+\item the message \texttt{c(x)} can be consumed immediately by some process
+\item it can be determined that \texttt{c(x)} will never be consumed by
+any process
+\item at this time, no messages on channel \texttt{c} can be consumed at
+all
+\end{enumerate}
+This is equivalent to the requirement that the condition for \texttt{c(x)}
+to be potentially consumable is independent of the presence of other
+messages on this or other channels. If this requirement holds for
+a channel \texttt{c}, a JC implementation can achieve the correct
+JC semantics by only inspecting a single message on the channel \texttt{c}
+when choosing new processes to run.
+
+To formulate this condition more rigorously, consider that each of
+the defined processes $P_{1}$, ..., $P_{n}$ introduces a predicate
+$p_{i}(x,a,b,...)$ that determines whether the process $P_{i}$ can
+start and consume \texttt{c(x)}. These predicates depend on the presence
+of input messages and on their values. Here we denoted by $x$ the
+value of the message \texttt{c(x)} on channel \texttt{c}, while $a,b,...$
+are some variables that describe other channels on which the $i$-th
+process is waiting. The condition for \emph{some} process consuming
+\texttt{c(x)} to start is
+\[
+\bigvee_{i=1}^{n}p_{i}(x,a,b,...).
+\]
+ \texttt{Chymyst} uses static analysis to try factorizing this Boolean
+expression as
+\[
+\bigvee_{i=1}^{n}p_{i}(x,a,b,...)=p_{c}(x)\wedge q(a,b,...)
+\]
+for some predicates $p_{c}$ and $q$. The factorized Boolean formula
+$p_{c}(x)\wedge q(...)$ indicates that the condition $p_{c}(x)$
+for being able to consume \texttt{c(x)} is logically independent of
+any other messages that may be currently present. If this Boolean
+factorization exists, \texttt{Chymyst} marks \texttt{c} as a pipelined
+channel with the predicate $p_{c}$. 
+
+Another optimization for pipelined channels is that \texttt{Chymyst}
+will discard all messages \texttt{c(x)} for which $p_{c}(x)$ does
+not hold: these messages will never be consumed by any processes.
+
+\subsubsection{Logging and unit testing}
+
+In the author's experience, errors in JC programs are often due to
+messages that should have been sent but were not, and to erroneous
+process definitions that start processes where they should not have.
+A straightforward approach to debugging these situations is to examine
+the execution trace of a join definition. Such a trace would show
+the decisions made by the a join definition's scheduler after each
+new process search, detailing whether a new process was scheduled,
+and what messages were present at that time on any channels.
+
+\texttt{Chymyst} includes an event reporting facility that allows
+join definitions to write an execution trace to console or to memory.
+A design issue is how to indicate in the application code that a certain
+join definition needs to log its trace. In \texttt{Chymyst}, as in
+JoCaml, user code has no direct access either to join definitions
+themselves or to the message multisets held by join definitions. This
+is a useful encapsulation and safety feature. However, user code can
+assign a thread pool to each join definition, and thus it is convenient
+to attach an event reporting interface to thread pool objects:
+\begin{align*}
+ & \text{\texttt{val tp = FixedPool(2).withReporter(reporter)}}\\
+ & \text{\texttt{site(tp)( ... )}}
+\end{align*}
+Frequently used event reporters are supplied by \texttt{Chymyst},
+and application code can define custom event reporters. This facility
+is suitable for reporting errors and for gathering runtime performance
+metrics. 
+
+However, logging is inadequate as a means of verifying the desired
+functionality of a JC program. For this reason, \texttt{Chymyst} implements
+a special \texttt{Future}-based API that can be used for unit testing. 
+
+For any chosen channel, the unit testing API can be used to obtain
+a Scala \texttt{Future} that completes when: 
+\begin{itemize}
+\item a message was sent on this channel
+\item process search has concluded and involved a message sent on this channel
+\item a message present on this channel was consumed by a new process
+\end{itemize}
+The process search event may have a positive outcome (a new process
+was scheduled, consuming this message) or a negative outcome (no new
+processes could be scheduled), in which case the \texttt{Future} will
+fail.
+
+The unit testing API can be used to verify correctness of asynchronous
+process logic embodied in a JC program, without changing the program's
+code. For example, one could write a test that, sends a message on
+a certain channel, waits until that message is consumed, then waits
+until a new message is sent on another channel, and finally asserts
+a condition on the value of the new message.
+
+The unit testing API also allows users to write tests that are robust
+against varying execution speed, since there is no need to wait for
+some arbitrarily chosen ``reasonable'' time before checking for
+conditions to hold.
+
+The API just described applies to asynchronous channels. Synchronous
+channels block and thus generally do not require a special API for
+testing. However, a useful convenience is to be able to convert a
+blocking message call into a \texttt{Future}, which makes sending
+the message a non-blocking call. This facility is available as the
+\texttt{futureReply()} method on blocking channels.
+
+\subsubsection{Process supervision}
+
+Since processes run on separate JVM threads, the application will
+not automatically receive a notification when a process throws an
+exception and fails. \texttt{Chymyst} supervises all processes and
+catches their run-time exceptions, reporting them to the user via
+the logging mechanism. Additionally, \texttt{Chymyst} will warn the
+user if a process fails to reply to a synchronous channel.
+
+If it is expected that an exception will sometimes occur but the failure
+is transient, the user may specify an option to retry running the
+process:
+\[
+\text{\texttt{go \{ case ...~\}.withRetry}}
+\]
+A more general supervision mechanism is to attach a supervisor process
+that recovers from a failure in some appropriate way:
+\[
+\text{\texttt{go \{ case ...~\}.onError(e \ensuremath{\Rightarrow} go \{ case ...~\}) }}
+\]
+The supervisor process receives the same input messages as the failed
+process and additionally may use the exception value \texttt{e}. The
+supervisor process will run on the same thread and can be visualized
+as a direct replacement for the failed process.
 
 \subsection{Pedagogical considerations}
 
@@ -552,56 +868,55 @@ an unfamiliar paradigm clearly and comprehensibly to newcomers. Here
 we again encounter difficulties when it comes to learning about join
 calculus. 
 
-The Wikipedia page on JC\footnote{ See \href{https://en.wikipedia.org/wiki/Join-calculus}{en.wikipedia.org/wiki/Join-calculus},
-as of December 2016.} describes it as ``\emph{an asynchronous $\pi$-calculus with several
-strong restrictions: 1) Scope restriction, reception, and replicated
-reception are syntactically merged into a single construct, the }definition\emph{;
-2) Communication occurs only on defined names; 3) For every defined
-name there is exactly one replicated reception.}''
+The Wikipedia page on JC describes it as ``\emph{an asynchronous
+$\pi$-calculus with several strong restrictions: 1) Scope restriction,
+reception, and replicated reception are syntactically merged into
+a single construct, the }definition\emph{; 2) Communication occurs
+only on defined names; 3) For every defined name there is exactly
+one replicated reception.}''\footnote{ See \href{https://en.wikipedia.org/wiki/Join-calculus}{en.wikipedia.org/wiki/Join-calculus},
+as of June 2017.}
 
 Explanations using technical jargon such as ``replicated reception''
 or ``communication on defined names'' are impenetrable for anyone
 not already well-versed in the concurrency research literature. Since
-Wikipedia (deservedly or not) is a popular go-to resource for learning
-new concepts, it is quite understandable that software practitioners
-today remain unaware of join calculus even 20+ years after its invention.
+Wikipedia is the most popular go-to resource for learning new concepts,
+it is quite understandable that software practitioners today remain
+unaware of join calculus.
 
 Another obstacle for comprehending JC is that academic literature
-typically uses terms such as \textquotedblleft channel\textquotedblright ,
+typically uses the terms \textquotedblleft channel\textquotedblright ,
 ``message'', and ``process'', which are inherited from $\pi$-calculus
-but are not helpful for understanding how JC works and how to write
-concurrent programs in it.
+but are not especially helpful for understanding how JC works and
+how to write concurrent programs in it.
 
-Indeed, a \textquotedblleft channel\textquotedblright{} in JC holds
-an \emph{unordered} collection of messages, rather than an ordered
-queue or mailbox, as the word \textquotedblleft channel\textquotedblright{}
+Indeed, a channel in JC holds an \emph{unordered} collection of messages,
+rather than an ordered queue or mailbox, as the word \textquotedblleft channel\textquotedblright{}
 suggests. Another meaning of \textquotedblleft channel\textquotedblright{}
 is a persistent path for exchanging messages between fixed locations,
-but this is far from what a JC \textquotedblleft channel\textquotedblright{}
-actually does.
+but this is far from what a JC channel actually does.
 
 The phrase \textquotedblleft sending a message\textquotedblright{}
-usually implies that a fixed recipient will consume the sent messages
+usually implies that a well-known recipient will consume messages
 one by one. But this is very different from what happens in JC, where
-a ``process'' may wait for several \textquotedblleft messages\textquotedblright{}
-at once, different ``processes'' may contend on several \textquotedblleft messages\textquotedblright{}
-they wait for, and several copies of a ``process'' may start concurrently,
-consuming their input ``messages'' in random order.
+a process may wait for several messages at once, different processes
+may contend on messages they wait for, and several copies of a process
+may start concurrently, consuming their input messages in non-deterministic
+order.
 
 The word ``process'' suggests a fixed, persistent thread of computation
 with which we may communicate. However, JC does not have persistent
-threads of computation; instead, ``processes'' are spawned on demand
-as input ``messages'' become available.
+threads of computation; instead, processes are spawned on demand as
+input messages become available.
 
-While JoCaml remains today the only well-maintained standard implementation
+While JoCaml is currently the sole well-maintained standard implementation
 of JC, its developer documentation\footnote{ See \href{http://jocaml.inria.fr/doc/index.html}{jocaml.inria.fr/doc/index.html}.}
-is especially confusing as regards the semantics of \textquotedblleft channels\textquotedblright ,
-\textquotedblleft messages\textquotedblright , \textquotedblleft processes\textquotedblright ,
-and ``spawning''. It is ill-suited as a pedagogical introduction
+is especially confusing as regards the semantics of channels, messages,
+processes, and ``spawning.'' It is ill-suited as a pedagogical introduction
 either to using JoCaml or to join calculus. For example, the JoCaml
-manual mixes the \texttt{spawn} keyword used for sending messages
-with the notion of ``spawning'' a new process, which has a quite
-different semantics in JC.
+manual does not clearly distinguish the notion of ``spawning'' a
+new process from the usage of the \texttt{spawn} keyword, which has
+a quite different semantics in JoCaml (sending ad-hoc messages on
+channels).
 
 Instead of using academic JC terminology, I follow the chemical machine
 metaphor and terminology when giving tutorial presentations about
@@ -639,14 +954,15 @@ who were previously unfamiliar with it.
 
 Many Scala developers interested in concurrent programming are already
 familiar with the Actor model. In this subsection, I outline how the
-chemical machine paradigm can be introduced to those developers.
+JC in its ``chemical machine'' presentation can be introduced effectively
+to those developers.
 
 In the Actor model, an actor receives messages and reacts to them
 by running a computation. An actor-based program declares several
 actors, defines the computations for them, stores references to the
-actors, and starts sending messages to some of the actors. Messages
+actors, and starts sending messages to the available actors. Messages
 are sent either synchronously or asynchronously, enabling communication
-between different concurrent actors. 
+between actors.
 
 The chemical machine paradigm is in certain ways similar to the Actor
 model. A chemical program also consists of concurrent processes, or
@@ -656,7 +972,7 @@ machine paradigm departs from the Actor model in two major ways:
 \item Chemical actors are automatically started and stopped; the user's
 code only sends messages and does not manipulate actor references.
 \item Chemical actors may wait for a set of different messages to be received
-atomically.
+atomically at once.
 \end{enumerate}
 If we examine these requirements and determine what should logically
 follow from them, we will arrive at the chemical machine paradigm.
@@ -678,28 +994,29 @@ like this,
 \text{} & \texttt{val c1 }\text{\texttt{= go \{ x:~Int \ensuremath{\Rightarrow} ...~\}}}\\
  & \text{\texttt{c1 !~123 }}
 \end{align*}
-The computation labeled as \texttt{c1} receives a message with an
-\texttt{Int} value and performs some processing on it. The computation
+The computation under the \texttt{go} keyword receives a message with
+an \texttt{Int} value and performs some processing on it. The computation
 will be instantiated and run concurrently, whenever a message is sent.
-In this way, we made the first step towards the full chemical machine
-paradigm. 
+In this way, we made the first step towards the chemical machine paradigm. 
 
-What should happen if we quickly send many messages? 
+What could happen if we quickly send many messages? 
 \begin{align*}
 \text{} & \texttt{val c1 }\text{\texttt{= go \{ x:~Int \ensuremath{\Rightarrow} ...~\}}}\\
  & \text{\texttt{(1 to 100).foreach(c1 !~\_) }}
 \end{align*}
 Since our computations are stateless, it is safe to run several instances
-of the computation \texttt{c1} concurrently. The runtime engine may
-automatically adjust the degree of parallelism depending on CPU load.
+of the computation \texttt{\{ x: Int $\Rightarrow$ ...~\}} concurrently.
+The runtime engine may automatically adjust the degree of parallelism
+depending on CPU load.
 
-Note that \texttt{c1} is not a reference to a particular instance
-of a computation. Rather, the computation \texttt{\{ x: Int $\Rightarrow$
-... \}} is being defined \emph{declaratively}, as a description of
-what needs to be done with any message sent via \texttt{c1}. We could
-say that the value \texttt{c1} plays the role of a \emph{label} attached
-to the value \texttt{123}. The label implies that the value \texttt{123}
-should be used as the input parameter \texttt{x} in a particular computation.
+Note that \texttt{c1} is not a reference to a particular \emph{instance}
+of the computation. Rather, the computation \texttt{\{ x: Int $\Rightarrow$
+...~\}} is merely a declarative description of what needs to be done
+with any message sent via \texttt{c1}. We could say that the value
+\texttt{c1} plays the role of a \emph{label} attached to the value
+\texttt{123}. This label implies that the value \texttt{123} should
+be used as the input parameter \texttt{x} in a particular computation. 
+
 To express this semantics more clearly, let us change our pseudo-code
 notation to 
 \begin{align*}
@@ -726,9 +1043,10 @@ like this,
  & \text{\texttt{c1 !~123}}\\
  & \text{\texttt{c2 !~"abc"}}
 \end{align*}
-The two messages are of different types and are labeled by \texttt{c1}
-and \texttt{c2} respectively. The computation starts only after \emph{both}
-messages have been sent, and consumes both messages atomically.
+The two messages carry data of different types and are labeled by
+\texttt{c1} and \texttt{c2} respectively. The computation starts only
+after \emph{both} messages have been sent, and consumes both messages
+atomically.
 
 It follows that messages cannot be sent to a linearly ordered queue
 or a mailbox. Instead, messages must be kept in an unordered bag,
@@ -748,7 +1066,7 @@ the messages that will be actually consumed. Among the several contending
 computations, only one will be actually started.
 
 This concludes the second and final step towards the chemical machine
-paradigm. It remains to use the Scala syntax instead of pseudo-code.
+paradigm. It remains to use the actual Scala syntax instead of pseudo-code.
 
 In Scala, we need to declare message types explicitly and to register
 chemical computations with the runtime engine as a separate step.
@@ -761,42 +1079,73 @@ The syntax used by \texttt{Chymyst} looks like this:
 \end{align*}
 
 As we have just seen, the chemical machine paradigm is a radical departure
-from the Actor model:
-\begin{itemize}
-\item Whenever there are sufficiently many input messages available for
+from the Actor model.
+
+Whenever there are sufficiently many input messages available for
 processing, the runtime engine may automatically instantiate several
 concurrent copies of the same computation that will consume the input
 messages concurrently. This is the main method for achieving parallelism
 in the chemical paradigm. The runtime engine is in the best position
-to optimize the CPU load using low-level OS threads. The application
-code does not need to decide how many concurrent actors to instantiate
-at any given time. 
-\item Since chemical actors are stateless and instantiated automatically
-on demand, users do not need to implement actor lifecycle management,
-actor supervision hierarchies, backup and recovery of actors' internal
-state, or a special ``dead letter'' actor. This removes a significant
-amount of complexity from the architecture of concurrent applications.
-\item Input message contention is used in the chemical machine paradigm
-as a general mechanism for synchronization and mutual exclusion. (In
+to optimize the CPU load over low-level threads. The application code
+does not need to specify how many concurrent processes to run at any
+given time. (To implement any concurrent computation such as map/reduce
+in the Actor model, the application code must explicitly instantiate
+a desired number of concurrent actors.)
+
+Since chemical actors are stateless and instantiated automatically
+on demand, the application code does not manipulate explicit actor
+references, which is error-prone.\footnote{ For example, books on Akka routinely warn against calling \texttt{sender()}
+in a \texttt{Future}, which may yield an incorrect actor reference
+when the \texttt{Future} is resolved.} The application code also does not need to implement actor lifecycle
+management, actor hierarchies, backup and recovery of actors' internal
+state, or deal with the special ``dead letter'' actor. This removes
+a significant amount of complexity from the architecture of concurrent
+applications.
+
+Input message contention is used in the chemical machine paradigm
+as a general mechanism for synchronization and mutual exclusion. This
+helps the programmer focus on the application logic at a higher level,
+because it is easier to reason about data than about processes. (In
 the Actor model, these features are implemented by creating a fixed
 number of actor \emph{instances} that alone can consume certain messages.)
-Since the runtime engine will arbitrarily decide which actor to run,
-input contention will result in nondeterminism. This is quite similar
-to the nondeterminism in the usual models of concurrent programming.
-For example, mutual exclusion allows the programmer to implement safe
-exclusive access to a resource for any number of concurrent processes,
-but the order of access among the contending processes remains unspecified.
+
+In the chemical machine paradigm, ``chemical actors'' are called
+\textbf{reactions}, their input messages are \textbf{input molecules},
+messages sent by a chemical computation are \textbf{output molecules}
+of the reaction, while input message labels are \textbf{molecule emitters}.
+
+In the academic literature, ``chemical actors'' are called \textbf{processes},
+while input message labels are \textbf{channels} or sometimes \textbf{channel}
+\textbf{names}.
+
+\section{Status and future roadmap}
+
+\texttt{Chymyst} is an Apache-licensed open-source project published
+to the Maven repository, currently at version 0.2.1. Extensive tutorial
+and developer documentation is already available and is being continually
+expanded. Tutorial examples include map/reduce, merge-sort, and Conway's
+``Game of Life'', as well as a number of standard concurrency problems
+such as the ``dining philosophers'' and the ``readers/writers.''
+The \texttt{Chymyst} development workflow follows industry-standard
+practices such as test-driven development and continuous integration.
+Unit tests exercise all features of the DSL (with 100\% code coverage).
+Timings of the process scheduling code indicate that the overhead
+for starting a new process after sending a message can be as short
+as 10 $\mu$s on a 2GHz laptop. 
+
+Features on the \texttt{Chymyst} development roadmap include:
+\begin{itemize}
+\item a standard library of JC definitions, to implement various concurrency
+patterns
+\item reporting of JVM thread performance metrics via JMX
+\item bindings for GUI toolkits such as JavaFX/ScalaFX
+\item possible support for Scala.js (with no multithreading)
+\item compile-time code transformations for performance optimization
+\item use of consensus algorithms to support distributed and remote execution
 \end{itemize}
-In the chemical machine paradigm, ``chemical actor'' computations
-are called \textbf{reactions}, their input messages are \textbf{input
-molecules}, messages sent by a chemical computation are \textbf{output
-molecules} of the reaction, while input message labels are \textbf{molecule
-emitters}.
-
-In the academic literature, chemical computations are called ``processes''
-and input message labels are ``channels'' or ``channel names''.
-
-\section{Future roadmap}
+Implementing these features will create a robust, full-featured, and
+well-tested Scala implementation of join calculus that is viable for
+industry adoption.
 
 \bibliographystyle{acm}
 \bibliography{chymyst_paper}
