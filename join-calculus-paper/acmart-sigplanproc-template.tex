@@ -165,8 +165,8 @@ of use and elegance.
 </ccs2012>
 \end{CCSXML}
 
-\ccsdesc[500]{Software and its engineering~General programming languages}
-\ccsdesc[300]{Computing methodologies~Concurrent programming languages}
+\ccsdesc[300]{Software and its engineering~General programming languages}
+\ccsdesc[500]{Computing methodologies~Concurrent programming languages}
 %% End of generated code
 
 
@@ -210,13 +210,13 @@ with JC-specific design patterns, which is not readily achieved without
 working through numerous examples.
 
 Industry-strength frameworks must provide a number of important facilities
-such as integration with other asynchronous interfaces, fault tolerance
-and process supervision, performance tuning and performance metrics,
-or unit testing and debugging, to name just a few. Existing academic
+such as fault tolerance
+and process supervision, performance tuning and metrics,
+or unit testing and debugging, to name just a few. Existing
 presentations of JC do not consider these features and do not describe
 how they are to be integrated into the JC paradigm. Neither do any
 of the existing JC implementations provide such features. This may
-be the biggest obstacle for industry acceptance of JC.
+be the biggest obstacle for industrial use of JC.
 
 In this paper, I present a new open-source implementation of JC as
 a library called \texttt{Chymyst},\footnote{ The name is borrowed from the early treatise~\citep{Boy1661} by
@@ -235,28 +235,25 @@ paradigm.
 
 I describe the main design decisions made in the \texttt{Chymyst}
 project while implementing join calculus as an embedded DSL in Scala. 
-
 \texttt{Chymyst} lifts several restrictions that are present in other
 JC projects, and offers some additional features:
 \begin{itemize}
 \item separate definition of channel names and processes
 \item arbitrary non-linear patterns and guards in process definitions
-\item synchronous rendezvous
+\item syntax that supports synchronous rendezvous
 \item incremental construction of join definitions from first-class process
 definitions
-\item automatic performance optimizations
 \item static code analysis and early error detection
 \end{itemize}
-I argue that certain new facilities need to be added to a JC implementation
-in order to make it viable for industry adoption. These facilities
-include:
+I argue that certain facilities need to be added to a JC implementation
+in order to make it viable for industry adoption, including:
 \begin{itemize}
 \item thread pool management for performance tuning
 \item time-outs for synchronous channels
-\item interoperability with \texttt{Future}'s and other asynchronous APIs
+\item interoperability with \texttt{Future}'s and other async APIs
 \item APIs for unit testing and debugging
-\item per-process fault tolerance settings
-\item message pipelining
+\item per-process fault tolerance options
+\item ordered channels, message pipelining
 \end{itemize}
 I show how these facilities can be embedded in the JC paradigm
 and describe their current implementation in \texttt{Chymyst}.
@@ -280,9 +277,9 @@ to}'' syntax) makes this code transformation more transparent.
 Since its invention more than 20 years ago, join calculus has been
 implemented by a number of researchers, typically by creating an entirely
 new JC-based programming language or by modifying an existing language
-compiler. It is hard to assess the scope and practical use of these
+compiler. It is hard to assess the practical use of these
 implementations, since most of them appear to be unmaintained proof-of-concept
-projects developed to accompany academic publications. 
+projects. 
 
 Here I will not attempt to survey the theoretical advances made by
 those researchers. Since the main goal of the \texttt{Chymyst} project
@@ -301,7 +298,7 @@ any concepts or features of JC \textemdash{} either in the language
 itself or in its standard libraries.
 
 G.~S.~von Itzstein implemented JC as a patch for the Java compiler~\citep{Von2004}.
-The ``Join Java'' project is abandoned.
+The project is abandoned.
 
 The first appearance of JC in Scala was a \textquotedblleft Join in
 Scala\textquotedblright{} compiler patch by V.~Cremet (2003).\footnote{ See \href{http://lampwww.epfl.ch/~cremet/misc/join_in_scala/index.html}{lampwww.epfl.ch/$\sim$cremet/misc/join\_{}in\_{}scala/}.}
@@ -342,9 +339,9 @@ appears to be unsupported.\footnote{ See \href{https://github.com/fredokun/LuaPi
 Y.~Liu implemented the basic JC primitives in 2007-2009 as part of
 the C++ \texttt{Boost} library.\footnote{ See \href{http://channel.sourceforge.net/}{channel.sourceforge.net}.} 
 
-In 2013, the present author created experimental JC prototypes for
+S.~Winitzki implemented JC for
 Objective-C on iOS and for Java on Android\footnote{ See \href{https://github.com/winitzki}{github.com/winitzki}.};
-these projects are unmaintained. However, the \texttt{Chymyst} project
+these projects are unmaintained. \texttt{Chymyst}
 reuses some design decisions made in these earlier works.
 
 In 2014, S.~Yallop implemented ``Join Language'' as a DSL embedded
@@ -371,8 +368,8 @@ also adopts these design choices.
 Neither of the words ``join'' and ``calculus'' are particularly
 explanatory or visually suggestive. In my experience, the absolute
 majority of software developers are unfamiliar with join calculus
-or its terminology (channel / message / process), but the majority
-of Scala concurrency practitioners know about the Actor model through
+or its terminology (channel / message / process), but most
+Scala concurrency practitioners know about the Actor model through
 the Akka library. Accordingly, I would argue that introducing JC concepts
 to the Scala developer audience should build upon the existing Actor
 model knowledge. However, reasoning about JC programs is most direct
@@ -397,7 +394,7 @@ have the form
 \text{\texttt{val c }} & \text{\texttt{= m[List[Int]]}}\\
 \text{\texttt{val t }} & \text{\texttt{= m[Unit]}}
 \end{align*}
-and result in creating new \textbf{molecule emitters} as local values
+which creates new \textbf{molecule emitters} as local values
 \texttt{c} and \texttt{t}. Emitters can be seen as functions that
 are called in order to emit the corresponding molecules into the reaction
 site:
@@ -420,7 +417,7 @@ This reaction consumes two input molecules, \texttt{t()} and \texttt{c()},
 and evaluates the reaction body (the Scala code in the body of the
 \texttt{case} clause). In this example, the reaction body simply emits
 one molecule, \texttt{c()}, carrying a computed new value \texttt{xs}.
-So, the effect of this reaction is to compute the tail of a list.
+In effect, this reaction computes the tail part of a list.
 Due to the pattern-matching condition, this reaction will start only
 when the molecule \texttt{c()} carries a non-empty list value.
 
@@ -437,8 +434,7 @@ it merely defines the available computation declaratively. In order
 to make the chemical machine run reactions, the programmer needs to
 create a reaction site using the \texttt{site()} call, such as \texttt{site(r1,
 r2)}, which activates the reactions listed as the arguments. A reaction
-site typically includes several reactions that may be declared inline
-for brevity:
+site typically includes several reactions declared inline for brevity:
 \begin{align*}
 \text{\texttt{site(}}\\
  & \text{\texttt{go \{ case t(\_) + c(x ::~xs) \ensuremath{\Rightarrow} c(xs) \},}}\\
@@ -576,10 +572,10 @@ of repeated channels:
 \[
 \text{\texttt{go \{ case a(x) + a(y) + a(z) \ensuremath{\Rightarrow} a(x+y+z) \}}}
 \]
-Some computations (such as unordered map/reduce) are most directly
+Some computations are most directly
 expressed in this form. A strictly linear-pattern JC implementation,
 such as JoCaml, would require cumbersome auxiliary definitions to
-implement an equivalent process.
+implement equivalent behavior.
 
 Processes may also wait on repeated \emph{synchronous} channels. This
 last feature, together with the continuation-passing syntax for those
@@ -821,15 +817,15 @@ using it to stop processing messages.
 
 \subsubsection{Timeouts}
 
-When a message is sent on a synchronous channel, the sending call,
+The call that sends a message on a synchronous channel,
 e.g.~\texttt{f(x)}, will be blocked until a reply is received. In
-\texttt{Chymyst}, it is possible to specify a time-out for this blocking
+\texttt{Chymyst}, it is possible to specify a timeout for this blocking
 call: 
 \[
 \text{\texttt{f.timeout(2 seconds)(x)}}
 \]
-A process that sends the reply can also check whether the waiting
-process received the reply value or timed out. This is implemented
+The replying process can also check whether the waiting
+process received the reply or timed out. This is implemented
 as a \texttt{Boolean} return value from a reply function \texttt{r}:
 \[
 \text{\texttt{go \{ case f(\_,r) \ensuremath{\Rightarrow} if (r("done")) ...~\}}}
@@ -880,9 +876,9 @@ any process
 \item at this time, no messages on channel \texttt{c} can be consumed at
 all
 \end{enumerate}
-This is equivalent to the requirement that the condition for \texttt{c(x)}
-to be potentially consumable is independent of the presence of other
-messages on this or other channels. If this requirement holds for
+Equivalently, the condition for \texttt{c(x)}
+to be potentially consumable should be independent of the presence of other
+messages on this or other channels. If this holds for
 a channel \texttt{c}, a JC implementation can achieve the correct
 JC semantics by only inspecting a single message on the channel \texttt{c}
 when choosing new processes to run.
@@ -994,14 +990,14 @@ process:
 \[
 \text{\texttt{go \{ case ...~\}.withRetry}}
 \]
-A more general supervision mechanism is to attach a supervisor process
-that recovers from a failure in some appropriate way:
+A more general supervision mechanism is to attach a second process
+that could recover from expected failures:
 \[
 \text{\texttt{go \{ case ...~\}.onError(e \ensuremath{\Rightarrow} go \{ case ...~\}) }}
 \]
-The supervisor process receives the same input messages as the failed
-process and additionally may use the exception value \texttt{e}. The
-supervisor process will run on the same thread and can be visualized
+The recovery process receives the same input messages as the failed
+process and also may use the exception value \texttt{e}. The
+recovery code will run on the same thread and can be visualized
 as a direct replacement for the failed process.
 
 \subsection{Pedagogical considerations}
@@ -1191,12 +1187,12 @@ The two messages carry data of different types and are labeled by
 after \emph{both} messages have been sent, and consumes both messages
 atomically.
 
-It follows that messages cannot be sent to a linearly ordered queue
-or a mailbox. Instead, messages must be kept in an unordered bag,
+It follows that messages cannot be sent to a linearly ordered queue,
 as they will be consumed in an unknown order.
+Instead, messages must be kept in an unordered bag.
 
-It also follows from the atomicity requirement that we may define
-several computations that \emph{jointly contend} on input messages:
+It also follows from the atomicity requirement that
+several computations could \emph{jointly contend} on input messages:
 \begin{align*}
 \text{} & \text{\texttt{go \{ x:~Int \textnormal{from} c1, y:~String \textnormal{from} c2 \ensuremath{\Rightarrow} ...~\}}}\\
  & \text{\texttt{go \{ x:~Int \textnormal{from} c1, z:~Unit \textnormal{from} e1 \ensuremath{\Rightarrow} ...~\}}}
@@ -1213,7 +1209,7 @@ paradigm, where ``chemical actors'' are called reactions and ``messages'' are ca
 
 It remains to use the actual Scala syntax instead of pseudo-code.
 In Scala, we need to declare message types explicitly and to register
-chemical computations with the runtime engine as a separate step.
+reactions with the runtime engine as a separate step.
 The syntax used by \texttt{Chymyst} looks like this:
 \begin{align*}
 \text{} & \text{\texttt{val c1 = m[Int]}}\\
@@ -1281,9 +1277,7 @@ industry adoption.
   %% \grantnum[<url>]{<sponsorID>}{<number>} should be used to
   %% acknowledge financial support and will be used by metadata
   %% extraction tools.
- Any opinions, findings, and
-  conclusions or recommendations expressed in this material are those
-  of the author and do not necessarily reflect the views of Workday, Inc.
+  The author thanks L.~Maranget, A.~Schmitt, J.~He, and S.~Yallop for fruitful discussions of join calculus.
 \end{acks}
 
 
