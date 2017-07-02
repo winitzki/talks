@@ -142,9 +142,8 @@ actors are made type-safe, immutable, and are automatically managed.
 By comparison with the popular Akka library, I identify a comprehensive
 set of additional features necessary to make JC an industry-ready
 concurrency paradigm. These features include ordered channels, APIs
-for unit testing, thread pool control, and fault tolerance. I present
-ways of embedding such features in JC without sacrificing its ease
-of use and elegance.
+for unit testing, thread pool control, and fault tolerance. I show
+how \texttt{Chymyst} embeds such features in the JC paradigm.
 \end{abstract}
 
 
@@ -152,21 +151,21 @@ of use and elegance.
 %% Generate at 'http://dl.acm.org/ccs/ccs.cfm'.
 \begin{CCSXML}
 <ccs2012>
-<concept>
-<concept_id>10011007.10011006.10011008</concept_id>
-<concept_desc>Software and its engineering~General programming languages</concept_desc>
-<concept_significance>300</concept_significance>
 </concept>
 <concept>
 <concept_id>10010147.10011777.10011014</concept_id>
 <concept_desc>Computing methodologies~Concurrent programming languages</concept_desc>
 <concept_significance>500</concept_significance>
 </concept>
+<concept>
+<concept_id>10011007.10011006.10011008</concept_id>
+<concept_desc>Software and its engineering~General programming languages</concept_desc>
+<concept_significance>300</concept_significance>
 </ccs2012>
 \end{CCSXML}
 
-\ccsdesc[300]{Software and its engineering~General programming languages}
 \ccsdesc[500]{Computing methodologies~Concurrent programming languages}
+\ccsdesc[300]{Software and its engineering~General programming languages}
 %% End of generated code
 
 
@@ -186,14 +185,14 @@ of use and elegance.
 
 Advanced programming models developed by the theoretical computer
 science community are often ignored by software practitioners. One
-such case is join calculus (JC)~\citep{FouGon1996}, which can be
-seen as a DSL (domain-specific language) for declarative, functional
+such case is join calculus~\citep{FouGon1996}, which can be
+seen as a domain-specific language (DSL) for declarative, functional
 concurrent programming. Given the high importance of concurrent programming
 and a growing adoption of functional languages, one would expect that
 software practitioners would take advantage of this high-level and
 type-safe concurrency paradigm. The message-passing idiom is particularly
 suitable for implementing distributed algorithms (see, e.g.,~\citep{BarEA2007}).
-Nevertheless, there appears to be no practical adoption of JC by the
+Nevertheless, there appears to be no practical adoption of join calculus (JC) by the
 software industry.\footnote{ A Google search yields a number of academic projects but no mentions
 of industrial JC use.} Perhaps not coincidentally, there are very few open-source implementations
 of JC available for download and use. To date, the only fully maintained
@@ -263,11 +262,11 @@ I point out specific deficiencies of the academic terminology of JC
 for explaining the concepts of JC to software developers. Instead,
 I show how to describe JC as an evolution of the Actor model, which
 is ideal for developers already familiar with the Akka library. When
-introducing JC from scratch, I rely on the ``chemical machine''
-metaphor and use the corresponding terminology (molecule / emitter
-/ reaction / reaction site), which is more visual and intuitive. Synchronous
+introducing JC from scratch, the ``chemical machine''
+metaphor and the corresponding terminology (molecule / emitter
+/ reaction / reaction site) prove to be more visual and intuitive. Synchronous
 channels are presented as a shorthand for carrying out a continuation-passing
-code transformation from blocking code to code that uses only asynchronous,
+code transformation to code that uses only asynchronous,
 non-blocking channels. The continuation-passing syntax used by \texttt{Chymyst}
 for synchronous channels (instead of the traditional ``\texttt{reply
 to}'' syntax) makes this code transformation more transparent.
@@ -368,19 +367,20 @@ also adopts these design choices.
 Neither of the words ``join'' and ``calculus'' are particularly
 explanatory or visually suggestive. In my experience, the absolute
 majority of software developers are unfamiliar with join calculus
-or its terminology (channel / message / process), but most
-Scala concurrency practitioners know about the Actor model through
+or its terminology (channel / message / process). However, most
+Scala concurrency practitioners know the Actor model through
 the Akka library. Accordingly, I would argue that introducing JC concepts
 to the Scala developer audience should build upon the existing Actor
 model knowledge. However, reasoning about JC programs is most direct
 and convenient when using the visual metaphors and the terminology
 of the ``chemical machine'' (molecule / reaction). The next subsection
-is a brief overview of JC as seen through the chemical machine metaphor,
-in order to establish terminology. This introduction is suitable also
+is a brief overview of JC as seen through the chemical machine metaphor~\citep{FouGon1996}. This introduction is suitable also
 for readers not already familiar with either JC or the Actor model.
 
 \subsection{The chemical metaphor for concurrency}
 
+In the chemical metaphor, concurrent processing of data is visualized as
+chemical reactions between molecules that carry the data.
 To begin, one imagines a \textbf{reaction site}, i.e.~a virtual place
 where many molecules are floating around and possibly reacting with
 each other. Each molecule has a chemical designation (such as \texttt{a},
@@ -394,16 +394,17 @@ have the form
 \text{\texttt{val c }} & \text{\texttt{= m[List[Int]]}}\\
 \text{\texttt{val t }} & \text{\texttt{= m[Unit]}}
 \end{align*}
-which creates new \textbf{molecule emitters} as local values
-\texttt{c} and \texttt{t}. Emitters can be seen as functions that
-are called in order to emit the corresponding molecules into the reaction
+and create new \textbf{molecule emitters} as local values
+\texttt{c} and \texttt{t}. Emitters can be seen as functions returning \texttt{Unit}
+that
+have a concurrent side-effect of emitting the corresponding molecules into the reaction
 site:
 \begin{align*}
  & \text{\texttt{c(List(1,2,3))}}\\
  & \text{\texttt{t() }//unit value implicit}
 \end{align*}
-The newly emitted molecules will carry the specified values of the
-correct types since the emitters are statically typed.
+Since the emitters are statically typed, the newly emitted molecules will carry specified values of the
+correct types.
 
 Further, the programmer defines the ``chemical laws'' describing
 the permitted reactions between molecules. For reactions, \texttt{Chymyst}
@@ -432,7 +433,7 @@ Reactions are first-class values:
 Creating the reaction value \texttt{r1} does not actually run a computation;
 it merely defines the available computation declaratively. In order
 to make the chemical machine run reactions, the programmer needs to
-create a reaction site using the \texttt{site()} call, such as \texttt{site(r1,
+create a reaction site using the \texttt{site()} call, e.g.~\texttt{site(r1,
 r2)}, which activates the reactions listed as the arguments. A reaction
 site typically includes several reactions declared inline for brevity:
 \begin{align*}
@@ -469,9 +470,9 @@ to JC.
 
 \subsubsection{Synchronous channels as shorthand for continuations}
 
-In a completely asynchronous, non-blocking programming style, a continuation
-can be used in order to simulate waiting until some concurrent computations
-are finished. However, using asynchronous channels with continuations
+In a fully asynchronous, non-blocking programming style, a continuation
+can be used in order to simulate waiting until some concurrently running computation
+is finished. However, using asynchronous channels with continuations
 is a bit cumbersome: The continuation function must be explicitly
 created as a closure and passed as a message value. Manually creating
 a continuation results in ``stack ripping''~\citep{Ady2002}, which
@@ -1218,11 +1219,11 @@ The syntax used by \texttt{Chymyst} looks like this:
  & \text{\texttt{c1(123); }\texttt{c2("abc")}}
 \end{align*}
 
-The chemical machine paradigm is a radical departure
+It is useful to summarize the ways in which the chemical machine paradigm departs
 from the Actor model.
 
 Whenever there are sufficiently many input messages available for
-processing, the runtime engine will automatically instantiate several
+processing, the chemical machine will automatically instantiate several
 concurrent copies of the same reaction that will consume the input
 messages concurrently. The application code
 does not need to specify how many parallel processes to run at any
