@@ -1,0 +1,1258 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass beamer
+\begin_preamble
+\usetheme[secheader]{Boadilla}
+\usecolortheme{seahorse}
+\title{Scala Threads and Futures}
+\author{Sergei Winitzki}
+\date{September 26, 2017}
+\institute[Workday, Inc.]{Workday, Inc.}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+frame{
+\backslash
+titlepage}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+JVM threads
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Java 
+\family typewriter
+Thread
+\family default
+ API: low-level and underpowered
+\end_layout
+
+\begin_layout Itemize
+user code must create/maintain thread, start, interrupt
+\end_layout
+
+\begin_layout Itemize
+cannot reuse one thread for different tasks
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+heavy
+\begin_inset Quotes erd
+\end_inset
+
+: cannot create more than about 2,000 JVM threads
+\end_layout
+
+\begin_layout Itemize
+difficult to synchronize across threads (wait / notify / synchronize)
+\end_layout
+
+\begin_layout Itemize
+code is error-prone, hard to debug
+\end_layout
+
+\begin_layout Itemize
+exceptions on a thread are invisible
+\end_layout
+
+\begin_layout Standard
+Plain C multithreading was essentially just as hard
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+
+\family typewriter
+ThreadPoolExecutor
+\family default
+ = thread pool + task queue
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Java 
+\family typewriter
+ThreadPoolExecutor
+\family default
+:
+\end_layout
+
+\begin_layout Itemize
+has a queue of pending tasks
+\end_layout
+
+\begin_layout Itemize
+runs tasks on a dynamically managed thread pool
+\end_layout
+
+\begin_layout Itemize
+reuses threads for different tasks
+\end_layout
+
+\begin_layout Itemize
+Fork/Join executor: additional facilities for synchronization
+\end_layout
+
+\begin_layout Itemize
+cannot be restarted after shutdown
+\end_layout
+
+\begin_layout Standard
+Main pattern of usage:
+\end_layout
+
+\begin_layout Itemize
+Run a large number of short tasks on a small, fixed number of threads
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Usages of thread pools
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\family typewriter
+scala.concurrent.ExecutionContext
+\family default
+ is a wrapper over a thread pool
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+akka.actor.ActorSystem
+\family default
+ contains a thread pool
+\end_layout
+
+\begin_layout Itemize
+Apache's 
+\family typewriter
+HttpAsyncClient
+\family default
+ contains a thread pool
+\end_layout
+
+\begin_layout Itemize
+Scala's 
+\family typewriter
+Future[T]
+\family default
+ operations (
+\family typewriter
+map
+\family default
+, 
+\family typewriter
+flatMap
+\family default
+) use implicit 
+\family typewriter
+ExecutionContext
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+First look at 
+\family typewriter
+scala.concurrent.Future
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Main features of 
+\family typewriter
+scala.concurrent.Future
+\family default
+:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+value semantics
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+val f: Future[Boolean]
+\family default
+ 
+\begin_inset Newline newline
+\end_inset
+
+– represents a Boolean value that 
+\emph on
+will
+\emph default
+ 
+\emph on
+become available
+\emph default
+ in the future
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+container semantics
+\begin_inset Quotes erd
+\end_inset
+
+: has 
+\family typewriter
+map
+\family default
+ and 
+\family typewriter
+flatMap
+\end_layout
+
+\begin_layout Itemize
+error handling and failure recovery
+\end_layout
+
+\begin_layout Itemize
+use 
+\family typewriter
+scala.concurrent.Promise[T]
+\family default
+ to convert callback APIs to 
+\family typewriter
+Future[T]
+\family default
+ 
+\end_layout
+
+\begin_layout Standard
+
+\size footnotesize
+Note: 
+\family typewriter
+java.util.concurrent.Future
+\family default
+ is just a callback wrapper class
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+How does a 
+\family typewriter
+Future
+\family default
+ run?
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\family typewriter
+\size footnotesize
+implicit ec = somebody.giveMeExecContextPlease()
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size footnotesize
+val f: Future[Array[Float]] = Future { long_computation() }
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+logger.info(
+\begin_inset Quotes eld
+\end_inset
+
+Long computation started
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+Getting a 
+\family typewriter
+Future[T]
+\family default
+ value means:
+\end_layout
+
+\begin_layout Itemize
+a task was queued on that 
+\emph on
+somebody's
+\emph default
+ thread pool
+\end_layout
+
+\begin_layout Itemize
+we could get the result value when it becomes available
+\end_layout
+
+\begin_layout Itemize
+we have no way of knowing when that will happen
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+How does 
+\family typewriter
+map
+\family default
+ work on a 
+\family typewriter
+Future
+\family default
+?
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\family typewriter
+\size footnotesize
+implicit ec = somebody.giveMeExecContextPlease()
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size footnotesize
+val f: Future[Array[Float]] = Future { long_computation() }
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+logger.info(
+\begin_inset Quotes eld
+\end_inset
+
+Long computation started
+\begin_inset Quotes erd
+\end_inset
+
+)
+\begin_inset Newline newline
+\end_inset
+
+val s: Future[Int] = f.map(_.length)
+\end_layout
+
+\begin_layout Itemize
+using 
+\family typewriter
+map
+\family default
+ requires an 
+\family typewriter
+ExecutionContext
+\end_layout
+
+\begin_layout Itemize
+the new computation (_.length) will run once the array is ready
+\end_layout
+
+\begin_layout Itemize
+the new computation may run on another thread!
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+flatMap
+\family default
+ also works: 
+\family typewriter
+Future[Future[T]]
+\family default
+ can be 
+\begin_inset Quotes eld
+\end_inset
+
+flattened
+\begin_inset Quotes erd
+\end_inset
+
+ to 
+\family typewriter
+Future[T]
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+How to work with APIs returning a 
+\family typewriter
+Future
+\family default
+?
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+get an 
+\family typewriter
+ExecutionContext
+\family default
+ (e.g.
+ 
+\family typewriter
+actorSystem.dispatcher
+\family default
+)
+\end_layout
+
+\begin_layout Itemize
+use 
+\family typewriter
+map
+\family default
+ or 
+\family typewriter
+flatMap
+\family default
+ to specify computations to be done in the future
+\end_layout
+
+\begin_layout Itemize
+return another 
+\family typewriter
+Future[T]
+\family default
+ value
+\end_layout
+
+\begin_layout Itemize
+avoid using 
+\family typewriter
+Await.result
+\family default
+ if you can
+\end_layout
+
+\begin_layout Standard
+With modern libraries, no need to wait!
+\end_layout
+
+\begin_layout Standard
+Examples:
+\end_layout
+
+\begin_layout Itemize
+Akka-Streaming accepts a 
+\family typewriter
+Future[T]
+\family default
+ value inside 
+\family typewriter
+mapAsync
+\end_layout
+
+\begin_layout Itemize
+Akka-HTTP accepts a 
+\family typewriter
+Future[T]
+\family default
+ value inside an HTTP route
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+How to convert callback APIs into a 
+\family typewriter
+Future
+\family default
+?
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+create a
+\family typewriter
+ Promise[T]
+\family default
+ value
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+val p = Promise[Int]()
+\end_layout
+
+\begin_layout Itemize
+in the callback, resolve the promise
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+p.succeed(123)
+\end_layout
+
+\begin_layout Itemize
+return the future value
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+p.future
+\end_layout
+
+\begin_layout Standard
+Example: 
+\end_layout
+
+\begin_layout Itemize
+converting Apache's 
+\family typewriter
+HttpAsyncClient
+\family default
+ into a 
+\family typewriter
+Future-based
+\family default
+ API
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+Mistakes were made
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Typical 
+\begin_inset Quotes eld
+\end_inset
+
+gotchas
+\begin_inset Quotes erd
+\end_inset
+
+ when using 
+\family typewriter
+scala.concurrent.Future
+\family default
+:
+\end_layout
+
+\begin_layout Itemize
+unnecessarily waiting for futures to complete – blocked threads
+\end_layout
+
+\begin_layout Itemize
+forgetting to wait for futures to complete – race conditions
+\end_layout
+
+\begin_layout Itemize
+expecting to see a stack trace from exceptions inside a 
+\family typewriter
+Future
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+using one thread pool for everything – thread starvation
+\end_layout
+
+\begin_layout Itemize
+forgetting to shut down the thread pool – application never quits 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What is 
+\begin_inset Quotes eld
+\end_inset
+
+thread-safe
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Thread-safe methods:
+\end_layout
+
+\begin_layout Itemize
+work correctly even if called from many threads in parallel
+\end_layout
+
+\begin_layout Itemize
+either have no mutable state, or manage it with great care
+\end_layout
+
+\begin_layout Standard
+Examples of thread-safe methods: 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+AtomicInteger.incrementAndGet()
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+ConcurrentLinkedQueue.add()
+\end_layout
+
+\begin_layout Standard
+Example of non-thread-safe method: 
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+MockitoSugar.mock[T]()
+\family default
+ – deadlocks when called in parallel
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+What is 
+\begin_inset Quotes eld
+\end_inset
+
+non-blocking
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Non-blocking methods:
+\end_layout
+
+\begin_layout Itemize
+return quickly, although they may 
+\emph on
+schedule
+\emph default
+ long-running calculations
+\end_layout
+
+\begin_layout Itemize
+do not perform an idle wait 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\family typewriter
+Thread.sleep()
+\family default
+ or 
+\family typewriter
+Await.result()
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+do not perform a busy wait 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\family typewriter
+while( ! isReady() ) { doNothingLoop() }
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+do not perform slow I/O (e.g.
+ HTTP with high latency)
+\end_layout
+
+\begin_layout Standard
+Thread pools perform best when most tasks are non-blocking calls
+\end_layout
+
+\begin_layout Standard
+Blocked threads cause suboptimal CPU utilization, a.k.a.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+slowness
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Can we avoid 
+\begin_inset Quotes eld
+\end_inset
+
+blocking
+\begin_inset Quotes erd
+\end_inset
+
+?
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+We could avoid blocking if arriving events could wake up our threads...
+ but:
+\end_layout
+
+\begin_layout Itemize
+A thread cannot be 
+\begin_inset Quotes eld
+\end_inset
+
+woken up
+\begin_inset Quotes erd
+\end_inset
+
+ if it isn't already blocked (
+\begin_inset Quotes eld
+\end_inset
+
+sleeping
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Someone, somewhere has to keep a blocked thread waiting for events
+\end_layout
+
+\begin_layout Itemize
+However, it does not have to be within 
+\emph on
+our
+\emph default
+ thread pools!
+\end_layout
+
+\begin_layout Standard
+If we never 
+\family typewriter
+Await.result()
+\family default
+, we would never get any non-
+\family typewriter
+Future
+\family default
+ values...
+\end_layout
+
+\begin_layout Itemize
+With the right libraries (Akka, etc.), our code never needs to do 
+\family typewriter
+Await.result()
+\end_layout
+
+\begin_layout Itemize
+(except in some unit tests)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+How and when to convert 
+\begin_inset Quotes eld
+\end_inset
+
+blocking
+\begin_inset Quotes erd
+\end_inset
+
+ to 
+\begin_inset Quotes eld
+\end_inset
+
+non-blocking
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Given a 3rd party blocking call 
+\family typewriter
+doHttpWork()
+\family default
+, our options are:
+\end_layout
+
+\begin_layout Itemize
+Wrap it in a 
+\family typewriter
+Future
+\family default
+ using the 
+\family typewriter
+scala.concurrent.blocking()
+\family default
+ instruction
+\end_layout
+
+\begin_layout Itemize
+Create a thread pool dedicated to scheduling 
+\family typewriter
+doHttpWork()
+\family default
+ tasks
+\end_layout
+
+\begin_layout Standard
+It's OK to block if we are not within concurrent code
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Summary
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The backbone of Java concurrency: thread pool executors
+\end_layout
+
+\begin_layout Itemize
+How and when do 
+\family typewriter
+Future
+\family default
+s run? 
+\end_layout
+
+\begin_layout Itemize
+What does it mean to be “thread safe” and “nonblocking”, and when do we
+ need that? 
+\end_layout
+
+\begin_layout Itemize
+Some typical “gotchas” when using 
+\family typewriter
+Future
+\family default
+s in the real world
+\end_layout
+
+\begin_layout Itemize
+Converting other async APIs to 
+\family typewriter
+Future
+\family default
+s and back
+\end_layout
+
+\end_deeper
+\end_body
+\end_document

@@ -1,0 +1,270 @@
+%% LyX 2.2.0 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\usepackage{babel}
+\ifx\hypersetup\undefined
+  \AtBeginDocument{%
+    \hypersetup{unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=true}
+  }
+\else
+  \hypersetup{unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=true}
+\fi
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme[secheader]{Boadilla}
+\usecolortheme{seahorse}
+\title{Scala Threads and Futures}
+\author{Sergei Winitzki}
+\date{September 26, 2017}
+\institute[Workday, Inc.]{Workday, Inc.}
+
+\makeatother
+
+\begin{document}
+\frame{\titlepage}
+\begin{frame}{JVM threads}
+
+Java \texttt{Thread} API: low-level and underpowered
+\begin{itemize}
+\item user code must create/maintain thread, start, interrupt
+\item cannot reuse one thread for different tasks
+\item ``heavy'': cannot create more than about 2,000 JVM threads
+\item difficult to synchronize across threads (wait / notify / synchronize)
+\item code is error-prone, hard to debug
+\item exceptions on a thread are invisible
+\end{itemize}
+Plain C multithreading was essentially just as hard
+\end{frame}
+
+\begin{frame}{\texttt{ThreadPoolExecutor} = thread pool + task queue}
+
+Java \texttt{ThreadPoolExecutor}:
+\begin{itemize}
+\item has a queue of pending tasks
+\item runs tasks on a dynamically managed thread pool
+\item reuses threads for different tasks
+\item Fork/Join executor: additional facilities for synchronization
+\item cannot be restarted after shutdown
+\end{itemize}
+Main pattern of usage:
+\begin{itemize}
+\item Run a large number of short tasks on a small, fixed number of threads
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Usages of thread pools}
+
+\begin{itemize}
+\item \texttt{scala.concurrent.ExecutionContext} is a wrapper over a thread
+pool
+\item \texttt{akka.actor.ActorSystem} contains a thread pool
+\item Apache's \texttt{HttpAsyncClient} contains a thread pool
+\item Scala's \texttt{Future{[}T{]}} operations (\texttt{map}, \texttt{flatMap})
+use implicit \texttt{ExecutionContext}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{First look at \texttt{scala.concurrent.Future}}
+
+Main features of \texttt{scala.concurrent.Future}:
+\begin{itemize}
+\item ``value semantics'' \\
+\texttt{val f: Future{[}Boolean{]}} \\
+\textendash{} represents a Boolean value that \emph{will} \emph{become
+available} in the future
+\item ``container semantics'': has \texttt{map} and \texttt{flatMap}
+\item error handling and failure recovery
+\item use \texttt{scala.concurrent.Promise{[}T{]}} to convert callback APIs
+to \texttt{Future{[}T{]}} 
+\end{itemize}
+{\footnotesize{}Note: }\texttt{\footnotesize{}java.util.concurrent.Future}{\footnotesize{}
+is just a callback wrapper class}{\footnotesize \par}
+\end{frame}
+
+\begin{frame}{How does a \texttt{Future} run?}
+
+\texttt{\footnotesize{}implicit ec = somebody.giveMeExecContextPlease()}{\footnotesize \par}
+
+\texttt{\footnotesize{}val f: Future{[}Array{[}Float{]}{]} = Future
+\{ long\_computation() \}}{\footnotesize{}}\\
+\texttt{\footnotesize{}logger.info(``Long computation started'')}{\footnotesize \par}
+
+Getting a \texttt{Future{[}T{]}} value means:
+\begin{itemize}
+\item a task was queued on that \emph{somebody's} thread pool
+\item we could get the result value when it becomes available
+\item we have no way of knowing when that will happen
+\end{itemize}
+\end{frame}
+
+\begin{frame}{How does \texttt{map} work on a \texttt{Future}?}
+
+\texttt{\footnotesize{}implicit ec = somebody.giveMeExecContextPlease()}{\footnotesize \par}
+
+\texttt{\footnotesize{}val f: Future{[}Array{[}Float{]}{]} = Future
+\{ long\_computation() \}}{\footnotesize{}}\\
+\texttt{\footnotesize{}logger.info(``Long computation started'')}~\\
+\texttt{\footnotesize{}val s: Future{[}Int{]} = f.map(\_.length)}{\footnotesize \par}
+\begin{itemize}
+\item using \texttt{map} requires an \texttt{ExecutionContext}
+\item the new computation (\_.length) will run once the array is ready
+\item the new computation may run on another thread!
+\item \texttt{flatMap} also works: \texttt{Future{[}Future{[}T{]}{]}} can
+be ``flattened'' to \texttt{Future{[}T{]}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{How to work with APIs returning a \texttt{Future}?}
+
+\begin{itemize}
+\item get an \texttt{ExecutionContext} (e.g. \texttt{actorSystem.dispatcher})
+\item use \texttt{map} or \texttt{flatMap} to specify computations to be
+done in the future
+\item return another \texttt{Future{[}T{]}} value
+\item avoid using \texttt{Await.result} if you can
+\end{itemize}
+With modern libraries, no need to wait!
+
+Examples:
+\begin{itemize}
+\item Akka-Streaming accepts a \texttt{Future{[}T{]}} value inside \texttt{mapAsync}
+\item Akka-HTTP accepts a \texttt{Future{[}T{]}} value inside an HTTP route
+\end{itemize}
+\end{frame}
+
+\begin{frame}{How to convert callback APIs into a \texttt{Future}?}
+
+\begin{itemize}
+\item create a\texttt{ Promise{[}T{]}} value\\
+\texttt{val p = Promise{[}Int{]}()}
+\item in the callback, resolve the promise\\
+\texttt{p.succeed(123)}
+\item return the future value\\
+\texttt{p.future}
+\end{itemize}
+Example: 
+\begin{itemize}
+\item converting Apache's \texttt{HttpAsyncClient} into a \texttt{Future-based}
+API
+\end{itemize}
+\end{frame}
+
+\begin{frame}{``Mistakes were made''}
+
+Typical ``gotchas'' when using \texttt{scala.concurrent.Future}:
+\begin{itemize}
+\item unnecessarily waiting for futures to complete \textendash{} blocked
+threads
+\item forgetting to wait for futures to complete \textendash{} race conditions
+\item expecting to see a stack trace from exceptions inside a \texttt{Future} 
+\item using one thread pool for everything \textendash{} thread starvation
+\item forgetting to shut down the thread pool \textendash{} application
+never quits 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{What is ``thread-safe''}
+
+
+\framesubtitle{Thread-safe methods:}
+\begin{itemize}
+\item work correctly even if called from many threads in parallel
+\item either have no mutable state, or manage it with great care
+\end{itemize}
+Examples of thread-safe methods: 
+\begin{itemize}
+\item \texttt{AtomicInteger.incrementAndGet()}
+\item \texttt{ConcurrentLinkedQueue.add()}
+\end{itemize}
+Example of non-thread-safe method: 
+\begin{itemize}
+\item \texttt{MockitoSugar.mock{[}T{]}()} \textendash{} deadlocks when called
+in parallel
+\end{itemize}
+\end{frame}
+
+\begin{frame}{What is ``non-blocking''}
+
+Non-blocking methods:
+\begin{itemize}
+\item return quickly, although they may \emph{schedule} long-running calculations
+\item do not perform an idle wait 
+\begin{itemize}
+\item \texttt{Thread.sleep()} or \texttt{Await.result()}
+\end{itemize}
+\item do not perform a busy wait 
+\begin{itemize}
+\item \texttt{while( ! isReady() ) \{ doNothingLoop() \}}
+\end{itemize}
+\item do not perform slow I/O (e.g. HTTP with high latency)
+\end{itemize}
+Thread pools perform best when most tasks are non-blocking calls
+
+Blocked threads cause suboptimal CPU utilization, a.k.a. ``slowness''
+\end{frame}
+
+\begin{frame}{Can we avoid ``blocking''?}
+
+We could avoid blocking if arriving events could wake up our threads...
+but:
+\begin{itemize}
+\item A thread cannot be ``woken up'' if it isn't already blocked (``sleeping'')
+\item Someone, somewhere has to keep a blocked thread waiting for events
+\item However, it does not have to be within \emph{our} thread pools!
+\end{itemize}
+If we never \texttt{Await.result()}, we would never get any non-\texttt{Future}
+values...
+\begin{itemize}
+\item With the right libraries (Akka, etc.), our code never needs to do
+\texttt{Await.result()}
+\item (except in some unit tests)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{How and when to convert ``blocking'' to ``non-blocking''}
+
+Given a 3rd party blocking call \texttt{doHttpWork()}, our options
+are:
+\begin{itemize}
+\item Wrap it in a \texttt{Future} using the \texttt{scala.concurrent.blocking()}
+instruction
+\item Create a thread pool dedicated to scheduling \texttt{doHttpWork()}
+tasks
+\end{itemize}
+It's OK to block if we are not within concurrent code
+\end{frame}
+
+\begin{frame}{Summary}
+
+\begin{itemize}
+\item The backbone of Java concurrency: thread pool executors
+\item How and when do \texttt{Future}s run? 
+\item What does it mean to be \textquotedblleft thread safe\textquotedblright{}
+and \textquotedblleft nonblocking\textquotedblright , and when do
+we need that? 
+\item Some typical \textquotedblleft gotchas\textquotedblright{} when using
+\texttt{Future}s in the real world
+\item Converting other async APIs to \texttt{Future}s and back
+\end{itemize}
+\end{frame}
+
+\end{document}
