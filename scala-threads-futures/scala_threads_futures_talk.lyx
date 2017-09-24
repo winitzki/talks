@@ -336,7 +336,7 @@ Future[T]
 \family typewriter
 \size small
 \color blue
-map
+Future()
 \family default
 \size default
 \color inherit
@@ -344,11 +344,19 @@ map
 \family typewriter
 \size small
 \color blue
-flatMap
+map
 \family default
 \size default
 \color inherit
-) use implicit 
+,
+\family typewriter
+\size small
+\color blue
+ flatMap
+\family default
+\size default
+\color inherit
+) need an implicit 
 \family typewriter
 \size small
 \color blue
@@ -415,7 +423,7 @@ val f:
 \begin_inset space ~
 \end_inset
 
-Future[Boolean]
+Future[T]
 \family default
 \size default
 \color inherit
@@ -423,15 +431,15 @@ Future[Boolean]
 \begin_inset Newline newline
 \end_inset
 
-– represents a 
+– represents a value (of type 
 \family typewriter
 \size small
 \color blue
-Boolean
+T
 \family default
 \size default
 \color inherit
- value that 
+) that 
 \emph on
 will
 \emph default
@@ -644,7 +652,7 @@ val f:
 \begin_inset space ~
 \end_inset
 
-Future[Array[Float]] = Future { long_computation() }
+Future[Array[Float]] = ...
 \family default
 
 \begin_inset Newline newline
@@ -1025,7 +1033,14 @@ CloseableHttpAsyncClient =
 \family typewriter
 \size small
 \color blue
-HttpAsyncClientBuilder.(....).build()
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+ HttpAsyncClientBuilder.(....).build()
 \end_layout
 
 \begin_layout Standard

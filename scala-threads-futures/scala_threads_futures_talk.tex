@@ -82,8 +82,8 @@ a thread pool
 \item Apache's \texttt{\textcolor{blue}{\small{}HttpAsyncClient}} contains
 a thread pool
 \item Scala's \texttt{\textcolor{blue}{\small{}Future{[}T{]}}} operations
-(\texttt{\textcolor{blue}{\small{}map}}, \texttt{\textcolor{blue}{\small{}flatMap}})
-use implicit \texttt{\textcolor{blue}{\small{}ExecutionContext}}{\small \par}
+(\texttt{\textcolor{blue}{\small{}Future()}}, \texttt{\textcolor{blue}{\small{}map}},\texttt{\textcolor{blue}{\small{}
+flatMap}}) need an implicit \texttt{\textcolor{blue}{\small{}ExecutionContext}}{\small \par}
 \end{itemize}
 \end{frame}
 
@@ -92,9 +92,9 @@ use implicit \texttt{\textcolor{blue}{\small{}ExecutionContext}}{\small \par}
 Main features of \texttt{\textcolor{blue}{\small{}scala.concurrent.Future}}:
 \begin{itemize}
 \item ``value semantics'' \\
-\texttt{\textcolor{blue}{\small{}val f:~Future{[}Boolean{]}}} \\
-\textendash{} represents a \texttt{\textcolor{blue}{\small{}Boolean}}
-value that \emph{will} \emph{become available} in the future
+\texttt{\textcolor{blue}{\small{}val f:~Future{[}T{]}}} \\
+\textendash{} represents a value (of type \texttt{\textcolor{blue}{\small{}T}})
+that \emph{will} \emph{become available} in the future
 \item ``container semantics'': covariant, has \texttt{\textcolor{blue}{\small{}map}}
 and \texttt{\textcolor{blue}{\small{}flatMap}}{\small \par}
 \item error handling and failure recovery
@@ -127,7 +127,7 @@ Getting a \texttt{\textcolor{blue}{\small{}Future{[}T{]}}} value means:
 \texttt{\textcolor{blue}{\small{}implicit ec = somebody.giveMeExecContextPlease()}}{\small \par}
 
 \texttt{\textcolor{blue}{\small{}val f:~Future{[}Array{[}Float{]}{]}
-= Future \{ long\_computation() \}}}\textcolor{blue}{\small{}}\\
+= ...}}\textcolor{blue}{\small{}}\\
 \texttt{\textcolor{blue}{\small{}logger.info(``Long computation started'')}}~\\
 \texttt{\textcolor{blue}{\small{}val s:~Future{[}Int{]} = f.map(\_.length)}}~\\
 {\small \par}
@@ -186,7 +186,7 @@ into a \texttt{\textcolor{blue}{\small{}Future}}-based API\medskip{}
 \texttt{\textcolor{blue}{\small{}val client:~CloseableHttpAsyncClient
 =}}{\small \par}
 
-\texttt{\textcolor{blue}{\small{}HttpAsyncClientBuilder.(....).build()}}{\small \par}
+\texttt{\textcolor{blue}{\small{}~ ~ HttpAsyncClientBuilder.(....).build()}}{\small \par}
 
 \texttt{\textcolor{blue}{\small{}val promise = Promise{[}HttpResponse{]}()}}{\small \par}
 
