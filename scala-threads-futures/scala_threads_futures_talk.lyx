@@ -8,7 +8,7 @@
 \begin_preamble
 \usetheme[secheader]{Boadilla}
 \usecolortheme{seahorse}
-\title{Scala Threads and Futures}
+\title{Scala \texttt{Thread}s and \texttt{Future}s}
 \author{Sergei Winitzki}
 \date{September 26, 2017}
 \institute[Workday, Inc.]{Workday, Inc.}
@@ -127,17 +127,21 @@ JVM threads
 \begin_layout Standard
 Java 
 \family typewriter
+\size small
+\color blue
 Thread
 \family default
+\size default
+\color inherit
  API: low-level and underpowered
 \end_layout
 
 \begin_layout Itemize
-user code must create/maintain thread, start, interrupt
+user code must create/maintain threads
 \end_layout
 
 \begin_layout Itemize
-cannot reuse one thread for different tasks
+cannot reuse one thread for running different tasks
 \end_layout
 
 \begin_layout Itemize
@@ -152,11 +156,31 @@ heavy
 \end_layout
 
 \begin_layout Itemize
-difficult to synchronize across threads (wait / notify / synchronize)
-\end_layout
-
-\begin_layout Itemize
-code is error-prone, hard to debug
+difficult to synchronize across threads correctly (
+\family typewriter
+\size small
+\color blue
+wait
+\family default
+\size default
+\color inherit
+ / 
+\family typewriter
+\size small
+\color blue
+notify
+\family default
+\size default
+\color inherit
+ / 
+\family typewriter
+\size small
+\color blue
+synchronized
+\family default
+\size default
+\color inherit
+)
 \end_layout
 
 \begin_layout Itemize
@@ -200,8 +224,12 @@ ThreadPoolExecutor
 \begin_layout Standard
 Java 
 \family typewriter
+\size small
+\color blue
 ThreadPoolExecutor
 \family default
+\size default
+\color inherit
 :
 \end_layout
 
@@ -262,42 +290,68 @@ Usages of thread pools
 \begin_layout Itemize
 
 \family typewriter
+\size small
+\color blue
 scala.concurrent.ExecutionContext
 \family default
+\size default
+\color inherit
  is a wrapper over a thread pool
 \end_layout
 
 \begin_layout Itemize
 
 \family typewriter
+\size small
+\color blue
 akka.actor.ActorSystem
 \family default
+\size default
+\color inherit
  contains a thread pool
 \end_layout
 
 \begin_layout Itemize
 Apache's 
 \family typewriter
+\size small
+\color blue
 HttpAsyncClient
 \family default
+\size default
+\color inherit
  contains a thread pool
 \end_layout
 
 \begin_layout Itemize
 Scala's 
 \family typewriter
+\size small
+\color blue
 Future[T]
 \family default
+\size default
+\color inherit
  operations (
 \family typewriter
+\size small
+\color blue
 map
 \family default
+\size default
+\color inherit
 , 
 \family typewriter
+\size small
+\color blue
 flatMap
 \family default
+\size default
+\color inherit
 ) use implicit 
 \family typewriter
+\size small
+\color blue
 ExecutionContext
 \end_layout
 
@@ -332,8 +386,12 @@ scala.concurrent.Future
 \begin_layout Standard
 Main features of 
 \family typewriter
+\size small
+\color blue
 scala.concurrent.Future
 \family default
+\size default
+\color inherit
 :
 \end_layout
 
@@ -351,13 +409,29 @@ value semantics
 
 
 \family typewriter
-val f: Future[Boolean]
+\size small
+\color blue
+val f:
+\begin_inset space ~
+\end_inset
+
+Future[Boolean]
 \family default
+\size default
+\color inherit
  
 \begin_inset Newline newline
 \end_inset
 
-– represents a Boolean value that 
+– represents a 
+\family typewriter
+\size small
+\color blue
+Boolean
+\family default
+\size default
+\color inherit
+ value that 
 \emph on
 will
 \emph default
@@ -376,12 +450,18 @@ container semantics
 \begin_inset Quotes erd
 \end_inset
 
-: has 
+: covariant, has 
 \family typewriter
+\size small
+\color blue
 map
 \family default
+\size default
+\color inherit
  and 
 \family typewriter
+\size small
+\color blue
 flatMap
 \end_layout
 
@@ -392,13 +472,17 @@ error handling and failure recovery
 \begin_layout Itemize
 use 
 \family typewriter
+\size small
+\color blue
 scala.concurrent.Promise[T]
 \family default
+\size default
+\color inherit
  to convert callback APIs to 
 \family typewriter
+\size small
+\color blue
 Future[T]
-\family default
- 
 \end_layout
 
 \begin_layout Standard
@@ -444,15 +528,21 @@ Future
 \begin_layout Standard
 
 \family typewriter
-\size footnotesize
+\size small
+\color blue
 implicit ec = somebody.giveMeExecContextPlease()
 \end_layout
 
 \begin_layout Standard
 
 \family typewriter
-\size footnotesize
-val f: Future[Array[Float]] = Future { long_computation() }
+\size small
+\color blue
+val f:
+\begin_inset space ~
+\end_inset
+
+Future[Array[Float]] = Future { long_computation() }
 \family default
 
 \begin_inset Newline newline
@@ -469,13 +559,21 @@ Long computation started
 \end_inset
 
 )
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 Getting a 
 \family typewriter
+\size small
+\color blue
 Future[T]
 \family default
+\size default
+\color inherit
  value means:
 \end_layout
 
@@ -532,15 +630,21 @@ Future
 \begin_layout Standard
 
 \family typewriter
-\size footnotesize
+\size small
+\color blue
 implicit ec = somebody.giveMeExecContextPlease()
 \end_layout
 
 \begin_layout Standard
 
 \family typewriter
-\size footnotesize
-val f: Future[Array[Float]] = Future { long_computation() }
+\size small
+\color blue
+val f:
+\begin_inset space ~
+\end_inset
+
+Future[Array[Float]] = Future { long_computation() }
 \family default
 
 \begin_inset Newline newline
@@ -560,7 +664,15 @@ Long computation started
 \begin_inset Newline newline
 \end_inset
 
-val s: Future[Int] = f.map(_.length)
+val s:
+\begin_inset space ~
+\end_inset
+
+Future[Int] = f.map(_.length)
+\begin_inset Newline newline
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -570,11 +682,21 @@ map
 \family default
  requires an 
 \family typewriter
+\size small
+\color blue
 ExecutionContext
 \end_layout
 
 \begin_layout Itemize
-the new computation (_.length) will run once the array is ready
+the new computation (
+\family typewriter
+\size small
+\color blue
+_.length
+\family default
+\size default
+\color inherit
+) will run once the array is ready
 \end_layout
 
 \begin_layout Itemize
@@ -584,12 +706,20 @@ the new computation may run on another thread!
 \begin_layout Itemize
 
 \family typewriter
+\size small
+\color blue
 flatMap
 \family default
+\size default
+\color inherit
  also works: 
 \family typewriter
+\size small
+\color blue
 Future[Future[T]]
 \family default
+\size default
+\color inherit
  can be 
 \begin_inset Quotes eld
 \end_inset
@@ -600,6 +730,8 @@ flattened
 
  to 
 \family typewriter
+\size small
+\color blue
 Future[T]
 \end_layout
 
@@ -636,41 +768,65 @@ Future
 \begin_layout Itemize
 get an 
 \family typewriter
+\size small
+\color blue
 ExecutionContext
 \family default
+\size default
+\color inherit
  (e.g.
  
 \family typewriter
+\size small
+\color blue
 actorSystem.dispatcher
 \family default
+\size default
+\color inherit
 )
 \end_layout
 
 \begin_layout Itemize
 use 
 \family typewriter
+\size small
+\color blue
 map
 \family default
+\size default
+\color inherit
  or 
 \family typewriter
+\size small
+\color blue
 flatMap
 \family default
+\size default
+\color inherit
  to specify computations to be done in the future
 \end_layout
 
 \begin_layout Itemize
 return another 
 \family typewriter
-Future[T]
+\size small
+\color blue
+Future
 \family default
+\size default
+\color inherit
  value
 \end_layout
 
 \begin_layout Itemize
 avoid using 
 \family typewriter
+\size small
+\color blue
 Await.result
 \family default
+\size default
+\color inherit
  if you can
 \end_layout
 
@@ -678,6 +834,15 @@ Await.result
 With modern libraries, no need to wait!
 \end_layout
 
+\end_deeper
+\begin_layout Frame
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 Examples:
 \end_layout
@@ -685,18 +850,28 @@ Examples:
 \begin_layout Itemize
 Akka-Streaming accepts a 
 \family typewriter
-Future[T]
+\size small
+\color blue
+Future
 \family default
+\size default
+\color inherit
  value inside 
 \family typewriter
+\size small
+\color blue
 mapAsync
 \end_layout
 
 \begin_layout Itemize
 Akka-HTTP accepts a 
 \family typewriter
-Future[T]
+\size small
+\color blue
+Future
 \family default
+\size default
+\color inherit
  value inside an HTTP route
 \end_layout
 
@@ -733,51 +908,247 @@ Future
 \begin_layout Itemize
 create a
 \family typewriter
- Promise[T]
+ 
+\size small
+\color blue
+Promise[T]
 \family default
- value
+\size default
+\color inherit
+ value:
 \begin_inset Newline newline
 \end_inset
 
 
 \family typewriter
+\size small
+\color blue
 val p = Promise[Int]()
 \end_layout
 
 \begin_layout Itemize
-in the callback, resolve the promise
+in the callback's body, resolve the promise:
 \begin_inset Newline newline
 \end_inset
 
 
 \family typewriter
-p.succeed(123)
+\size small
+\color blue
+p.success(123)
 \end_layout
 
 \begin_layout Itemize
-return the future value
+return a 
+\size small
+\color blue
+Future[T]
+\size default
+\color inherit
+ value using the promise value:
 \begin_inset Newline newline
 \end_inset
 
 
 \family typewriter
-p.future
+\size small
+\color blue
+p.future 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example: Converting Apache's 
+\family typewriter
+HttpAsyncClient
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Converting Apache's 
+\family typewriter
+\size small
+\color blue
+HttpAsyncClient
+\family default
+\size default
+\color inherit
+ into a 
+\family typewriter
+\size small
+\color blue
+Future
+\family default
+\size default
+\color inherit
+-based API
+\begin_inset VSpace defskip
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Example: 
+
+\family typewriter
+\size small
+\color blue
+val client:
+\begin_inset space ~
+\end_inset
+
+CloseableHttpAsyncClient =
 \end_layout
 
-\begin_layout Itemize
-converting Apache's 
+\begin_layout Standard
+
 \family typewriter
-HttpAsyncClient
-\family default
- into a 
+\size small
+\color blue
+HttpAsyncClientBuilder.(....).build()
+\end_layout
+
+\begin_layout Standard
+
 \family typewriter
-Future-based
-\family default
- API
+\size small
+\color blue
+val promise = Promise[HttpResponse]()
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+client.execute(request, new FutureCallback[HttpResponse] {
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+\begin_inset space ~
+\end_inset
+
+ override def cancelled():
+\begin_inset space ~
+\end_inset
+
+Unit =
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+ promise.failure(new CancellationException())
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+\begin_inset space ~
+\end_inset
+
+ override def completed(resp:
+\begin_inset space ~
+\end_inset
+
+HttpResponse):
+\begin_inset space ~
+\end_inset
+
+Unit =
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+ promise.success(resp)
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+\begin_inset space ~
+\end_inset
+
+ override def failed(ex:
+\begin_inset space ~
+\end_inset
+
+Exception):
+\begin_inset space ~
+\end_inset
+
+Unit = promise.failure(ex) 
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+})
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+val responseFuture = promise.future
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size small
+\color blue
+// The new API will return this.
 \end_layout
 
 \end_deeper
@@ -824,8 +1195,12 @@ gotchas
 
  when using 
 \family typewriter
+\size small
+\color blue
 scala.concurrent.Future
 \family default
+\size default
+\color inherit
 :
 \end_layout
 
@@ -840,8 +1215,12 @@ forgetting to wait for futures to complete – race conditions
 \begin_layout Itemize
 expecting to see a stack trace from exceptions inside a 
 \family typewriter
+\size small
+\color blue
 Future
 \family default
+\size default
+\color inherit
  
 \end_layout
 
@@ -906,25 +1285,53 @@ Examples of thread-safe methods:
 \begin_layout Itemize
 
 \family typewriter
+\size small
+\color blue
 AtomicInteger.incrementAndGet()
 \end_layout
 
 \begin_layout Itemize
 
 \family typewriter
+\size small
+\color blue
 ConcurrentLinkedQueue.add()
 \end_layout
 
 \begin_layout Standard
-Example of non-thread-safe method: 
+Example of a non-thread-safe method: 
 \end_layout
 
 \begin_layout Itemize
 
 \family typewriter
+\size small
+\color blue
 MockitoSugar.mock[T]()
 \family default
- – deadlocks when called in parallel
+\size default
+\color inherit
+ – deadlocks when running tests in parallel
+\end_layout
+
+\begin_layout Standard
+Workarounds for non-thread-safe code:
+\end_layout
+
+\begin_layout Itemize
+wrap in 
+\family typewriter
+\size small
+\color blue
+synchronized
+\end_layout
+
+\begin_layout Itemize
+in some cases, can simply use 
+\family typewriter
+\size small
+\color blue
+fork in Test := true
 \end_layout
 
 \end_deeper
@@ -985,10 +1392,16 @@ do not perform an idle wait
 \begin_layout Itemize
 
 \family typewriter
+\size small
+\color blue
 Thread.sleep()
 \family default
+\size default
+\color inherit
  or 
 \family typewriter
+\size small
+\color blue
 Await.result()
 \end_layout
 
@@ -1001,6 +1414,8 @@ do not perform a busy wait
 \begin_layout Itemize
 
 \family typewriter
+\size small
+\color blue
 while( ! isReady() ) { doNothingLoop() }
 \end_layout
 
@@ -1014,6 +1429,15 @@ do not perform slow I/O (e.g.
 Thread pools perform best when most tasks are non-blocking calls
 \end_layout
 
+\end_deeper
+\begin_layout Frame
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
 \begin_layout Standard
 Blocked threads cause suboptimal CPU utilization, a.k.a.
  
@@ -1062,7 +1486,11 @@ blocking
 
 \begin_deeper
 \begin_layout Standard
-We could avoid blocking if arriving events could wake up our threads...
+We could avoid blocking if arriving events could 
+\emph on
+wake up
+\emph default
+ our threads...
  but:
 \end_layout
 
@@ -1101,23 +1529,46 @@ our
 \begin_layout Standard
 If we never 
 \family typewriter
+\size small
+\color blue
 Await.result()
 \family default
+\size default
+\color inherit
 , we would never get any non-
 \family typewriter
+\size small
+\color blue
 Future
 \family default
+\size default
+\color inherit
  values...
 \end_layout
 
 \begin_layout Itemize
-With the right libraries (Akka, etc.), our code never needs to do 
+Someone, somewhere has to do 
 \family typewriter
+\size small
+\color blue
 Await.result()
 \end_layout
 
 \begin_layout Itemize
-(except in some unit tests)
+However, it does not have to be within 
+\emph on
+our
+\emph default
+ code (except in unit tests)
+\end_layout
+
+\begin_layout Itemize
+With the right libraries (Akka, etc.), our code never needs to block or to
+ do 
+\family typewriter
+\size small
+\color blue
+Await.result()
 \end_layout
 
 \end_deeper
@@ -1165,33 +1616,56 @@ non-blocking
 \begin_layout Standard
 Given a 3rd party blocking call 
 \family typewriter
+\size small
+\color blue
 doHttpWork()
 \family default
+\size default
+\color inherit
 , our options are:
 \end_layout
 
 \begin_layout Itemize
 Wrap it in a 
 \family typewriter
+\size small
+\color blue
 Future
 \family default
+\size default
+\color inherit
  using the 
 \family typewriter
+\size small
+\color blue
 scala.concurrent.blocking()
 \family default
- instruction
+\size default
+\color inherit
+ function
 \end_layout
 
 \begin_layout Itemize
-Create a thread pool dedicated to scheduling 
+Use a new thread pool dedicated to scheduling 
 \family typewriter
+\size small
+\color blue
 doHttpWork()
 \family default
+\size default
+\color inherit
  tasks
 \end_layout
 
 \begin_layout Standard
-It's OK to block if we are not within concurrent code
+\begin_inset VSpace defskip
+\end_inset
+
+Note: It's OK to block if we are 
+\emph on
+not
+\emph default
+ within concurrent code
 \end_layout
 
 \end_deeper
@@ -1221,35 +1695,73 @@ Summary
 
 \begin_deeper
 \begin_layout Itemize
+Sample code: 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://github.com/winitzki/scala-threads-futures-intro"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
 The backbone of Java concurrency: thread pool executors
 \end_layout
 
 \begin_layout Itemize
 How and when do 
 \family typewriter
+\size small
+\color blue
 Future
 \family default
-s run? 
+\size default
+\color inherit
+s run? On thread pools
 \end_layout
 
 \begin_layout Itemize
-What does it mean to be “thread safe” and “nonblocking”, and when do we
- need that? 
+What does it mean to be “thread safe” and “nonblocking”?
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+nonblocking = 
+\size small
+\color blue
+uses
+\size default
+\color inherit
+ multi-core CPU optimally
+\end_layout
+
+\begin_layout Itemize
+thread safe = permits easy concurrent nonblocking code
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Some typical “gotchas” when using 
 \family typewriter
+\size small
+\color blue
 Future
 \family default
+\size default
+\color inherit
 s in the real world
 \end_layout
 
 \begin_layout Itemize
 Converting other async APIs to 
 \family typewriter
+\size small
+\color blue
 Future
 \family default
+\size default
+\color inherit
 s and back
 \end_layout
 

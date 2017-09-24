@@ -32,7 +32,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
 \usetheme[secheader]{Boadilla}
 \usecolortheme{seahorse}
-\title{Scala Threads and Futures}
+\title{Scala \texttt{Thread}s and \texttt{Future}s}
 \author{Sergei Winitzki}
 \date{September 26, 2017}
 \institute[Workday, Inc.]{Workday, Inc.}
@@ -43,13 +43,14 @@
 \frame{\titlepage}
 \begin{frame}{JVM threads}
 
-Java \texttt{Thread} API: low-level and underpowered
+Java \texttt{\textcolor{blue}{\small{}Thread}} API: low-level and
+underpowered
 \begin{itemize}
-\item user code must create/maintain thread, start, interrupt
-\item cannot reuse one thread for different tasks
+\item user code must create/maintain threads
+\item cannot reuse one thread for running different tasks
 \item ``heavy'': cannot create more than about 2,000 JVM threads
-\item difficult to synchronize across threads (wait / notify / synchronize)
-\item code is error-prone, hard to debug
+\item difficult to synchronize across threads correctly (\texttt{\textcolor{blue}{\small{}wait}}
+/ \texttt{\textcolor{blue}{\small{}notify}} / \texttt{\textcolor{blue}{\small{}synchronized}})
 \item exceptions on a thread are invisible
 \end{itemize}
 Plain C multithreading was essentially just as hard
@@ -57,7 +58,7 @@ Plain C multithreading was essentially just as hard
 
 \begin{frame}{\texttt{ThreadPoolExecutor} = thread pool + task queue}
 
-Java \texttt{ThreadPoolExecutor}:
+Java \texttt{\textcolor{blue}{\small{}ThreadPoolExecutor}}:
 \begin{itemize}
 \item has a queue of pending tasks
 \item runs tasks on a dynamically managed thread pool
@@ -74,27 +75,31 @@ Main pattern of usage:
 \begin{frame}{Usages of thread pools}
 
 \begin{itemize}
-\item \texttt{scala.concurrent.ExecutionContext} is a wrapper over a thread
-pool
-\item \texttt{akka.actor.ActorSystem} contains a thread pool
-\item Apache's \texttt{HttpAsyncClient} contains a thread pool
-\item Scala's \texttt{Future{[}T{]}} operations (\texttt{map}, \texttt{flatMap})
-use implicit \texttt{ExecutionContext}
+\item \texttt{\textcolor{blue}{\small{}scala.concurrent.ExecutionContext}}
+is a wrapper over a thread pool
+\item \texttt{\textcolor{blue}{\small{}akka.actor.ActorSystem}} contains
+a thread pool
+\item Apache's \texttt{\textcolor{blue}{\small{}HttpAsyncClient}} contains
+a thread pool
+\item Scala's \texttt{\textcolor{blue}{\small{}Future{[}T{]}}} operations
+(\texttt{\textcolor{blue}{\small{}map}}, \texttt{\textcolor{blue}{\small{}flatMap}})
+use implicit \texttt{\textcolor{blue}{\small{}ExecutionContext}}{\small \par}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{First look at \texttt{scala.concurrent.Future}}
 
-Main features of \texttt{scala.concurrent.Future}:
+Main features of \texttt{\textcolor{blue}{\small{}scala.concurrent.Future}}:
 \begin{itemize}
 \item ``value semantics'' \\
-\texttt{val f: Future{[}Boolean{]}} \\
-\textendash{} represents a Boolean value that \emph{will} \emph{become
-available} in the future
-\item ``container semantics'': has \texttt{map} and \texttt{flatMap}
+\texttt{\textcolor{blue}{\small{}val f:~Future{[}Boolean{]}}} \\
+\textendash{} represents a \texttt{\textcolor{blue}{\small{}Boolean}}
+value that \emph{will} \emph{become available} in the future
+\item ``container semantics'': covariant, has \texttt{\textcolor{blue}{\small{}map}}
+and \texttt{\textcolor{blue}{\small{}flatMap}}{\small \par}
 \item error handling and failure recovery
-\item use \texttt{scala.concurrent.Promise{[}T{]}} to convert callback APIs
-to \texttt{Future{[}T{]}} 
+\item use \texttt{\textcolor{blue}{\small{}scala.concurrent.Promise{[}T{]}}}
+to convert callback APIs to \texttt{\textcolor{blue}{\small{}Future{[}T{]}}}{\small \par}
 \end{itemize}
 {\footnotesize{}Note: }\texttt{\footnotesize{}java.util.concurrent.Future}{\footnotesize{}
 is just a callback wrapper class}{\footnotesize \par}
@@ -102,13 +107,14 @@ is just a callback wrapper class}{\footnotesize \par}
 
 \begin{frame}{How does a \texttt{Future} run?}
 
-\texttt{\footnotesize{}implicit ec = somebody.giveMeExecContextPlease()}{\footnotesize \par}
+\texttt{\textcolor{blue}{\small{}implicit ec = somebody.giveMeExecContextPlease()}}{\small \par}
 
-\texttt{\footnotesize{}val f: Future{[}Array{[}Float{]}{]} = Future
-\{ long\_computation() \}}{\footnotesize{}}\\
-\texttt{\footnotesize{}logger.info(``Long computation started'')}{\footnotesize \par}
+\texttt{\textcolor{blue}{\small{}val f:~Future{[}Array{[}Float{]}{]}
+= Future \{ long\_computation() \}}}\textcolor{blue}{\small{}}\\
+\texttt{\textcolor{blue}{\small{}logger.info(``Long computation started'')\medskip{}
+}}{\small \par}
 
-Getting a \texttt{Future{[}T{]}} value means:
+Getting a \texttt{\textcolor{blue}{\small{}Future{[}T{]}}} value means:
 \begin{itemize}
 \item a task was queued on that \emph{somebody's} thread pool
 \item we could get the result value when it becomes available
@@ -118,64 +124,103 @@ Getting a \texttt{Future{[}T{]}} value means:
 
 \begin{frame}{How does \texttt{map} work on a \texttt{Future}?}
 
-\texttt{\footnotesize{}implicit ec = somebody.giveMeExecContextPlease()}{\footnotesize \par}
+\texttt{\textcolor{blue}{\small{}implicit ec = somebody.giveMeExecContextPlease()}}{\small \par}
 
-\texttt{\footnotesize{}val f: Future{[}Array{[}Float{]}{]} = Future
-\{ long\_computation() \}}{\footnotesize{}}\\
-\texttt{\footnotesize{}logger.info(``Long computation started'')}~\\
-\texttt{\footnotesize{}val s: Future{[}Int{]} = f.map(\_.length)}{\footnotesize \par}
+\texttt{\textcolor{blue}{\small{}val f:~Future{[}Array{[}Float{]}{]}
+= Future \{ long\_computation() \}}}\textcolor{blue}{\small{}}\\
+\texttt{\textcolor{blue}{\small{}logger.info(``Long computation started'')}}~\\
+\texttt{\textcolor{blue}{\small{}val s:~Future{[}Int{]} = f.map(\_.length)}}~\\
+{\small \par}
 \begin{itemize}
-\item using \texttt{map} requires an \texttt{ExecutionContext}
-\item the new computation (\_.length) will run once the array is ready
+\item using \texttt{map} requires an \texttt{\textcolor{blue}{\small{}ExecutionContext}}{\small \par}
+\item the new computation (\texttt{\textcolor{blue}{\small{}\_.length}})
+will run once the array is ready
 \item the new computation may run on another thread!
-\item \texttt{flatMap} also works: \texttt{Future{[}Future{[}T{]}{]}} can
-be ``flattened'' to \texttt{Future{[}T{]}}
+\item \texttt{\textcolor{blue}{\small{}flatMap}} also works: \texttt{\textcolor{blue}{\small{}Future{[}Future{[}T{]}{]}}}
+can be ``flattened'' to \texttt{\textcolor{blue}{\small{}Future{[}T{]}}}{\small \par}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{How to work with APIs returning a \texttt{Future}?}
 
 \begin{itemize}
-\item get an \texttt{ExecutionContext} (e.g. \texttt{actorSystem.dispatcher})
-\item use \texttt{map} or \texttt{flatMap} to specify computations to be
-done in the future
-\item return another \texttt{Future{[}T{]}} value
-\item avoid using \texttt{Await.result} if you can
+\item get an \texttt{\textcolor{blue}{\small{}ExecutionContext}} (e.g. \texttt{\textcolor{blue}{\small{}actorSystem.dispatcher}})
+\item use \texttt{\textcolor{blue}{\small{}map}} or \texttt{\textcolor{blue}{\small{}flatMap}}
+to specify computations to be done in the future
+\item return another \texttt{\textcolor{blue}{\small{}Future}} value
+\item avoid using \texttt{\textcolor{blue}{\small{}Await.result}} if you
+can
 \end{itemize}
 With modern libraries, no need to wait!
 
+\medskip{}
+
 Examples:
 \begin{itemize}
-\item Akka-Streaming accepts a \texttt{Future{[}T{]}} value inside \texttt{mapAsync}
-\item Akka-HTTP accepts a \texttt{Future{[}T{]}} value inside an HTTP route
+\item Akka-Streaming accepts a \texttt{\textcolor{blue}{\small{}Future}}
+value inside \texttt{\textcolor{blue}{\small{}mapAsync}}{\small \par}
+\item Akka-HTTP accepts a \texttt{\textcolor{blue}{\small{}Future}} value
+inside an HTTP route
 \end{itemize}
 \end{frame}
 
 \begin{frame}{How to convert callback APIs into a \texttt{Future}?}
 
 \begin{itemize}
-\item create a\texttt{ Promise{[}T{]}} value\\
-\texttt{val p = Promise{[}Int{]}()}
-\item in the callback, resolve the promise\\
-\texttt{p.succeed(123)}
-\item return the future value\\
-\texttt{p.future}
+\item create a\texttt{ }\texttt{\textcolor{blue}{\small{}Promise{[}T{]}}}
+value:\\
+\texttt{\textcolor{blue}{\small{}val p = Promise{[}Int{]}()}}{\small \par}
+\item in the callback's body, resolve the promise:\\
+\texttt{\textcolor{blue}{\small{}p.success(123)}}{\small \par}
+\item return a \textcolor{blue}{\small{}Future{[}T{]}} value using the promise
+value:\\
+\texttt{\textcolor{blue}{\small{}p.future }}{\small \par}
 \end{itemize}
-Example: 
-\begin{itemize}
-\item converting Apache's \texttt{HttpAsyncClient} into a \texttt{Future-based}
-API
-\end{itemize}
+\end{frame}
+
+\begin{frame}{Example: Converting Apache's \texttt{HttpAsyncClient}}
+
+Converting Apache's \texttt{\textcolor{blue}{\small{}HttpAsyncClient}}
+into a \texttt{\textcolor{blue}{\small{}Future}}-based API\medskip{}
+
+\texttt{\textcolor{blue}{\small{}val client:~CloseableHttpAsyncClient
+=}}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}HttpAsyncClientBuilder.(....).build()}}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}val promise = Promise{[}HttpResponse{]}()}}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}client.execute(request, new FutureCallback{[}HttpResponse{]}
+\{}}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}~ override def cancelled():~Unit
+=}}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}~ ~ promise.failure(new CancellationException())}}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}~ override def completed(resp:~HttpResponse):~Unit
+=}}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}~ ~ promise.success(resp)}}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}~ override def failed(ex:~Exception):~Unit
+= promise.failure(ex) }}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}\})}}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}val responseFuture = promise.future}}{\small \par}
+
+\texttt{\textcolor{blue}{\small{}// The new API will return this.}}{\small \par}
 \end{frame}
 
 \begin{frame}{``Mistakes were made''}
 
-Typical ``gotchas'' when using \texttt{scala.concurrent.Future}:
+Typical ``gotchas'' when using \texttt{\textcolor{blue}{\small{}scala.concurrent.Future}}:
 \begin{itemize}
 \item unnecessarily waiting for futures to complete \textendash{} blocked
 threads
 \item forgetting to wait for futures to complete \textendash{} race conditions
-\item expecting to see a stack trace from exceptions inside a \texttt{Future} 
+\item expecting to see a stack trace from exceptions inside a \texttt{\textcolor{blue}{\small{}Future}} 
 \item using one thread pool for everything \textendash{} thread starvation
 \item forgetting to shut down the thread pool \textendash{} application
 never quits 
@@ -192,13 +237,19 @@ never quits
 \end{itemize}
 Examples of thread-safe methods: 
 \begin{itemize}
-\item \texttt{AtomicInteger.incrementAndGet()}
-\item \texttt{ConcurrentLinkedQueue.add()}
+\item \texttt{\textcolor{blue}{\small{}AtomicInteger.incrementAndGet()}}{\small \par}
+\item \texttt{\textcolor{blue}{\small{}ConcurrentLinkedQueue.add()}}{\small \par}
 \end{itemize}
-Example of non-thread-safe method: 
+Example of a non-thread-safe method: 
 \begin{itemize}
-\item \texttt{MockitoSugar.mock{[}T{]}()} \textendash{} deadlocks when called
-in parallel
+\item \texttt{\textcolor{blue}{\small{}MockitoSugar.mock{[}T{]}()}} \textendash{}
+deadlocks when running tests in parallel
+\end{itemize}
+Workarounds for non-thread-safe code:
+\begin{itemize}
+\item wrap in \texttt{\textcolor{blue}{\small{}synchronized}}{\small \par}
+\item in some cases, can simply use \texttt{\textcolor{blue}{\small{}fork
+in Test := true}}{\small \par}
 \end{itemize}
 \end{frame}
 
@@ -209,61 +260,74 @@ Non-blocking methods:
 \item return quickly, although they may \emph{schedule} long-running calculations
 \item do not perform an idle wait 
 \begin{itemize}
-\item \texttt{Thread.sleep()} or \texttt{Await.result()}
+\item \texttt{\textcolor{blue}{\small{}Thread.sleep()}} or \texttt{\textcolor{blue}{\small{}Await.result()}}{\small \par}
 \end{itemize}
 \item do not perform a busy wait 
 \begin{itemize}
-\item \texttt{while( ! isReady() ) \{ doNothingLoop() \}}
+\item \texttt{\textcolor{blue}{\small{}while( ! isReady() ) \{ doNothingLoop()
+\}}}{\small \par}
 \end{itemize}
 \item do not perform slow I/O (e.g. HTTP with high latency)
 \end{itemize}
 Thread pools perform best when most tasks are non-blocking calls
+
+\medskip{}
 
 Blocked threads cause suboptimal CPU utilization, a.k.a. ``slowness''
 \end{frame}
 
 \begin{frame}{Can we avoid ``blocking''?}
 
-We could avoid blocking if arriving events could wake up our threads...
-but:
+We could avoid blocking if arriving events could \emph{wake up} our
+threads... but:
 \begin{itemize}
 \item A thread cannot be ``woken up'' if it isn't already blocked (``sleeping'')
 \item Someone, somewhere has to keep a blocked thread waiting for events
 \item However, it does not have to be within \emph{our} thread pools!
 \end{itemize}
-If we never \texttt{Await.result()}, we would never get any non-\texttt{Future}
+If we never \texttt{\textcolor{blue}{\small{}Await.result()}}, we
+would never get any non-\texttt{\textcolor{blue}{\small{}Future}}
 values...
 \begin{itemize}
-\item With the right libraries (Akka, etc.), our code never needs to do
-\texttt{Await.result()}
-\item (except in some unit tests)
+\item Someone, somewhere has to do \texttt{\textcolor{blue}{\small{}Await.result()}}{\small \par}
+\item However, it does not have to be within \emph{our} code (except in
+unit tests)
+\item With the right libraries (Akka, etc.), our code never needs to block
+or to do \texttt{\textcolor{blue}{\small{}Await.result()}}{\small \par}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{How and when to convert ``blocking'' to ``non-blocking''}
 
-Given a 3rd party blocking call \texttt{doHttpWork()}, our options
-are:
+Given a 3rd party blocking call \texttt{\textcolor{blue}{\small{}doHttpWork()}},
+our options are:
 \begin{itemize}
-\item Wrap it in a \texttt{Future} using the \texttt{scala.concurrent.blocking()}
-instruction
-\item Create a thread pool dedicated to scheduling \texttt{doHttpWork()}
+\item Wrap it in a \texttt{\textcolor{blue}{\small{}Future}} using the \texttt{\textcolor{blue}{\small{}scala.concurrent.blocking()}}
+function
+\item Use a new thread pool dedicated to scheduling \texttt{\textcolor{blue}{\small{}doHttpWork()}}
 tasks
 \end{itemize}
-It's OK to block if we are not within concurrent code
+\medskip{}
+Note: It's OK to block if we are \emph{not} within concurrent code
 \end{frame}
 
 \begin{frame}{Summary}
 
 \begin{itemize}
+\item Sample code: \href{https://github.com/winitzki/scala-threads-futures-intro}{https://github.com/winitzki/scala-threads-futures-intro}
 \item The backbone of Java concurrency: thread pool executors
-\item How and when do \texttt{Future}s run? 
+\item How and when do \texttt{\textcolor{blue}{\small{}Future}}s run? On
+thread pools
 \item What does it mean to be \textquotedblleft thread safe\textquotedblright{}
-and \textquotedblleft nonblocking\textquotedblright , and when do
-we need that? 
+and \textquotedblleft nonblocking\textquotedblright ?
+\begin{itemize}
+\item nonblocking = \textcolor{blue}{\small{}uses} multi-core CPU optimally
+\item thread safe = permits easy concurrent nonblocking code
+\end{itemize}
 \item Some typical \textquotedblleft gotchas\textquotedblright{} when using
-\texttt{Future}s in the real world
-\item Converting other async APIs to \texttt{Future}s and back
+\texttt{\textcolor{blue}{\small{}Future}}s in the real world
+\item Converting other async APIs to \texttt{\textcolor{blue}{\small{}Future}}s
+and back
 \end{itemize}
 \end{frame}
 
