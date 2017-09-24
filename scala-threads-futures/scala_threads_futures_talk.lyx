@@ -1281,7 +1281,7 @@ thread-safe
 \end_layout
 
 \begin_deeper
-\begin_layout FrameSubtitle
+\begin_layout Standard
 Thread-safe methods:
 \end_layout
 
