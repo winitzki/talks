@@ -1742,13 +1742,7 @@ What does it mean to be “thread safe” and “nonblocking”?
 
 \begin_deeper
 \begin_layout Itemize
-nonblocking = 
-\size small
-\color blue
-uses
-\size default
-\color inherit
- multi-core CPU optimally
+nonblocking = uses multi-core CPU optimally
 \end_layout
 
 \begin_layout Itemize
