@@ -397,7 +397,7 @@ STM (Haskell)
 status open
 
 \begin_layout Plain Layout
-Join Calculus: The new hope
+Join Calculus: A New Hope
 \end_layout
 
 \end_inset
@@ -488,7 +488,7 @@ chemical soup with molecules and reactions
 status open
 
 \begin_layout Plain Layout
-Join Calculus: The genesis
+Join Calculus: The Genesis
 \end_layout
 
 \end_inset
@@ -754,7 +754,7 @@ in parallel
 status open
 
 \begin_layout Plain Layout
-Join Calculus in a nutshell
+Join Calculus in a Nutshell
 \end_layout
 
 \end_inset
@@ -1243,7 +1243,7 @@ Reaction emits molecules
 status open
 
 \begin_layout Plain Layout
-Using 
+
 \family typewriter
 Chymyst
 \family default
@@ -1321,7 +1321,11 @@ reactions
 \family typewriter
 \size scriptsize
 \color blue
-val r0 = go { case counter(n) + decr() => counter(n-1) }
+val r0 = go { case counter(n) + decr(_) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ counter(n-1) }
 \family default
 \size default
 \color inherit
@@ -1333,7 +1337,11 @@ val r0 = go { case counter(n) + decr() => counter(n-1) }
 \family typewriter
 \size scriptsize
 \color blue
-val r1 = go { case counter(n) + incr() => counter(n+1) }
+val r1 = go { case counter(n) + incr(_) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ counter(n+1) }
 \family default
 \size default
 \color inherit
@@ -1460,7 +1468,7 @@ Unit
 status open
 
 \begin_layout Plain Layout
-Using 
+
 \family typewriter
 Chymyst
 \family default
@@ -1551,10 +1559,22 @@ Example:
 \end_inset
 
 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
 \family typewriter
 \size scriptsize
 \color blue
-f(x, replyToF) + c(y) => val z = ...; replyToF(z) 
+f(x, replyToF) + c(y) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ val z = ...; replyToF(z) 
 \end_layout
 
 \end_deeper
@@ -1570,7 +1590,7 @@ f(x, replyToF) + c(y) => val z = ...; replyToF(z)
 status open
 
 \begin_layout Plain Layout
-Using 
+
 \family typewriter
 Chymyst
 \family default
@@ -1613,6 +1633,10 @@ x
 \size scriptsize
 \color blue
 counter(x)
+\family default
+\size default
+\color inherit
+:
 \end_layout
 
 \begin_layout Standard
@@ -1650,7 +1674,11 @@ val getN = b[Unit, Int]
 \size scriptsize
 \color blue
 ...
- val r2 = go { case counter(x) + getN(_, reply) => reply(x) }
+ val r2 = go { case counter(x) + getN(_, reply) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ reply(x) }
 \family default
 \size default
 \color inherit
@@ -1710,6 +1738,22 @@ Int
 \end_inset
 
 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Source code: 
+\begin_inset CommandInset href
+LatexCommand href
+name "CounterSpec.scala"
+target "https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/CounterSpec.scala"
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -1725,7 +1769,7 @@ Int
 status open
 
 \begin_layout Plain Layout
-Using 
+
 \family typewriter
 Chymyst
 \family default
@@ -1747,7 +1791,7 @@ Options, Futures, and Map/Reduce
 \end_layout
 
 \begin_layout Standard
-Future with blocking poll (
+Implement Future with blocking poll (
 \begin_inset Quotes eld
 \end_inset
 
@@ -1771,19 +1815,11 @@ get
 \family typewriter
 \size scriptsize
 \color blue
-fut( (f,x) ) => finished( f(x) )
-\family default
-\size default
-\color inherit
-
-\begin_inset Newline newline
+go { case get(_, reply) 
+\begin_inset Formula $\Rightarrow$
 \end_inset
 
-
-\family typewriter
-\size scriptsize
-\color blue
-get(_, r) + finished(fx) => r(fx)
+ val x = f(); reply(x) }
 \family default
 \size default
 \color inherit
@@ -1807,7 +1843,7 @@ get(_, r) + finished(fx) => r(fx)
 \end_layout
 
 \begin_layout Standard
-Map/Reduce:
+Implement Map/Reduce:
 \begin_inset Newline newline
 \end_inset
 
@@ -1815,7 +1851,11 @@ Map/Reduce:
 \family typewriter
 \size scriptsize
 \color blue
-{ case res(list) + c(s) => res(s :: list) } 
+go { case c(x) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ d(x * 2) } 
 \family default
 \size default
 \color inherit
@@ -1827,7 +1867,31 @@ Map/Reduce:
 \family typewriter
 \size scriptsize
 \color blue
-{ case get(_, reply) + res(list) => reply(list) }
+go { case res(list) + d(s) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ res(s ::
+\begin_inset space ~
+\end_inset
+
+list) } 
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+go { case get(_, reply) + res(list) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ reply(list) }
 \family default
 \size default
 \color inherit
@@ -1851,7 +1915,11 @@ res(Nil)
 \family typewriter
 \size scriptsize
 \color blue
-Seq(1,2,3).foreach(x => c(x*2))
+Seq(1,2,3).foreach(x 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ c(x))
 \family default
 \size default
 \color inherit
@@ -1868,6 +1936,29 @@ get()
 \size footnotesize
 \color gray
  // this returned Seq(4,6,2) in one test
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Source code: 
+\begin_inset CommandInset href
+LatexCommand href
+name "FutureSpec.scala"
+target "https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/FutureSpec.scala"
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -1883,7 +1974,7 @@ get()
 status open
 
 \begin_layout Plain Layout
-Using 
+
 \family typewriter
 Chymyst
 \family default
@@ -1927,7 +2018,7 @@ f12, f23, f34, f45, f51
 \size footnotesize
 \color gray
 // ...
- some declarations omitted for brevity
+ some definitions omitted for brevity
 \end_layout
 
 \begin_layout LyX-Code
@@ -1941,35 +2032,75 @@ site (
 
 \size scriptsize
 \color blue
-  go{ case t1(_) => wait(); h1() },
+  go{ case t1(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ wait(); h1() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  go{ case t2(_) => wait(); h2() },
+  go{ case t2(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ wait(); h2() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  go{ case t3(_) => wait(); h3() },
+  go{ case t3(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ wait(); h3() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  go{ case t4(_) => wait(); h4() },
+  go{ case t4(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ wait(); h4() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  go{ case t5(_) => wait(); h5() },
+  go{ case t5(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ wait(); h5() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -1980,35 +2111,75 @@ site (
 
 \size scriptsize
 \color blue
-  go{ case h1(_) + f12(_) + f51(_) => wait(); t1() + f12() + f51() },
+  go{ case h1(_) + f12(_) + f51(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ wait(); t1() + f12() + f51() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  go{ case h2(_) + f23(_) + f12(_) => wait(); t2() + f23() + f12() },
+  go{ case h2(_) + f23(_) + f12(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ wait(); t2() + f23() + f12() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  go{ case h3(_) + f34(_) + f23(_) => wait(); t3() + f34() + f23() },
+  go{ case h3(_) + f34(_) + f23(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ wait(); t3() + f34() + f23() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  go{ case h4(_) + f45(_) + f34(_) => wait(); t4() + f45() + f34() },
+  go{ case h4(_) + f45(_) + f34(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ wait(); t4() + f45() + f34() },
 \end_layout
 
 \begin_layout LyX-Code
 
 \size scriptsize
 \color blue
-  go{ case h5(_) + f51(_) + f45(_) => wait(); t5() + f51() + f45() }
+  go{ case h5(_) + f51(_) + f45(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ wait(); t5() + f51() + f45() }
 \end_layout
 
 \begin_layout LyX-Code
@@ -2034,6 +2205,33 @@ t1() + t2() + t3() + t4() + t5()
 \size scriptsize
 \color blue
 f12() + f23() + f34() + f45() + f51()
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Source code: 
+\begin_inset CommandInset href
+LatexCommand href
+name "DiningPhilosophers.scala"
+target "https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/main/scala/io/chymyst/talk_examples/DiningPhilosophers.scala"
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -2200,7 +2398,15 @@ site( // Chymyst
 
 \size scriptsize
 \color blue
-  go { case a(x) => ...
+  go { case a(x) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ ...
  }, 
 \end_layout
 
@@ -2208,7 +2414,15 @@ site( // Chymyst
 
 \size scriptsize
 \color blue
-  go { case b(x) => ...
+  go { case b(x) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ ...
  })
 \end_layout
 
@@ -2248,7 +2462,11 @@ Blocking molecules
 \family typewriter
 \size scriptsize
 \color blue
-actorRef ? 1
+actorRef ?
+\begin_inset space ~
+\end_inset
+
+1
 \end_layout
 
 \end_deeper
@@ -2356,7 +2574,7 @@ all reactions are defined statically, but locally scoped
 status open
 
 \begin_layout Plain Layout
-Using 
+
 \family typewriter
 Chymyst
 \family default
@@ -2467,7 +2685,13 @@ mergesort( (arr,
 \family typewriter
 sortedResult
 \family default
-) ) =>
+) ) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
 \end_layout
 
 \begin_layout LyX-Code
@@ -2485,7 +2709,15 @@ sortedResult
 
 \size scriptsize
 \color blue
-       sorted1(x) + sorted2(y) => 
+       sorted1(x) + sorted2(y) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ 
 \family typewriter
 sortedResult
 \family default
@@ -2532,7 +2764,7 @@ mergesort
 status open
 
 \begin_layout Plain Layout
-Using 
+
 \family typewriter
 Chymyst
 \family default
@@ -2579,7 +2811,13 @@ site(
 \family typewriter
 sortedResult
 \family default
-)) =>
+)) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
 \end_layout
 
 \begin_layout LyX-Code
@@ -2625,7 +2863,15 @@ sortedResult
 
 \size scriptsize
 \color blue
-          go { case sorted1(x) + sorted2(y) => 
+          go { case sorted1(x) + sorted2(y) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ 
 \family typewriter
 sortedResult
 \family default
@@ -2680,6 +2926,29 @@ mergesort
 \size scriptsize
 \color blue
   })
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Source code: 
+\begin_inset CommandInset href
+LatexCommand href
+name "MergeSortSpec.scala"
+target "https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/MergeSortSpec.scala"
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -3204,6 +3473,10 @@ Better syntax, more checks of code sanity
 Thread pool and thread priority control
 \end_layout
 
+\begin_layout Itemize
+Event monitoring and unit testing APIs
+\end_layout
+
 \end_deeper
 \end_deeper
 \begin_layout Standard
@@ -3285,6 +3558,18 @@ target "https://winitzki.gitbooks.io/concurrency-in-reactions-declarative-multic
 LatexCommand href
 name "draft paper"
 target "https://github.com/winitzki/talks/blob/master/join-calculus-paper/join-calculus-paper.pdf"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Example code for this talk: 
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/Chymyst/jc-talk-2017-examples"
+target "https://github.com/Chymyst/jc-talk-2017-examples"
 
 \end_inset
 

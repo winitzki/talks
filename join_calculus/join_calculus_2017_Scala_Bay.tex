@@ -118,7 +118,7 @@ Not in this talk: other approaches to declarative concurrency
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Join Calculus: The new hope}
+\begin{frame}{Join Calculus: A New Hope}
 
 
 \framesubtitle{...and some new hype}
@@ -138,7 +138,7 @@ Metaphors for join calculus:
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Join Calculus: The genesis}
+\begin{frame}{Join Calculus: The Genesis}
 
 
 \framesubtitle{a.k.a.~the ``Reflexive Chemical Abstract Machine'' {[}\href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.32.3078}{Fournet \&{} Gonthier 1996}{]}}
@@ -175,7 +175,7 @@ parallel}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Join Calculus in a nutshell}
+\begin{frame}{Join Calculus in a Nutshell}
 
 
 \framesubtitle{``Better concurrency through chemistry''}
@@ -263,7 +263,7 @@ Reaction consumes molecules $\approx$ function consumes input values
 Reaction emits molecules $\approx$ function returns result values
 \end{frame}
 
-\begin{frame}{Using \texttt{Chymyst}: basic features}
+\begin{frame}{\texttt{Chymyst}: basic features}
 
 
 \framesubtitle{Molecule emitters, reaction definitions}
@@ -275,9 +275,9 @@ Define \textbf{molecule} \textbf{emitters}:\\
 
 Declare some \textbf{reactions} using the known molecules:\\
 \texttt{\textcolor{blue}{\scriptsize{}val r0 = go \{ case counter(n)
-+ decr() => counter(n-1) \}}} \\
++ decr(\_) $\Rightarrow$ counter(n-1) \}}} \\
 \texttt{\textcolor{blue}{\scriptsize{}val r1 = go \{ case counter(n)
-+ incr() => counter(n+1) \}}} 
++ incr(\_) $\Rightarrow$ counter(n+1) \}}} 
 
 Activate a ``\textbf{reaction site}'' and emit some molecules:\\
 \texttt{\textcolor{blue}{\scriptsize{}site(r0, r1)}}\\
@@ -296,7 +296,7 @@ as a side-effect
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Using \texttt{Chymyst}: more features}
+\begin{frame}{\texttt{Chymyst}: more features}
 
 
 \framesubtitle{Blocking vs.~non-blocking molecules}
@@ -312,59 +312,64 @@ molecule
 \item molecule implicitly carries a pseudo-emitter for ``reply''
 \item when the ``reply'' is emitted, the value will be returned to caller
 \item Example:\\
-\texttt{\textcolor{blue}{\scriptsize{}f(x, replyToF) + c(y) => val
-z = ...; replyToF(z) }}{\scriptsize \par}
+~\\
+\texttt{\textcolor{blue}{\scriptsize{}f(x, replyToF) + c(y) $\Rightarrow$
+val z = ...; replyToF(z) }}{\scriptsize \par}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Using \texttt{Chymyst}: examples I}
+\begin{frame}{\texttt{Chymyst}: examples I}
 
 
 \framesubtitle{Counter with blocking access}
 
 Blocking molecule \texttt{\textcolor{blue}{\scriptsize{}getN}} reads
-the value \texttt{\textcolor{blue}{\scriptsize{}x}} in \texttt{\textcolor{blue}{\scriptsize{}counter(x)}}{\scriptsize \par}
+the value \texttt{\textcolor{blue}{\scriptsize{}x}} in \texttt{\textcolor{blue}{\scriptsize{}counter(x)}}:
 
 ~\\
 \texttt{\textcolor{blue}{\scriptsize{}val getN = b{[}Unit, Int{]}}}\\
 \textcolor{gray}{\footnotesize{}// revise the join definition, appending
 this reaction:}\\
 \texttt{\textcolor{blue}{\scriptsize{}... val r2 = go \{ case counter(x)
-+ getN(\_, reply) => reply(x) \}}}\\
++ getN(\_, reply) $\Rightarrow$ reply(x) \}}}\\
 \texttt{\textcolor{blue}{\scriptsize{}site(r0, r1, r2)}}\\
 \textcolor{gray}{\footnotesize{}// Emit non-blocking molecules as
 before... }\\
 \textcolor{gray}{\footnotesize{}// Now emit the blocking molecule:}\\
 \texttt{\textcolor{blue}{\scriptsize{}val x = getN()}}\textcolor{gray}{\footnotesize{}
 // blocking call, returns }\texttt{\textcolor{gray}{\footnotesize{}Int}}\\
-
+~\\
+Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/CounterSpec.scala}{CounterSpec.scala}
 \end{frame}
 
-\begin{frame}{Using \texttt{Chymyst}: examples II}
+\begin{frame}{\texttt{Chymyst}: examples II}
 
 
 \framesubtitle{Options, Futures, and Map/Reduce}
 
-Future with blocking poll (``\texttt{\textcolor{blue}{\scriptsize{}get}}''):\\
-\texttt{\textcolor{blue}{\scriptsize{}fut( (f,x) ) => finished( f(x)
-)}}\\
-\texttt{\textcolor{blue}{\scriptsize{}get(\_, r) + finished(fx) =>
-r(fx)}}\\
+Implement Future with blocking poll (``\texttt{\textcolor{blue}{\scriptsize{}get}}''):\\
+\texttt{\textcolor{blue}{\scriptsize{}go \{ case get(\_, reply) $\Rightarrow$
+val x = f(); reply(x) \}}}\\
 ~\\
 ~
 
-Map/Reduce:\\
-\texttt{\textcolor{blue}{\scriptsize{}\{ case res(list) + c(s) =>
-res(s :: list) \} }}\\
-\texttt{\textcolor{blue}{\scriptsize{}\{ case get(\_, reply) + res(list)
-=> reply(list) \}}}\\
+Implement Map/Reduce:\\
+\texttt{\textcolor{blue}{\scriptsize{}go \{ case c(x) $\Rightarrow$
+d(x {*} 2) \} }}\\
+\texttt{\textcolor{blue}{\scriptsize{}go \{ case res(list) + d(s)
+$\Rightarrow$ res(s ::~list) \} }}\\
+\texttt{\textcolor{blue}{\scriptsize{}go \{ case get(\_, reply) +
+res(list) $\Rightarrow$ reply(list) \}}}\\
 \texttt{\textcolor{blue}{\scriptsize{}res(Nil)}} \\
-\texttt{\textcolor{blue}{\scriptsize{}Seq(1,2,3).foreach(x => c(x{*}2))}}\\
+\texttt{\textcolor{blue}{\scriptsize{}Seq(1,2,3).foreach(x $\Rightarrow$
+c(x))}}\\
 \texttt{\textcolor{blue}{\scriptsize{}get()}}\textcolor{gray}{\footnotesize{}
-// this returned Seq(4,6,2) in one test}{\footnotesize \par}
+// this returned Seq(4,6,2) in one test}\\
+~\\
+Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/FutureSpec.scala}{FutureSpec.scala}
 \end{frame}
 
-\begin{frame}{Using \texttt{Chymyst}: examples III}
+\begin{frame}{\texttt{Chymyst}: examples III}
 
 
 \framesubtitle{Five Dining Philosophers}
@@ -373,36 +378,38 @@ Philosophers \texttt{\textcolor{blue}{\scriptsize{}1, 2, 3, 4, }}\textcolor{blue
 and forks \texttt{\textcolor{blue}{\scriptsize{}f12, f23, f34, f45,
 f51}}{\scriptsize \par}
 \begin{lyxcode}
-\textsf{\textcolor{gray}{\footnotesize{}//~...~some~declarations~omitted~for~brevity}}{\footnotesize \par}
+\textsf{\textcolor{gray}{\footnotesize{}//~...~some~definitions~omitted~for~brevity}}{\footnotesize \par}
 
 \textcolor{blue}{\scriptsize{}site~(}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~t1(\_)~=>~wait();~h1()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go\{~case~t1(\_)~$\Rightarrow$~wait();~h1()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~t2(\_)~=>~wait();~h2()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go\{~case~t2(\_)~$\Rightarrow$~wait();~h2()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~t3(\_)~=>~wait();~h3()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go\{~case~t3(\_)~$\Rightarrow$~wait();~h3()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~t4(\_)~=>~wait();~h4()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go\{~case~t4(\_)~$\Rightarrow$~wait();~h4()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~t5(\_)~=>~wait();~h5()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go\{~case~t5(\_)~$\Rightarrow$~wait();~h5()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~h1(\_)~+~f12(\_)~+~f51(\_)~=>~wait();~t1()~+~f12()~+~f51()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go\{~case~h1(\_)~+~f12(\_)~+~f51(\_)~$\Rightarrow$~wait();~t1()~+~f12()~+~f51()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~h2(\_)~+~f23(\_)~+~f12(\_)~=>~wait();~t2()~+~f23()~+~f12()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go\{~case~h2(\_)~+~f23(\_)~+~f12(\_)~$\Rightarrow$~wait();~t2()~+~f23()~+~f12()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~h3(\_)~+~f34(\_)~+~f23(\_)~=>~wait();~t3()~+~f34()~+~f23()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go\{~case~h3(\_)~+~f34(\_)~+~f23(\_)~$\Rightarrow$~wait();~t3()~+~f34()~+~f23()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~h4(\_)~+~f45(\_)~+~f34(\_)~=>~wait();~t4()~+~f45()~+~f34()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go\{~case~h4(\_)~+~f45(\_)~+~f34(\_)~$\Rightarrow$~wait();~t4()~+~f45()~+~f34()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~h5(\_)~+~f51(\_)~+~f45(\_)~=>~wait();~t5()~+~f51()~+~f45()~\}}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go\{~case~h5(\_)~+~f51(\_)~+~f45(\_)~$\Rightarrow$~wait();~t5()~+~f51()~+~f45()~\}}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{})}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}t1()~+~t2()~+~t3()~+~t4()~+~t5()}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}f12()~+~f23()~+~f34()~+~f45()~+~f51()}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}f12()~+~f23()~+~f34()~+~f45()~+~f51()}~\\
+ ~\\
 \end{lyxcode}
+Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/main/scala/io/chymyst/talk_examples/DiningPhilosophers.scala}{DiningPhilosophers.scala}
 \end{frame}
 
 \begin{frame}{From Actors to Join Calculus}
@@ -438,9 +445,9 @@ It follows from these requirements that...
 \begin{lyxcode}
 \textcolor{blue}{\scriptsize{}site(~//~Chymyst}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~a(x)~=>~...~\},~}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~a(x)~$\Rightarrow$~...~\},~}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~b(x)~=>~...~\})}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~b(x)~$\Rightarrow$~...~\})}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}a(100)}{\scriptsize \par}
 
@@ -451,7 +458,7 @@ It follows from these requirements that...
 \begin{itemize}
 \item Multiple messages are automatically parallelized
 \item Blocking molecules $\approx$ blocking-send: \texttt{\textcolor{blue}{\scriptsize{}actorRef
-? 1}}{\scriptsize \par}
+?~1}}{\scriptsize \par}
 \end{itemize}
 \end{frame}
 
@@ -478,7 +485,7 @@ Reactions:
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Using \texttt{Chymyst}: examples IV}
+\begin{frame}{\texttt{Chymyst}: examples IV}
 
 
 \framesubtitle{Concurrent merge-sort: chemistry pseudocode}
@@ -494,11 +501,11 @@ molecules in \emph{local scope}
 when done
 \end{itemize}
 \begin{lyxcode}
-\textcolor{blue}{\scriptsize{}mergesort(~(arr,~sortedResult)~)~=>}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}mergesort(~(arr,~sortedResult)~)~$\Rightarrow$}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}~~~~~~~val~(part1,~part2)~=~arr.splitAt(arr.length/2)}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~sorted1(x)~+~sorted2(y)~=>~sortedResult(~arrayMerge(x,y)~)}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~~~~~~sorted1(x)~+~sorted2(y)~$\Rightarrow$~sortedResult(~arrayMerge(x,y)~)}{\scriptsize \par}
 
 ~~~
 
@@ -509,7 +516,7 @@ when done
 \end{lyxcode}
 \end{frame}
 
-\begin{frame}{Using \texttt{Chymyst}: examples IV}
+\begin{frame}{\texttt{Chymyst}: examples IV}
 
 
 \framesubtitle{Concurrent merge-sort: \texttt{Chymyst} code}
@@ -518,7 +525,7 @@ when done
 
 \textcolor{blue}{\scriptsize{}site(}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~mergesort((arr,~sortedResult))~=>}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~mergesort((arr,~sortedResult))~$\Rightarrow$}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}~~~~if~(arr.length~<=~1)~sortedResult(arr)}{\scriptsize \par}
 
@@ -530,7 +537,7 @@ when done
 
 \textcolor{blue}{\scriptsize{}~~~~~~~~site(}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~~~~go~\{~case~sorted1(x)~+~sorted2(y)~=>~sortedResult(arrayMerge(x,y))~\}}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~~~~~~~~~go~\{~case~sorted1(x)~+~sorted2(y)~$\Rightarrow$~sortedResult(arrayMerge(x,y))~\}}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}~~~~~~~~)}{\scriptsize \par}
 
@@ -542,7 +549,9 @@ when done
 
 \textcolor{blue}{\scriptsize{}~~~~\}}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~\})}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~\})}~\\
+ ~\\
+Source~code:~\href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/MergeSortSpec.scala}{MergeSortSpec.scala}
 \end{lyxcode}
 \end{frame}
 
@@ -604,6 +613,7 @@ JC implementation in Scala (this talk)
 \item Better syntax, more checks of code sanity
 \item (Some) automatic fault tolerance
 \item Thread pool and thread priority control
+\item Event monitoring and unit testing APIs
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -617,6 +627,7 @@ JC implementation in Scala (this talk)
 \item A new Scala implementation, \href{https://github.com/Chymyst/chymyst-core}{Chymyst}
 \item Documentation: \href{https://winitzki.gitbooks.io/concurrency-in-reactions-declarative-multicore-in/content/}{tutorial book}
 and \href{https://github.com/winitzki/talks/blob/master/join-calculus-paper/join-calculus-paper.pdf}{draft paper}
+\item Example code for this talk: \href{https://github.com/Chymyst/jc-talk-2017-examples}{github.com/Chymyst/jc-talk-2017-examples}
 \end{itemize}
 \end{frame}
 
