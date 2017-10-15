@@ -2040,7 +2040,7 @@ site (
 
 
 \family default
- wait(); h1() },
+ think(1); h1() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -2055,7 +2055,7 @@ site (
 
 
 \family default
- wait(); h2() },
+ think(2); h2() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -2070,7 +2070,7 @@ site (
 
 
 \family default
- wait(); h3() },
+ think(3); h3() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -2085,7 +2085,7 @@ site (
 
 
 \family default
- wait(); h4() },
+ think(4); h4() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -2100,7 +2100,7 @@ site (
 
 
 \family default
- wait(); h5() },
+ think(5); h5() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -2119,7 +2119,7 @@ site (
 
 
 \family default
- wait(); t1() + f12() + f51() },
+ eat(1); t1() + f12() + f51() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -2134,7 +2134,7 @@ site (
 
 
 \family default
- wait(); t2() + f23() + f12() },
+ eat(2); t2() + f23() + f12() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -2149,7 +2149,7 @@ site (
 
 
 \family default
- wait(); t3() + f34() + f23() },
+ eat(3); t3() + f34() + f23() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -2164,7 +2164,7 @@ site (
 
 
 \family default
- wait(); t4() + f45() + f34() },
+ eat(4); t4() + f45() + f34() },
 \end_layout
 
 \begin_layout LyX-Code
@@ -2179,7 +2179,7 @@ site (
 
 
 \family default
- wait(); t5() + f51() + f45() }
+ eat(5); t5() + f51() + f45() }
 \end_layout
 
 \begin_layout LyX-Code
