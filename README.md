@@ -1,16 +1,34 @@
-
-
-
-
-
-
-
-
-
-
 # Talk slides for various meetup presentations
 
-## Join Calculus
+## Declarative concurrent programming in join calculus
+
+Abstract: I give an introduction to Join calculus, a declarative formalism for concurrent programming. Join Calculus is a development of Pi-calculus that is higher-level and easier to use in practice. Join Calculus radically improves upon well-known concurrency paradigms such as Actors or CSP. I explain how Join Calculus emerges if we want to improve the Actor model by making actors type-safe, stateless, and automatically managed. I am developing `Chymyst`,  a new open-source implementation of Join Calculus as an embedded DSL in Scala. I show concise and fully declarative Chymyst solutions for classic concurrency problems such as the "dining philosophers" or recursive "fork/join".
+
+[Talk slides: Oct. 16, 2017](join_calculus/join_calculus_2017_Scala_Bay.pdf)
+
+## Scala Futures and Thread Pools
+
+- The backbone of Java concurrency: thread pool executors
+
+- How and when do Futures run? (On thread pools.)
+
+- What does it mean to be “thread safe” and “nonblocking”?
+
+- nonblocking = uses multi-core CPU optimally
+
+- thread safe = permits easy concurrent nonblocking code
+
+- Some typical “gotchas” when using Futures in the real world
+
+- Converting other async APIs to Futures and back
+
+[Talk slides](scala-threads-futures/scala_threads_futures_talk.pdf)
+
+[Video: slides + audio recording](https://youtu.be/6b24sszy6Js)
+
+[Sample code for the talk](https://github.com/winitzki/scala-threads-futures-intro)
+
+## Join Calculus (old presentation)
 
 Presented at [Scala Study Group meetup, November 10, 2013](http://www.meetup.com/Scala-Study-Group/events/149187102/).
 
@@ -73,7 +91,7 @@ Presented at [SF Types, Theorems, and Programming Languages meetup, June 16, 201
 
 [Talk slides](prolog/prolog_talk.pdf)
 
-[Video: animated slides with audio recording](http://youtu.be/Fhc7fPQF1iY­)
+[Video: slides + audio recording](http://youtu.be/Fhc7fPQF1iY­)
 
 ## Logic and functional programming in Mercury
 
