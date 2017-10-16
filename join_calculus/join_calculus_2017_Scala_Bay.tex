@@ -7,6 +7,7 @@
 \setcounter{tocdepth}{3}
 \usepackage{babel}
 \usepackage{calc}
+\usepackage{amstext}
 \usepackage{graphicx}
 \ifx\hypersetup\undefined
   \AtBeginDocument{%
@@ -63,9 +64,9 @@
 \frame{\titlepage}
 \begin{frame}{What is ``Join Calculus''?}
 
-``Join calculus'' is...
+Join calculus is...
 \begin{itemize}
-\item a \emph{programming language} for concurrent \& parallel computations
+\item a \emph{declarative language} for concurrent \& parallel computations
 \item ...largely unknown and unused by the software engineering community 
 \end{itemize}
 \end{frame}
@@ -74,16 +75,25 @@
 
 Imperative concurrency is difficult to reason about:
 \begin{itemize}
-\item callbacks, threads, semaphores, mutexes, shared mutable state...
+\item callbacks, threads, semaphores, mutex locks
+\item errors with shared mutable state
 \item testing is hard \textendash{} non-deterministic runtime behavior!
 \begin{itemize}
 \item race conditions, deadlocks, livelocks
 \end{itemize}
 \end{itemize}
-We try to \emph{avoid} concurrency whenever possible
+We can avoid this if we use declarative approaches:
+\begin{itemize}
+\item synchronous parallelism (parallel collections, Spark)
+\item asynchronous parallelism (\texttt{\textcolor{blue}{\scriptsize{}Future}},
+\texttt{\textcolor{blue}{\scriptsize{}async}}/\texttt{\textcolor{blue}{\scriptsize{}await}})
+\item asynchronous streaming (Akka Streaming)
+\item Actors (Akka)
+\item join calculus (\href{https://github.com/Chymyst/chymyst-core}{Chymyst})
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Dining philosophers}
+\begin{frame}{``Dining philosophers''}
 
 
 \framesubtitle{The paradigmatic example of concurrency}
@@ -94,22 +104,25 @@ taking turns eating and thinking for random time intervals
 \includegraphics[height=4cm]{An_illustration_of_the_dining_philosophers_problem}
 \par\end{center}
 
-Problem: run the process, avoiding deadlock and starvation
+Problem: simulate the process, avoiding deadlock and starvation
 
 Solutions: \href{https://rosettacode.org/wiki/Dining_philosophers}{Rosetta Code}
 \end{frame}
 
-\begin{frame}{How I learned to forget deadlocks and to love concurrency}
+\begin{frame}{Talk overview}
+
+
+\framesubtitle{How I learned to forget semaphores and to love concurrency}
 
 In this talk:
 \begin{itemize}
-\item Introduction to the ``\textbf{join calculus}'' style of concurrency
+\item Introduction to join calculus and ``chemical'' style of concurrency
 \item \href{https://github.com/chymyst/chymyst-core}{Chymyst} -{}- a new
-Scala implementation
+Scala EDSL for join calculus
 \item Join calculus as an evolution of the Actor model
 \item Examples and demos
 \end{itemize}
-Not in this talk: other approaches to declarative concurrency
+Not in this talk: Other approaches to declarative concurrency
 \begin{itemize}
 \item $\pi$-calculus, PICT language (academic so far)
 \item \texttt{Erlang's} message-passing $\approx$ Akka's ``Actors''
@@ -126,15 +139,41 @@ Not in this talk: other approaches to declarative concurrency
 Join calculus is ...
 \begin{itemize}
 \item ...a declarative language for general-purpose concurrency
-\item ``What if actors were stateless, auto-started, and type-safe''
-\item No threads/semaphores/locks/mutexes/forks, no shared mutable state
-\item Concurrency is automatic and \emph{data-driven} (not command-driven)
-\item Easier to use than anything I've seen so far!
+\item ``What if Actors were auto-started, type-safe, and multiple-dispatch''
+\item No threads/semaphores/locks, no shared mutable state
+\item Concurrency is automatic and \emph{data-driven}, not command-driven
+\begin{itemize}
+\item Easier to reason about than any other concurrency formalism!
+\end{itemize}
 \end{itemize}
 Metaphors for join calculus:
 \begin{itemize}
-\item ``concurrent functions computing with concurrent data''
+\item ``concurrent functions compute with concurrent data''
 \item ``chemical soup with molecules and reactions'' 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Concurrent data and concurrent functions}
+
+
+\framesubtitle{Intuitions leading to join calculus}
+
+What would it mean to make ordinary functions concurrent?
+\begin{itemize}
+\item Several functions should be able to run at once
+\item No shared state: Concurrent processes work on different data
+\end{itemize}
+This will be implemented if:
+\begin{itemize}
+\item Data items and functions are stored in a special \textbf{site}
+\item Each data item is labeled for specific concurrent function(s)
+\item Concurrent functions consume data from the site
+\item Computed results are emitted back to the site
+\end{itemize}
+Operational semantics:
+\begin{itemize}
+\item Concurrent functions auto-start whenever input data is available
+\item Different instances of a concurrent function consume separate data
 \end{itemize}
 \end{frame}
 
@@ -143,20 +182,25 @@ Metaphors for join calculus:
 
 \framesubtitle{a.k.a.~the ``Reflexive Chemical Abstract Machine'' {[}\href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.32.3078}{Fournet \&{} Gonthier 1996}{]}}
 
+Real chemistry:
+\[
+\text{HCl}+\text{NaOH}\rightarrow\text{NaCl}+\text{H}_{2}\text{O}
+\]
+
 Abstract chemistry:
 \begin{itemize}
-\item Chemical ``soup'' contains many ``molecules''
+\item The chemical ``soup'' contains arbitrarily defined ``molecules''
 \item A combination of certain molecules starts a ``chemical reaction''
 \end{itemize}
 ~\\
 
 \fbox{\begin{minipage}[c][1\totalheight][t]{0.5\columnwidth}%
 \begin{center}
-``Chemical laws'':\\
+``Abstract'' chemical laws:\\
 \texttt{\textcolor{blue}{\footnotesize{}a + b ${\color{blue}\rightarrow}$
 a}}\\
 \texttt{\textcolor{blue}{\footnotesize{}a + c ${\color{blue}\rightarrow}$
-${\color{blue}\emptyset}$}}
+$\textrm{Ø}$}}
 \par\end{center}%
 \end{minipage}}\hfill{}%
 \begin{minipage}[c][1\totalheight][t]{0.3\columnwidth}%
@@ -166,9 +210,9 @@ ${\color{blue}\emptyset}$}}
 ~\\
 
 \begin{itemize}
-\item Define molecules \texttt{\textcolor{blue}{\scriptsize{}a}}, \texttt{\textcolor{blue}{\scriptsize{}b}},
-\texttt{\textcolor{blue}{\scriptsize{}c}}, ... and arbitrary chemical
-laws
+\item Program code defines molecules \texttt{\textcolor{blue}{\scriptsize{}a}},
+\texttt{\textcolor{blue}{\scriptsize{}b}}, \texttt{\textcolor{blue}{\scriptsize{}c}},
+... and arbitrary chemical laws
 \item Emit some molecules into the ``soup''
 \item The runtime system evolves the soup \emph{concurrently} and \emph{in
 parallel}
@@ -204,22 +248,26 @@ and in parallel
 + }}\texttt{\textbf{\textcolor{blue}{\scriptsize{}b}}}\texttt{\textcolor{blue}{\scriptsize{}(y)
 $\Rightarrow$}}{\scriptsize \par}
 
-\texttt{\textcolor{blue}{\scriptsize{}~ ~val z = compute\_z(x,y);
-}}\texttt{\textbf{\textcolor{blue}{\scriptsize{}a}}}\texttt{\textcolor{blue}{\scriptsize{}(z)
+\texttt{\textcolor{blue}{\scriptsize{}~ ~val z = f(x,y); }}\texttt{\textbf{\textcolor{blue}{\scriptsize{}a}}}\texttt{\textcolor{blue}{\scriptsize{}(z)
 \},}}{\scriptsize \par}
 
 \texttt{\textcolor{blue}{\scriptsize{}~ go \{ case }}\texttt{\textbf{\textcolor{blue}{\scriptsize{}a}}}\texttt{\textcolor{blue}{\scriptsize{}(x)
 + }}\texttt{\textbf{\textcolor{blue}{\scriptsize{}c}}}\texttt{\textcolor{blue}{\scriptsize{}(\_)
 $\Rightarrow$}}{\scriptsize \par}
 
-\texttt{\textcolor{blue}{\scriptsize{}~ ~ ~ println(x) \} )}}{\scriptsize \par}%
+\texttt{\textcolor{blue}{\scriptsize{}~ ~ ~ println(x) \}}}{\scriptsize \par}
+
+\texttt{\textcolor{blue}{\scriptsize{})}}{\scriptsize \par}%
 \end{minipage}\hfill{}\\
 ~\\
 When a reaction starts: input molecules disappear, expression is computed,
 output molecules are emitted
 \end{frame}
 
-\begin{frame}{First example: concurrent counter}
+\begin{frame}{Programs = chemical laws + initial molecules}
+
+
+\framesubtitle{First example: concurrent counter}
 
 Chemical laws:
 \begin{itemize}
@@ -238,31 +286,6 @@ We may emit \textcolor{blue}{\scriptsize{}decr()} and \textcolor{blue}{\scriptsi
 concurrently
 \end{frame}
 
-\begin{frame}{Concurrent data and concurrent functions}
-
-
-\framesubtitle{Towards a more declarative view}
-
-Molecule with value $\approx$ data lifted into the concurrent world
-
-Reaction $\approx$ function lifted into the concurrent world
-\begin{itemize}
-\item \textcolor{blue}{\scriptsize{}counter(n) + add(x) }\texttt{\textcolor{blue}{\scriptsize{}$\Rightarrow$}}\textcolor{blue}{\scriptsize{}
-counter(n + x)}{\scriptsize \par}
-\item \textcolor{blue}{\scriptsize{}counter(n) + incr() }\texttt{\textcolor{blue}{\scriptsize{}$\Rightarrow$}}\textcolor{blue}{\scriptsize{}
-counter(n + 1)}{\scriptsize \par}
-\item \textcolor{blue}{\scriptsize{}counter(n) + get(result)}\texttt{\textcolor{blue}{\scriptsize{}
-$\Rightarrow$}}\textcolor{blue}{\scriptsize{} counter(n) + result(n)}{\scriptsize \par}
-\end{itemize}
-State of the chemical soup:
-\begin{itemize}
-\item \textcolor{blue}{\scriptsize{}counter(0) + incr() + incr() + add(10)}{\scriptsize \par}
-\end{itemize}
-Reaction consumes molecules $\approx$ function consumes input values
-
-Reaction emits molecules $\approx$ function returns result values
-\end{frame}
-
 \begin{frame}{\texttt{Chymyst}: basic features}
 
 
@@ -273,26 +296,61 @@ Define \textbf{molecule} \textbf{emitters}:\\
 \texttt{\textcolor{blue}{\scriptsize{}val decr = m{[}Unit{]}}}\\
 \texttt{\textcolor{blue}{\scriptsize{}val incr = m{[}Unit{]}}}{\scriptsize \par}
 
-Declare some \textbf{reactions} using the known molecules:\\
+~\\
+
+Declare some \textbf{reactions} by pattern match on the molecule values:\\
 \texttt{\textcolor{blue}{\scriptsize{}val r0 = go \{ case counter(n)
 + decr(\_) $\Rightarrow$ counter(n-1) \}}} \\
 \texttt{\textcolor{blue}{\scriptsize{}val r1 = go \{ case counter(n)
 + incr(\_) $\Rightarrow$ counter(n+1) \}}} 
 
-Activate a ``\textbf{reaction site}'' and emit some molecules:\\
-\texttt{\textcolor{blue}{\scriptsize{}site(r0, r1)}}\\
+~\\
+
+Activate a \textbf{reaction site}:\\
+\texttt{\textcolor{blue}{\scriptsize{}site(r0, r1)}}{\scriptsize \par}
+\begin{itemize}
+\item For brevity, define reactions inline within reaction sites
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{Chymyst}: basic usage}
+
+
+\framesubtitle{Operational semantics}
+
+Emit some molecules:\\
 \texttt{\textcolor{blue}{\scriptsize{}counter(10)}} \textcolor{gray}{\footnotesize{}//
 non-blocking side-effect}\\
 \texttt{\textcolor{blue}{\scriptsize{}incr()}} \textcolor{gray}{\footnotesize{}//
 ditto; we will have}\texttt{\textcolor{gray}{\footnotesize{} counter(11)}}\textcolor{gray}{\footnotesize{}
-later} \\
+}\textcolor{gray}{\emph{\footnotesize{}later}} \\
 \texttt{\textcolor{blue}{\scriptsize{}incr()}} \textcolor{gray}{\footnotesize{}//
 we will have }\texttt{\textcolor{gray}{\footnotesize{}counter(12)}}\textcolor{gray}{\footnotesize{}
-later}{\footnotesize \par}
+}\textcolor{gray}{\emph{\footnotesize{}later}}{\footnotesize \par}
 \begin{itemize}
 \item Calling \texttt{\textcolor{blue}{\scriptsize{}counter(10)}} returns
 \texttt{\textcolor{blue}{\scriptsize{}Unit}} and emits a molecule
 as a side-effect
+\item This could be the state of the chemical soup at some point in time:
+\begin{itemize}
+\item \textcolor{blue}{\scriptsize{}counter(10) + incr() + incr()}{\scriptsize \par}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Concurrent data and concurrent functions}
+
+
+\framesubtitle{Chemical metaphor vs.~concurrent terms metaphor}
+\begin{itemize}
+\item Emit molecule with value $\approx$ lift data into the ``concurrent
+world''
+\item Define reaction $\approx$ lift a function into the ``concurrent
+world''
+\item Reaction site $\approx$ container for concurrent functions and data
+items
+\item Reaction consumes molecules $\approx$ function consumes input values
+\item Reaction emits molecules $\approx$ function returns result values
 \end{itemize}
 \end{frame}
 
@@ -342,22 +400,66 @@ before... }\\
 Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/CounterSpec.scala}{CounterSpec.scala}
 \end{frame}
 
+\begin{frame}{Definitions in local scopes}
+
+
+\framesubtitle{\texttt{Chymyst} = functional programming + join calculus}
+
+New molecules, reactions, and sites can be defined in local scopes
+
+Emitters (\texttt{\textcolor{blue}{\scriptsize{}read:~M{[}Int{]}}})
+can be molecule values too!
+\begin{lyxcode}
+\textcolor{blue}{\scriptsize{}def~makeCounter(init:~Int):~(M{[}Unit{]},~M{[}M{[}Int{]}{]})~=~\{}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}~~val~c~=~m{[}Int{]}}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}~~val~decr~=~m{[}Unit{]}}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}~~val~get~=~m{[}M{[}Int{]}{]}}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}~~site(~~~~~}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}~~~go~\{~case~c(x)~+~get(read)~\ensuremath{\Rightarrow}~c(x);~read(x)~\},}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}~~~go~\{~case~c(x)~+~decr(\_)~\ensuremath{\Rightarrow}~c(x~-~1)~\}~~}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}~~)}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}~~c(init)}\textcolor{gray}{\scriptsize{}~//~emit~initial~molecule}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}~~(decr,~get)~}\textcolor{gray}{\scriptsize{}//~return~emitters~to~the~outside~scope}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}\}}{\scriptsize \par}
+
+\textcolor{gray}{\scriptsize{}//~usage:}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}val~(decr,~get)~=~makeCounter(100)}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}val~result~=~m{[}Int{]}}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}get(result)}\textcolor{gray}{\scriptsize{}~//~non-blocking}{\scriptsize \par}
+\end{lyxcode}
+\end{frame}
+
 \begin{frame}{\texttt{Chymyst}: examples II}
 
 
 \framesubtitle{Options, Futures, and Map/Reduce}
 
-Implement Future with blocking poll (``\texttt{\textcolor{blue}{\scriptsize{}get}}''):\\
+Implement \texttt{\textcolor{blue}{\scriptsize{}Future}} with blocking
+``\texttt{\textcolor{blue}{\scriptsize{}get}}'':\\
 \texttt{\textcolor{blue}{\scriptsize{}go \{ case get(\_, reply) $\Rightarrow$
 val x = f(); reply(x) \}}}\\
-~\\
 ~
 
 Implement Map/Reduce:\\
 \texttt{\textcolor{blue}{\scriptsize{}go \{ case c(x) $\Rightarrow$
-d(x {*} 2) \} }}\\
+d(x {*} 2) \}}}\textcolor{gray}{\scriptsize{} // ``map''}\texttt{\textcolor{blue}{\scriptsize{}
+}}\\
 \texttt{\textcolor{blue}{\scriptsize{}go \{ case res(list) + d(s)
-$\Rightarrow$ res(s ::~list) \} }}\\
+$\Rightarrow$ res(s ::~list) \} }}\textcolor{gray}{\scriptsize{}//
+``reduce''}\\
 \texttt{\textcolor{blue}{\scriptsize{}go \{ case get(\_, reply) +
 res(list) $\Rightarrow$ reply(list) \}}}\\
 \texttt{\textcolor{blue}{\scriptsize{}res(Nil)}} \\
@@ -378,36 +480,37 @@ Philosophers \texttt{\textcolor{blue}{\scriptsize{}1, 2, 3, 4, }}\textcolor{blue
 and forks \texttt{\textcolor{blue}{\scriptsize{}f12, f23, f34, f45,
 f51}}{\scriptsize \par}
 \begin{lyxcode}
-\textsf{\textcolor{gray}{\footnotesize{}//~...~some~definitions~omitted~for~brevity}}{\footnotesize \par}
+\textsf{\textcolor{gray}{\footnotesize{}//~...~definitions~of~emitters,~think(),~eat()~omitted~for~brevity}}{\footnotesize \par}
 
 \textcolor{blue}{\scriptsize{}site~(}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~t1(\_)~$\Rightarrow$~think(1);~h1()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~t1(\_)~$\Rightarrow$~think(1);~h1()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~t2(\_)~$\Rightarrow$~think(2);~h2()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~t2(\_)~$\Rightarrow$~think(2);~h2()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~t3(\_)~$\Rightarrow$~think(3);~h3()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~t3(\_)~$\Rightarrow$~think(3);~h3()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~t4(\_)~$\Rightarrow$~think(4);~h4()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~t4(\_)~$\Rightarrow$~think(4);~h4()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~t5(\_)~$\Rightarrow$~think(5);~h5()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~t5(\_)~$\Rightarrow$~think(5);~h5()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~h1(\_)~+~f12(\_)~+~f51(\_)~$\Rightarrow$~eat(1);~t1()~+~f12()~+~f51()~\},}{\scriptsize \par}
+~ 
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~h2(\_)~+~f23(\_)~+~f12(\_)~$\Rightarrow$~eat(2);~t2()~+~f23()~+~f12()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~h1(\_)~+~f12(\_)~+~f51(\_)~$\Rightarrow$~eat(1);~t1()~+~f12()~+~f51()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~h3(\_)~+~f34(\_)~+~f23(\_)~$\Rightarrow$~eat(3);~t3()~+~f34()~+~f23()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~h2(\_)~+~f23(\_)~+~f12(\_)~$\Rightarrow$~eat(2);~t2()~+~f23()~+~f12()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~h4(\_)~+~f45(\_)~+~f34(\_)~$\Rightarrow$~eat(4);~t4()~+~f45()~+~f34()~\},}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~h3(\_)~+~f34(\_)~+~f23(\_)~$\Rightarrow$~eat(3);~t3()~+~f34()~+~f23()~\},}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go\{~case~h5(\_)~+~f51(\_)~+~f45(\_)~$\Rightarrow$~eat(5);~t5()~+~f51()~+~f45()~\}}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~h4(\_)~+~f45(\_)~+~f34(\_)~$\Rightarrow$~eat(4);~t4()~+~f45()~+~f34()~\},}{\scriptsize \par}
+
+\textcolor{blue}{\scriptsize{}~~go~\{~case~h5(\_)~+~f51(\_)~+~f45(\_)~$\Rightarrow$~eat(5);~t5()~+~f51()~+~f45()~\}}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{})}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}t1()~+~t2()~+~t3()~+~t4()~+~t5()}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}f12()~+~f23()~+~f34()~+~f45()~+~f51()}~\\
- ~\\
 \end{lyxcode}
 Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/main/scala/io/chymyst/talk_examples/DiningPhilosophers.scala}{DiningPhilosophers.scala}
 \end{frame}
@@ -416,20 +519,20 @@ Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/
 
 ``Chemical actors'' are actors with new requirements:
 \begin{enumerate}
-\item chemical actors are auto-started and stopped when messages arrive
+\item chemical actors are auto-started when messages arrive
 \item chemical actors may wait atomically for a \emph{set} of different
 messages
 \item messages carry statically typed values
 \end{enumerate}
 It follows from these requirements that... 
 \begin{itemize}
-\item User code declares computations, not actor instances
+\item User code declares \emph{computations} and not actor instances
 \item Auto-created actor instances must be stateless
 \item Message emitters are \emph{specific to data}, not to actor instances:
 \end{itemize}
 \begin{minipage}[c][1\totalheight][t]{0.5\columnwidth}%
 \begin{lyxcode}
-\textcolor{blue}{\scriptsize{}//~Actors}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}//~Akka}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}val~a:~ActorRef~=~...}{\scriptsize \par}
 
@@ -443,11 +546,11 @@ It follows from these requirements that...
 \end{minipage}\hfill{}%
 \begin{minipage}[c][1\totalheight][t]{0.45\columnwidth}%
 \begin{lyxcode}
-\textcolor{blue}{\scriptsize{}site(~//~Chymyst}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}//~Chymyst}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~a(x)~$\Rightarrow$~...~\},~}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}go~\{~case~a(x)~+~b(y)~$\Rightarrow$~...~\}~}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~b(x)~$\Rightarrow$~...~\})}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}go~\{~case~b(y)~+~c(z)~$\Rightarrow$~...~\}}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}a(100)}{\scriptsize \par}
 
@@ -462,23 +565,23 @@ It follows from these requirements that...
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Join Calculus vs. Actor model}
+\begin{frame}{Join Calculus vs.~Actor model}
 
 
 \framesubtitle{David vs. Goliath?}
 \begin{itemize}
 \item reaction $\approx$ actor
-\item emitted molecule $\approx$ message to actor
+\item emitted molecule $\approx$ message sent to actor
 \end{itemize}
-Actors: 
+Programming in Actors: 
 \begin{itemize}
 \item user code creates and manages explicit actor instances
 \item actors will process one message at a time
 \item actors typically hold mutable state or mutate ``behavior'' 
 \end{itemize}
-Reactions:
+Programming in Reactions:
 \begin{itemize}
-\item autostart when the required input molecules are available
+\item processes auto-start when the needed input molecules are available
 \item many reactions can start at once, automatically concurrent
 \item immutable, stateless, and type-safe
 \item all reactions are defined statically, but locally scoped
@@ -519,7 +622,7 @@ when done
 \begin{frame}{\texttt{Chymyst}: examples IV}
 
 
-\framesubtitle{Concurrent merge-sort: \texttt{Chymyst} code}
+\framesubtitle{Concurrent merge-sort: \texttt{Chymyst} main code}
 \begin{lyxcode}
 \textcolor{blue}{\scriptsize{}val~mergesort~=~m{[}(Array{[}T{]},~M{[}Array{[}T{]}{]}){]}}{\scriptsize \par}
 
@@ -555,12 +658,13 @@ Source~code:~\href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/
 \end{lyxcode}
 \end{frame}
 
-\begin{frame}{Everything you need to know about JC...}
+\begin{frame}{Everything you need to know about join calculus...}
 
 
-\framesubtitle{... but were afraid to ask}
+\framesubtitle{... but the \href{https://en.wikipedia.org/wiki/Join-calculus}{Wikipedia page}
+confused you, so you were afraid to ask}
 
-Most descriptions of JC use the ``message/channel'' metaphor... 
+Academic descriptions of JC use the ``message/channel'' terminology
 
 \texttt{\footnotesize{}\bigskip{}
 }{\footnotesize \par}
@@ -573,9 +677,9 @@ Most descriptions of JC use the ``message/channel'' metaphor...
 molecule & message on channel & \texttt{\textcolor{blue}{\footnotesize{}a(123)}}\textcolor{gray}{\footnotesize{}
 // side effect}\tabularnewline
 \hline 
-emitter & channel (port) name & \texttt{\textcolor{blue}{\footnotesize{}val a : M{[}Int{]}}}\tabularnewline
+emitter & channel name & \texttt{\textcolor{blue}{\footnotesize{}val a:~M{[}Int{]}}}\tabularnewline
 \hline 
-blocking emitter & blocking channel & \texttt{\textcolor{blue}{\footnotesize{}val q : B{[}Unit, Int{]}}}\tabularnewline
+blocking emitter & blocking channel & \texttt{\textcolor{blue}{\footnotesize{}val q:~B{[}Unit, Int{]}}}\tabularnewline
 \hline 
 reaction & process & \texttt{\textcolor{blue}{\footnotesize{}go \{ case a(x) + ... \}}}\tabularnewline
 \hline 
@@ -621,12 +725,17 @@ JC implementation in Scala (this talk)
 \begin{frame}{Conclusions and outlook}
 
 \begin{itemize}
-\item Join Calculus = declarative, purely functional concurrency
+\item Join calculus = declarative, purely functional concurrency
+\begin{itemize}
 \item Similar to ``Actors'', but easier and ``more purely functional''
-\item Very little known, and very little used in practice
-\item A new Scala implementation, \href{https://github.com/Chymyst/chymyst-core}{Chymyst}
+\item Very little known, very little used in practice
+\end{itemize}
+\item A new Scala implementation: \href{https://github.com/Chymyst/chymyst-core}{Chymyst}
+\begin{itemize}
+\item Industry-strength features planned
 \item Documentation: \href{https://winitzki.gitbooks.io/concurrency-in-reactions-declarative-multicore-in/content/}{tutorial book}
 and \href{https://github.com/winitzki/talks/blob/master/join-calculus-paper/join-calculus-paper.pdf}{draft paper}
+\end{itemize}
 \item Example code for this talk: \href{https://github.com/Chymyst/jc-talk-2017-examples}{github.com/Chymyst/jc-talk-2017-examples}
 \end{itemize}
 \end{frame}
