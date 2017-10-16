@@ -6,6 +6,8 @@ Abstract: I give an introduction to Join calculus, a declarative formalism for c
 
 [Talk slides: Oct. 16, 2017](join_calculus/join_calculus_2017_Scala_Bay.pdf)
 
+[Sample code for the talk](https://github.com/Chymyst/jc-talk-2017-examples)
+
 ## Scala Futures and Thread Pools
 
 - The backbone of Java concurrency: thread pool executors
