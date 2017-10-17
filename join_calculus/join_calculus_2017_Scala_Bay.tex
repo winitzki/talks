@@ -88,6 +88,7 @@ We can avoid this if we use declarative approaches:
 \item asynchronous parallelism (\texttt{\textcolor{blue}{\scriptsize{}Future}},
 \texttt{\textcolor{blue}{\scriptsize{}async}}/\texttt{\textcolor{blue}{\scriptsize{}await}})
 \item asynchronous streaming (Akka Streaming)
+\item STM
 \item Actors (Akka)
 \item join calculus (\href{https://github.com/Chymyst/chymyst-core}{Chymyst})
 \end{itemize}
@@ -268,6 +269,8 @@ output molecules are emitted
 
 
 \framesubtitle{First example: concurrent counter}
+
+We would like to decrement and increment concurrently
 
 Chemical laws:
 \begin{itemize}

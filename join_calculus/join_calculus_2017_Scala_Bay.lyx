@@ -237,6 +237,10 @@ asynchronous streaming (Akka Streaming)
 \end_layout
 
 \begin_layout Itemize
+STM
+\end_layout
+
+\begin_layout Itemize
 Actors (Akka)
 \end_layout
 
@@ -1192,6 +1196,10 @@ Programs = chemical laws + initial molecules
 \begin_deeper
 \begin_layout FrameSubtitle
 First example: concurrent counter
+\end_layout
+
+\begin_layout Standard
+We would like to decrement and increment concurrently
 \end_layout
 
 \begin_layout Standard
