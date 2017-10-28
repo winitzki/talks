@@ -850,7 +850,7 @@
 %% Compatibility with auto-generated ACM eRights management instructions.
 \let \acmPrice = \reprintprice
 
-\reprintprice{\$15.00}
+\reprintprice{\$0.00}
 
 \def \setcopyrightdoi {%
   \if \@emptydefp{\@copyrightdoi}%
