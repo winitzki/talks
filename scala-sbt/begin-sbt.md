@@ -64,15 +64,51 @@ Using Scala as configuration language privides extreme flexibility
 
 ## Learn by example
 
+- We need to learn by example...
+    - because there are just too many conventions and functions
+
+- Cut-and-paste code is mostly okay with `build.sbt`
+    - as long as you copy from similar projects
+
+### How does SBT configure all that?
+
+SBT provides a rich library with predefined functions
+
+- Settings: the values we assign
+- Tasks: the commands we run
+
+Example settings:
+
+```scala
+val scalaVersion: SettingKey[String]
+val publishArtifact: SettingKey[Boolean]
+
+```
+
+Example commands:
+
+```scala
+val compile = TaskKey[Analysis]
+val doc = TaskKey[File]
+val packageBin = TaskKey[File]
+
+```
+
+### Specify the version of SBT
+
 The `project/build.properties` file should always contain this:
 
 ```
 sbt.version = 0.13.16
+
 ```
+
+- The latest version of SBT is `1.0.2`...
+    - but it is not yet stable enough for us
 
 ### Example `build.sbt`: Single-project build
 
-```
+```scala
 scalaVersion := "2.12.4"
 
 crossScalaVersions := Seq("2.11.11", "2.12.4")
@@ -113,7 +149,7 @@ libraryDependencies ++= Seq(
 
 - Subprojects are `my_app`, `my_lib`, and `my_client`
 
-```
+```scala
 
 val common = Seq(
   version := "1.0.0",
@@ -191,7 +227,16 @@ lazy val my_lib = (project in file("mylib"))
 
 ```
 
-## Basic SBT commands
+## What goes into `project/plugins.sbt`?
+
+It is the configuration needed to compile your main `build.sbt`
+
+- SBT plugins used in the build (coverage, scalastyle, etc.)
+- Libraries needed to compile and run the main `build.sbt`
+    - libraries for source code generation (e.g. protobuf)
+- Artifactory resolvers needed to resolve these plugins and libraries
+
+## Basic SBT tasks
 
 - `sbt update` - verify/download all dependencies
 - `sbt compile` - compile the main code
@@ -199,10 +244,54 @@ lazy val my_lib = (project in file("mylib"))
 - `sbt run` - run the `main` method of the `App` object
 - `sbt test` - run all tests
 - `sbt publishLocal` - package JARs and publish to `$HOME/.ivy2/local`
+- `sbt publishSigned` - package JARs and publish to some artifactory
+
+- `sbt assembly` - package the application JAR
 
 - `sbt clean` - delete all compiled and generated files
 
-## Dependencies
+## Basic SBT settings
+
+- version and options for the Scala compiler
+    - `scalaVersion`, `scalacSettings`
+- dependencies on libraries
+    - `libraryDependencies`, `dependencyOverrides`, `dependsOn()`, `Test`, `%`, `%%`
+- JAR artifact names and where to publish the JARs
+    - `version`, `name`, `publishTo`
+
+## Anatomy of a JAR
+
+- JAR is a zip file with extra metadata (secure signing)
+
+- There are five kinds of JAR files:
+    - application JAR (can run with `java -jar file.jar`, all dependencies included)
+    - library JAR (no `main` method, just one library's classes with no dependencies)
+    - library JARs with some 3rd party dependencies included (trouble!!!)
+        - example: `mockito-all`
+    - source JAR (Java/Scala files)
+    - documentation JAR (HTML files)
+
+- JAR contains two kinds of files:
+    - Java class files: `*.class`
+    - Resource files: default config files, data files
+    - Build-time information, licenses, etc.
+- Working with JARs: `unzip -l file.jar`, etc.
+
+- Example of JAR contents:
+
+```
+META-INF/MANIFEST.MF
+META-INF/maven/org.javolution/javolution-core-java/pom.properties
+META-INF/maven/org.javolution/javolution-core-java/pom.xml
+javax/realtime/RealtimeThread.class
+javolution/context/AbstractContext.class
+
+```
+
+## Project dependencies
+
+- Most projects use code from other projects or other libraries
+   - Since we are using open source libraries, IntelliJ can navigate to the full source code of every dependency
 
 There are two kinds of dependencies:
 
@@ -217,14 +306,59 @@ Main differences:
 - subproject dependencies:
     - always depends on current version
     - does not use AF or local cache
-    - subproject dependency must be published at the same version
+    - dependent and depending subprojects must be published at the same version
 
 When to use (with in-house code):
 
 - subproject dependencies: for code actively developed in sync
 - library dependencies: for stable or unrelated code
 
-To discover what versions of libraries are available:
 
-- Look at [Official Maven site](http://search.maven.org/) only!
-    - Do not use `MVNRepository.com`, it is not current with Maven
+### Library dependencies
+
+- Discover what versions of libraries are available:
+    - Look at [Official Maven site](http://search.maven.org/) only!
+        - Do not use `MVNRepository.com`, it is not current with Maven
+    - Determine what version you want to use
+        - Is this version very recent with no newer patches? Suspicious.
+        - Is this version very old with no newer patches? Either very stable, or suspicious.
+        - Does it have Scala 2.11 / 2.12 versions published?
+- Add dependencies to your project
+
+```scala
+libraryDependencies ++= Seq(
+   "org.scalatest" %% "scalatest" % "3.0.4" % Test,
+   "org.apache.poi" % "poi-ooxml" % "3.14"
+)
+
+```
+
+- The Scala dependencies must be `%%`, the Java dependencies `%`
+
+### Main code vs. test code
+
+- What is this `% Test`?
+    - it's called a **classifier**
+    - most often you will have no classifier or just a `Test` classifier
+    - `% Test` is the same as `% "test"` and the same as `% "test->compile"`
+    - **test dependencies** are dependencies you only need when running tests
+    - other code that depends on your code (i.e. downstream from you) does not usually need your tests or your test dependencies
+
+- Each library typically has **main** code and **test** code
+    - `src/main/scala/...` and `/src/test/scala/...`
+
+So, there are four possibilities:
+
+- Our main code depends on the library's main code: no classifier needed
+- Our test code depends on the library's main code: `% Test` or `% "test->compile"`
+- Our test code depends on the library's test code: Really? `% "test->test"
+- Our main code depends on the library's test code: Really now?? `% "compile->test"`
+
+Classifiers can be combined: `% "compile->compile;test->test`
+
+Recommended practices:
+
+- Make sure your test dependencies are marked with `% Test` to avoid leaking them downstream
+- Do not use other people's test code! It's usually very unstable.
+    - For common "test utilities", make a library with main code, and use it as a `% Test` dependency
+
