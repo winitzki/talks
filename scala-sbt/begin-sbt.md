@@ -98,7 +98,7 @@ val packageBin = TaskKey[File]
 
 ### Specify the version of SBT
 
-The `project/build.properties` file should always contain this:
+The `project/build.properties` file should contain this line:
 
 ```
 sbt.version = 0.13.16
@@ -109,6 +109,8 @@ sbt.version = 0.13.16
     - but it is not yet stable enough for us
 
 ### Example `build.sbt`: Single-project build
+
+By default, the project directory is `.`
 
 ```scala
 scalaVersion := "2.12.4"
@@ -159,13 +161,16 @@ val common = Seq(
   crossScalaVersions := Seq("2.11.11", "2.12.4")
 )
 
+// Root subproject: will not publish JARs, only aggregate other subprojects.
+// So e.g. `sbt test` will run tests in the aggregated subprojects.
 lazy val hello_root = (project in file("."))
   .settings(common)
   .settings(
     publishArtifact := false
   )
-  .aggregate(my_app, my_client)
-  
+  .aggregate(my_app, my_client, my_lib)
+
+// main standalone app subproject, source code in ./myapp/
 lazy val my_app = (project in file("myapp"))
   .settings(common)
   .settings(
@@ -177,6 +182,7 @@ lazy val my_app = (project in file("myapp"))
     )
   ).dependsOn(my_lib)
 
+// client subproject, source code in ./myclient/
 lazy val my_client = (project in file("myclient"))
   .settings(common)
   .settings(
@@ -187,6 +193,7 @@ lazy val my_client = (project in file("myclient"))
     )
   ).dependsOn(my_lib)
 
+// library subproject, source code in ./mylib/
 lazy val my_lib = (project in file("mylib"))
   .settings(common)
   .settings(
@@ -223,11 +230,15 @@ lazy val my_lib = (project in file("mylib"))
 /myclient/target/...
 
 /mylib/src/main/scala/...
+/mylib/src/main/java/...
 /mylib/src/test/scala/...
 
 /mylib/target/...
 
 ```
+
+- Note: Java files must be in `.../main/java/`
+    - Java files are compiled together with Scala in the same JAR
 
 ## What goes into `project/plugins.sbt`?
 
@@ -287,18 +298,21 @@ project(...).settings(
 - JAR is a zip file with extra metadata (secure signing)
 
 - There are five kinds of JAR files:
-    - application JAR (can run with `java -jar file.jar`, all dependencies included)
-    - library JAR (no `main` method, just one library's classes with no dependencies)
-    - library JARs with some 3rd party dependencies included (trouble!!!)
-        - example: `mockito-all`
-    - source JAR (Java/Scala files)
-    - documentation JAR (HTML files)
+    - application JAR (have `main` method, can run with `java -jar file.jar`, all dependencies included)
+    - library JAR (no `main` method, just one library's classes, no dependencies included in JAR)
+    - library JARs with some 3rd party dependencies included in JAR (trouble!!!)
+        - example of this: `mockito-all-1.9.5.jar` 
+    - source JAR (Java/Scala files only)
+    - documentation JAR (HTML files only)
 
-- JAR contains two kinds of files:
+- A typical library JAR contains three kinds of files:
     - Java class files: `*.class`
     - Resource files: default config files, data files
     - Build-time information, licenses, etc.
+
 - Working with JARs: `unzip -l file.jar`, etc.
+    - each `.class` file is in its package directory
+        - e.g. `org/apache/zookeeper/server/ZooTrace.class` corresponds to `import org.apache.zookeeper.server.ZooTrace`
 
 - Example of JAR contents:
 
@@ -308,8 +322,20 @@ META-INF/maven/org.javolution/javolution-core-java/pom.properties
 META-INF/maven/org.javolution/javolution-core-java/pom.xml
 javax/realtime/RealtimeThread.class
 javolution/context/AbstractContext.class
-
+...
 ```
+
+- Assembling an application JAR:
+    - compile the application into its `.class`
+    - download all library JARs and unpack them too
+    - copy all resource files, e.g. `src/main/resources/blah/file` into `./blah/file`
+    - also copy all resource files from library JARs
+    - gather all unpacked files under one directory, deduplicate
+    - add `META-INF/MANIFEST.MF`
+    - zip everything into one big JAR
+- All this is done by the SBT assembly plugin automatically
+    - the deduplication rules must be specified manually (`assemblyMergeStrategy`)
+
 
 ## Project dependencies
 
@@ -348,7 +374,8 @@ When to use (with in-house code):
         - Is this version very recent with no newer patches? Suspicious.
         - Is this version very old with no newer patches? Either very stable, or suspicious.
         - Does it have Scala 2.11 / 2.12 versions published?
-- Add dependencies to your project
+
+- Add dependencies to your project:
 
 ```scala
 libraryDependencies ++= Seq(
@@ -366,37 +393,39 @@ libraryDependencies ++= Seq(
     - it's called a **classifier**
     - most often you will have no classifier or just a `Test` classifier
     - `% Test` is the same as `% "test"` and the same as `% "test->compile"`
-    - **test dependencies** are dependencies you only need when running tests
-    - other code that depends on your code (i.e. downstream from you) does not usually need your tests or your test dependencies
+    - **test dependencies** are libraries used only when running tests
+    - other code that depends on your code (i.e. downstream from you) usually needs neither your tests or your test dependencies
+        - if really necessary, your test code can be published as a "test JAR"
 
-- Each library typically has **main** code and **test** code
+- Typically each library will also have its own **main** code and **test** code
     - `src/main/scala/...` and `/src/test/scala/...`
 
-So, there are four possibilities:
+There are four possibilities:
 
-- Our main code depends on the library's main code: no classifier needed
-- Our test code depends on the library's main code: `% Test` or `% "test"` or `% "test->compile"`
-- Our test code depends on the library's test code: Really? `% "test->test"
-- Our main code depends on the library's test code: Really now?? `% "compile->test"`
+1. Our main code depends on the library's main code: no classifier needed
+2. Our test code depends on the library's main code: `% Test` or `% "test"` or `% "test->compile"`
+3. Our test code depends on the library's test code: Really? `% "test->test"
+4. Our main code depends on the library's test code: Really now?? `% "compile->test"`
 
 Classifiers can be combined: `% "compile->compile;test->test`
 
 Recommended practices:
 
 - Make sure your test dependencies are marked with `% Test` to avoid leaking them downstream
-- Do not use other people's test code! (It's usually unstable.)
-    - For common "test utilities", make a library with main code, and use it as a `% Test` dependency
+    - Usual culprits: `scalatest`, `mockito`, and in-house test utilities libraries
+- As a rule, do not depend on the test code of other projects! (Test code is usually quite unstable.)
+    - If you need common "test utilities", make that a separate library project and use it as a `% Test` dependency (Case 2)
 
 ### Getting out of "JAR hell" I
 
 Symptoms of "JAR hell":
-    - code compiles but does not run due to "cannot find class / method"
+    - code compiles but does not run because "cannot find class / method"
     - code compiles, tests run, but cannot assemble application JAR due to "deduplication" errors
-    - code compiles, tests run, but assembled application JAR does not run due to "cannot find class / method"
+    - code compiles, tests run, but assembled application JAR does not run because "cannot find class / method"
 
 Most frequent cause of "JAR hell":
 
-- Transitive dependencies introduce different versions of the same library
+- Transitive dependencies that declare different incompatible versions of the same library
     - SBT will choose the latest of these versions; other versions will be "evicted"
         - We usually don't depend on this library directly and don't even know about its existence
         - Incompatible API changes occurred, but the code is not aware of this due to dependency eviction
@@ -404,13 +433,14 @@ Most frequent cause of "JAR hell":
 
 Example of this:
 
-- Our code depends on libraries A and B
+- Our code depends on Library A and Library B
 - Library A depends on org.libraryX 1.0.0
 - Library B depends on org.libraryX 1.1.0
-    - org.libraryX 1.1.0 deleted some method, replacing it with another
-        - version 1.0.0: `def myMethod(a: Int)`
-        - version 1.1.0: `def myMethod(a: Int, b: Boolean = true)`
-    - org.libraryX 1.0.0 is evicted but library A does not know about that and breaks
+    - There is a breaking change in some method or class, for example:
+        - org.libraryX version 1.0.0: `def myMethod(a: Int)`
+        - org.libraryX version 1.1.0: `def myMethod(a: Int, b: Boolean = true)`
+    - org.libraryX 1.0.0 is evicted, but library A does not know about that and breaks
+- Your code and/or the code in Library A may need to be changed to fix this problem!
 
 Use the `sbt-dependency-graph` plugin to figure this out
 
@@ -450,6 +480,7 @@ For assembling the application JAR:
 
 - Organize your project in subprojects by directory - e.g. server, client, common library, test utilities, etc.
     - there should not be any circular dependencies between subprojects!
+    - use aggregator-only subprojects to control builds
 
 - In `build.sbt`, make `val`s with common settings and reuse them in subprojects
     - make simple libraries or SBT plugins to hold collections of common settings, e.g. AF resolvers, scalac options
