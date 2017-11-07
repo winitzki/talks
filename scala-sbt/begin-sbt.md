@@ -492,6 +492,6 @@ For assembling the application JAR:
 - Useful SBT plugins: scalastyle, scoverage, dependency-graph, sbt-duplicates-finder, WartRemover, acyclic
 
 - Start SBT and do not quit it
-    - this is faster
+    - working within the same SBT session is faster than starting SBT each time
     - do `reload` when `build.sbt` or `plugins.sbt` change
     - other than that, just do `testOnly`, `test`, `run`, `project mySubproject`
