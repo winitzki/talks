@@ -470,6 +470,7 @@ Less frequent reasons for "JAR hell":
 
 - Use the SBT plugin `sbt-duplicates-finder`
     -  discovers Java classes that are duplicated but have different contents
+        - sure sign of trouble!
 
 - Go through your `$HOME/.ivy2/cache` and find out which JARs have the problematic classes
     - IntelliJ can decompile `.class` files or JARs that you drop into the file tree of any project
