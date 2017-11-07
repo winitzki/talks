@@ -370,6 +370,7 @@ When to use (with in-house code):
 ### Library dependencies
 
 - Prefer managed libraries (`libraryDependencies ++= ...`) to unmanaged (JARs in `lib/` subdirectory)
+    - See [SBT documentation on library management](http://www.scala-sbt.org/1.0/docs/Library-Management.html)
 
 - Discover what versions of libraries are available:
     - Look at [Official Maven site](http://search.maven.org/) only!
@@ -379,7 +380,7 @@ When to use (with in-house code):
         - Is this version very old with no newer patches? Either very stable, or suspicious.
         - Does it have Scala 2.11 / 2.12 versions published?
 
-- Add dependencies to your project:
+- Add your required dependencies to your project's settings:
 
 ```scala
 libraryDependencies ++= Seq(
@@ -390,6 +391,8 @@ libraryDependencies ++= Seq(
 ```
 
 - The Scala dependencies must be `%%`, the Java dependencies `%`
+    - The `%%` inserts a Scala binary version suffix, e.g. `_2.11`
+    - Note: Scala version can be overridden, e.g. `sbt ++2.10.6 compile`
 
 ### Main code vs. test code
 
