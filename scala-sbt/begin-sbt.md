@@ -20,7 +20,7 @@ The build configuration specifies:
 - Scala compiler version and options
 - JVM options for `run` and `test` commands
 - Code dependencies on 3rd party libraries
-    - Where to download these libraries
+    - Where to download these libraries (artifactory resolvers)
     - Version overrides, dependency exclusions
     - Main code vs. test code dependencies
 - Build steps that generate new source files
@@ -43,7 +43,9 @@ The build configuration specifies:
 Using Scala as configuration language privides extreme flexibility
 
 - `sbt test` could...
+    - run tests using a custom testing framework
     - prepare and upload XLSX spreadsheet to Confluence
+    - launch missiles
 - we can refactor code to avoid repetitive configs
 - we can use 3rd party Scala or Java libraries
     - SBT provides a rich library (IO, processes, HTTP)
@@ -57,7 +59,7 @@ Using Scala as configuration language privides extreme flexibility
         - default Scala version 2.10
         - `/project/project`
     - build is slower because of additional compilation steps
-- Errors in `build.sbt` are hard to debug
+- Errors in `build.sbt` are harder to debug
     - (IntelliJ cannot load anything)
 - SBT's library DSL has a steep learning curve
     - `assemblyMergeStrategy in assembly ~= (old => { ...`
@@ -82,7 +84,7 @@ Example settings:
 ```scala
 val scalaVersion: SettingKey[String]
 val publishArtifact: SettingKey[Boolean]
-
+val libraryDependencies: SettingKey[Seq[ModuleID]]
 ```
 
 Example commands:
@@ -259,6 +261,27 @@ It is the configuration needed to compile your main `build.sbt`
 - JAR artifact names and where to publish the JARs
     - `version`, `name`, `publishTo`
 
+Settings can be subproject-specific:
+
+```scala
+version := (version in mySubproject).value
+```
+
+- Must use `.value` when on the right side of `:=`, `+=`, `++=`, `~=`
+
+- All settings are evaluated when tasks are run on a project
+
+- Semantics of `:=` is similar to assignment:
+
+```scala
+project(...).settings(
+  name := "my-project",
+  name := "real-project-name" // this is the actual value used
+)
+```
+
+- Too much to cover here; we learn from examples and `stackoverflow`
+
 ## Anatomy of a JAR
 
 - JAR is a zip file with extra metadata (secure signing)
@@ -316,6 +339,8 @@ When to use (with in-house code):
 
 ### Library dependencies
 
+- Prefer managed libraries (`libraryDependencies ++= ...`) to unmanaged (JARs in `lib/` subdirectory)
+
 - Discover what versions of libraries are available:
     - Look at [Official Maven site](http://search.maven.org/) only!
         - Do not use `MVNRepository.com`, it is not current with Maven
@@ -350,7 +375,7 @@ libraryDependencies ++= Seq(
 So, there are four possibilities:
 
 - Our main code depends on the library's main code: no classifier needed
-- Our test code depends on the library's main code: `% Test` or `% "test->compile"`
+- Our test code depends on the library's main code: `% Test` or `% "test"` or `% "test->compile"`
 - Our test code depends on the library's test code: Really? `% "test->test"
 - Our main code depends on the library's test code: Really now?? `% "compile->test"`
 
@@ -359,6 +384,79 @@ Classifiers can be combined: `% "compile->compile;test->test`
 Recommended practices:
 
 - Make sure your test dependencies are marked with `% Test` to avoid leaking them downstream
-- Do not use other people's test code! It's usually very unstable.
+- Do not use other people's test code! (It's usually unstable.)
     - For common "test utilities", make a library with main code, and use it as a `% Test` dependency
 
+### Getting out of "JAR hell" I
+
+Symptoms of "JAR hell":
+    - code compiles but does not run due to "cannot find class / method"
+    - code compiles, tests run, but cannot assemble application JAR due to "deduplication" errors
+    - code compiles, tests run, but assembled application JAR does not run due to "cannot find class / method"
+
+Most frequent cause of "JAR hell":
+
+- Transitive dependencies introduce different versions of the same library
+    - SBT will choose the latest of these versions; other versions will be "evicted"
+        - We usually don't depend on this library directly and don't even know about its existence
+        - Incompatible API changes occurred, but the code is not aware of this due to dependency eviction
+    - Use `dependencyOverrides ++= Set(...)` and/or `exclude()` to force a non-latest version and evict others
+
+Example of this:
+
+- Our code depends on libraries A and B
+- Library A depends on org.libraryX 1.0.0
+- Library B depends on org.libraryX 1.1.0
+    - org.libraryX 1.1.0 deleted some method, replacing it with another
+        - version 1.0.0: `def myMethod(a: Int)`
+        - version 1.1.0: `def myMethod(a: Int, b: Boolean = true)`
+    - org.libraryX 1.0.0 is evicted but library A does not know about that and breaks
+
+Use the `sbt-dependency-graph` plugin to figure this out
+
+- Most useful command: `whatDependsOn org.apache.zookeeper zookeeper 3.4.5`
+- Second most useful command: `sbt dependencyGraph > depgraph.txt`
+    - Redirecting to file because the output is _very_ verbose and redundant
+    
+### Getting out of "JAR hell" II
+
+Less frequent reasons for "JAR hell":
+
+- Some library JARs contain classes from third libraries
+    - `slf4j-over-log4j` contains some of the same classes as `log4j`
+    - `mockito-all` contains its dependencies `hamcrest-core` and `objenesis`
+
+- Some library depends on other third-party libraries that are incompatible with our other dependencies
+    - But we don't need any functionality of those other libraries!
+    - Use `exclude()`, `excludeAll`, `excludeDependencies` to [remove transitive dependencies](http://www.scala-sbt.org/1.0/docs/Library-Management.html#Exclude+Transitive+Dependencies)
+
+- Some library has changed name and not only version
+    - `woodstox-core-asl` 4.x was continued as `woodstox-core` 5.x
+    - use `exclude()`
+
+- Use the SBT plugin `sbt-duplicates-finder`
+    -  discovers Java classes that are duplicated but have different contents
+
+- Go through your `$HOME/.ivy2/cache` and find out which JARs have the problematic classes
+    - IntelliJ can decompile `.class` files or JARs that you drop into the file tree of any project
+
+For assembling the application JAR:
+
+- Use `assemblyMergeStrategy` carefully
+    - strategies `first` and `last` are nondeterministic
+    - prefer to use `exclude()` or `dependencyOverride` if that works
+
+## General recommendations about using SBT
+
+- Organize your project in subprojects by directory - e.g. server, client, common library, test utilities, etc.
+    - there should not be any circular dependencies between subprojects!
+
+- In `build.sbt`, make `val`s with common settings and reuse them in subprojects
+    - make simple libraries or SBT plugins to hold collections of common settings, e.g. AF resolvers, scalac options
+
+- Useful SBT plugins: scalastyle, scoverage, dependency-graph, sbt-duplicates-finder, WartRemover, acyclic
+
+- Start SBT and do not quit it
+    - this is faster
+    - do `reload` when `build.sbt` or `plugins.sbt` change
+    - other than that, just do `testOnly`, `test`, `run`, `project mySubproject`
