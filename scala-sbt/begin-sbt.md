@@ -31,12 +31,15 @@ The build configuration specifies:
 
 - The build configuration is a Scala object
 
-- At the minimum, uses 2 files:
+- Typically, uses 3 files:
 
 ```
 /build.sbt
 /project/build.properties
+/project/plugins.sbt
 ```
+
+- Can add other `.sbt` or `.scala` files into `/project/`.
 
 #### Advantages
 
@@ -344,7 +347,8 @@ javolution/context/AbstractContext.class
 
 There are two kinds of dependencies:
 
-- `libraryDependencies`: use Maven published third-party libraries
+- `libraryDependencies`: use published third-party libraries
+    - the library JARs are downloaded from "artifactories" such as Maven
 - `.dependsOn()`: use code from another subproject in the same `build.sbt`
 
 Main differences:
