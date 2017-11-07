@@ -478,7 +478,7 @@ Less frequent reasons for "JAR hell":
 For assembling the application JAR:
 
 - Use `assemblyMergeStrategy` carefully
-    - strategies `first` and `last` are nondeterministic
+    - strategies `first` and `last` are nondeterministic (which file is first or last?)
     - prefer to use `exclude()` or `dependencyOverride` if that works
 
 ## General recommendations about using SBT
