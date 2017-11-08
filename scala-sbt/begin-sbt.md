@@ -43,7 +43,7 @@ The build configuration specifies:
 
 #### Advantages
 
-Using Scala as configuration language privides extreme flexibility
+Using Scala as configuration language provides extreme flexibility
 
 - `sbt test` could...
     - run tests using a custom testing framework
@@ -71,6 +71,8 @@ Using Scala as configuration language privides extreme flexibility
 
 - We need to learn by example...
     - because there are just too many conventions and functions
+- SBT is written in Scala
+    - discover new settings by exploring SBT source code via IntelliJ!
 
 - Cut-and-paste code is mostly okay with `build.sbt`
     - as long as you copy from similar projects
@@ -315,7 +317,8 @@ project(...).settings(
 
 - Working with JARs: `unzip -l file.jar`, etc.
     - each `.class` file is in its package directory
-        - e.g. `org/apache/zookeeper/server/ZooTrace.class` corresponds to `import org.apache.zookeeper.server.ZooTrace`
+        - `import org.apache.zookeeper.server.ZooTrace` in code
+        - `org/apache/zookeeper/server/ZooTrace.class` in JAR
 
 - Example of JAR contents:
 
@@ -393,6 +396,7 @@ libraryDependencies ++= Seq(
 - The Scala dependencies must be `%%`, the Java dependencies `%`
     - The `%%` inserts a Scala binary version suffix, e.g. `_2.11`
     - Note: Scala version can be overridden, e.g. `sbt ++2.10.6 compile`
+        - Do not hard-code Scala binary version, use `scalaBinaryVersion.value` instead
 
 ### Main code vs. test code
 
@@ -414,7 +418,7 @@ There are four possibilities:
 3. Our test code depends on the library's test code: Really? `% "test->test"
 4. Our main code depends on the library's test code: Really now?? `% "compile->test"`
 
-Classifiers can be combined: `% "compile->compile;test->test`
+Classifiers can be combined: `% "compile->compile;test->test"`
 
 Recommended practices:
 
@@ -426,9 +430,10 @@ Recommended practices:
 ### Getting out of "JAR hell" I
 
 Symptoms of "JAR hell":
-    - code compiles but does not run because "cannot find class / method"
-    - code compiles, tests run, but cannot assemble application JAR due to "deduplication" errors
-    - code compiles, tests run, but assembled application JAR does not run because "cannot find class / method"
+
+- code compiles but does not run because "cannot find class / method"
+- code compiles, tests run, but cannot assemble application JAR due to "deduplication" errors
+- code compiles, tests run, but assembled application JAR does not run because "cannot find class / method"
 
 Most frequent cause of "JAR hell":
 
