@@ -194,7 +194,7 @@ largely unknown and unused by the software engineering community
 available as an 
 \begin_inset CommandInset href
 LatexCommand href
-name "open-source library & DSL"
+name "open-source library & EDSL"
 target "https://github.com/Chymyst/chymyst-core"
 
 \end_inset
@@ -288,7 +288,7 @@ await
 \end_layout
 
 \begin_layout Itemize
-asynchronous streaming (Akka Streaming)
+asynchronous streaming (Akka Streams)
 \end_layout
 
 \begin_layout Itemize
@@ -3548,9 +3548,9 @@ ordered
 
 \begin_layout Standard
 Reaction scheduler in 
-\emph on
+\family typewriter
 Chymyst
-\emph default
+\family default
 :
 \end_layout
 
@@ -3558,6 +3558,7 @@ Chymyst
 Examines all present molecule instances and runs the next reaction 
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 Is it sufficient to examine 
 \emph on
@@ -3568,12 +3569,13 @@ only one
 
 \begin_deeper
 \begin_layout Itemize
-This depends on the specific chemical program
+This could be true or false depending on the specific molecule
 \end_layout
 
 \end_deeper
+\end_deeper
 \begin_layout Itemize
-If so, molecule instances can be held in an ordered queue (
+If true, the molecule's instances are held in a queue (
 \begin_inset Quotes eld
 \end_inset
 
@@ -3584,18 +3586,20 @@ pipelined
 )
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 
 \family typewriter
 Chymyst
 \family default
- 
+ automatically makes 
 \emph on
-automatically
+some
 \emph default
- makes some molecules pipelined
+ molecules pipelined
 \end_layout
 
+\end_deeper
 \begin_layout Standard
 In a given chemical program, can we pipeline the molecule 
 \family typewriter
@@ -3734,14 +3738,7 @@ message/channel
 \begin_layout Plain Layout
 
 \series bold
-\begin_inset Quotes eld
-\end_inset
-
-Chemistry
-\begin_inset Quotes erd
-\end_inset
-
-
+Chymyst
 \end_layout
 
 \end_inset
@@ -3752,7 +3749,7 @@ Chemistry
 \begin_layout Plain Layout
 
 \series bold
-JC terminology
+join calculus
 \end_layout
 
 \end_inset
@@ -3762,11 +3759,8 @@ JC terminology
 
 \begin_layout Plain Layout
 
-\family typewriter
 \series bold
-Chymyst
-\family default
- code
+code
 \end_layout
 
 \end_inset
@@ -4278,6 +4272,10 @@ target "https://github.com/Chymyst/chymyst-core"
 \begin_deeper
 \begin_layout Itemize
 Full-featured implementation of join calculus
+\end_layout
+
+\begin_layout Itemize
+Static DSL code analysis (with Scala macros)
 \end_layout
 
 \begin_layout Itemize

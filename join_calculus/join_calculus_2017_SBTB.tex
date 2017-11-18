@@ -74,7 +74,7 @@ in the academic world
 \item it is a \emph{declarative language} for concurrent \& parallel computations
 \begin{itemize}
 \item largely unknown and unused by the software engineering community
-\item available as an \href{https://github.com/Chymyst/chymyst-core}{open-source library \&{} DSL}
+\item available as an \href{https://github.com/Chymyst/chymyst-core}{open-source library \&{} EDSL}
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -95,7 +95,7 @@ We can avoid this if we use declarative approaches:
 \item synchronous parallelism (parallel collections, Spark)
 \item asynchronous parallelism (\texttt{\textcolor{blue}{\scriptsize{}Future}},
 \texttt{\textcolor{blue}{\scriptsize{}async}}/\texttt{\textcolor{blue}{\scriptsize{}await}})
-\item asynchronous streaming (Akka Streaming)
+\item asynchronous streaming (Akka Streams)
 \item Actors (Akka)
 \item chemical machine (\href{https://github.com/Chymyst/chymyst-core}{Chymyst})
 \end{itemize}
@@ -686,15 +686,19 @@ Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/
 
 \framesubtitle{In join calculus: channels with \emph{ordered} mailboxes }
 
-Reaction scheduler in \emph{Chymyst}:
+Reaction scheduler in \texttt{Chymyst}:
 \begin{itemize}
 \item Examines all present molecule instances and runs the next reaction 
+\begin{itemize}
 \item Is it sufficient to examine \emph{only one} molecule instance?
 \begin{itemize}
-\item This depends on the specific chemical program
+\item This could be true or false depending on the specific molecule
 \end{itemize}
-\item If so, molecule instances can be held in an ordered queue (``pipelined'')
-\item \texttt{Chymyst} \emph{automatically} makes some molecules pipelined
+\end{itemize}
+\item If true, the molecule's instances are held in a queue (``pipelined'')
+\begin{itemize}
+\item \texttt{Chymyst} automatically makes \emph{some} molecules pipelined
+\end{itemize}
 \end{itemize}
 In a given chemical program, can we pipeline the molecule \texttt{\textcolor{blue}{\footnotesize{}a(x)}}?
 \begin{itemize}
@@ -725,7 +729,7 @@ Academic descriptions of JC use the ``message/channel'' terminology
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline 
-\textbf{``Chemistry''} & \textbf{JC terminology} & \texttt{\textbf{Chymyst}}\textbf{ code}\tabularnewline
+\textbf{Chymyst} & \textbf{join calculus} & \textbf{code}\tabularnewline
 \hline 
 \hline 
 molecule & message on channel & \texttt{\textcolor{blue}{\footnotesize{}a(123)}}\textcolor{gray}{\footnotesize{}
@@ -787,6 +791,7 @@ JC implementation in Scala (this talk)
 \item A new open-source Scala implementation: \href{https://github.com/Chymyst/chymyst-core}{Chymyst}
 \begin{itemize}
 \item Full-featured implementation of join calculus
+\item Static DSL code analysis (with Scala macros)
 \item Industry-strength features (thread priority control, pipelining, fault
 tolerance, unit testing and debugging APIs)
 \item Extensive documentation: \href{https://winitzki.gitbooks.io/concurrency-in-reactions-declarative-multicore-in/content/}{tutorial book}
