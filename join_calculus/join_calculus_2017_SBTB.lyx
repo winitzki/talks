@@ -659,6 +659,10 @@ This will be implemented if:
 \end_layout
 
 \begin_layout Itemize
+Each data item is labeled for specific concurrent function(s)
+\end_layout
+
+\begin_layout Itemize
 Data items and functions are stored in a special 
 \begin_inset Quotes eld
 \end_inset
@@ -668,10 +672,6 @@ site
 \end_inset
 
 
-\end_layout
-
-\begin_layout Itemize
-Each data item is labeled for specific concurrent function(s)
 \end_layout
 
 \begin_layout Itemize
