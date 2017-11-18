@@ -8,7 +8,7 @@
 \begin_preamble
 \usetheme[secheader]{Boadilla}
 \usecolortheme{seahorse}
-\title[Declarative Concurrency with Chymyst]{Declarative Concurrent Programming with Chymyst}
+\title[Declarative Concurrency with \texttt{Chymyst}]{Declarative Concurrent Programming with \texttt{Chymyst}}
 \author{Sergei Winitzki}
 \date{November 18, 2017}
 \institute[Workday, Inc.]{Scale by the Bay 2017}
@@ -115,7 +115,11 @@ What is
 \begin_inset Quotes eld
 \end_inset
 
+
+\family typewriter
 Chymyst
+\family default
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -133,7 +137,11 @@ Chymyst
 
 \begin_deeper
 \begin_layout Standard
-Chymyst = a Scala implementation of the 
+
+\family typewriter
+Chymyst
+\family default
+ = a Scala implementation of the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -640,8 +648,6 @@ This will be implemented if:
 
 \begin_layout Itemize
 Data items and functions are stored in a special 
-\series bold
-
 \begin_inset Quotes eld
 \end_inset
 
@@ -1456,18 +1462,22 @@ Activate a
 reaction site
 \series default
 :
-\begin_inset Newline newline
-\end_inset
-
-
 \family typewriter
 \size scriptsize
 \color blue
-site(r0, r1)
+ site(r0, r1)
 \end_layout
 
 \begin_layout Itemize
-For brevity, define reactions inline within reaction sites
+For brevity, we can define reactions inline, within the 
+\family typewriter
+\size scriptsize
+\color blue
+site()
+\family default
+\size default
+\color inherit
+ call
 \end_layout
 
 \end_deeper
@@ -1842,15 +1852,7 @@ reply
 \color olive
 reply
 \color blue
-(s
-\begin_inset Quotes erd
-\end_inset
-
-${x + y}
-\begin_inset Quotes erd
-\end_inset
-
-) }
+(s"${x + y}") }
 \begin_inset Newline newline
 \end_inset
 

@@ -53,7 +53,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
 \usetheme[secheader]{Boadilla}
 \usecolortheme{seahorse}
-\title[Declarative Concurrency with Chymyst]{Declarative Concurrent Programming with Chymyst}
+\title[Declarative Concurrency with \texttt{Chymyst}]{Declarative Concurrent Programming with \texttt{Chymyst}}
 \author{Sergei Winitzki}
 \date{November 18, 2017}
 \institute[Workday, Inc.]{Scale by the Bay 2017}
@@ -62,9 +62,10 @@
 
 \begin{document}
 \frame{\titlepage}
-\begin{frame}{What is ``Chymyst''?}
+\begin{frame}{What is ``\texttt{Chymyst}''?}
 
-Chymyst = a Scala implementation of the ``chemical machine'' paradigm
+\texttt{Chymyst} = a Scala implementation of the ``chemical machine''
+paradigm
 \begin{itemize}
 \item \href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.32.3078}{Reflexive Chemical Abstract Machine [Fournet \&{} Gonthier 1996]}
 \begin{itemize}
@@ -176,7 +177,7 @@ What would it mean to make ordinary functions concurrent?
 \end{itemize}
 This will be implemented if:
 \begin{itemize}
-\item Data items and functions are stored in a special \textbf{``site''}
+\item Data items and functions are stored in a special ``site''
 \item Each data item is labeled for specific concurrent function(s)
 \item Concurrent functions consume data from the site
 \item Computed results are emitted back to the site
@@ -319,10 +320,11 @@ Declare some \textbf{reactions} by pattern match on the molecule values:\\
 
 ~\\
 
-Activate a \textbf{reaction site}:\\
-\texttt{\textcolor{blue}{\scriptsize{}site(r0, r1)}}{\scriptsize \par}
+Activate a \textbf{reaction site}:\texttt{\textcolor{blue}{\scriptsize{} site(r0,
+r1)}}{\scriptsize \par}
 \begin{itemize}
-\item For brevity, define reactions inline within reaction sites
+\item For brevity, we can define reactions inline, within the \texttt{\textcolor{blue}{\scriptsize{}site()}}
+call
 \end{itemize}
 \end{frame}
 
@@ -389,8 +391,8 @@ molecule
 emitter}\texttt{\textcolor{blue}{\scriptsize{}}}~\\
 \texttt{\textcolor{blue}{\scriptsize{}go \{ }}\texttt{\textcolor{brown}{\scriptsize{}f}}\texttt{\textcolor{blue}{\scriptsize{}(x,
 }}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{})
-+ c(y) $\Rightarrow$ }}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{}(s''\$\{x
-+ y\}'') \}}}~\\
++ c(y) $\Rightarrow$ }}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{}(s\textquotedbl{}\$\{x
++ y\}\textquotedbl{}) \}}}~\\
 \texttt{\textcolor{blue}{\scriptsize{}c(100)}}\textcolor{gray}{\footnotesize{}
 // non-blocking}\texttt{\textcolor{blue}{\scriptsize{}}}~\\
 \texttt{\textcolor{blue}{\scriptsize{}val result: String = }}\texttt{\textcolor{brown}{\scriptsize{}f}}\texttt{\textcolor{blue}{\scriptsize{}(200)}}\textcolor{gray}{\footnotesize{}
