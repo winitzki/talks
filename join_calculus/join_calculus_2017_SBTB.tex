@@ -56,7 +56,7 @@
 \title[Declarative Concurrency with Chymyst]{Declarative Concurrent Programming with Chymyst}
 \author{Sergei Winitzki}
 \date{November 18, 2017}
-\institute[Workday, Inc.]{Scale by the Bay}
+\institute[Workday, Inc.]{Scale by the Bay 2017}
 
 \makeatother
 
@@ -74,7 +74,7 @@ in the academic world
 \item it is a \emph{declarative language} for concurrent \& parallel computations
 \begin{itemize}
 \item largely unknown and unused by the software engineering community
-\item available as an \href{https://github.com/Chymyst/chymyst-core}{open-source library DSL}
+\item available as an \href{https://github.com/Chymyst/chymyst-core}{open-source library \&{} DSL}
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -166,6 +166,9 @@ Metaphors for join calculus:
 
 \framesubtitle{Intuitions leading to join calculus}
 
+Message to auto-started actor $\approx$ concurrent function call
+on data item
+
 What would it mean to make ordinary functions concurrent?
 \begin{itemize}
 \item Several functions should be able to run at once
@@ -173,7 +176,7 @@ What would it mean to make ordinary functions concurrent?
 \end{itemize}
 This will be implemented if:
 \begin{itemize}
-\item Data items and functions are stored in a special \textbf{site}
+\item Data items and functions are stored in a special \textbf{``site''}
 \item Each data item is labeled for specific concurrent function(s)
 \item Concurrent functions consume data from the site
 \item Computed results are emitted back to the site
@@ -181,7 +184,7 @@ This will be implemented if:
 Operational semantics:
 \begin{itemize}
 \item Concurrent functions auto-start whenever input data is available
-\item Different instances of a concurrent function consume separate data
+\item Different instances of a conc.\ function consume separate data items
 \end{itemize}
 \end{frame}
 
@@ -197,14 +200,14 @@ Real chemistry:
 
 Abstract chemistry:
 \begin{itemize}
-\item The chemical ``soup'' contains arbitrarily defined ``molecules''
-\item A combination of certain molecules starts a ``chemical reaction''
+\item Chemical ``soup'' contains instances of abstract ``molecules''
+\item Combine certain sorts of molecules to start a ``reaction'':
 \end{itemize}
 ~\\
 
 \fbox{\begin{minipage}[c][1\totalheight][t]{0.5\columnwidth}%
 \begin{center}
-``Abstract'' chemical laws:\\
+Abstract chemical laws:\\
 \texttt{\textcolor{blue}{\footnotesize{}a + b ${\color{blue}\rightarrow}$
 a}}\\
 \texttt{\textcolor{blue}{\footnotesize{}a + c ${\color{blue}\rightarrow}$
@@ -220,8 +223,8 @@ $\textrm{Ø}$}}
 \begin{itemize}
 \item Program code defines molecules \texttt{\textcolor{blue}{\scriptsize{}a}},
 \texttt{\textcolor{blue}{\scriptsize{}b}}, \texttt{\textcolor{blue}{\scriptsize{}c}},
-... and arbitrary chemical laws
-\item Emit some molecules into the ``soup''
+... and chemical laws
+\item At initial time, the code emits some molecules into the ``soup''
 \item The runtime system evolves the soup \emph{concurrently} and \emph{in
 parallel}
 \end{itemize}
@@ -256,7 +259,7 @@ and in parallel
 + }}\texttt{\textbf{\textcolor{blue}{\scriptsize{}b}}}\texttt{\textcolor{blue}{\scriptsize{}(y)
 $\Rightarrow$}}{\scriptsize \par}
 
-\texttt{\textcolor{blue}{\scriptsize{}~ ~val z = f(x,y); }}\texttt{\textbf{\textcolor{blue}{\scriptsize{}a}}}\texttt{\textcolor{blue}{\scriptsize{}(z)
+\texttt{\textcolor{blue}{\scriptsize{}~ ~val z = f(x, y); }}\texttt{\textbf{\textcolor{blue}{\scriptsize{}a}}}\texttt{\textcolor{blue}{\scriptsize{}(z)
 \},}}{\scriptsize \par}
 
 \texttt{\textcolor{blue}{\scriptsize{}~ go \{ case }}\texttt{\textbf{\textcolor{blue}{\scriptsize{}a}}}\texttt{\textcolor{blue}{\scriptsize{}(x)
@@ -282,7 +285,7 @@ We would like to decrement and increment concurrently
 Chemical laws:
 \begin{itemize}
 \item \textcolor{blue}{\scriptsize{}counter(n) + decr() }\texttt{\textcolor{blue}{\scriptsize{}$\Rightarrow$}}\textcolor{blue}{\scriptsize{}
-counter(n - 1)}{\scriptsize \par}
+counter(n \textendash{} 1)}{\scriptsize \par}
 \item \textcolor{blue}{\scriptsize{}counter(n) + incr() }\texttt{\textcolor{blue}{\scriptsize{}$\Rightarrow$}}\textcolor{blue}{\scriptsize{}
 counter(n + 1)}{\scriptsize \par}
 \end{itemize}
@@ -376,17 +379,22 @@ molecule
 \end{itemize}
 \textbf{Blocking} molecules:
 \begin{itemize}
-\item emitter will block until a reaction starts and sends a ``reply value''
+\item emitter will block until a reaction starts and emits a ``reply value''
 \item molecule implicitly carries a pseudo-emitter for ``reply''
-\item when the ``reply'' is emitted, the value will be returned to caller
+\item when the ``reply'' is emitted, its value will be returned to caller
 \item Example:\\
 ~\\
-\texttt{\textcolor{blue}{\scriptsize{}go \{ f(x, replyToF) + c(y)
-$\Rightarrow$ replyToF(x + y) \}}}~\\
-\texttt{\textcolor{blue}{\scriptsize{}c(100)}}\textrm{\textcolor{gray}{\footnotesize{}
-// non-blocking}}\texttt{\textcolor{blue}{\scriptsize{}}}~\\
-\texttt{\textcolor{blue}{\scriptsize{}val result = f(200)}}\textrm{\textcolor{gray}{\footnotesize{}
-// blocking, will get 300}}{\footnotesize \par}
+\texttt{\textcolor{blue}{\scriptsize{}val }}\texttt{\textcolor{brown}{\scriptsize{}f}}\texttt{\textcolor{blue}{\scriptsize{}
+= b{[}Int, String{]}}}\textcolor{gray}{\footnotesize{} // create blocking
+emitter}\texttt{\textcolor{blue}{\scriptsize{}}}~\\
+\texttt{\textcolor{blue}{\scriptsize{}go \{ }}\texttt{\textcolor{brown}{\scriptsize{}f}}\texttt{\textcolor{blue}{\scriptsize{}(x,
+}}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{})
++ c(y) $\Rightarrow$ }}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{}(s''\$\{x
++ y\}'') \}}}~\\
+\texttt{\textcolor{blue}{\scriptsize{}c(100)}}\textcolor{gray}{\footnotesize{}
+// non-blocking}\texttt{\textcolor{blue}{\scriptsize{}}}~\\
+\texttt{\textcolor{blue}{\scriptsize{}val result: String = }}\texttt{\textcolor{brown}{\scriptsize{}f}}\texttt{\textcolor{blue}{\scriptsize{}(200)}}\textcolor{gray}{\footnotesize{}
+// blocking call, will get ``300''}{\footnotesize \par}
 \end{itemize}
 \end{frame}
 
@@ -409,7 +417,7 @@ this reaction:}\\
 before... }\\
 \textcolor{gray}{\footnotesize{}// Now emit the blocking molecule:}\\
 \texttt{\textcolor{blue}{\scriptsize{}val x = getN()}}\textcolor{gray}{\footnotesize{}
-// blocking call, returns }\texttt{\textcolor{gray}{\footnotesize{}Int}}\\
+// blocking fetch, returns }\texttt{\textcolor{gray}{\footnotesize{}Int}}\\
 ~\\
 Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/CounterSpec.scala}{CounterSpec.scala}
 \end{frame}
@@ -453,7 +461,7 @@ can be molecule values too!
 
 \textcolor{blue}{\scriptsize{}val~result~=~m{[}Int{]}}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}get(result)}\textcolor{gray}{\scriptsize{}~//~non-blocking}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}get(result)}\textcolor{gray}{\scriptsize{}~//~non-blocking~fetch}{\scriptsize \par}
 \end{lyxcode}
 \end{frame}
 
@@ -537,7 +545,7 @@ Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/
 \item chemical actors are auto-started when messages arrive
 \item chemical actors may wait atomically for a \emph{set} of different
 messages
-\item messages carry statically typed values
+\item messages carry statically typed values (``typed Akka'')
 \end{enumerate}
 It follows from these requirements that... 
 \begin{itemize}
@@ -612,25 +620,25 @@ Programming with reactions:
 The \texttt{\textcolor{blue}{\scriptsize{}mergesort}} molecule starts
 a ``chain reaction'':
 \begin{itemize}
-\item receives the upper-level ``\texttt{\textcolor{blue}{\scriptsize{}sortedResult}}''
+\item receives the upper-level ``\texttt{\textcolor{brown}{\scriptsize{}sortedResult}}''
 molecule
-\item defines its own ``\texttt{\textcolor{blue}{\scriptsize{}sorted}}''
+\item defines its own ``\texttt{\textcolor{brown}{\scriptsize{}sorted}}''
 molecules in \emph{local scope}
-\item emits upper-level ``\texttt{\textcolor{blue}{\scriptsize{}sortedResult}}''
+\item emits upper-level ``\texttt{\textcolor{brown}{\scriptsize{}sortedResult}}''
 when done
 \end{itemize}
 \begin{lyxcode}
-\textcolor{blue}{\scriptsize{}mergesort(~(arr,~sortedResult)~)~$\Rightarrow$}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}mergesort(~(arr,~}\textcolor{brown}{\scriptsize{}sortedResult}\textcolor{blue}{\scriptsize{})~)~$\Rightarrow$}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}~~~~~~~val~(part1,~part2)~=~arr.splitAt(arr.length/2)}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~sorted1(x)~+~sorted2(y)~$\Rightarrow$~sortedResult(~arrayMerge(x,y)~)}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~~~~~~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{}(x)~+~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}(y)~$\Rightarrow$~}\textcolor{brown}{\scriptsize{}sortedResult}\textcolor{blue}{\scriptsize{}(~arrayMerge(x,y)~)}{\scriptsize \par}
 
 ~~~
 
 \textsf{\textcolor{gray}{\footnotesize{}~~~~~~~//~Emit~lower-level~}}\textcolor{gray}{\footnotesize{}mergesort}\textsf{\textcolor{gray}{\footnotesize{}~molecules:}}{\footnotesize \par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~mergesort(part1,~sorted1)~+~mergesort(part2,~sorted2)}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~~~~~~mergesort(part1,~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{})~+~mergesort(part2,~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{})}{\scriptsize \par}
 
 \end{lyxcode}
 \end{frame}
@@ -644,19 +652,19 @@ when done
 
 \textcolor{blue}{\scriptsize{}site(}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~mergesort((arr,~sortedResult))~$\Rightarrow$}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~mergesort((arr,~}\textcolor{brown}{\scriptsize{}sortedResult}\textcolor{blue}{\scriptsize{}))~$\Rightarrow$}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}~~~~if~(arr.length~<=~1)~sortedResult(arr)}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}~~~~~~else~\{}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~~val~sorted1~=~m{[}Array{[}T{]}{]}}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~~~~~~~val~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{}~=~m{[}Array{[}T{]}{]}}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~~val~sorted2~=~m{[}Array{[}T{]}{]}}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~~~~~~~val~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}~=~m{[}Array{[}T{]}{]}}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~~site(}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~~~~~~~}\textcolor{brown}{\scriptsize{}site}\textcolor{blue}{\scriptsize{}(}{\scriptsize \par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~~~~go~\{~case~sorted1(x)~+~sorted2(y)~$\Rightarrow$~sortedResult(arrayMerge(x,y))~\}}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~~~~~~~~~go~\{~case~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{}(x)~+~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}(y)~$\Rightarrow$~}\textcolor{brown}{\scriptsize{}sortedResult}\textcolor{blue}{\scriptsize{}(arrayMerge(x,y))~\}}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}~~~~~~~~)}{\scriptsize \par}
 
@@ -664,14 +672,44 @@ when done
 
 \textcolor{blue}{\scriptsize{}~~~~~~~~}\textsf{\textcolor{gray}{\footnotesize{}//~Emit~lower-level~}}\textcolor{gray}{\footnotesize{}mergesort}\textsf{\textcolor{gray}{\footnotesize{}~molecules:}}{\footnotesize \par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~~mergesort(part1,~sorted1)~+~mergesort(part2,~sorted2)}{\scriptsize \par}
+\textcolor{blue}{\scriptsize{}~~~~~~~~mergesort(part1,~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{})~+~mergesort(part2,~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{})}{\scriptsize \par}
 
 \textcolor{blue}{\scriptsize{}~~~~\}}{\scriptsize \par}
-
-\textcolor{blue}{\scriptsize{}~~\})}~\\
- ~\\
-Source~code:~\href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/MergeSortSpec.scala}{MergeSortSpec.scala}
 \end{lyxcode}
+\textcolor{blue}{\scriptsize{}\})}\\
+~\\
+Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/MergeSortSpec.scala}{MergeSortSpec.scala}
+\end{frame}
+
+\begin{frame}{Pipelined molecules: An automatic optimization}
+
+
+\framesubtitle{In join calculus: channels with \emph{ordered} mailboxes }
+
+Reaction scheduler in \emph{Chymyst}:
+\begin{itemize}
+\item Examines all present molecule instances and runs the next reaction 
+\item Is it sufficient to examine \emph{only one} molecule instance?
+\begin{itemize}
+\item This depends on the specific chemical program
+\end{itemize}
+\item If so, molecule instances can be held in an ordered queue (``pipelined'')
+\item \texttt{Chymyst} \emph{automatically} makes some molecules pipelined
+\end{itemize}
+In a given chemical program, can we pipeline the molecule \texttt{\textcolor{blue}{\footnotesize{}a(x)}}?
+\begin{itemize}
+\item Consider the predicate \texttt{\textcolor{blue}{\footnotesize{}f(x,
+y, z,...)}} for starting a reaction, e.g.:\\
+\texttt{\textcolor{blue}{\footnotesize{} f(x, y, b) = HAVE(b(y)) \&\&
+x == 0 \&\& y > x}}{\footnotesize \par}
+\item The predicate \texttt{\textcolor{blue}{\footnotesize{}f(...)}} must
+be \emph{factorizable} into a conjuction:\\
+\texttt{\textcolor{blue}{\footnotesize{} f(x, y, z, ...) = p(x) \&\&
+q(y, z,...)}}{\footnotesize \par}
+\begin{itemize}
+\item I have a proof that this optimization preserves semantics
+\end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Everything you need to know about join calculus...}
@@ -687,7 +725,7 @@ Academic descriptions of JC use the ``message/channel'' terminology
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline 
-``Chemistry'' & JC terminology & \texttt{Chymyst}\tabularnewline
+\textbf{``Chemistry''} & \textbf{JC terminology} & \texttt{\textbf{Chymyst}}\textbf{ code}\tabularnewline
 \hline 
 \hline 
 molecule & message on channel & \texttt{\textcolor{blue}{\footnotesize{}a(123)}}\textcolor{gray}{\footnotesize{}
@@ -743,17 +781,26 @@ JC implementation in Scala (this talk)
 \begin{itemize}
 \item Chemical machine = declarative, purely functional concurrency
 \begin{itemize}
-\item Similar to ``Actors'', but easier and ``more purely functional''
-\item Very little known, very little used in practice
+\item Similar to ``Actors'', but easier to use and ``more purely functional''
+\item Short, declarative code implementing barriers, rendezvous, etc.
 \end{itemize}
-\item A new Scala implementation: \href{https://github.com/Chymyst/chymyst-core}{Chymyst}
+\item A new open-source Scala implementation: \href{https://github.com/Chymyst/chymyst-core}{Chymyst}
 \begin{itemize}
-\item Industry-strength features
-\item Documentation: \href{https://winitzki.gitbooks.io/concurrency-in-reactions-declarative-multicore-in/content/}{tutorial book}
+\item Full-featured implementation of join calculus
+\item Industry-strength features (thread priority control, pipelining, fault
+tolerance, unit testing and debugging APIs)
+\item Extensive documentation: \href{https://winitzki.gitbooks.io/concurrency-in-reactions-declarative-multicore-in/content/}{tutorial book}
 and \href{https://github.com/winitzki/talks/blob/master/join-calculus-paper/join-calculus-paper.pdf}{draft paper}
 \end{itemize}
-\item Example code for this talk: \href{https://github.com/Chymyst/jc-talk-2017-examples}{github.com/Chymyst/jc-talk-2017-examples}
-\item \href{https://github.com/winitzki/talks/blob/master/join_calculus/join_calculus_2017_SBTB.pdf}{Talk slides}
+\item On the future roadmap:
+\begin{itemize}
+\item Thread fusion for better performance
+\item Full continuation-passing transformation to nonblocking code
+\item Automatic backpressure (``reaction temperature'')
+\item Automatic distributed runtime (``distributed soup'')
+\end{itemize}
+\item Example code for \href{https://github.com/winitzki/talks/blob/master/join_calculus/join_calculus_2017_SBTB.pdf}{this talk}:
+{\footnotesize{}\href{https://github.com/Chymyst/jc-talk-2017-examples}{github.com/Chymyst/jc-talk-2017-examples}}{\footnotesize \par}
 \end{itemize}
 \end{frame}
 
