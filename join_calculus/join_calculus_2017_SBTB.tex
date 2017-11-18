@@ -86,7 +86,8 @@ Imperative concurrency is difficult to reason about:
 \begin{itemize}
 \item callbacks, threads, semaphores, mutex locks
 \item errors with shared mutable state
-\item testing is hard \textendash{} non-deterministic runtime behavior!
+\item hard to reason about states that mutate in parallel
+\item hard to test \textendash{} non-deterministic runtime behavior!
 \begin{itemize}
 \item race conditions, deadlocks, livelocks
 \end{itemize}

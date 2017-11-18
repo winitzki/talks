@@ -250,7 +250,11 @@ errors with shared mutable state
 \end_layout
 
 \begin_layout Itemize
-testing is hard – non-deterministic runtime behavior!
+hard to reason about states that mutate in parallel
+\end_layout
+
+\begin_layout Itemize
+hard to test – non-deterministic runtime behavior!
 \end_layout
 
 \begin_deeper
