@@ -3054,10 +3054,6 @@ user code creates and manages explicit actor instances
 \end_layout
 
 \begin_layout Itemize
-actors will consume one message at a time
-\end_layout
-
-\begin_layout Itemize
 actors typically hold mutable state or mutate 
 \begin_inset Quotes eld
 \end_inset
@@ -3066,9 +3062,19 @@ behavior
 \begin_inset Quotes erd
 \end_inset
 
- 
+
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+reasoning is about running processes 
+\emph on
+and
+\emph default
+ the data
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 Programming with reactions:
 \end_layout
@@ -3078,21 +3084,15 @@ processes auto-start when the needed input molecules are available
 \end_layout
 
 \begin_layout Itemize
-many reactions can start at once, automatically concurrent
+many reactions can start at once, automatically parallel
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
-many molecules can be consumed at once, atomically
+reasoning is only about the data on present molecules 
 \end_layout
 
-\begin_layout Itemize
-immutable, stateless, and type-safe
-\end_layout
-
-\begin_layout Itemize
-all reactions are defined statically, but locally scoped
-\end_layout
-
+\end_deeper
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator parbreak

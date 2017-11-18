@@ -605,16 +605,18 @@ It follows from these requirements that...
 Programming with actors: 
 \begin{itemize}
 \item user code creates and manages explicit actor instances
-\item actors will consume one message at a time
-\item actors typically hold mutable state or mutate ``behavior'' 
+\item actors typically hold mutable state or mutate ``behavior''
+\begin{itemize}
+\item reasoning is about running processes \emph{and} the data
+\end{itemize}
 \end{itemize}
 Programming with reactions:
 \begin{itemize}
 \item processes auto-start when the needed input molecules are available
-\item many reactions can start at once, automatically concurrent
-\item many molecules can be consumed at once, atomically
-\item immutable, stateless, and type-safe
-\item all reactions are defined statically, but locally scoped
+\item many reactions can start at once, automatically parallel
+\begin{itemize}
+\item reasoning is only about the data on present molecules 
+\end{itemize}
 \end{itemize}
 \end{frame}
 
