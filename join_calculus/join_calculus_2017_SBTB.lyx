@@ -2462,6 +2462,19 @@ target "https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/sc
 
 \end_layout
 
+\begin_layout Standard
+For more examples, see the 
+\begin_inset CommandInset href
+LatexCommand href
+name "main repository"
+target "https://github.com/Chymyst/chymyst-core"
+
+\end_inset
+
+ (first-of, barriers, rendezvous, critical sections, readers/writers, Game
+ of Life, 8 queens, etc.)
+\end_layout
+
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator parbreak
