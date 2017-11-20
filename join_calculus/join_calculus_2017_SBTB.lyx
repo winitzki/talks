@@ -1850,7 +1850,7 @@ f
 
 go { 
 \color brown
-f
+case f
 \color blue
 (x, 
 \color olive

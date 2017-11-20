@@ -391,8 +391,8 @@ molecule
 \texttt{\textcolor{blue}{\scriptsize{}val }}\texttt{\textcolor{brown}{\scriptsize{}f}}\texttt{\textcolor{blue}{\scriptsize{}
 = b{[}Int, String{]}}}\textcolor{gray}{\footnotesize{} // create blocking
 emitter}\texttt{\textcolor{blue}{\scriptsize{}}}~\\
-\texttt{\textcolor{blue}{\scriptsize{}go \{ }}\texttt{\textcolor{brown}{\scriptsize{}f}}\texttt{\textcolor{blue}{\scriptsize{}(x,
-}}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{})
+\texttt{\textcolor{blue}{\scriptsize{}go \{ }}\texttt{\textcolor{brown}{\scriptsize{}case
+f}}\texttt{\textcolor{blue}{\scriptsize{}(x, }}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{})
 + c(y) $\Rightarrow$ }}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{}(s\textquotedbl{}\$\{x
 + y\}\textquotedbl{}) \}}}~\\
 \texttt{\textcolor{blue}{\scriptsize{}c(100)}}\textcolor{gray}{\footnotesize{}
