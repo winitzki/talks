@@ -75,18 +75,20 @@ in the academic world
 \item it is a \emph{declarative language} for concurrent \& parallel computations
 \begin{itemize}
 \item largely unknown and unused by the software engineering community
-\item available as an \href{https://github.com/Chymyst/chymyst-core}{open-source library \&{} EDSL}
+\item available as an \href{https://github.com/Chymyst/chymyst-core}{open-source library \&{} embedded DSL}
 \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Concurrent \& parallel programming is hard}
 
-Imperative concurrency is difficult to reason about:
+\emph{Imperative} concurrency \& parallelism is difficult to reason
+about:
 \begin{itemize}
 \item callbacks, threads, semaphores, mutex locks
 \item errors with shared mutable state
-\item testing is hard \textendash{} non-deterministic runtime behavior!
+\item hard to reason about states that mutate in parallel
+\item hard to test \textendash{} non-deterministic runtime behavior!
 \begin{itemize}
 \item race conditions, deadlocks, livelocks
 \end{itemize}
@@ -127,7 +129,7 @@ In this talk:
 \begin{itemize}
 \item Introduction to join calculus and ``chemical'' style of concurrency
 \item \href{https://github.com/chymyst/chymyst-core}{Chymyst} -{}- a new
-Scala EDSL for join calculus
+Scala DSL for join calculus
 \item Join calculus as an evolution of the Actor model
 \item Examples and demos
 \end{itemize}
@@ -173,12 +175,12 @@ on data item
 What would it mean to make ordinary functions concurrent?
 \begin{itemize}
 \item Several functions should be able to run at once
-\item No shared state: Concurrent processes work on different data
+\item No shared state: Concurrent processes work on \emph{different} data
 \end{itemize}
 This will be implemented if:
 \begin{itemize}
-\item Data items and functions are stored in a special ``site''
 \item Each data item is labeled for specific concurrent function(s)
+\item Data items and functions are stored in a special ``site''
 \item Concurrent functions consume data from the site
 \item Computed results are emitted back to the site
 \end{itemize}
@@ -389,8 +391,8 @@ molecule
 \texttt{\textcolor{blue}{\scriptsize{}val }}\texttt{\textcolor{brown}{\scriptsize{}f}}\texttt{\textcolor{blue}{\scriptsize{}
 = b{[}Int, String{]}}}\textcolor{gray}{\footnotesize{} // create blocking
 emitter}\texttt{\textcolor{blue}{\scriptsize{}}}~\\
-\texttt{\textcolor{blue}{\scriptsize{}go \{ }}\texttt{\textcolor{brown}{\scriptsize{}f}}\texttt{\textcolor{blue}{\scriptsize{}(x,
-}}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{})
+\texttt{\textcolor{blue}{\scriptsize{}go \{ }}\texttt{\textcolor{brown}{\scriptsize{}case
+f}}\texttt{\textcolor{blue}{\scriptsize{}(x, }}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{})
 + c(y) $\Rightarrow$ }}\texttt{\textcolor{olive}{\scriptsize{}reply}}\texttt{\textcolor{blue}{\scriptsize{}(s\textquotedbl{}\$\{x
 + y\}\textquotedbl{}) \}}}~\\
 \texttt{\textcolor{blue}{\scriptsize{}c(100)}}\textcolor{gray}{\footnotesize{}
@@ -599,7 +601,7 @@ It follows from these requirements that...
 
 \framesubtitle{David vs.~Goliath?}
 \begin{itemize}
-\item reaction $\approx$ actor
+\item reaction $\approx$ (auto-started) actor
 \item emitted molecule $\approx$ message sent to actor
 \end{itemize}
 Programming with actors: 
@@ -615,7 +617,7 @@ Programming with reactions:
 \item processes auto-start when the needed input molecules are available
 \item many reactions can start at once, automatically parallel
 \begin{itemize}
-\item reasoning is only about the data on present molecules 
+\item reasoning is only about the data on \emph{present} molecules 
 \end{itemize}
 \end{itemize}
 \end{frame}

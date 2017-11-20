@@ -202,7 +202,7 @@ largely unknown and unused by the software engineering community
 available as an 
 \begin_inset CommandInset href
 LatexCommand href
-name "open-source library & EDSL"
+name "open-source library & embedded DSL"
 target "https://github.com/Chymyst/chymyst-core"
 
 \end_inset
@@ -238,7 +238,11 @@ Concurrent & parallel programming is hard
 
 \begin_deeper
 \begin_layout Standard
-Imperative concurrency is difficult to reason about:
+
+\emph on
+Imperative
+\emph default
+ concurrency & parallelism is difficult to reason about:
 \end_layout
 
 \begin_layout Itemize
@@ -250,7 +254,11 @@ errors with shared mutable state
 \end_layout
 
 \begin_layout Itemize
-testing is hard – non-deterministic runtime behavior!
+hard to reason about states that mutate in parallel
+\end_layout
+
+\begin_layout Itemize
+hard to test – non-deterministic runtime behavior!
 \end_layout
 
 \begin_deeper
@@ -445,7 +453,7 @@ target "https://github.com/chymyst/chymyst-core"
 
 \end_inset
 
- -- a new Scala EDSL for join calculus
+ -- a new Scala DSL for join calculus
 \end_layout
 
 \begin_layout Itemize
@@ -639,11 +647,19 @@ Several functions should be able to run at once
 \end_layout
 
 \begin_layout Itemize
-No shared state: Concurrent processes work on different data
+No shared state: Concurrent processes work on 
+\emph on
+different
+\emph default
+ data
 \end_layout
 
 \begin_layout Standard
 This will be implemented if:
+\end_layout
+
+\begin_layout Itemize
+Each data item is labeled for specific concurrent function(s)
 \end_layout
 
 \begin_layout Itemize
@@ -656,10 +672,6 @@ site
 \end_inset
 
 
-\end_layout
-
-\begin_layout Itemize
-Each data item is labeled for specific concurrent function(s)
 \end_layout
 
 \begin_layout Itemize
@@ -1838,7 +1850,7 @@ f
 
 go { 
 \color brown
-f
+case f
 \color blue
 (x, 
 \color olive
@@ -3034,7 +3046,7 @@ reaction
 \begin_inset Formula $\approx$
 \end_inset
 
- actor
+ (auto-started) actor
 \end_layout
 
 \begin_layout Itemize
@@ -3089,7 +3101,11 @@ many reactions can start at once, automatically parallel
 
 \begin_deeper
 \begin_layout Itemize
-reasoning is only about the data on present molecules 
+reasoning is only about the data on 
+\emph on
+present
+\emph default
+ molecules 
 \end_layout
 
 \end_deeper
