@@ -285,6 +285,17 @@ version := (version in mySubproject).value
 
 - Must use `.value` when on the right side of `:=`, `+=`, `++=`, `~=`
 
+Another example:
+
+```scala
+libraryDependencies ++= (if (scalaBinaryVersion.value == "2.10") Seq(
+    ... // library dependencies for Scala 2.10
+    )
+    else Seq(
+    ... // dependencies for Scala versions above 2.10
+    ))
+```
+
 - All settings are evaluated when tasks are run on a project
 
 - Semantics of `:=` is similar to assignment:
