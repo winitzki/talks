@@ -79,17 +79,21 @@ Presented at [SF Types, Theorems, and Programming Languages meetup, June 16, 201
 
 ### Summary
 
+* The meaning of "declarative programming": a domain-adapted executable specification language
+
+* Examples of declarative and nondeclarative code in Fortran and Haskell
+
 * What is "logic programming" and "constraint programming"
 
-* Prolog in a nutshell
+* Prolog in a nutshell: a declarative language for logic puzzles
 
 * How Prolog "makes pointers safe"
 
-* Why Prolog was the ultimate scripting language for AI (backtracking search,
- interpreters, and DSLs for free)
+* Prolog's legacy: pattern-matching, user-defined infix syntax, recursive data structures, and SQL
 
-* What is "functional-logic programming" (a taste of the programming languages
- Mercury and Curry)
+* Why Prolog was the ultimate scripting language for AI (backtracking search, parsers, and DSLs for free)
+
+* What is "functional-logic programming" (a taste of the programming languages Mercury and Curry)
 
 [Talk slides](prolog/prolog_talk.pdf)
 
