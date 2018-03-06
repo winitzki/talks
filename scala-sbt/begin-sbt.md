@@ -283,7 +283,17 @@ Settings can be subproject-specific:
 version := (version in mySubproject).value
 ```
 
-- Must use `.value` when on the right side of `:=`, `+=`, `++=`, `~=`
+- Must use `.value` or `.taskValue` when on the right side of `:=`, `+=`, `++=`, `~=`
+
+Example:
+
+```scala
+resourceGenerators in Compile += Def.task {
+      val res: File = (resourceDirectory in Compile).value
+      val externalPath: Classpath = (externalDependencyClasspath in Compile).value
+      bundleInstall(res, externalPath) // Returns a Seq[File]
+    }.taskValue
+```
 
 Another example:
 
@@ -296,7 +306,7 @@ libraryDependencies ++= (if (scalaBinaryVersion.value == "2.10") Seq(
     ))
 ```
 
-- All settings are evaluated when tasks are run on a project
+- All settings are evaluated when tasks are run on a project, not at definition site
 
 - Semantics of `:=` is similar to assignment:
 
@@ -470,7 +480,8 @@ Use the `sbt-dependency-graph` plugin to figure this out
 - Most useful command: `whatDependsOn org.apache.zookeeper zookeeper 3.4.5`
 - Second most useful command: `sbt dependencyGraph > depgraph.txt`
     - Redirecting to file because the output is _very_ verbose and redundant
-    
+    - `sbt dependencyBrowseGraph` will open a graphical browser
+
 ### Getting out of "JAR hell" II
 
 Less frequent reasons for "JAR hell":
@@ -498,7 +509,8 @@ Less frequent reasons for "JAR hell":
 For assembling the application JAR:
 
 - Use `assemblyMergeStrategy` carefully
-    - strategies `first` and `last` are nondeterministic (which file is first or last?)
+    - some files require `concat` (e.g. `*.properties` or Akka's `reference.conf`) 
+    - strategies `first` and `last` are nondeterministic (which library is first or last?)
     - prefer to use `exclude()` or `dependencyOverride` if that works
 
 ## General recommendations about using SBT
