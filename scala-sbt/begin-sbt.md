@@ -492,6 +492,7 @@ Less frequent reasons for "JAR hell":
         - sure sign of trouble!
 
 - Go through your `$HOME/.ivy2/cache` and find out which JARs have the problematic classes
+    - `find $HOME/.ivy2/cache -name \*jar | while read f; do unzip -l $f | grep -q 'Problem.class' && echo $f; done `
     - IntelliJ can decompile `.class` files or JARs that you drop into the file tree of any project
 
 For assembling the application JAR:
@@ -514,4 +515,4 @@ For assembling the application JAR:
 - Start SBT and do not quit it
     - working within the same SBT session is faster than starting SBT each time
     - do `reload` when `build.sbt` or `plugins.sbt` change
-    - other than that, just do `testOnly`, `test`, `run`, `project mySubproject`
+    - other than that, just do `compile`, `test:compile`, `testOnly`, `test`, `run`, `project mySubproject`
