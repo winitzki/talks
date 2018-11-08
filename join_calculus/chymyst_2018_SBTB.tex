@@ -340,23 +340,29 @@ Programming with the Chemical Machine:
 on molecules
 \end{itemize}
 \end{itemize}
+\texttt{Chymyst} code is typically 2x -- 3x shorter than equivalent
+Akka code
 \end{frame}
 
 \begin{frame}{Example: throttling}
 
-Throttle emitting a molecule \texttt{\textcolor{blue}{\footnotesize{}s()}}
+Throttle emitting a molecule \texttt{\textcolor{blue}{\footnotesize{}s(x)}}
 with min.~delay of \texttt{\textcolor{blue}{\footnotesize{}delta\_t}}
 ms
 \begin{lyxcode}
-\textcolor{blue}{\footnotesize{}val~r~=~m{[}A{]}}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}val~r~=~m{[}X{]}}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}val~allow~=~m{[}Unit{]}}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}site(}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~go~\{~case~r(x)~+~allow(\_)~\ensuremath{\Rightarrow}~s(x)}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~go~\{~case~r(x)~+~allow(\_)~\ensuremath{\Rightarrow}}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~~~~Thread.sleep(delta\_t);~allow()}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~~~~~~~s(x)}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}~~~~~~~~Thread.sleep(delta\_t)}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}~~~~~~~~allow()}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}~~~~~\}}{\footnotesize\par}
 
@@ -366,39 +372,50 @@ ms
 \end{lyxcode}
 \begin{itemize}
 \item No threads/semaphores/locks, no mutable state
-\item External code may emit \texttt{\textcolor{blue}{\footnotesize{}r(a)}}
-at will, but \texttt{\textcolor{blue}{\footnotesize{}s(a)}} is then
+\item External code may emit \texttt{\textcolor{blue}{\footnotesize{}r(x)}}
+at will, but \texttt{\textcolor{blue}{\footnotesize{}s(x)}} is then
 throttled
-\item \href{ https://github.com/softwaremill/akka-vs-scalaz/tree/master/core/src/main/scala/com/softwaremill/ratelimiter}{Implementations in Akka, in Monix, and in ZIO}:
-about 50 LOC
 \end{itemize}
+\href{ https://github.com/softwaremill/akka-vs-scalaz/tree/master/core/src/main/scala/com/softwaremill/ratelimiter}{Implementations in Akka, in Monix, and ZIO}:
+about 50 LOC each
 \end{frame}
 
-\begin{frame}{Concurrent data and concurrent functions}
+\begin{frame}{Example: parallel merge-sort}
 
+\texttt{Chymyst} code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/MergeSortSpec.scala}{MergeSortSpec.scala}
+\begin{lyxcode}
+\textcolor{blue}{\scriptsize{}val~mergesort~=~m{[}(Array{[}T{]},~M{[}Array{[}T{]}{]}){]}}{\scriptsize\par}
 
-\framesubtitle{Intuitions leading to join calculus}
+\textcolor{blue}{\scriptsize{}site(}{\scriptsize\par}
 
-Message to auto-started actor $\approx$ concurrent function call
-on data item
+\textcolor{blue}{\scriptsize{}~~go~\{~case~mergesort((arr,~}\textcolor{brown}{\scriptsize{}sortedResult}\textcolor{blue}{\scriptsize{}))~$\Rightarrow$}{\scriptsize\par}
 
-What would it mean to make ordinary functions concurrent?
-\begin{itemize}
-\item Several functions should be able to run at once
-\item No shared state: Concurrent processes work on \emph{different} data
-\end{itemize}
-This will be implemented if:
-\begin{itemize}
-\item Each data item is labeled for specific concurrent function(s)
-\item Data items and functions are stored in a special ``site''
-\item Concurrent functions consume data from the site
-\item Computed results are emitted back to the site
-\end{itemize}
-Operational semantics:
-\begin{itemize}
-\item Concurrent functions auto-start whenever input data is available
-\item Different instances of a conc.\ function consume separate data items
-\end{itemize}
+\textcolor{blue}{\scriptsize{}~~~~if~(arr.length~<=~1)~sortedResult(arr)}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~~~else~\{}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~~~~~val~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{}~=~m{[}Array{[}T{]}{]}}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~~~~~val~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}~=~m{[}Array{[}T{]}{]}}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~~~~~}\textcolor{brown}{\scriptsize{}site}\textcolor{blue}{\scriptsize{}(}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~~~~~~~go~\{~case~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{}(x)~+~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}(y)~$\Rightarrow$~}\textcolor{brown}{\scriptsize{}sortedResult}\textcolor{blue}{\scriptsize{}(arrayMerge(x,y))~\}}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~~~~~)}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~~~~~val~(part1,~part2)~=~arr.splitAt(arr.length/2)}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~~~~~}\textsf{\textcolor{gray}{\footnotesize{}//~Emit~lower-level~}}\textcolor{gray}{\footnotesize{}mergesort}\textsf{\textcolor{gray}{\footnotesize{}~molecules:}}{\footnotesize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~~~~~mergesort(part1,~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{})~+~mergesort(part2,~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{})}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~\}}{\scriptsize\par}
+\end{lyxcode}
+\textcolor{blue}{\scriptsize{}\})}\\
+~\\
+\href{https://gist.github.com/stephenmcd/7edbcfb632c373eaf466}{Implementation in Akka}:
+25 LOC for the same functionality
 \end{frame}
 
 \begin{frame}{Distributed Chemical Machine}
@@ -710,44 +727,6 @@ when done
 \textcolor{blue}{\scriptsize{}~~~~~~~mergesort(part1,~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{})~+~mergesort(part2,~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{})}{\scriptsize\par}
 
 \end{lyxcode}
-\end{frame}
-
-\begin{frame}{\texttt{Chymyst}: examples IV}
-
-
-\framesubtitle{Concurrent merge-sort: \texttt{Chymyst} code}
-\begin{lyxcode}
-\textcolor{blue}{\scriptsize{}val~mergesort~=~m{[}(Array{[}T{]},~M{[}Array{[}T{]}{]}){]}}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}site(}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~go~\{~case~mergesort((arr,~}\textcolor{brown}{\scriptsize{}sortedResult}\textcolor{blue}{\scriptsize{}))~$\Rightarrow$}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~if~(arr.length~<=~1)~sortedResult(arr)}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~~~else~\{}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~~~~~val~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{}~=~m{[}Array{[}T{]}{]}}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~~~~~val~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}~=~m{[}Array{[}T{]}{]}}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~~~~~}\textcolor{brown}{\scriptsize{}site}\textcolor{blue}{\scriptsize{}(}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~~~~~~~go~\{~case~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{}(x)~+~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}(y)~$\Rightarrow$~}\textcolor{brown}{\scriptsize{}sortedResult}\textcolor{blue}{\scriptsize{}(arrayMerge(x,y))~\}}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~~~~~)}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~~~~~val~(part1,~part2)~=~arr.splitAt(arr.length/2)}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~~~~~}\textsf{\textcolor{gray}{\footnotesize{}//~Emit~lower-level~}}\textcolor{gray}{\footnotesize{}mergesort}\textsf{\textcolor{gray}{\footnotesize{}~molecules:}}{\footnotesize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~~~~~mergesort(part1,~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{})~+~mergesort(part2,~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{})}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}~~~~\}}{\scriptsize\par}
-\end{lyxcode}
-\textcolor{blue}{\scriptsize{}\})}\\
-~\\
-Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/MergeSortSpec.scala}{MergeSortSpec.scala}
 \end{frame}
 
 \begin{frame}{Pipelined molecules: An automatic optimization}
