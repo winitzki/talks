@@ -2611,13 +2611,7 @@ A simple implementation of map/reduce in DCM:
 \family typewriter
 \size scriptsize
 \color blue
-val c = dm[Int]
-\family default
-\color gray
- // distributed
-\family typewriter
-\color blue
- 
+implicit val cluster = ClusterConfig(???)
 \end_layout
 
 \begin_layout LyX-Code
@@ -2625,7 +2619,7 @@ val c = dm[Int]
 \family typewriter
 \size scriptsize
 \color blue
-val d = dm[Int]
+val c = dm[Int] ; val d = dm[Int]
 \family default
 \color gray
  // distributed
@@ -2824,7 +2818,19 @@ Reasoning in the Distributed Chemical Machine
 
 \begin_deeper
 \begin_layout Itemize
-All DCM peers are equal (no master/worker)
+All DCM peers operate in the same way (no master/worker)
+\end_layout
+
+\begin_layout Itemize
+All DCM peers need to define the same distributed reaction sites
+\end_layout
+
+\begin_layout Itemize
+Distributed molecules may be consumed by 
+\emph on
+any
+\emph default
+ DCM peer
 \end_layout
 
 \end_deeper
