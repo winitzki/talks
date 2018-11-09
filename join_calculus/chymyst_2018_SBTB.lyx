@@ -2825,12 +2825,30 @@ All DCM peers operate in the same way (no master/worker)
 All DCM peers need to define the same distributed reaction sites
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+To designate a DCM peer as a 
+\begin_inset Quotes eld
+\end_inset
+
+driver
+\begin_inset Quotes erd
+\end_inset
+
+, use config files
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Distributed molecules may be consumed by 
 \emph on
 any
 \emph default
  DCM peer
+\end_layout
+
+\begin_layout Standard
+Other than that, reasoning in DCM is the same as in CM
 \end_layout
 
 \end_deeper

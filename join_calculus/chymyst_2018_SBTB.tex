@@ -560,9 +560,9 @@ Distributed Chemical Machine:
 \end{itemize}
 A simple implementation of map/reduce in DCM:
 \begin{lyxcode}
-\textcolor{blue}{\scriptsize{}val~c~=~dm{[}Int{]}}\textcolor{gray}{\scriptsize{}~//~distributed}\textcolor{blue}{\scriptsize{}~}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}implicit~val~cluster~=~ClusterConfig(???)}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}val~d~=~dm{[}Int{]}}\textcolor{gray}{\scriptsize{}~//~distributed}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~c~=~dm{[}Int{]}~;~val~d~=~dm{[}Int{]}}\textcolor{gray}{\scriptsize{}~//~distributed}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}val~res~=~m{[}(Int,~List{[}Int{]}){]}}{\scriptsize\par}
 
@@ -597,8 +597,14 @@ A simple implementation of map/reduce in DCM:
 \begin{frame}{Reasoning in the Distributed Chemical Machine}
 
 \begin{itemize}
-\item All DCM peers are equal (no master/worker)
+\item All DCM peers operate in the same way (no master/worker)
+\item All DCM peers need to define the same distributed reaction sites
+\begin{itemize}
+\item To designate a DCM peer as a ``driver'', use config files
 \end{itemize}
+\item Distributed molecules may be consumed by \emph{any} DCM peer
+\end{itemize}
+Other than that, reasoning in DCM is the same as in CM
 \end{frame}
 
 \begin{frame}{Conclusions and outlook}
