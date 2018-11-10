@@ -1682,7 +1682,10 @@ A simple map/reduce implementation:
 \family typewriter
 \size scriptsize
 \color blue
-val c = m[Int]
+val c = m[A]
+\family default
+\color gray
+ // Initial values have type `A`.
 \end_layout
 
 \begin_layout LyX-Code
@@ -1690,7 +1693,10 @@ val c = m[Int]
 \family typewriter
 \size scriptsize
 \color blue
-val d = m[Int]
+val d = m[(Int, B)] 
+\family default
+\color gray
+// `B` is a commutative monoid.
 \end_layout
 
 \begin_layout LyX-Code
@@ -1698,7 +1704,10 @@ val d = m[Int]
 \family typewriter
 \size scriptsize
 \color blue
-val res = m[(Int, List[Int])]
+val res = m[B]
+\family default
+\color gray
+ // Final result of type `B`.
 \end_layout
 
 \begin_layout LyX-Code
@@ -1706,7 +1715,10 @@ val res = m[(Int, List[Int])]
 \family typewriter
 \size scriptsize
 \color blue
-val fetch = b[Unit, List[Int]]
+val fetch = b[Unit, B]
+\family default
+\color gray
+ // Blocking emitter.
 \end_layout
 
 \begin_layout LyX-Code
@@ -1719,15 +1731,7 @@ site(
 
 \begin_layout LyX-Code
 
-\family typewriter
 \size scriptsize
-\color blue
-  go { case c(x) 
-\begin_inset Formula $\Rightarrow$
-\end_inset
-
- d(x * 2) },
-\family default
 \color gray
   // 
 \begin_inset Quotes eld
@@ -1738,9 +1742,18 @@ map
 \end_inset
 
 
+\end_layout
+
+\begin_layout LyX-Code
+
 \family typewriter
+\size scriptsize
 \color blue
- 
+  go { case c(x) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ d((1, long_computation(x))) }, 
 \end_layout
 
 \begin_layout LyX-Code
@@ -1751,7 +1764,7 @@ map
  
 \family default
 \color gray
-// 
+ // 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1767,11 +1780,11 @@ reduce
 \family typewriter
 \size scriptsize
 \color blue
-  go { case res((n, list)) + d(x) 
+  go { case d((n1, b1)) + d((n2, b2)) 
 \begin_inset Formula $\Rightarrow$
 \end_inset
 
- res((n-1, s::list)) },
+
 \end_layout
 
 \begin_layout LyX-Code
@@ -1779,10 +1792,7 @@ reduce
 \family typewriter
 \size scriptsize
 \color blue
- 
-\family default
-\color gray
-// fetch results
+   val (newN, newB) = (n1 + n2, b1 |+| b2)
 \end_layout
 
 \begin_layout LyX-Code
@@ -1790,11 +1800,27 @@ reduce
 \family typewriter
 \size scriptsize
 \color blue
-  go { case fetch(_, reply) + res((0, list)) 
+   if (newN == total) res(newB) else d((newN, newB)) 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  },
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  go { case fetch(_, reply) + res(b) 
 \begin_inset Formula $\Rightarrow$
 \end_inset
 
- reply(list) }
+ reply(b) }
 \end_layout
 
 \begin_layout LyX-Code
@@ -1810,7 +1836,7 @@ reduce
 \family typewriter
 \size scriptsize
 \color blue
-Seq(1, 2, 3).foreach(x 
+(1 to 100).foreach(x 
 \begin_inset Formula $\Rightarrow$
 \end_inset
 
@@ -1822,19 +1848,11 @@ Seq(1, 2, 3).foreach(x
 \family typewriter
 \size scriptsize
 \color blue
-res((3, Nil))
-\end_layout
-
-\begin_layout LyX-Code
-
-\family typewriter
-\size scriptsize
-\color blue
 fetch()
 \family default
 \size footnotesize
 \color gray
- // This returned Seq(4, 6, 2) in one test.
+ // Blocking call returns the final result.
 \end_layout
 
 \begin_layout Standard
@@ -2514,15 +2532,11 @@ Chymyst
 
 \begin_deeper
 \begin_layout Itemize
-Blocking molecules with time-outs
+Blocking molecules with timeouts
 \end_layout
 
 \begin_layout Itemize
 Automatic pipelining of molecules
-\end_layout
-
-\begin_layout Itemize
-Compile-time and early run-time DSL error reporting
 \end_layout
 
 \begin_layout Itemize
@@ -2545,11 +2559,102 @@ agents
 \end_layout
 
 \begin_layout Itemize
+Compile-time and early run-time DSL error reporting
+\end_layout
+
+\begin_layout Itemize
 Logging, debugging, unit-testing facilities
 \end_layout
 
 \begin_layout Itemize
 Thread pools with thread priority control
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Related frameworks: Petri nets
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Workflow management with an approach based on 
+\begin_inset CommandInset href
+LatexCommand href
+name "Petri nets"
+target "https://en.wikipedia.org/wiki/Petri_net"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "ING Baker"
+target "https://github.com/ing-bank/baker"
+literal "false"
+
+\end_inset
+
+ – a DSL for workflow management
+\end_layout
+
+\begin_layout Itemize
+Process modeling and control (
+\begin_inset Quotes eld
+\end_inset
+
+elevator system
+\begin_inset Quotes erd
+\end_inset
+
+ etc.)
+\end_layout
+
+\begin_layout Itemize
+Business process management (BPM) systems
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+Chymyst
+\family default
+ implements a rich version of Petri nets:
+\end_layout
+
+\begin_layout Itemize
+Transitions admit arbitrary guard conditions and error recovery
+\end_layout
+
+\begin_layout Itemize
+Transitions carry values, reactions are values, can be nested
+\end_layout
+
+\begin_layout Itemize
+Nondeterministic, asynchronous, parallel execution
 \end_layout
 
 \end_deeper
@@ -2669,7 +2774,7 @@ map
 \begin_inset Quotes erd
 \end_inset
 
-
+ on cluster,
 \family typewriter
 \color blue
  
@@ -2691,7 +2796,7 @@ reduce
 \begin_inset Quotes erd
 \end_inset
 
-
+ on the driver node only
 \end_layout
 
 \begin_layout LyX-Code
@@ -2769,6 +2874,9 @@ if (isDriver) {
 \size scriptsize
 \color blue
   res((3, Nil)) ; fetch()
+\family default
+\color gray
+ // Returns the result.
 \end_layout
 
 \begin_layout LyX-Code
@@ -2848,7 +2956,31 @@ any
 \end_layout
 
 \begin_layout Standard
-Other than that, reasoning in DCM is the same as in CM
+Other than that, reasoning in DCM is the same as in CM:
+\end_layout
+
+\begin_layout Itemize
+Determine which data needs to be distributed and/or concurrent
+\end_layout
+
+\begin_layout Itemize
+Determine which computations will need to consume that data
+\end_layout
+
+\begin_layout Itemize
+Emit initial molecules and let the DCM run
+\end_layout
+
+\begin_layout Standard
+Examples (see documentation)
+\end_layout
+
+\begin_layout Itemize
+Broadcast (DCM peers see it exactly once upon connecting)
+\end_layout
+
+\begin_layout Itemize
+Distributed peer-to-peer chat
 \end_layout
 
 \end_deeper
@@ -2958,28 +3090,16 @@ literal "false"
 
 \end_deeper
 \begin_layout Itemize
-On the future roadmap:
+Promising applications:
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Thread fusion for better performance
+Workflow management
 \end_layout
 
 \begin_layout Itemize
-Full continuation-passing transformation to nonblocking code
-\end_layout
-
-\begin_layout Itemize
-Automatic backpressure (
-\begin_inset Quotes eld
-\end_inset
-
-reaction temperature
-\begin_inset Quotes erd
-\end_inset
-
-)
+Distributed peer-to-peer systems
 \end_layout
 
 \end_deeper

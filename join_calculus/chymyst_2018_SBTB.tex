@@ -390,33 +390,37 @@ about 50 LOC each
 
 A simple map/reduce implementation:
 \begin{lyxcode}
-\textcolor{blue}{\scriptsize{}val~c~=~m{[}Int{]}}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~c~=~m{[}A{]}}\textcolor{gray}{\scriptsize{}~//~Initial~values~have~type~`A`.}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}val~d~=~m{[}Int{]}}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~d~=~m{[}(Int,~B){]}~}\textcolor{gray}{\scriptsize{}//~`B`~is~a~commutative~monoid.}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}val~res~=~m{[}(Int,~List{[}Int{]}){]}}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~res~=~m{[}B{]}}\textcolor{gray}{\scriptsize{}~//~Final~result~of~type~`B`.}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}val~fetch~=~b{[}Unit,~List{[}Int{]}{]}}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~fetch~=~b{[}Unit,~B{]}}\textcolor{gray}{\scriptsize{}~//~Blocking~emitter.}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}site(}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~c(x)~$\Rightarrow$~d(x~{*}~2)~\},}\textcolor{gray}{\scriptsize{}~~//~``map''}\textcolor{blue}{\scriptsize{}~}{\scriptsize\par}
+\textcolor{gray}{\scriptsize{}~~//~``map''}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~}\textcolor{gray}{\scriptsize{}//~``reduce''}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~c(x)~$\Rightarrow$~d((1,~long\_computation(x)))~\},~}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~res((n,~list))~+~d(x)~$\Rightarrow$~res((n-1,~s::list))~\},}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~}\textcolor{gray}{\scriptsize{}~//~``reduce''}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~}\textcolor{gray}{\scriptsize{}//~fetch~results}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~d((n1,~b1))~+~d((n2,~b2))~$\Rightarrow$}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~fetch(\_,~reply)~+~res((0,~list))~$\Rightarrow$~reply(list)~\}}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~~~val~(newN,~newB)~=~(n1~+~n2,~b1~|+|~b2)}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~if~(newN~==~total)~res(newB)~else~d((newN,~newB))~}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~\},}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~go~\{~case~fetch(\_,~reply)~+~res(b)~$\Rightarrow$~reply(b)~\}}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{})}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}Seq(1,~2,~3).foreach(x~$\Rightarrow$~c(x))}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}(1~to~100).foreach(x~$\Rightarrow$~c(x))}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}res((3,~Nil))}{\scriptsize\par}
-
-\textcolor{blue}{\scriptsize{}fetch()}\textcolor{gray}{\footnotesize{}~//~This~returned~Seq(4,~6,~2)~in~one~test.}{\footnotesize\par}
+\textcolor{blue}{\scriptsize{}fetch()}\textcolor{gray}{\footnotesize{}~//~Blocking~call~returns~the~final~result.}{\footnotesize\par}
 \end{lyxcode}
 ~\\
 Compare with the \href{https://stackoverflow.com/questions/17291851/mapreduce-implementation-with-akka}{Akka example}
@@ -539,12 +543,29 @@ Guarantees:
 \begin{frame}{Current features of \texttt{Chymyst}}
 
 \begin{itemize}
-\item Blocking molecules with time-outs
+\item Blocking molecules with timeouts
 \item Automatic pipelining of molecules
-\item Compile-time and early run-time DSL error reporting
 \item ``Static'' molecules with read-only access (similar to Akka ``agents'')
+\item Compile-time and early run-time DSL error reporting
 \item Logging, debugging, unit-testing facilities
 \item Thread pools with thread priority control
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Related frameworks: Petri nets}
+
+Workflow management with an approach based on \href{https://en.wikipedia.org/wiki/Petri_net}{Petri nets}
+\begin{itemize}
+\item \href{https://github.com/ing-bank/baker}{ING Baker} -- a DSL for
+workflow management
+\item Process modeling and control (``elevator system'' etc.)
+\item Business process management (BPM) systems
+\end{itemize}
+\texttt{Chymyst} implements a rich version of Petri nets:
+\begin{itemize}
+\item Transitions admit arbitrary guard conditions and error recovery
+\item Transitions carry values, reactions are values, can be nested
+\item Nondeterministic, asynchronous, parallel execution
 \end{itemize}
 \end{frame}
 
@@ -570,9 +591,9 @@ A simple implementation of map/reduce in DCM:
 
 \textcolor{blue}{\scriptsize{}site(}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~c(x)~$\Rightarrow$~d(x~{*}~2)~\},}\textcolor{gray}{\scriptsize{}~~//~``map''}\textcolor{blue}{\scriptsize{}~}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~c(x)~$\Rightarrow$~d(x~{*}~2)~\},}\textcolor{gray}{\scriptsize{}~~//~``map''~on~cluster,}\textcolor{blue}{\scriptsize{}~}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~}\textcolor{gray}{\scriptsize{}//~``reduce''}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~}\textcolor{gray}{\scriptsize{}//~``reduce''~on~the~driver~node~only}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}~~go~\{~case~res((n,~list))~+~d(x)~$\Rightarrow$~res((n-1,~s::list))~\},}{\scriptsize\par}
 
@@ -586,7 +607,7 @@ A simple implementation of map/reduce in DCM:
 
 \textcolor{blue}{\scriptsize{}~~Seq(1,~2,~3).foreach(x~$\Rightarrow$~c(x))}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~res((3,~Nil))~;~fetch()}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~~res((3,~Nil))~;~fetch()}\textcolor{gray}{\scriptsize{}~//~Returns~the~result.}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}\}}{\scriptsize\par}
 \end{lyxcode}
@@ -604,7 +625,17 @@ A simple implementation of map/reduce in DCM:
 \end{itemize}
 \item Distributed molecules may be consumed by \emph{any} DCM peer
 \end{itemize}
-Other than that, reasoning in DCM is the same as in CM
+Other than that, reasoning in DCM is the same as in CM:
+\begin{itemize}
+\item Determine which data needs to be distributed and/or concurrent
+\item Determine which computations will need to consume that data
+\item Emit initial molecules and let the DCM run
+\end{itemize}
+Examples (see documentation)
+\begin{itemize}
+\item Broadcast (DCM peers see it exactly once upon connecting)
+\item Distributed peer-to-peer chat
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Conclusions and outlook}
@@ -624,11 +655,10 @@ tolerance, unit testing and debugging APIs)
 \item Extensive documentation: \href{https://winitzki.gitbooks.io/concurrency-in-reactions-declarative-multicore-in/content/}{tutorial book}
 and \href{https://github.com/winitzki/talks/blob/master/join-calculus-paper/join-calculus-paper.pdf}{draft paper}
 \end{itemize}
-\item On the future roadmap:
+\item Promising applications:
 \begin{itemize}
-\item Thread fusion for better performance
-\item Full continuation-passing transformation to nonblocking code
-\item Automatic backpressure (``reaction temperature'')
+\item Workflow management
+\item Distributed peer-to-peer systems
 \end{itemize}
 \item Example code for \href{https://github.com/winitzki/talks/blob/master/join_calculus/join_calculus_2017_SBTB.pdf}{this talk}:
 {\footnotesize{}\href{https://github.com/Chymyst/jc-talk-2017-examples}{github.com/Chymyst/jc-talk-2017-examples}}{\footnotesize\par}
