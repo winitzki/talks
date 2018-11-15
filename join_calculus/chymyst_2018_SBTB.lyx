@@ -3030,6 +3030,22 @@ Distributed computing is made declarative
 \end_layout
 
 \begin_layout Itemize
+Determine which data needs to be distributed and/or concurrent
+\end_layout
+
+\begin_layout Itemize
+Determine which computations will need to consume that data
+\end_layout
+
+\begin_layout Itemize
+Emit initial molecules and let the DCM run
+\end_layout
+
+\begin_layout Standard
+Peer-to-peer architecture
+\end_layout
+
+\begin_layout Itemize
 All DCM peers operate in the same way (no master/worker)
 \end_layout
 
@@ -3057,22 +3073,6 @@ Distributed molecules may be consumed by
 any
 \emph default
  DCM peer
-\end_layout
-
-\begin_layout Standard
-Other than that, reasoning in DCM is the same as in CM:
-\end_layout
-
-\begin_layout Itemize
-Determine which data needs to be distributed and/or concurrent
-\end_layout
-
-\begin_layout Itemize
-Determine which computations will need to consume that data
-\end_layout
-
-\begin_layout Itemize
-Emit initial molecules and let the DCM run
 \end_layout
 
 \begin_layout Standard
@@ -3199,19 +3199,23 @@ In this way, downloaded molecules can be emitted locally
 \end_layout
 
 \begin_layout Itemize
-All DCM peer must run identical reaction code 
+All DCM peers must run identical reaction code 
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-If a reaction failed or network failed, molecules are 
+Each DCM peer acquires a distributed lock on its DMs
+\end_layout
+
+\begin_layout Itemize
+If a node goes down or network fails, molecules will be 
 \emph on
 unconsumed
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Another DCM peer can pick up these molecules
+Another DCM peer will pick up these molecules later
 \end_layout
 
 \end_deeper
@@ -3272,7 +3276,9 @@ Short, declarative code implementing barriers, rendezvous, etc.
 
 \end_deeper
 \begin_layout Itemize
-A new open-source Scala implementation: 
+An open-source Scala implementation: 
+\family typewriter
+
 \begin_inset CommandInset href
 LatexCommand href
 name "Chymyst"
@@ -3285,10 +3291,6 @@ literal "false"
 \end_layout
 
 \begin_deeper
-\begin_layout Itemize
-Full-featured implementation of join calculus
-\end_layout
-
 \begin_layout Itemize
 Static DSL code analysis (with Scala macros)
 \end_layout
@@ -3332,6 +3334,10 @@ Workflow management
 
 \begin_layout Itemize
 Distributed peer-to-peer systems
+\end_layout
+
+\begin_layout Itemize
+Process modeling, GUIs, BPM
 \end_layout
 
 \end_deeper

@@ -642,18 +642,18 @@ Comparison: \href{https://github.com/ltronky/MapReduce-akka}{Akka implementation
 
 Distributed computing is made declarative
 \begin{itemize}
+\item Determine which data needs to be distributed and/or concurrent
+\item Determine which computations will need to consume that data
+\item Emit initial molecules and let the DCM run
+\end{itemize}
+Peer-to-peer architecture
+\begin{itemize}
 \item All DCM peers operate in the same way (no master/worker)
 \item All DCM peers need to define the same distributed reaction sites
 \begin{itemize}
 \item To designate a DCM peer as a ``driver'', use config files
 \end{itemize}
 \item Distributed molecules may be consumed by \emph{any} DCM peer
-\end{itemize}
-Other than that, reasoning in DCM is the same as in CM:
-\begin{itemize}
-\item Determine which data needs to be distributed and/or concurrent
-\item Determine which computations will need to consume that data
-\item Emit initial molecules and let the DCM run
 \end{itemize}
 Examples (see documentation)
 \begin{itemize}
@@ -688,11 +688,12 @@ Examples (see documentation)
 \item On a DCM peer, each DM is identified with a unique local RS
 \begin{itemize}
 \item In this way, downloaded molecules can be emitted locally
-\item All DCM peer must run identical reaction code 
+\item All DCM peers must run identical reaction code 
 \end{itemize}
-\item If a reaction failed or network failed, molecules are \emph{unconsumed}
+\item Each DCM peer acquires a distributed lock on its DMs
+\item If a node goes down or network fails, molecules will be \emph{unconsumed}
 \begin{itemize}
-\item Another DCM peer can pick up these molecules
+\item Another DCM peer will pick up these molecules later
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -705,9 +706,8 @@ Examples (see documentation)
 \item Similar to ``Actors'', but easier to use and ``more purely functional''
 \item Short, declarative code implementing barriers, rendezvous, etc.
 \end{itemize}
-\item A new open-source Scala implementation: \href{https://github.com/Chymyst/chymyst-core}{Chymyst}
+\item An open-source Scala implementation: \texttt{\href{https://github.com/Chymyst/chymyst-core}{Chymyst}}
 \begin{itemize}
-\item Full-featured implementation of join calculus
 \item Static DSL code analysis (with Scala macros)
 \item Industry-strength features (thread priority control, pipelining, fault
 tolerance, unit testing and debugging APIs)
@@ -718,6 +718,7 @@ and \href{https://github.com/winitzki/talks/blob/master/join-calculus-paper/join
 \begin{itemize}
 \item Workflow management
 \item Distributed peer-to-peer systems
+\item Process modeling, GUIs, BPM
 \end{itemize}
 \item Example code for \href{https://github.com/winitzki/talks/blob/master/join_calculus/join_calculus_2017_SBTB.pdf}{this talk}:
 {\footnotesize{}\href{https://github.com/Chymyst/jc-talk-2017-examples}{github.com/Chymyst/jc-talk-2017-examples}}{\footnotesize\par}
