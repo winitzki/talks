@@ -2920,6 +2920,10 @@ Transitions carry values, reactions are values, can be nested
 Nondeterministic, asynchronous, parallel execution
 \end_layout
 
+\begin_layout Standard
+A Petri net model is straightforwardly translated into a CM program
+\end_layout
+
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator parbreak
