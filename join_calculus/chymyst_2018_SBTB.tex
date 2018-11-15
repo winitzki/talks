@@ -126,7 +126,7 @@ monadic functor &
 \texttt{\footnotesize{}RxJava}, Akka Streams\tabularnewline
 \hline 
 unrestricted streaming &
-recursive monad &
+recursive monad+ &
 Flink, fs2, ZIO\tabularnewline
 \hline 
 unrestricted concurrency &
@@ -160,7 +160,7 @@ taking turns eating and thinking for random time intervals
 
 Problem: simulate the process, avoiding deadlock and starvation
 
-Solutions: \href{https://rosettacode.org/wiki/Dining_philosophers}{Rosetta Code}
+Solutions in various programming languages: see \href{https://rosettacode.org/wiki/Dining_philosophers}{Rosetta Code}
 \begin{itemize}
 \item Can this be implemented via (effectful) streams? (I think not.)
 \item The Chemical Machine code is purely declarative
@@ -171,10 +171,10 @@ Solutions: \href{https://rosettacode.org/wiki/Dining_philosophers}{Rosetta Code}
 
 The Chemical Machine paradigm:
 \begin{itemize}
-\item A \emph{declarative language} for concurrent \& parallel computations
+\item A \emph{declarative language} for concurrent and parallel computations
 \begin{itemize}
 \item largely unknown and unused by the software engineering community
-\item available as an \href{https://github.com/Chymyst/chymyst-core}{open-source library \& embedded DSL}
+\item \texttt{Chymyst} -- an \href{https://github.com/Chymyst/chymyst-core}{open-source library \& embedded DSL}
 for Scala
 \item presented in my SBTB talks in 2016 and 2017
 \end{itemize}
@@ -188,8 +188,8 @@ AWS Lambda
 \end{itemize}
 Modify the AWS Lambda model by adding new requirements:
 \begin{itemize}
-\item a Lambda may wait for several unrelated events
-\item several Lambdas may contend \emph{atomically} on events
+\item a Lambda should be able to wait for several \emph{unrelated} events
+\item several Lambdas contend \emph{atomically} on shared input events
 \end{itemize}
 With these new requirements, AWS Lambda becomes a purely functional
 \emph{unrestricted} \emph{concurrency} model
@@ -659,6 +659,41 @@ Examples (see documentation)
 \begin{itemize}
 \item Broadcast (DCM peers see it exactly once upon connecting)
 \item Distributed peer-to-peer chat
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Chemical Machine: implementation details}
+
+\begin{itemize}
+\item Each reaction site has a scheduler thread and a worker thread pool
+\item Each molecule is bound to a unique reaction site and is stored there
+\item Each emitted molecule triggers a search for possible reactions
+\item Reactions are scheduled on the worker thread pool
+\item Each reaction may emit further molecules
+\item Scala macros are used for static analysis and optimizations
+\begin{itemize}
+\item Automatically pipelined molecules
+\item Simplify and analyze Boolean conditions
+\end{itemize}
+\item Some error analysis is performed at early run time
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Distributed Chemical Machine: implementation details}
+
+\begin{itemize}
+\item Each distributed molecule (DM) is bound to a unique reaction site
+\item Emitted DM data goes into the ZK instance
+\item Each DCM peer listens to ZK messages and checks for DMs
+\item On a DCM peer, each DM is identified with a unique local RS
+\begin{itemize}
+\item In this way, downloaded molecules can be emitted locally
+\item All DCM peer must run identical reaction code 
+\end{itemize}
+\item If a reaction failed or network failed, molecules are \emph{unconsumed}
+\begin{itemize}
+\item Another DCM peer can pick up these molecules
+\end{itemize}
 \end{itemize}
 \end{frame}
 

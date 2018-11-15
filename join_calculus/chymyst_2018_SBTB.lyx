@@ -402,7 +402,7 @@ unrestricted streaming
 \begin_inset Text
 
 \begin_layout Plain Layout
-recursive monad
+recursive monad+
 \end_layout
 
 \end_inset
@@ -542,7 +542,7 @@ Problem: simulate the process, avoiding deadlock and starvation
 \end_layout
 
 \begin_layout Standard
-Solutions: 
+Solutions in various programming languages: see 
 \begin_inset CommandInset href
 LatexCommand href
 name "Rosetta Code"
@@ -601,7 +601,7 @@ A
 \emph on
 declarative language
 \emph default
- for concurrent & parallel computations
+ for concurrent and parallel computations
 \end_layout
 
 \begin_deeper
@@ -610,7 +610,11 @@ largely unknown and unused by the software engineering community
 \end_layout
 
 \begin_layout Itemize
-available as an 
+
+\family typewriter
+Chymyst
+\family default
+ – an 
 \begin_inset CommandInset href
 LatexCommand href
 name "open-source library & embedded DSL"
@@ -652,15 +656,19 @@ Modify the AWS Lambda model by adding new requirements:
 \end_layout
 
 \begin_layout Itemize
-a Lambda may wait for several unrelated events
+a Lambda should be able to wait for several 
+\emph on
+unrelated
+\emph default
+ events
 \end_layout
 
 \begin_layout Itemize
-several Lambdas may contend 
+several Lambdas contend 
 \emph on
 atomically
 \emph default
- on events
+ on shared input events
 \end_layout
 
 \begin_layout Standard
@@ -3079,6 +3087,134 @@ Broadcast (DCM peers see it exactly once upon connecting)
 Distributed peer-to-peer chat
 \end_layout
 
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Chemical Machine: implementation details
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Each reaction site has a scheduler thread and a worker thread pool
+\end_layout
+
+\begin_layout Itemize
+Each molecule is bound to a unique reaction site and is stored there
+\end_layout
+
+\begin_layout Itemize
+Each emitted molecule triggers a search for possible reactions
+\end_layout
+
+\begin_layout Itemize
+Reactions are scheduled on the worker thread pool
+\end_layout
+
+\begin_layout Itemize
+Each reaction may emit further molecules
+\end_layout
+
+\begin_layout Itemize
+Scala macros are used for static analysis and optimizations
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Automatically pipelined molecules
+\end_layout
+
+\begin_layout Itemize
+Simplify and analyze Boolean conditions
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Some error analysis is performed at early run time
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Distributed Chemical Machine: implementation details
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Each distributed molecule (DM) is bound to a unique reaction site
+\end_layout
+
+\begin_layout Itemize
+Emitted DM data goes into the ZK instance
+\end_layout
+
+\begin_layout Itemize
+Each DCM peer listens to ZK messages and checks for DMs
+\end_layout
+
+\begin_layout Itemize
+On a DCM peer, each DM is identified with a unique local RS
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+In this way, downloaded molecules can be emitted locally
+\end_layout
+
+\begin_layout Itemize
+All DCM peer must run identical reaction code 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+If a reaction failed or network failed, molecules are 
+\emph on
+unconsumed
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Another DCM peer can pick up these molecules
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator parbreak
