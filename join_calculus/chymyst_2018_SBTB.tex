@@ -205,7 +205,8 @@ mailboxes
 \end{itemize}
 It follows from these requirements that... 
 \begin{itemize}
-\item Auto-created actor instances are stateless and invisible to user
+\item Auto-created actor instances are \emph{stateless} and invisible to
+user
 \item User code defines \emph{mailboxes} and \emph{computations} that consume
 messages
 \item Repeated messages may be consumed in parallel
@@ -242,8 +243,8 @@ messages
 \begin{itemize}
 \item All data resides on messages in mailboxes, is consumed automatically
 \item Mailboxes and computations are \emph{values}, can be sent on messages
-\item Code for computations can be purely functional
 \end{itemize}
+Any Actor program can be straightforwardly translated into CM
 \end{frame}
 
 \begin{frame}{The chemical metaphor}

@@ -737,7 +737,11 @@ It follows from these requirements that...
 \end_layout
 
 \begin_layout Itemize
-Auto-created actor instances are stateless and invisible to user
+Auto-created actor instances are 
+\emph on
+stateless
+\emph default
+ and invisible to user
 \end_layout
 
 \begin_layout Itemize
@@ -925,8 +929,8 @@ values
 , can be sent on messages
 \end_layout
 
-\begin_layout Itemize
-Code for computations can be purely functional
+\begin_layout Standard
+Any Actor program can be straightforwardly translated into CM
 \end_layout
 
 \end_deeper
