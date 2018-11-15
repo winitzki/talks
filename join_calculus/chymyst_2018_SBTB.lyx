@@ -145,37 +145,6 @@ Chymyst
 \end_layout
 
 \begin_layout Itemize
-A 
-\emph on
-declarative language
-\emph default
- for concurrent & parallel computations
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-largely unknown and unused by the software engineering community
-\end_layout
-
-\begin_layout Itemize
-available as an 
-\begin_inset CommandInset href
-LatexCommand href
-name "open-source library & embedded DSL"
-target "https://github.com/Chymyst/chymyst-core"
-literal "false"
-
-\end_inset
-
- for Scala
-\end_layout
-
-\begin_layout Itemize
-presented in my SBTB talks in 2016 and 2017
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
 CM 
 \begin_inset Formula $\approx$
 \end_inset
@@ -214,7 +183,7 @@ Petri nets,
 \end_layout
 
 \begin_layout Itemize
-DCM formulated within some theory of distributed programming?
+DCM formulated within some theory of distributed programming
 \end_layout
 
 \end_deeper
@@ -321,7 +290,7 @@ Formal structure
 
 \series bold
 \size footnotesize
-Scala code
+Scala implementation
 \end_layout
 
 \end_inset
@@ -397,7 +366,7 @@ Future
 \color blue
 async
 \family default
-\size default
+\size footnotesize
 \color inherit
 /
 \family typewriter
@@ -586,7 +555,7 @@ literal "false"
 \end_layout
 
 \begin_layout Itemize
-Can this be implemented via functional streams? (I think not.)
+Can this be implemented via (effectful) streams? (I think not.)
 \end_layout
 
 \begin_layout Itemize
@@ -606,7 +575,124 @@ The Chemical Machine code is purely declarative
 status open
 
 \begin_layout Plain Layout
-From Actors to the Chemical Machine
+Chemical Machine vs.
+\begin_inset space ~
+\end_inset
+
+AWS Lambda
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+The Chemical Machine paradigm:
+\end_layout
+
+\begin_layout Itemize
+A 
+\emph on
+declarative language
+\emph default
+ for concurrent & parallel computations
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+largely unknown and unused by the software engineering community
+\end_layout
+
+\begin_layout Itemize
+available as an 
+\begin_inset CommandInset href
+LatexCommand href
+name "open-source library & embedded DSL"
+target "https://github.com/Chymyst/chymyst-core"
+literal "false"
+
+\end_inset
+
+ for Scala
+\end_layout
+
+\begin_layout Itemize
+presented in my SBTB talks in 2016 and 2017
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+AWS Lambda
+\end_layout
+
+\begin_layout Itemize
+wait for an event, signalling arrival of input data
+\end_layout
+
+\begin_layout Itemize
+run computation when input data becomes available
+\end_layout
+
+\begin_layout Itemize
+the computation is automatically parallelized, data-driven
+\end_layout
+
+\begin_layout Itemize
+writing output will create a new event
+\end_layout
+
+\begin_layout Standard
+Modify the AWS Lambda model by adding new requirements:
+\end_layout
+
+\begin_layout Itemize
+a Lambda may wait for several unrelated events
+\end_layout
+
+\begin_layout Itemize
+several Lambdas may contend 
+\emph on
+atomically
+\emph default
+ on events
+\end_layout
+
+\begin_layout Standard
+With these new requirements, AWS Lambda becomes a purely functional 
+\emph on
+unrestricted
+\emph default
+ 
+\emph on
+concurrency
+\emph default
+ model
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+The Chemical Machine vs.
+\begin_inset space ~
+\end_inset
+
+the Actor model
 \end_layout
 
 \end_inset
@@ -848,7 +934,7 @@ Code for computations can be purely functional
 status open
 
 \begin_layout Plain Layout
-The Chemical Metaphor
+The chemical metaphor
 \end_layout
 
 \end_inset
@@ -1091,7 +1177,7 @@ in parallel
 status open
 
 \begin_layout Plain Layout
-Chemical Machine in a Nutshell
+Chemical Machine in a nutshell
 \end_layout
 
 \end_inset
@@ -2687,11 +2773,10 @@ Distributed Chemical Machine
 Run concurrent code on a cluster with no code changes
 \end_layout
 
-\begin_layout Standard
-Distributed Chemical Machine:
-\end_layout
-
 \begin_layout Itemize
+\begin_inset VSpace -0.2cm
+\end_inset
+
 Same as CM except some molecules are declared as 
 \begin_inset Quotes eld
 \end_inset
@@ -2707,6 +2792,12 @@ distributed
 No other code changes necessary!
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+early prototype in progress
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 A simple implementation of map/reduce in DCM:
 \end_layout
@@ -2888,6 +2979,7 @@ if (isDriver) {
 \end_layout
 
 \begin_layout Standard
+Comparison: 
 \begin_inset CommandInset href
 LatexCommand href
 name "Akka implementation of distributed map/reduce"
@@ -2925,6 +3017,10 @@ Reasoning in the Distributed Chemical Machine
 \end_layout
 
 \begin_deeper
+\begin_layout Standard
+Distributed computing is made declarative
+\end_layout
+
 \begin_layout Itemize
 All DCM peers operate in the same way (no master/worker)
 \end_layout

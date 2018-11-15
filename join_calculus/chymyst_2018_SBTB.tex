@@ -75,13 +75,6 @@
 \texttt{Chymyst} = an implementation of the Chemical Machine (CM)
 paradigm
 \begin{itemize}
-\item A \emph{declarative language} for concurrent \& parallel computations
-\begin{itemize}
-\item largely unknown and unused by the software engineering community
-\item available as an \href{https://github.com/Chymyst/chymyst-core}{open-source library \& embedded DSL}
-for Scala
-\item presented in my SBTB talks in 2016 and 2017
-\end{itemize}
 \item CM $\approx$ Actors made purely functional and auto-parallelized
 \item Intuitions about why CM works better than other concurrency models
 \begin{itemize}
@@ -94,7 +87,7 @@ Not in this talk: academic theory
 \begin{itemize}
 \item Petri nets, $\pi$-calculus, join calculus, joinads, mobile agent
 calculus...
-\item DCM formulated within some theory of distributed programming?
+\item DCM formulated within some theory of distributed programming
 \end{itemize}
 \end{frame}
 
@@ -120,7 +113,7 @@ Known declarative approaches to avoid these problems:\vspace{-0.5cm}
 \hline 
 \textbf{\footnotesize{}Kind of concurrency} &
 \textbf{\footnotesize{}Formal structure} &
-\textbf{\footnotesize{}Scala code}\tabularnewline
+\textbf{\footnotesize{}Scala implementation}\tabularnewline
 \hline 
 \hline 
 synchronous parallelism &
@@ -129,7 +122,7 @@ Spark, \texttt{\textcolor{blue}{\scriptsize{}.par.map()}}\tabularnewline
 \hline 
 asynchronous streaming DAG &
 monadic functor &
-\texttt{\textcolor{blue}{\scriptsize{}Future}}, \texttt{\textcolor{blue}{\scriptsize{}async}}/\texttt{\textcolor{blue}{\scriptsize{}await}},
+\texttt{\textcolor{blue}{\scriptsize{}Future}}, \texttt{\textcolor{blue}{\scriptsize{}async}}{\footnotesize{}/}\texttt{\textcolor{blue}{\scriptsize{}await}},
 \texttt{\footnotesize{}RxJava}, Akka Streams\tabularnewline
 \hline 
 unrestricted streaming &
@@ -169,12 +162,40 @@ Problem: simulate the process, avoiding deadlock and starvation
 
 Solutions: \href{https://rosettacode.org/wiki/Dining_philosophers}{Rosetta Code}
 \begin{itemize}
-\item Can this be implemented via functional streams? (I think not.)
+\item Can this be implemented via (effectful) streams? (I think not.)
 \item The Chemical Machine code is purely declarative
 \end{itemize}
 \end{frame}
 
-\begin{frame}{From Actors to the Chemical Machine}
+\begin{frame}{Chemical Machine vs.~AWS Lambda}
+
+The Chemical Machine paradigm:
+\begin{itemize}
+\item A \emph{declarative language} for concurrent \& parallel computations
+\begin{itemize}
+\item largely unknown and unused by the software engineering community
+\item available as an \href{https://github.com/Chymyst/chymyst-core}{open-source library \& embedded DSL}
+for Scala
+\item presented in my SBTB talks in 2016 and 2017
+\end{itemize}
+\end{itemize}
+AWS Lambda
+\begin{itemize}
+\item wait for an event, signalling arrival of input data
+\item run computation when input data becomes available
+\item the computation is automatically parallelized, data-driven
+\item writing output will create a new event
+\end{itemize}
+Modify the AWS Lambda model by adding new requirements:
+\begin{itemize}
+\item a Lambda may wait for several unrelated events
+\item several Lambdas may contend \emph{atomically} on events
+\end{itemize}
+With these new requirements, AWS Lambda becomes a purely functional
+\emph{unrestricted} \emph{concurrency} model
+\end{frame}
+
+\begin{frame}{The Chemical Machine vs.~the Actor model}
 
 Modify the Actor model by adding new requirements:
 \begin{itemize}
@@ -225,7 +246,7 @@ messages
 \end{itemize}
 \end{frame}
 
-\begin{frame}{The Chemical Metaphor}
+\begin{frame}{The chemical metaphor}
 
 
 \framesubtitle{From real to abstract chemistry}
@@ -267,7 +288,7 @@ parallel}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Chemical Machine in a Nutshell}
+\begin{frame}{Chemical Machine in a nutshell}
 
 
 \framesubtitle{``Better concurrency through chemistry''}
@@ -573,11 +594,13 @@ workflow management
 
 
 \framesubtitle{Run concurrent code on a cluster with no code changes}
-
-Distributed Chemical Machine:
 \begin{itemize}
-\item Same as CM except some molecules are declared as ``distributed''
+\item \vspace{-0.2cm}
+Same as CM except some molecules are declared as ``distributed''
 \item No other code changes necessary!
+\begin{itemize}
+\item early prototype in progress
+\end{itemize}
 \end{itemize}
 A simple implementation of map/reduce in DCM:
 \begin{lyxcode}
@@ -611,12 +634,13 @@ A simple implementation of map/reduce in DCM:
 
 \textcolor{blue}{\scriptsize{}\}}{\scriptsize\par}
 \end{lyxcode}
-\href{https://github.com/ltronky/MapReduce-akka}{Akka implementation of distributed map/reduce}
+Comparison: \href{https://github.com/ltronky/MapReduce-akka}{Akka implementation of distributed map/reduce}
 (400+ LOC)
 \end{frame}
 
 \begin{frame}{Reasoning in the Distributed Chemical Machine}
 
+Distributed computing is made declarative
 \begin{itemize}
 \item All DCM peers operate in the same way (no master/worker)
 \item All DCM peers need to define the same distributed reaction sites
