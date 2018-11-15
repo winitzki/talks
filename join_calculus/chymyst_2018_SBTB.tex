@@ -112,7 +112,7 @@ Known declarative approaches to avoid these problems:\vspace{-0.5cm}
 \begin{tabular}{|>{\centering}p{0.35\textwidth}|c|>{\centering}p{0.3\textwidth}|}
 \hline 
 \textbf{\footnotesize{}Kind of concurrency} &
-\textbf{\footnotesize{}Formal structure} &
+\textbf{\footnotesize{}Typeclass} &
 \textbf{\footnotesize{}Scala implementation}\tabularnewline
 \hline 
 \hline 
@@ -167,7 +167,7 @@ Solutions in various programming languages: see \href{https://rosettacode.org/wi
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Chemical Machine vs.~AWS Lambda}
+\begin{frame}{Chemical Machine vs.~Amazon's AWS Lambda}
 
 The Chemical Machine paradigm:
 \begin{itemize}
@@ -179,25 +179,25 @@ for Scala
 \item presented in my SBTB talks in 2016 and 2017
 \end{itemize}
 \end{itemize}
-AWS Lambda
+How does AWS$\lambda$ work:
 \begin{itemize}
-\item wait for an event, signalling arrival of input data
-\item run computation when input data becomes available
+\item wait for an event that signals arrival of input data
+\item run a computation whenever input data becomes available
 \item the computation is automatically parallelized, data-driven
-\item writing output will create a new event
+\item writing the output data will create a new event
 \end{itemize}
-Modify the AWS Lambda model by adding new requirements:
+Modify the AWS$\lambda$ execution model by adding new requirements:
 \begin{itemize}
 \item a Lambda should be able to wait for several \emph{unrelated} events
-\item several Lambdas contend \emph{atomically} on shared input events
+\item several Lambdas may contend \emph{atomically} on shared input events
 \end{itemize}
-With these new requirements, AWS Lambda becomes a purely functional
-\emph{unrestricted} \emph{concurrency} model
+With these new requirements, AWS$\lambda$ becomes ``AWS$\pi$''
+-- a purely functional \emph{unrestricted} \emph{concurrency} model
 \end{frame}
 
 \begin{frame}{The Chemical Machine vs.~the Actor model}
 
-Modify the Actor model by adding new requirements:
+Modify the Actor execution model by adding new requirements:
 \begin{itemize}
 \item when messages arrive, actors are auto-created, maybe \emph{in parallel}
 \item actors may wait atomically for messages in \emph{several} different
@@ -252,12 +252,12 @@ Any Actor program can be straightforwardly translated into CM
 
 \framesubtitle{From real to abstract chemistry}
 
-Real chemistry:
+Real chemistry is ``asynchronous'', ``concurrent'', and ``distributed''
 \[
 \text{HCl}+\text{NaOH}\rightarrow\text{NaCl}+\text{H}_{2}\text{O}
 \]
 
-Abstract chemistry:
+Use as inspiration for the execution model of ``abstract chemistry'':
 \begin{itemize}
 \item Abstract ``molecules'' float around in a ``chemical reaction site''
 \item Certain sorts of molecules may combine to start a ``reaction'':
@@ -287,6 +287,8 @@ $\textrm{Ø}$}}
 \item The runtime system evolves the molecules \emph{concurrently} and \emph{in
 parallel}
 \end{itemize}
+Want to run \emph{computations} similarly to how chemical reactions
+run
 \end{frame}
 
 \begin{frame}{Chemical Machine in a nutshell}
@@ -294,7 +296,7 @@ parallel}
 
 \framesubtitle{``Better concurrency through chemistry''}
 
-Translating the chemical metaphor into practice:~\\
+Translating the chemical metaphor into a model of computation:~\\
 ~
 
 \fbox{\begin{minipage}[c][1\totalheight][t]{0.5\columnwidth}%
@@ -331,7 +333,10 @@ $\Rightarrow$}}{\scriptsize\par}
 When a reaction starts: input molecules disappear, new values are
 computed, output molecules are emitted
 
-Reactions are functions from input values to output values
+Reactions are \emph{functions} from input values to output values
+\begin{itemize}
+\item Need to learn how to ``think in molecules''
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Chemical Machine vs.~Actor model}
@@ -368,33 +373,33 @@ Akka code
 
 \begin{frame}{Example: throttling}
 
-Throttle emitting a molecule \texttt{\textcolor{blue}{\footnotesize{}s(x)}}
-with min.~delay of \texttt{\textcolor{blue}{\footnotesize{}delta}}
+Throttle emitting molecules \texttt{\textcolor{blue}{\footnotesize{}s(x)}}
+with minimum allowed delay of \texttt{\textcolor{blue}{\footnotesize{}delta}}
 ms
 \begin{lyxcode}
 \textcolor{blue}{\footnotesize{}def~throttle{[}X{]}(s:~M{[}X{]},~delta:~Long):~M{[}X{]}~=~\{}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}~val~r~=~m{[}X{]}}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~val~allow~=~m{[}Unit{]}}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~val~enable~=~m{[}Unit{]}~}\textcolor{gray}{\scriptsize{}//~This~molecule~is~confined~to~the~local~scope.}{\scriptsize\par}
 
 \textcolor{blue}{\footnotesize{}~site(}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~go~\{~case~r(x)~+~allow(\_)~\ensuremath{\Rightarrow}}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~go~\{~case~r(x)~+~enable(\_)~\ensuremath{\Rightarrow}}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}~~~~~~~~s(x)}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}~~~~~~~~Thread.sleep(delta)}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~~~~~allow()}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~~~~~~~enable()}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}~~~~~\}}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}~)}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~allow()~//~Beginning~of~time;~we~allow~requests.}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~enable()~}\textcolor{gray}{\scriptsize{}//~Enable~emitting~`s`~initially.}{\scriptsize\par}
 
-\textcolor{blue}{\footnotesize{}~r}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~r~}\textcolor{gray}{\scriptsize{}//~Outside~scope~will~be~able~to~emit~`r`.}{\scriptsize\par}
 
 \textcolor{blue}{\footnotesize{}\}}{\footnotesize\par}
 \end{lyxcode}
@@ -405,7 +410,7 @@ at will, and \texttt{\textcolor{blue}{\footnotesize{}s(x)}} is then
 throttled
 \end{itemize}
 \href{ https://github.com/softwaremill/akka-vs-scalaz/tree/master/core/src/main/scala/com/softwaremill/ratelimiter}{Implementations in Akka, in Monix, and ZIO}:
-about 50 LOC each
+> 50 LOC each
 \end{frame}
 
 \begin{frame}{Example: map/reduce}
@@ -442,10 +447,10 @@ A simple map/reduce implementation:
 
 \textcolor{blue}{\scriptsize{}(1~to~100).foreach(x~$\Rightarrow$~c(x))}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}fetch()}\textcolor{gray}{\footnotesize{}~//~Blocking~call~returns~the~final~result.}{\footnotesize\par}
+\textcolor{blue}{\scriptsize{}fetch()}\textcolor{gray}{\footnotesize{}~}\textcolor{gray}{\scriptsize{}//~Blocking~call~will~return~the~final~result.}{\scriptsize\par}
 \end{lyxcode}
 ~\\
-Compare with the \href{https://stackoverflow.com/questions/17291851/mapreduce-implementation-with-akka}{Akka example}
+Compare with the \href{https://stackoverflow.com/questions/17291851/mapreduce-implementation-with-akka}{Akka implementation here}
 (100+ LOC)
 \end{frame}
 
@@ -469,7 +474,11 @@ Compare with the \href{https://stackoverflow.com/questions/17291851/mapreduce-im
 
 \textcolor{blue}{\scriptsize{}~~~~~~~~}\textcolor{brown}{\scriptsize{}site}\textcolor{blue}{\scriptsize{}(}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~~~~go~\{~case~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{}(x)~+~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}(y)~$\Rightarrow$~}\textcolor{brown}{\scriptsize{}sortedResult}\textcolor{blue}{\scriptsize{}(arrayMerge(x,y))~\}}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~~~~~~~~~~go~\{~case~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{}(x)~+~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}(y)~$\Rightarrow$}{\scriptsize\par}
+
+\textcolor{brown}{\scriptsize{}~~~~~~~~~~~~~sortedResult}\textcolor{blue}{\scriptsize{}(arrayMerge(x,y))}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~~~~~~~~~~~\}}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}~~~~~~~~)}{\scriptsize\par}
 
@@ -483,9 +492,8 @@ Compare with the \href{https://stackoverflow.com/questions/17291851/mapreduce-im
 
 \textcolor{blue}{\scriptsize{}\})}{\scriptsize\par}
 \end{lyxcode}
-~\\
 \href{https://gist.github.com/stephenmcd/7edbcfb632c373eaf466}{Implementation in Akka}:
-25 LOC for the same functionality
+30 LOC for the same functionality
 \end{frame}
 
 \begin{frame}{Example: Dining philosophers}
@@ -533,19 +541,18 @@ Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/
 
 For more examples, see the \href{https://github.com/Chymyst/chymyst-core}{code repository}
 (first-of, barriers, rendezvous, critical sections, readers/writers,
-Game of Life, 8 queens, etc.)
+Game of Life, elevators, etc.)
 \end{frame}
 
 \begin{frame}{Reasoning about code in the Chemical Machine paradigm}
 
-Chemical metaphor vs.~concurrent data metaphor:
+Reasoning about concurrent data:
 \begin{itemize}
 \item Emit molecule with value $\approx$ lift data into the ``concurrent
 world''
 \item Define reaction $\approx$ lift a function into the ``concurrent
 world''
 \item Reaction site $\approx$ container for concurrent functions and data
-items
 \item Reaction consumes molecules $\approx$ function consumes input values
 \item Reaction emits molecules $\approx$ function returns result values
 \end{itemize}
@@ -558,15 +565,15 @@ Guarantees:
 \begin{itemize}
 \item Molecule emitters and reactions are immutable values in local scopes
 \item Reaction sites are immutable once activated; can refactor to libraries
-\item Molecules are consumed atomically by reactions
+\item Multiple input molecules are consumed atomically by reactions
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Current features of \texttt{Chymyst}}
 
 \begin{itemize}
-\item Blocking molecules with timeouts
-\item Automatic pipelining of molecules
+\item Blocking molecules with timeouts and back-signalling
+\item Automatic pipelining of molecules (ordered mailboxes)
 \item ``Static'' molecules with read-only access (similar to Akka ``agents'')
 \item Compile-time and early run-time DSL error reporting
 \item Logging, debugging, unit-testing facilities
@@ -576,7 +583,7 @@ Guarantees:
 
 \begin{frame}{Related frameworks: Petri nets}
 
-Workflow management with an approach based on \href{https://en.wikipedia.org/wiki/Petri_net}{Petri nets}
+Workflow management: an approach based on \href{https://en.wikipedia.org/wiki/Petri_net}{Petri nets}
 \begin{itemize}
 \item \href{https://github.com/ing-bank/baker}{ING Baker} -- a DSL for
 workflow management
@@ -597,8 +604,8 @@ workflow management
 \framesubtitle{Run concurrent code on a cluster with no code changes}
 \begin{itemize}
 \item \vspace{-0.2cm}
-Same as CM except some molecules are declared as ``distributed''
-\item No other code changes necessary!
+Some molecules are declared as ``distributed'', of type \texttt{\textcolor{blue}{\scriptsize{}DM{[}T{]}}}{\scriptsize\par}
+\item No other new language constructions are necessary!
 \begin{itemize}
 \item early prototype in progress
 \end{itemize}
@@ -667,16 +674,25 @@ Examples (see documentation)
 
 \begin{itemize}
 \item Each reaction site has a scheduler thread and a worker thread pool
-\item Each molecule is bound to a unique reaction site and is stored there
+\item Each molecule is ``bound'' to a unique reaction site
+\item Each emitted molecule is stored in a multi-set at its reaction site
 \item Each emitted molecule triggers a search for possible reactions
+\begin{itemize}
+\item Reaction search proceeds concurrently for different reaction sites
+\end{itemize}
 \item Reactions are scheduled on the worker thread pool
-\item Each reaction may emit further molecules
+\begin{itemize}
+\item The thread pool can be configured per-reaction or per-site
+\end{itemize}
 \item Scala macros are used for static analysis and optimizations
 \begin{itemize}
 \item Automatically pipelined molecules
 \item Simplify and analyze Boolean conditions
 \end{itemize}
-\item Some error analysis is performed at early run time
+\item Error analysis is also performed at early run time
+\begin{itemize}
+\item Reaction site with errors remain inactive
+\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -685,13 +701,19 @@ Examples (see documentation)
 \begin{itemize}
 \item Each distributed molecule (DM) is bound to a unique reaction site
 \item Emitted DM data goes into the ZK instance
-\item Each DCM peer listens to ZK messages and checks for DMs
+\item Each DCM peer listens to ZK messages and checks for its DMs
+\begin{itemize}
+\item Once a DM is found, its data is downloaded and deserialized
+\end{itemize}
 \item On a DCM peer, each DM is identified with a unique local RS
 \begin{itemize}
-\item In this way, downloaded molecules can be emitted locally
-\item All DCM peers must run identical reaction code 
+\item Downloaded molecules are emitted into the local RS to run reactions
+\item All DCM peers must run identical reaction code for DMs
 \end{itemize}
 \item Each DCM peer acquires a distributed lock on its DMs
+\begin{itemize}
+\item Lock is released once reaction scheduling is complete
+\end{itemize}
 \item If a node goes down or network fails, molecules will be \emph{unconsumed}
 \begin{itemize}
 \item Another DCM peer will pick up these molecules later
@@ -702,10 +724,10 @@ Examples (see documentation)
 \begin{frame}{Conclusions and outlook}
 
 \begin{itemize}
-\item Chemical machine = declarative, purely functional concurrency
+\item Chemical Machine = declarative, purely functional concurrency
 \begin{itemize}
 \item Similar to ``Actors'', but easier to use and ``more purely functional''
-\item Short, declarative code implementing barriers, rendezvous, etc.
+\item Significantly shorter code, easier to reason about
 \end{itemize}
 \item An open-source Scala implementation: \texttt{\href{https://github.com/Chymyst/chymyst-core}{Chymyst}}
 \begin{itemize}
@@ -713,7 +735,6 @@ Examples (see documentation)
 \item Industry-strength features (thread priority control, pipelining, fault
 tolerance, unit testing and debugging APIs)
 \item Extensive documentation: \href{https://winitzki.gitbooks.io/concurrency-in-reactions-declarative-multicore-in/content/}{tutorial book}
-and \href{https://github.com/winitzki/talks/blob/master/join-calculus-paper/join-calculus-paper.pdf}{draft paper}
 \end{itemize}
 \item Promising applications:
 \begin{itemize}
@@ -721,13 +742,14 @@ and \href{https://github.com/winitzki/talks/blob/master/join-calculus-paper/join
 \item Distributed peer-to-peer systems
 \item Process modeling, GUIs, BPM
 \end{itemize}
-\item Example code for \href{https://github.com/winitzki/talks/blob/master/join_calculus/join_calculus_2017_SBTB.pdf}{this talk}:
-{\footnotesize{}\href{https://github.com/Chymyst/jc-talk-2017-examples}{github.com/Chymyst/jc-talk-2017-examples}}{\footnotesize\par}
+\item Distributed Chemical Machine in the works
 \end{itemize}
 \end{frame}
 
 \end{document}
-}{github.com/Chymyst/jc-talk-2017-examples}}{\footnotesize\par}
+M
+\end{itemize}
+\item Distributed Chemical Machine in the works
 \end{itemize}
 \end{frame}
 
