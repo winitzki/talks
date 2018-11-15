@@ -1551,6 +1551,9 @@ Actor model
 
 \begin_deeper
 \begin_layout Itemize
+\begin_inset VSpace -0.5cm
+\end_inset
+
 reaction 
 \begin_inset Formula $\approx$
 \end_inset
@@ -1623,7 +1626,15 @@ user code does not manipulate references to processes
 
 \begin_deeper
 \begin_layout Itemize
-no state, no supervision, no lifecycle to manage
+no state, no supervision, no lifecycle, no 
+\begin_inset Quotes eld
+\end_inset
+
+dead letters
+\begin_inset Quotes erd
+\end_inset
+
+, no routers
 \end_layout
 
 \end_deeper
@@ -1639,6 +1650,12 @@ data
  currently available on molecules
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+no reasoning about running processes having state
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Standard
 
@@ -2684,6 +2701,69 @@ Reaction sites are immutable once activated; can refactor to libraries
 
 \begin_layout Itemize
 Multiple input molecules are consumed atomically by reactions
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Chemical Machine paradigm to become mainstream in 2033
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset VSpace -0.2cm
+\end_inset
+
+The Chemical Machine paradigm was 
+\begin_inset CommandInset href
+LatexCommand href
+name "invented in 1995"
+target "http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.32.3078"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The gap from academic invention to industry adoption is 38.2 years (declarative
+ math, map/reduce, continuations, OOP, CSP, Actors, constraint programming,
+ DAG dataflow, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+-functions, Hindley-Milner)
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 40-year-gap.png
+	width 70text%
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper

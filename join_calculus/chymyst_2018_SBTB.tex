@@ -342,7 +342,8 @@ Reactions are \emph{functions} from input values to output values
 \begin{frame}{Chemical Machine vs.~Actor model}
 
 \begin{itemize}
-\item reaction $\approx$ template for an (auto-started) actor
+\item \vspace{-0.5cm}
+reaction $\approx$ template for an (auto-started) actor
 \item emitted molecule with value $\approx$ message with value, in a mailbox
 \item molecule emitters $\approx$ mailbox references
 \end{itemize}
@@ -361,10 +362,14 @@ Programming with the Chemical Machine:
 \begin{itemize}
 \item user code does not manipulate references to processes
 \begin{itemize}
-\item no state, no supervision, no lifecycle to manage
+\item no state, no supervision, no lifecycle, no ``dead letters'', no
+routers
 \end{itemize}
 \item reasoning is \emph{only} about the \emph{data} currently available
 on molecules
+\begin{itemize}
+\item no reasoning about running processes having state
+\end{itemize}
 \end{itemize}
 \end{itemize}
 \texttt{Chymyst} code is typically 2x -- 3x shorter than equivalent
@@ -569,6 +574,21 @@ Guarantees:
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Chemical Machine paradigm to become mainstream in 2033}
+
+\begin{itemize}
+\item \vspace{-0.2cm}
+The Chemical Machine paradigm was \href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.32.3078}{invented in 1995}
+\item The gap from academic invention to industry adoption is 38.2 years
+(declarative math, map/reduce, continuations, OOP, CSP, Actors, constraint
+programming, DAG dataflow, $\lambda$-functions, Hindley-Milner)
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{40-year-gap}
+\par\end{center}
+
+\end{frame}
+
 \begin{frame}{Current features of \texttt{Chymyst}}
 
 \begin{itemize}
@@ -747,7 +767,8 @@ tolerance, unit testing and debugging APIs)
 \end{frame}
 
 \end{document}
-M
+peer-to-peer systems
+\item Process modeling, GUIs, BPM
 \end{itemize}
 \item Distributed Chemical Machine in the works
 \end{itemize}
