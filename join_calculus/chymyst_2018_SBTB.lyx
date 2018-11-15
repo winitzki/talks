@@ -183,7 +183,7 @@ Petri nets,
 \end_layout
 
 \begin_layout Itemize
-DCM formulated within some theory of distributed programming
+DCM formulated within a theory of distributed programming?
 \end_layout
 
 \end_deeper
@@ -970,7 +970,7 @@ Any Actor program can be straightforwardly translated into CM
 status open
 
 \begin_layout Plain Layout
-The chemical metaphor
+Understanding the CM via the chemical metaphor
 \end_layout
 
 \end_inset
@@ -1237,7 +1237,7 @@ Want to run
 \emph on
 computations
 \emph default
- similarly to how chemical reactions run
+ similarly to how chemical reactions run!
 \end_layout
 
 \end_deeper
