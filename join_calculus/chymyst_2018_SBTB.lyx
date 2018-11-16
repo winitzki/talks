@@ -3240,7 +3240,7 @@ literal "false"
 status open
 
 \begin_layout Plain Layout
-Distributed cache in 10 lines of code
+Distributed cache in 10 LOC
 \end_layout
 
 \end_inset
@@ -3501,7 +3501,7 @@ site(go { case users(es) + carrier(e)
 \begin_inset Formula $\Rightarrow$
 \end_inset
 
- r(es) } )
+ users(es); r(es) } )
 \end_layout
 
 \begin_layout LyX-Code
