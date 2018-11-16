@@ -305,7 +305,7 @@ $\textrm{Ø}$}}
 \begin{frame}{Chemical Machine in a nutshell}
 
 
-\framesubtitle{``Better concurrency through chemistry''}
+\framesubtitle{From abstract chemistry to computation}
 
 Translating the chemical metaphor into a model of computation:~\\
 ~
@@ -354,7 +354,7 @@ Reactions are \emph{functions} from input values to output values
 
 \begin{itemize}
 \item \vspace{-0.3cm}
-reaction $\approx$ template for an (auto-started) actor
+reaction $\approx$ function body for an (auto-started) actor
 \item emitted molecule with value $\approx$ message with value, in a mailbox
 \item molecule emitters $\approx$ mailbox references
 \end{itemize}
@@ -369,14 +369,14 @@ Programming with actors:
 Programming with the Chemical Machine:
 \begin{itemize}
 \item processes auto-start when the needed input molecules are available
-\item many reactions may start at once, automatically parallel
+\item many reactions may start at once, with automatic parallelism
 \begin{itemize}
 \item user code does not manipulate references to processes
 \begin{itemize}
 \item no state, no supervision, no lifecycle, no ``dead letters'', no
 routers
 \end{itemize}
-\item reasoning is \emph{only} about the \emph{data} currently available
+\item reasoning is \emph{only} about the \emph{data} \emph{currently} \emph{available}
 on molecules
 \begin{itemize}
 \item no reasoning about running processes having state

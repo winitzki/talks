@@ -1303,14 +1303,7 @@ Chemical Machine in a nutshell
 
 \begin_deeper
 \begin_layout FrameSubtitle
-\begin_inset Quotes eld
-\end_inset
-
-Better concurrency through chemistry
-\begin_inset Quotes erd
-\end_inset
-
-
+From abstract chemistry to computation
 \end_layout
 
 \begin_layout Standard
@@ -1594,7 +1587,7 @@ reaction
 \begin_inset Formula $\approx$
 \end_inset
 
- template for an (auto-started) actor
+ function body for an (auto-started) actor
 \end_layout
 
 \begin_layout Itemize
@@ -1652,7 +1645,7 @@ processes auto-start when the needed input molecules are available
 \end_layout
 
 \begin_layout Itemize
-many reactions may start at once, automatically parallel
+many reactions may start at once, with automatic parallelism
 \end_layout
 
 \begin_deeper
@@ -1683,7 +1676,15 @@ only
 \emph on
 data
 \emph default
- currently available on molecules
+ 
+\emph on
+currently
+\emph default
+ 
+\emph on
+available
+\emph default
+ on molecules
 \end_layout
 
 \begin_deeper
