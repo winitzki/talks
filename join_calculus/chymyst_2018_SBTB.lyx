@@ -149,25 +149,31 @@ CM
 \begin_inset Formula $\approx$
 \end_inset
 
- Actors made purely functional and auto-parallelized
+ AWS
+\begin_inset Formula $\lambda$
+\end_inset
+
+ with atomic multiple triggers
 \end_layout
 
 \begin_layout Itemize
-Intuitions about why CM works better than other concurrency models
+CM 
+\begin_inset Formula $\approx$
+\end_inset
+
+ Actors made typesafe, stateless, auto-created, auto-parallelized
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
-Comparison with related work: ING Baker, BPMN (workflow)
+Intuitions about why CM is easier than other concurrency models
 \end_layout
 
-\end_deeper
 \begin_layout Itemize
 New extension for distributed programming: DCM
 \end_layout
 
 \begin_layout Itemize
-Code examples
+Code examples: implement anything in 15 LOC
 \end_layout
 
 \begin_layout Standard
