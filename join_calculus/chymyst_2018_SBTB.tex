@@ -667,6 +667,40 @@ Comparison: \href{https://github.com/ltronky/MapReduce-akka}{Akka implementation
 (400+ LOC)
 \end{frame}
 
+\begin{frame}{Distributed cache in 10 lines of code}
+
+\begin{itemize}
+\item \vspace{-0.2cm}
+Mutable \texttt{\textcolor{blue}{\scriptsize{}Map{[}String, String{]}}}
+with operations: \texttt{\textcolor{blue}{\scriptsize{}put}}, \texttt{\textcolor{blue}{\scriptsize{}get}},
+\texttt{\textcolor{blue}{\scriptsize{}delete}}{\scriptsize\par}
+\end{itemize}
+\begin{lyxcode}
+\textcolor{blue}{\scriptsize{}val~data~=~dm{[}mutable.Map{[}String,~String{]}{]}}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}val~put~=~dm{[}(String,~String){]}}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}val~get~=~dm{[}(String,~M{[}Option{[}String{]}{]}{]}}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}val~delete~=~dm{[}String{]}}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}site(}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~go~\{~case~data(dict)~+~put((k,~v))~$\Rightarrow$~data(dict.updated(k,~v))~\},}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~go~\{~case~data(dict)~+~get((k,~r))~$\Rightarrow$~data(dict);~r(dict.get(k))~\},}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~go~\{~case~data(dict)~+~delete(k)~$\Rightarrow$~dict.remove(k);~data(dict)~\}}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{})}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}if~(isDriver)~data(mutable.Map{[}String,~String{]}())}{\scriptsize\par}
+\end{lyxcode}
+\begin{itemize}
+\item Comparison: \href{https://medium.com/@hussachai/creating-a-distributed-cache-in-100-lines-with-akka-5387bd7310fd}{Distributed cache in 100 lines of Akka}
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Reasoning in the Distributed Chemical Machine}
 
 Distributed computing is made declarative

@@ -3189,6 +3189,172 @@ literal "false"
 status open
 
 \begin_layout Plain Layout
+Distributed cache in 10 lines of code
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset VSpace -0.2cm
+\end_inset
+
+Mutable 
+\family typewriter
+\size scriptsize
+\color blue
+Map[String, String]
+\family default
+\size default
+\color inherit
+ with operations: 
+\family typewriter
+\size scriptsize
+\color blue
+put
+\family default
+\size default
+\color inherit
+, 
+\family typewriter
+\size scriptsize
+\color blue
+get
+\family default
+\size default
+\color inherit
+, 
+\family typewriter
+\size scriptsize
+\color blue
+delete
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val data = dm[mutable.Map[String, String]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val put = dm[(String, String)]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val get = dm[(String, M[Option[String]]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val delete = dm[String]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+site(
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+ go { case data(dict) + put((k, v)) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ data(dict.updated(k, v)) },
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+ go { case data(dict) + get((k, r)) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ data(dict); r(dict.get(k)) },
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+ go { case data(dict) + delete(k) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ dict.remove(k); data(dict) }
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+if (isDriver) data(mutable.Map[String, String]())
+\end_layout
+
+\begin_layout Itemize
+Comparison: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Distributed cache in 100 lines of Akka"
+target "https://medium.com/@hussachai/creating-a-distributed-cache-in-100-lines-with-akka-5387bd7310fd"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
 Reasoning in the Distributed Chemical Machine
 \end_layout
 
