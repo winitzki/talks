@@ -510,7 +510,7 @@ Dining philosophers
 
 \begin_deeper
 \begin_layout FrameSubtitle
-The paradigmatic problem of concurrency, parallelism and resource contention
+The paradigmatic example of concurrency, parallelism and resource contention
 \end_layout
 
 \begin_layout Standard
@@ -726,15 +726,15 @@ AWS
 \begin_inset Quotes erd
 \end_inset
 
- – a purely functional 
-\emph on
-unrestricted
-\emph default
- 
-\emph on
-concurrency
-\emph default
- model
+ – a model of 
+\begin_inset Quotes eld
+\end_inset
+
+unrestricted concurrency
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -1058,7 +1058,15 @@ distributed
 \end_layout
 
 \begin_layout Standard
-Use as inspiration for the execution model of 
+Want to run 
+\emph on
+computations
+\emph default
+ similarly to how chemical reactions run!
+\end_layout
+
+\begin_layout Standard
+Begin by formulating the execution model of 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1264,14 +1272,6 @@ concurrently
  and 
 \emph on
 in parallel
-\end_layout
-
-\begin_layout Standard
-Want to run 
-\emph on
-computations
-\emph default
- similarly to how chemical reactions run!
 \end_layout
 
 \end_deeper

@@ -149,7 +149,7 @@ For distributed computing: challenges remain
 \begin{frame}{``Dining philosophers''}
 
 
-\framesubtitle{The paradigmatic problem of concurrency, parallelism and resource
+\framesubtitle{The paradigmatic example of concurrency, parallelism and resource
 contention}
 
 \href{https://en.wikipedia.org/wiki/Dining_philosophers_problem}{Five philosophers sit at a round table},
@@ -197,7 +197,7 @@ Modify the AWS$\lambda$ execution model by adding new requirements:
 \item several Lambdas may contend \emph{atomically} on shared input events
 \end{itemize}
 With these new requirements, AWS$\lambda$ becomes ``AWS$\pi$''
--- a purely functional \emph{unrestricted} \emph{concurrency} model
+-- a model of ``unrestricted concurrency''
 \begin{itemize}
 \item (Implementation on AWS will be tricky)
 \end{itemize}
@@ -265,7 +265,10 @@ Real chemistry is ``asynchronous'', ``concurrent'', and ``distributed''
 \text{HCl}+\text{NaOH}\rightarrow\text{NaCl}+\text{H}_{2}\text{O}
 \]
 
-Use as inspiration for the execution model of ``abstract chemistry'':
+Want to run \emph{computations} similarly to how chemical reactions
+run!
+
+Begin by formulating the execution model of ``abstract chemistry'':
 \begin{itemize}
 \item Abstract ``molecules'' float around in a ``chemical reaction site''
 \item Certain sorts of molecules may combine to start a ``reaction'':
@@ -295,8 +298,6 @@ $\textrm{Ø}$}}
 \item The runtime system evolves the molecules \emph{concurrently} and \emph{in
 parallel}
 \end{itemize}
-Want to run \emph{computations} similarly to how chemical reactions
-run!
 \end{frame}
 
 \begin{frame}{Chemical Machine in a nutshell}
