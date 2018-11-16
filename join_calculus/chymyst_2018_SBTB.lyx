@@ -555,9 +555,15 @@ literal "false"
 \end_layout
 
 \begin_layout Itemize
-Can this be implemented via (effectful) streams? (I think not.)
+Can this be implemented via (effectful) streams?
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+(I think not: a stream expression can be run on a single CPU thread.)
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 The Chemical Machine code is purely declarative
 \end_layout
@@ -628,7 +634,7 @@ presented in my SBTB talks in 2016 and 2017
 
 \end_deeper
 \begin_layout Itemize
-Implement anything in 10 lines of code
+Implement anything in 10-15 lines of code
 \end_layout
 
 \begin_layout Itemize
@@ -3023,7 +3029,7 @@ Chymyst
 
 \end_deeper
 \begin_layout Standard
-A simple implementation of map/reduce in DCM: 15 LOC
+Distributed map/reduce in 15 LOC:
 \end_layout
 
 \begin_layout LyX-Code

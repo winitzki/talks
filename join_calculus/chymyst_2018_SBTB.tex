@@ -162,7 +162,10 @@ Problem: simulate the process, avoiding deadlock and starvation
 
 Solutions in various programming languages: see \href{https://rosettacode.org/wiki/Dining_philosophers}{Rosetta Code}
 \begin{itemize}
-\item Can this be implemented via (effectful) streams? (I think not.)
+\item Can this be implemented via (effectful) streams?
+\begin{itemize}
+\item (I think not: a stream expression can be run on a single CPU thread.)
+\end{itemize}
 \item The Chemical Machine code is purely declarative
 \end{itemize}
 \end{frame}
@@ -178,7 +181,7 @@ The Chemical Machine paradigm:
 for Scala
 \item presented in my SBTB talks in 2016 and 2017
 \end{itemize}
-\item Implement anything in 10 lines of code
+\item Implement anything in 10-15 lines of code
 \item Derive programs quickly from specifications
 \end{itemize}
 \end{frame}
@@ -643,7 +646,7 @@ Declare some molecules as ``distributed'', of type \texttt{\textcolor{blue}{\scr
 \item early prototype in progress, as extension of \texttt{Chymyst}
 \end{itemize}
 \end{itemize}
-A simple implementation of map/reduce in DCM: 15 LOC
+Distributed map/reduce in 15 LOC:
 \begin{lyxcode}
 \textcolor{blue}{\scriptsize{}implicit~val~cluster~=~ClusterConfig(???)}{\scriptsize\par}
 
