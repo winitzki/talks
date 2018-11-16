@@ -1267,13 +1267,15 @@ At initial time, the code emits some molecules into the site
 \begin_layout Itemize
 The runtime system evolves the molecules 
 \emph on
-concurrently
-\emph default
- and 
-\emph on
 in parallel
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+A simulator for this is easy to implement in any language
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator parbreak
