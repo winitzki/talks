@@ -3016,12 +3016,14 @@ No other new language constructions are necessary!
 
 \begin_deeper
 \begin_layout Itemize
-early prototype in progress
+early prototype in progress, as extension of 
+\family typewriter
+Chymyst
 \end_layout
 
 \end_deeper
 \begin_layout Standard
-A simple implementation of map/reduce in DCM:
+A simple implementation of map/reduce in DCM: 15 LOC
 \end_layout
 
 \begin_layout LyX-Code
@@ -3048,7 +3050,10 @@ val c = dm[Int] ; val d = dm[Int]
 \family typewriter
 \size scriptsize
 \color blue
-val res = m[(Int, List[Int])]
+val res = m[(Int, List[Int])] 
+\family default
+\color gray
+// local
 \end_layout
 
 \begin_layout LyX-Code
@@ -3279,6 +3284,14 @@ delete
 \family typewriter
 \size scriptsize
 \color blue
+implicit val cluster = ClusterConfig(???)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
 val data = dm[mutable.Map[String, String]]
 \end_layout
 
@@ -3422,7 +3435,15 @@ Emit initial molecules and let the DCM run
 \end_layout
 
 \begin_layout Standard
-Peer-to-peer architecture
+Pure peer-to-peer architecture
+\end_layout
+
+\begin_layout Itemize
+Distributed molecules may be consumed by 
+\emph on
+any
+\emph default
+ DCM peer
 \end_layout
 
 \begin_layout Itemize
@@ -3447,14 +3468,6 @@ driver
 \end_layout
 
 \end_deeper
-\begin_layout Itemize
-Distributed molecules may be consumed by 
-\emph on
-any
-\emph default
- DCM peer
-\end_layout
-
 \begin_layout Standard
 Examples (see documentation)
 \end_layout

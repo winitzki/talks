@@ -640,16 +640,16 @@ A Petri net model is straightforwardly translated into a CM program
 Some molecules are declared as ``distributed'', of type \texttt{\textcolor{blue}{\scriptsize{}DM{[}T{]}}}{\scriptsize\par}
 \item No other new language constructions are necessary!
 \begin{itemize}
-\item early prototype in progress
+\item early prototype in progress, as extension of \texttt{Chymyst}
 \end{itemize}
 \end{itemize}
-A simple implementation of map/reduce in DCM:
+A simple implementation of map/reduce in DCM: 15 LOC
 \begin{lyxcode}
 \textcolor{blue}{\scriptsize{}implicit~val~cluster~=~ClusterConfig(???)}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}val~c~=~dm{[}Int{]}~;~val~d~=~dm{[}Int{]}}\textcolor{gray}{\scriptsize{}~//~distributed}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}val~res~=~m{[}(Int,~List{[}Int{]}){]}}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~res~=~m{[}(Int,~List{[}Int{]}){]}~}\textcolor{gray}{\scriptsize{}//~local}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}val~fetch~=~b{[}Unit,~List{[}Int{]}{]}}{\scriptsize\par}
 
@@ -688,6 +688,8 @@ with operations: \texttt{\textcolor{blue}{\scriptsize{}put}}, \texttt{\textcolor
 \texttt{\textcolor{blue}{\scriptsize{}delete}}{\scriptsize\par}
 \end{itemize}
 \begin{lyxcode}
+\textcolor{blue}{\scriptsize{}implicit~val~cluster~=~ClusterConfig(???)}{\scriptsize\par}
+
 \textcolor{blue}{\scriptsize{}val~data~=~dm{[}mutable.Map{[}String,~String{]}{]}}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}val~put~=~dm{[}(String,~String){]}}{\scriptsize\par}
@@ -721,14 +723,14 @@ Distributed computing is made declarative
 \item Determine which computations will need to consume that data
 \item Emit initial molecules and let the DCM run
 \end{itemize}
-Peer-to-peer architecture
+Pure peer-to-peer architecture
 \begin{itemize}
+\item Distributed molecules may be consumed by \emph{any} DCM peer
 \item All DCM peers operate in the same way (no master/worker)
 \item All DCM peers need to define the same distributed reaction sites
 \begin{itemize}
 \item To designate a DCM peer as a ``driver'', use config files
 \end{itemize}
-\item Distributed molecules may be consumed by \emph{any} DCM peer
 \end{itemize}
 Examples (see documentation)
 \begin{itemize}
