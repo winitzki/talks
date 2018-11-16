@@ -2995,7 +2995,7 @@ Run concurrent code on a cluster with no code changes
 \begin_inset VSpace -0.2cm
 \end_inset
 
-Some molecules are declared as 
+Declare some molecules as 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3114,7 +3114,7 @@ reduce
 \begin_inset Quotes erd
 \end_inset
 
- on the driver node only
+ on the driver node only.
 \end_layout
 
 \begin_layout LyX-Code
@@ -3168,10 +3168,7 @@ reduce
 if (isDriver) {
 \family default
 \color gray
- // `true` only on the driver node
-\family typewriter
-\color blue
- 
+ // `true` only on the driver node.
 \end_layout
 
 \begin_layout LyX-Code
@@ -3385,6 +3382,219 @@ Comparison:
 LatexCommand href
 name "Distributed cache in 100 lines of Akka"
 target "https://medium.com/@hussachai/creating-a-distributed-cache-in-100-lines-with-akka-5387bd7310fd"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Distributed peer-to-peer chat in 15 LOC
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset VSpace -0.2cm
+\end_inset
+
+Register user names in chat room
+\end_layout
+
+\begin_layout Itemize
+Fetch list of users
+\end_layout
+
+\begin_layout Itemize
+Send and receive text messages
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+implicit val cluster = ClusterConfig(???)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val users = dm[List[DM[String]]]
+\family default
+\color gray
+ // List of users' message emitters.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val carrier = dm[DM[String]]
+\family default
+\color gray
+ // Carries this node's message emitter.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val fetch = b[Unit, List[DM[String]]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+site(go { case users(es) + carrier(e) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ users(e :: es) }
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+, go { case users(es) + fetch(_, r) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ r(es) } )
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val peerName = ???
+\family default
+\color gray
+ // Read from config on node.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val sender = new DM[String](peerName) 
+\family default
+\color gray
+// Assign unique molecule name.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+site(go { case sender(x) ⇒ println(s"Peer $peerName reads $x")})
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+   
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+carrier(sender)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+if (isDriver) users(Nil)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color gray
+// Fetch list of users and send a message to Sergei if present.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+fetch()
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  .find(_.name == "Sergei")
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  .foreach(sender 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ sender("hello"))
+\end_layout
+
+\begin_layout Itemize
+Comparison: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Distributed chat in > 100 lines of Akka"
+target "https://github.com/typesafehub/activator-akka-clustering/tree/master/src/main/scala/chat"
 literal "false"
 
 \end_inset

@@ -637,7 +637,7 @@ A Petri net model is straightforwardly translated into a CM program
 \framesubtitle{Run concurrent code on a cluster with no code changes}
 \begin{itemize}
 \item \vspace{-0.2cm}
-Some molecules are declared as ``distributed'', of type \texttt{\textcolor{blue}{\scriptsize{}DM{[}T{]}}}{\scriptsize\par}
+Declare some molecules as ``distributed'', of type \texttt{\textcolor{blue}{\scriptsize{}DM{[}T{]}}}{\scriptsize\par}
 \item No other new language constructions are necessary!
 \begin{itemize}
 \item early prototype in progress, as extension of \texttt{Chymyst}
@@ -657,7 +657,7 @@ A simple implementation of map/reduce in DCM: 15 LOC
 
 \textcolor{blue}{\scriptsize{}~~go~\{~case~c(x)~$\Rightarrow$~d(x~{*}~2)~\},}\textcolor{gray}{\scriptsize{}~~//~``map''~on~cluster,}\textcolor{blue}{\scriptsize{}~}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~}\textcolor{gray}{\scriptsize{}//~``reduce''~on~the~driver~node~only}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~}\textcolor{gray}{\scriptsize{}//~``reduce''~on~the~driver~node~only.}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}~~go~\{~case~res((n,~list))~+~d(x)~$\Rightarrow$~res((n-1,~s::list))~\},}{\scriptsize\par}
 
@@ -667,7 +667,7 @@ A simple implementation of map/reduce in DCM: 15 LOC
 
 \textcolor{blue}{\scriptsize{})}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}if~(isDriver)~\{}\textcolor{gray}{\scriptsize{}~//~`true`~only~on~the~driver~node}\textcolor{blue}{\scriptsize{}~}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}if~(isDriver)~\{}\textcolor{gray}{\scriptsize{}~//~`true`~only~on~the~driver~node.}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}~~Seq(1,~2,~3).foreach(x~$\Rightarrow$~c(x))}{\scriptsize\par}
 
@@ -712,6 +712,54 @@ with operations: \texttt{\textcolor{blue}{\scriptsize{}put}}, \texttt{\textcolor
 \end{lyxcode}
 \begin{itemize}
 \item Comparison: \href{https://medium.com/@hussachai/creating-a-distributed-cache-in-100-lines-with-akka-5387bd7310fd}{Distributed cache in 100 lines of Akka}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Distributed peer-to-peer chat in 15 LOC}
+
+\begin{itemize}
+\item \vspace{-0.2cm}
+Register user names in chat room
+\item Fetch list of users
+\item Send and receive text messages
+\end{itemize}
+\begin{lyxcode}
+\textcolor{blue}{\scriptsize{}implicit~val~cluster~=~ClusterConfig(???)}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}val~users~=~dm{[}List{[}DM{[}String{]}{]}{]}}\textcolor{gray}{\scriptsize{}~//~List~of~users'~message~emitters.}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}val~carrier~=~dm{[}DM{[}String{]}{]}}\textcolor{gray}{\scriptsize{}~//~Carries~this~node's~message~emitter.}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}val~fetch~=~b{[}Unit,~List{[}DM{[}String{]}{]}{]}}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}site(go~\{~case~users(es)~+~carrier(e)~$\Rightarrow$~users(e~::~es)~\}}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{},~go~\{~case~users(es)~+~fetch(\_,~r)~$\Rightarrow$~r(es)~\}~)}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}val~peerName~=~???}\textcolor{gray}{\scriptsize{}~//~Read~from~config~on~node.}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}val~sender~=~new~DM{[}String{]}(peerName)~}\textcolor{gray}{\scriptsize{}//~Assign~unique~molecule~name.}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}site(go~\{~case~sender(x)~\ensuremath{\Rightarrow}~println(s\textquotedbl Peer~\$peerName~reads~\$x\textquotedbl )\})}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~~}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}carrier(sender)}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}if~(isDriver)~users(Nil)}{\scriptsize\par}
+
+\textcolor{gray}{\scriptsize{}//~Fetch~list~of~users~and~send~a~message~to~Sergei~if~present.}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}fetch()}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~.find(\_.name~==~\textquotedbl Sergei\textquotedbl )}{\scriptsize\par}
+
+\textcolor{blue}{\scriptsize{}~~.foreach(sender~$\Rightarrow$~sender(\textquotedbl hello\textquotedbl ))}{\scriptsize\par}
+\end{lyxcode}
+\begin{itemize}
+\item Comparison: \href{https://github.com/typesafehub/activator-akka-clustering/tree/master/src/main/scala/chat}{Distributed chat in > 100 lines of Akka}
 \end{itemize}
 \end{frame}
 
