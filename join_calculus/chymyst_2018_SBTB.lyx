@@ -627,6 +627,10 @@ presented in my SBTB talks in 2016 and 2017
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+Implement anything in 10 lines of code
+\end_layout
+
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator parbreak
@@ -731,6 +735,10 @@ unrestricted
 concurrency
 \emph default
  model
+\end_layout
+
+\begin_layout Itemize
+(Implementation on AWS will be tricky)
 \end_layout
 
 \end_deeper
