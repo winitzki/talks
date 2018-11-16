@@ -627,8 +627,12 @@ presented in my SBTB talks in 2016 and 2017
 \end_layout
 
 \end_deeper
-\begin_layout Standard
+\begin_layout Itemize
 Implement anything in 10 lines of code
+\end_layout
+
+\begin_layout Itemize
+Derive programs quickly from specifications
 \end_layout
 
 \end_deeper
@@ -1668,11 +1672,7 @@ dead letters
 
 \end_deeper
 \begin_layout Itemize
-reasoning is 
-\emph on
-only
-\emph default
- about the 
+reasoning is only about the 
 \emph on
 data
 \emph default
