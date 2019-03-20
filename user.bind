@@ -19,6 +19,7 @@ Format 4
 \bind "M-i c" "unicode-insert 0x219c"
 \bind "M-i u" "math-insert \\uparrow"
 \bind "M-i b" "math-insert \\bef"
+\bind "M-i d" "math-insert \\downarrow"
 \bind "C-equal" "math-insert \\Rightarrow"
 \bind "C-S-c" "dialog-show character"
 \bind "C-S-p" "dialog-show paragraph"
