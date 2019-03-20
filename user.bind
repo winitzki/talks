@@ -20,6 +20,7 @@ Format 4
 \bind "M-i u" "math-insert \\uparrow"
 \bind "M-i b" "math-insert \\bef"
 \bind "M-i d" "math-insert \\downarrow"
+\bind "M-i n" "math-insert \\diamond"
 \bind "C-equal" "math-insert \\Rightarrow"
 \bind "C-S-c" "dialog-show character"
 \bind "C-S-p" "dialog-show paragraph"
