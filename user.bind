@@ -6,6 +6,8 @@ Format 4
 \unbind "C-S-i" "info-insert"
 \unbind "S-F2" "buffer-export latex"
 \unbind "C-equals" "math-insert \\overrightarrow"
+\unbind "M-Down" "command-alternatives outline-down; paragraph-move-down; tabular-feature move-row-down"
+\unbind "M-Up" "command-alternatives outline-up; paragraph-move-up; tabular-feature move-row-up"
 
 \bind "S-BackTab" "depth-decrement"
 \bind "Tab" "depth-increment"
@@ -21,10 +23,13 @@ Format 4
 \bind "M-i b" "math-insert \\bef"
 \bind "M-i d" "math-insert \\downarrow"
 \bind "M-i n" "math-insert \\diamond"
+\bind "M-i f" "footnote-insert"
 \bind "C-equal" "math-insert \\Rightarrow"
 \bind "C-S-c" "dialog-show character"
 \bind "C-S-p" "dialog-show paragraph"
 \bind "S-F2" "command-sequence buffer-export latex; buffer-export pdf2"
 \bind "M-space" "space-insert protected"
 \bind "C-s b" "math-insert \\bullet"
+\bind "M-Down" "paragraph-down"
+\bind "M-Up" "paragraph-up"
 
