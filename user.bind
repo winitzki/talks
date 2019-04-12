@@ -25,6 +25,8 @@ Format 4
 \bind "M-i n" "math-insert \\diamond"
 \bind "M-i f" "footnote-insert"
 \bind "M-i e" "math-insert \\triangleq"
+\bind "M-i p" "listing-insert"
+\bind "M-i o" "command-sequence listing-insert; inset-modify listings true"
 \bind "C-equal" "math-insert \\Rightarrow"
 \bind "C-S-c" "dialog-show character"
 \bind "C-S-p" "dialog-show paragraph"
