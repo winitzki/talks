@@ -35,6 +35,7 @@ Format 4
 \bind "S-F2" "command-sequence buffer-export latex; buffer-export pdf2"
 \bind "M-space" "space-insert protected"
 \bind "C-s b" "math-insert \\bullet"
+\bind "C-s z" "math-insert \\boxtimes"
 \bind "M-Down" "paragraph-down"
 \bind "M-Up" "paragraph-up"
 
