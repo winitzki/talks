@@ -27,6 +27,8 @@ Format 4
 \bind "M-i e" "math-insert \\triangleq"
 \bind "M-i p" "listing-insert"
 \bind "M-i o" "command-sequence listing-insert; inset-modify listings true 1 \"\"; char-left; char-left; inset-modify listings true 1 \"\""
+\bind "M-i w" "math-insert \\bigtriangleup"
+\bind "M-i v" "math-insert \\bigtriangledown"
 \bind "C-equal" "math-insert \\Rightarrow"
 \bind "C-S-c" "dialog-show character"
 \bind "C-S-p" "dialog-show paragraph"
