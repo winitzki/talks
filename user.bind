@@ -38,4 +38,5 @@ Format 4
 \bind "C-s z" "math-insert \\boxtimes"
 \bind "M-Down" "paragraph-down"
 \bind "M-Up" "paragraph-up"
+\bind "C-y" "command-sequence math-insert \\gunderline; char-left"
 
