@@ -8,6 +8,7 @@ Format 4
 \unbind "C-equals" "math-insert \\overrightarrow"
 \unbind "M-Down" "command-alternatives outline-down; paragraph-move-down; tabular-feature move-row-down"
 \unbind "M-Up" "command-alternatives outline-up; paragraph-move-up; tabular-feature move-row-up"
+\unbind "C-n" "buffer-new"
 
 \bind "S-BackTab" "depth-decrement"
 \bind "Tab" "depth-increment"
@@ -19,7 +20,6 @@ Format 4
 \bind "M-i S-a" "unicode-insert 0x219d"
 \bind "M-i a" "math-insert \\leadsto"
 \bind "M-i u" "math-insert \\uparrow"
-\bind "M-i b" "math-insert \\bef"
 \bind "M-i d" "math-insert \\downarrow"
 \bind "M-i n" "math-insert \\diamond"
 \bind "M-i f" "footnote-insert"
@@ -39,6 +39,7 @@ Format 4
 \bind "C-s c" "math-insert \\circ"
 \bind "C-s w" "math-insert \\triangleright"
 \bind "C-s t" "math-insert \\tilde"
+\bind "C-s f" "math-insert \\bef"
 \bind "M-Down" "paragraph-down"
 \bind "M-Up" "paragraph-up"
 \bind "C-y" "command-sequence math-insert \\gunderline; char-left"
