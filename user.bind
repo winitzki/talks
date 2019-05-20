@@ -32,7 +32,6 @@ Format 4
 \bind "C-equal" "math-insert \\Rightarrow"
 \bind "C-S-c" "dialog-show character"
 \bind "C-S-p" "dialog-show paragraph"
-\bind "S-F2" "command-sequence buffer-export latex; buffer-export pdf2"
 \bind "M-space" "space-insert protected"
 \bind "C-s b" "math-insert \\bullet"
 \bind "C-s z" "math-insert \\boxtimes"
@@ -43,4 +42,5 @@ Format 4
 \bind "M-Down" "paragraph-down"
 \bind "M-Up" "paragraph-up"
 \bind "C-y" "command-sequence math-insert \\gunderline; char-left"
+\bind "S-F2" "buffer-export latex"
 
