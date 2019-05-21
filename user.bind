@@ -9,6 +9,9 @@ Format 4
 \unbind "M-Down" "command-alternatives outline-down; paragraph-move-down; tabular-feature move-row-down"
 \unbind "M-Up" "command-alternatives outline-up; paragraph-move-up; tabular-feature move-row-up"
 \unbind "C-n" "buffer-new"
+\unbind "C-w" "buffer-close"
+\unbind "C-F4" "buffer-close"
+\unbind "M-F4" "lyx-quit"
 
 \bind "S-BackTab" "depth-decrement"
 \bind "Tab" "depth-increment"
