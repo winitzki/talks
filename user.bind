@@ -42,8 +42,12 @@ Format 4
 \bind "C-s w" "math-insert \\triangleright"
 \bind "C-s t" "math-insert \\tilde"
 \bind "C-s f" "math-insert \\bef"
+\bind "C-s S-parenleft" "math-insert \\big("
+\bind "C-s S-parenright" "math-insert \\big)"
 \bind "M-Down" "paragraph-down"
 \bind "M-Up" "paragraph-up"
 \bind "C-y" "command-sequence math-insert \\gunderline; char-left"
-\bind "S-F2" "buffer-export latex"
+\bind "M-s S-parenleft" "math-insert \\bigg("
+\bind "M-s S-parenright" "math-insert \\bigg)"
+\bind "S-F2" "buffer-export pdflatex"
 
