@@ -33,6 +33,8 @@ Format 4
 \bind "M-i s" "math-insert \\quad"
 \bind "M-i S-c" "unicode-insert 0x219c"
 \bind "M-i b" "math-insert \\bbnum"
+\bind "M-i 0" "command-sequence self-insert 0; char-left; math-insert \\bbnum"
+\bind "M-i 1" "command-sequence self-insert 1; char-left; math-insert \\bbnum"
 \bind "C-equal" "math-insert \\Rightarrow"
 \bind "C-S-c" "dialog-show character"
 \bind "C-S-p" "dialog-show paragraph"
