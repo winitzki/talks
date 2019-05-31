@@ -32,6 +32,7 @@ Format 4
 \bind "M-i v" "math-insert \\nabla"
 \bind "M-i s" "math-insert \\quad"
 \bind "M-i S-c" "unicode-insert 0x219c"
+\bind "M-i b" "math-insert \\bbnum"
 \bind "C-equal" "math-insert \\Rightarrow"
 \bind "C-S-c" "dialog-show character"
 \bind "C-S-p" "dialog-show paragraph"
