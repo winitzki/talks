@@ -63,4 +63,5 @@ Format 4
 \bind "C-g c" "math-insert \\chi"
 \bind "C-g q" "math-insert \\theta"
 \bind "C-g S-q" "math-insert \\Theta"
+\bind "C-S-backslash" "math-delim | |"
 
