@@ -1,0 +1,3713 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass beamer
+\begin_preamble
+\usetheme[secheader]{Boadilla}
+\usecolortheme{seahorse}
+\author{Sergei Winitzki}
+\date{August 11, 2020}
+\setbeamertemplate{headline}{} % disable headline at top
+\setbeamertemplate{navigation symbols}{} % disable navigation bar at bottom
+\title[Declarative concurrency in Scala]{Declarative Concurrent Programming with Join Calculus in Scala}
+\institute[$\Lambda$-Conf 2020]{Lambda-Conf 2020 Global Edition}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+frame{
+\backslash
+titlepage}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Talk summary
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+How I learned to forget semaphores and to love concurrency
+\end_layout
+
+\begin_layout Standard
+In this talk:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+join calculus
+\begin_inset Quotes erd
+\end_inset
+
+ as a 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+Chemical Machine
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+, without academic jargon
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Formula $\lambda$
+\end_inset
+
+-calculus
+\begin_inset Quotes erd
+\end_inset
+
+ — a small (but complete) programming language
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+join calculus
+\begin_inset Quotes erd
+\end_inset
+
+ — a small (but complete) language for concurrency
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+adds 2 features (
+\begin_inset Quotes eld
+\end_inset
+
+async mailboxes
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+async functions
+\begin_inset Quotes erd
+\end_inset
+
+) to 
+\begin_inset Formula $\lambda$
+\end_inset
+
+-calculus
+\end_layout
+
+\begin_layout Itemize
+in the chemical metaphor: 
+\begin_inset Quotes eld
+\end_inset
+
+molecules
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+reactions
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+
+\family typewriter
+Chymyst
+\family default
+ – open-source implementation of Chemical Machine (Scala)
+\end_layout
+
+\begin_layout Itemize
+examples of concurrent programs in 
+\family typewriter
+Chymyst
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+implement anything in 10-15 lines of code
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+comparisons with Actor Model and with 
+\begin_inset Quotes eld
+\end_inset
+
+AWS Lambda
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+an extension for distributed programming: DCM
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Not
+\emph default
+ in this talk: academic theory
+\end_layout
+
+\begin_layout Itemize
+Petri nets, 
+\begin_inset Formula $\pi$
+\end_inset
+
+-calculus, join calculus, joinads, formal semantics
+\end_layout
+
+\begin_layout Itemize
+DCM formulated within some formalism for distributed programming
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+Dining philosophers
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+The paradigmatic example of concurrency, parallelism and resource contention
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Five philosophers sit at a round table"
+target "https://en.wikipedia.org/wiki/Dining_philosophers_problem"
+literal "false"
+
+\end_inset
+
+, taking turns eating and thinking for random time intervals
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename An_illustration_of_the_dining_philosophers_problem.png
+	display false
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Problem: simulate the process, avoiding deadlock and starvation
+\end_layout
+
+\begin_layout Standard
+Solutions in various programming languages: see 
+\begin_inset CommandInset href
+LatexCommand href
+name "Rosetta Code"
+target "https://rosettacode.org/wiki/Dining_philosophers"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The Chemical Machine code is purely declarative
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Chemical Machine vs.
+\begin_inset space ~
+\end_inset
+
+Amazon's AWS Lambda
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+How AWS
+\begin_inset Formula $\lambda$
+\end_inset
+
+ works:
+\end_layout
+
+\begin_layout Itemize
+wait for an event that signals arrival of input data
+\end_layout
+
+\begin_layout Itemize
+run a computation whenever input data becomes available
+\end_layout
+
+\begin_layout Itemize
+the computation is automatically parallelized, data-driven
+\end_layout
+
+\begin_layout Itemize
+writing the output data will create a new event
+\end_layout
+
+\begin_layout Standard
+Modify the AWS
+\begin_inset Formula $\lambda$
+\end_inset
+
+ execution model by adding new requirements:
+\end_layout
+
+\begin_layout Itemize
+a Lambda should be able to wait for several 
+\emph on
+unrelated
+\emph default
+ events
+\end_layout
+
+\begin_layout Itemize
+several Lambdas may contend 
+\emph on
+atomically
+\emph default
+ on shared input events
+\end_layout
+
+\begin_layout Standard
+With these new requirements, AWS
+\begin_inset Formula $\lambda$
+\end_inset
+
+ becomes 
+\begin_inset Quotes eld
+\end_inset
+
+AWS
+\begin_inset Formula $\pi$
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ – a model of 
+\begin_inset Quotes eld
+\end_inset
+
+unrestricted concurrency
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+(Implementation on AWS will be tricky)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+The Chemical Machine vs.
+\begin_inset space ~
+\end_inset
+
+the Actor model
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Modify the Actor execution model by adding new requirements:
+\end_layout
+
+\begin_layout Itemize
+when messages arrive, actors are auto-created, maybe 
+\emph on
+in parallel
+\end_layout
+
+\begin_layout Itemize
+actors may wait atomically for messages in 
+\emph on
+several
+\emph default
+ different mailboxes
+\end_layout
+
+\begin_layout Standard
+It follows from these requirements that...
+ 
+\end_layout
+
+\begin_layout Itemize
+Auto-created actor instances are 
+\emph on
+stateless
+\emph default
+ and invisible to user
+\end_layout
+
+\begin_layout Itemize
+User code defines 
+\emph on
+mailboxes
+\emph default
+ and 
+\emph on
+computations
+\emph default
+ that consume messages
+\end_layout
+
+\begin_layout Itemize
+Repeated messages may be consumed in parallel
+\end_layout
+
+\begin_layout Itemize
+Messages are sent to mailboxes, not to specific actor instances:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "50col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+// Akka
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+val a: ActorRef = ...
+ receive(x) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+...
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+val b: ActorRef = ...
+ receive(y) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+...
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+a ! 100
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+b ! 1;   b ! 2;   b ! 3
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+// Chymyst
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+...
+ go { case a(x) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ ...
+ } 
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+...
+ go { case b(y) + c(z) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ ...
+ }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+a(100)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+b(1);  b(2);  b(3); c("hello");
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+All data resides on messages in mailboxes, is consumed automatically
+\end_layout
+
+\begin_layout Itemize
+Mailboxes and computations are 
+\emph on
+values
+\emph default
+, can be sent on messages
+\end_layout
+
+\begin_layout Standard
+Any Actor program can be straightforwardly translated into CM
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Understanding the CM via the chemical metaphor
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+From real to 
+\begin_inset Quotes eld
+\end_inset
+
+abstract
+\begin_inset Quotes erd
+\end_inset
+
+ chemistry
+\end_layout
+
+\begin_layout Standard
+Real chemistry is asynchronous, concurrent, and parallel:
+\begin_inset Formula 
+\[
+\text{HCl}+\text{NaOH}\rightarrow\text{NaCl}+\text{H}_{2}\text{O}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Want to run 
+\emph on
+computations
+\emph default
+ similarly to how chemical reactions run!
+\end_layout
+
+\begin_layout Standard
+Begin by formulating the execution model of 
+\begin_inset Quotes eld
+\end_inset
+
+abstract chemistry
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Itemize
+Abstract 
+\begin_inset Quotes eld
+\end_inset
+
+molecules
+\begin_inset Quotes erd
+\end_inset
+
+ float around in a 
+\begin_inset Quotes eld
+\end_inset
+
+chemical reaction site
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Certain kinds of molecules may combine to start a 
+\begin_inset Quotes eld
+\end_inset
+
+reaction
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "50col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Quotes eld
+\end_inset
+
+abstract
+\begin_inset Quotes erd
+\end_inset
+
+ chemical laws:
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size footnotesize
+\color blue
+a + b 
+\begin_inset Formula ${\color{blue}\rightarrow}$
+\end_inset
+
+ a
+\family default
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size footnotesize
+\color blue
+a + c 
+\begin_inset Formula ${\color{blue}\rightarrow}$
+\end_inset
+
+ 
+\begin_inset Formula $\textrm{Ø}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "30col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename cham1a.eps
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Program code defines molecules 
+\family typewriter
+\size scriptsize
+\color blue
+a
+\family default
+\size default
+\color inherit
+, 
+\family typewriter
+\size scriptsize
+\color blue
+b
+\family default
+\size default
+\color inherit
+, 
+\family typewriter
+\size scriptsize
+\color blue
+c
+\family default
+\size default
+\color inherit
+, ...
+ and chemical reactions
+\end_layout
+
+\begin_layout Itemize
+At initial time, the code emits some molecules into the site
+\end_layout
+
+\begin_layout Itemize
+The runtime system runs reactions 
+\emph on
+concurrently and in parallel
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+A chemical simulation engine is easy to implement in any language
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Chemical Machine in a nutshell
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+From abstract chemistry to computation
+\end_layout
+
+\begin_layout Standard
+Translating the chemical metaphor into a model of computation:
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "50col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Itemize
+Each molecule carries a 
+\series bold
+value
+\series default
+ (
+\begin_inset Quotes eld
+\end_inset
+
+concurrent data
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Each reaction computes new values from its input values
+\end_layout
+
+\begin_layout Itemize
+Some molecules with new values may be emitted back into the reaction site
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename cham2.eps
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size scriptsize
+\color blue
+site(
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ go { case 
+\series bold
+a
+\series default
+(x) + 
+\series bold
+b
+\series default
+(y) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+val z = f(x, y); 
+\series bold
+a
+\series default
+(z) },
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ go { case 
+\series bold
+a
+\series default
+(x) + 
+\series bold
+c
+\series default
+(_) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size scriptsize
+\color blue
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+ println(x) }
+\end_layout
+
+\begin_layout Plain Layout
+
+\family typewriter
+\size scriptsize
+\color blue
+)
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+When a reaction starts: input molecules disappear, new values are computed,
+ output molecules are emitted
+\end_layout
+
+\begin_layout Standard
+Reactions are 
+\emph on
+functions
+\emph default
+ from input values to output values
+\end_layout
+
+\begin_layout Itemize
+Need to learn how to 
+\begin_inset Quotes eld
+\end_inset
+
+think in molecules and reactions
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Chemical Machine vs.
+\begin_inset space ~
+\end_inset
+
+Actor model
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset VSpace -0.3cm
+\end_inset
+
+reaction 
+\begin_inset Formula $\approx$
+\end_inset
+
+ function body for an (auto-started) actor
+\end_layout
+
+\begin_layout Itemize
+emitted molecule with value 
+\begin_inset Formula $\approx$
+\end_inset
+
+ message with value, in a mailbox
+\end_layout
+
+\begin_layout Itemize
+molecule emitters 
+\begin_inset Formula $\approx$
+\end_inset
+
+ mailbox references
+\end_layout
+
+\begin_layout Standard
+Programming with actors: 
+\end_layout
+
+\begin_layout Itemize
+user code creates and manages explicit actor instances
+\end_layout
+
+\begin_layout Itemize
+actors typically hold mutable state and/or mutate 
+\begin_inset Quotes eld
+\end_inset
+
+behavior
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+reasoning is about running processes 
+\emph on
+and
+\emph default
+ the data sent on messages
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Programming with the Chemical Machine:
+\end_layout
+
+\begin_layout Itemize
+processes auto-start when the needed input molecules are available
+\end_layout
+
+\begin_layout Itemize
+many reactions may start at once, with automatic parallelism
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+user code does not manipulate references to processes
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+no state, no supervision, no lifecycle, no 
+\begin_inset Quotes eld
+\end_inset
+
+dead letters
+\begin_inset Quotes erd
+\end_inset
+
+, no routers
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+reasoning is only about the 
+\emph on
+data
+\emph default
+ 
+\emph on
+currently
+\emph default
+ 
+\emph on
+available
+\emph default
+ on molecules
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+no reasoning about running processes having state
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+
+\family typewriter
+Chymyst
+\family default
+ code is typically 2x – 3x shorter than equivalent Akka code
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example: throttling
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Throttle emitting molecules 
+\family typewriter
+\size footnotesize
+\color blue
+s(x)
+\family default
+\size default
+\color inherit
+ with minimum allowed delay of 
+\family typewriter
+\size footnotesize
+\color blue
+delta
+\family default
+\size default
+\color inherit
+ ms
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+def throttle[X](s: M[X], delta: Long): M[X] = {
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+ val r = m[X]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+ val enable = m[Unit] 
+\size scriptsize
+\color gray
+// This molecule is confined to the local scope.
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+ site(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  go { case r(x) + enable(_) ⇒
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+        s(x)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+        Thread.sleep(delta)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+        enable()
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+     }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+ )
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+ enable() 
+\size scriptsize
+\color gray
+// Enable emitting `s` initially.
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+ r 
+\size scriptsize
+\color gray
+// Outside scope will be able to emit `r`.
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+}
+\end_layout
+
+\begin_layout Itemize
+No threads/semaphores/locks, no mutable state
+\end_layout
+
+\begin_layout Itemize
+External code may emit 
+\family typewriter
+\size footnotesize
+\color blue
+r(x)
+\family default
+\size default
+\color inherit
+ at will, and 
+\family typewriter
+\size footnotesize
+\color blue
+s(x)
+\family default
+\size default
+\color inherit
+ is then throttled
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Implementations in Akka, in Monix, and ZIO"
+target " https://github.com/softwaremill/akka-vs-scalaz/tree/master/core/src/main/scala/com/softwaremill/ratelimiter"
+literal "false"
+
+\end_inset
+
+: > 50 LOC each
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example: map/reduce
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+A simple map/reduce implementation:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val c = m[A]
+\family default
+\color gray
+ // Initial values have type `A`.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val d = m[(Int, B)] 
+\family default
+\color gray
+// `B` is a commutative monoid.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val res = m[B]
+\family default
+\color gray
+ // Final result of type `B`.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val fetch = b[Unit, B]
+\family default
+\color gray
+ // Blocking emitter.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+site(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color gray
+  // 
+\begin_inset Quotes eld
+\end_inset
+
+map
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  go { case c(x) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ d((1, long_computation(x))) }, 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+ 
+\family default
+\color gray
+ // 
+\begin_inset Quotes eld
+\end_inset
+
+reduce
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  go { case d((n1, b1)) + d((n2, b2)) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+   val (newN, newB) = (n1 + n2, b1 |+| b2)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+   if (newN == total) res(newB) else d((newN, newB)) 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  },
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  go { case fetch(_, reply) + res(b) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ reply(b) }
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+(1 to 100).foreach(x 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ c(x))
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+fetch()
+\family default
+\size footnotesize
+\color gray
+ 
+\size scriptsize
+// Blocking call will return the final result.
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Compare with the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Akka implementation here"
+target "https://stackoverflow.com/questions/17291851/mapreduce-implementation-with-akka"
+literal "false"
+
+\end_inset
+
+ (100+ LOC)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example: parallel merge-sort
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\family typewriter
+Chymyst
+\family default
+ code: 
+\begin_inset CommandInset href
+LatexCommand href
+name "MergeSortSpec.scala"
+target "https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/MergeSortSpec.scala"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+val mergesort = m[(Array[T], M[Array[T]])]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+site(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case mergesort((arr, 
+\color brown
+sortedResult
+\color blue
+)) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+    if (arr.length <= 1) 
+\family typewriter
+sortedResult
+\family default
+(arr)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+      else {
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        val 
+\color brown
+sorted1
+\color blue
+ = m[Array[T]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        val 
+\color brown
+sorted2
+\color blue
+ = m[Array[T]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        
+\color brown
+site
+\color blue
+(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+          go { case 
+\color brown
+sorted1
+\color blue
+(x) + 
+\color brown
+sorted2
+\color blue
+(y) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color brown
+             sortedResult
+\color blue
+(arrayMerge(x,y))
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+             }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        )
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        val (part1, part2) = arr.splitAt(arr.length/2)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        
+\family sans
+\size footnotesize
+\color gray
+// Emit lower-level 
+\family default
+mergesort
+\family sans
+ molecules:
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+        mergesort(part1, 
+\color brown
+sorted1
+\color blue
+) + mergesort(part2, 
+\color brown
+sorted2
+\color blue
+)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+    }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+})
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Implementation in Akka"
+target "https://gist.github.com/stephenmcd/7edbcfb632c373eaf466"
+literal "false"
+
+\end_inset
+
+: 30 LOC for the same functionality
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example: Dining philosophers
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Five Dining Philosophers
+\end_layout
+
+\begin_layout Standard
+Philosophers 
+\family typewriter
+\size scriptsize
+\color blue
+1, 2, 3, 4, 
+\family default
+5
+\size default
+\color inherit
+ and forks 
+\family typewriter
+\size scriptsize
+\color blue
+f12, f23, f34, f45, f51
+\end_layout
+
+\begin_layout LyX-Code
+
+\family sans
+\size footnotesize
+\color gray
+// ...
+ definitions of emitters, think(), eat() omitted for brevity
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+site (
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case t1(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ think(1); h1() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case t2(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ think(2); h2() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case t3(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ think(3); h3() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case t4(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ think(4); h4() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case t5(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ think(5); h5() },
+\end_layout
+
+\begin_layout LyX-Code
+ 
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case h1(_) + f12(_) + f51(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ eat(1); t1() + f12() + f51() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case h2(_) + f23(_) + f12(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ eat(2); t2() + f23() + f12() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case h3(_) + f34(_) + f23(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ eat(3); t3() + f34() + f23() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case h4(_) + f45(_) + f34(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ eat(4); t4() + f45() + f34() },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+  go { case h5(_) + f51(_) + f45(_) 
+\family typewriter
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\family default
+ eat(5); t5() + f51() + f45() }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+t1() + t2() + t3() + t4() + t5()
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color blue
+f12() + f23() + f34() + f45() + f51()
+\size default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Source code: 
+\begin_inset CommandInset href
+LatexCommand href
+name "DiningPhilosophers.scala"
+target "https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/main/scala/io/chymyst/talk_examples/DiningPhilosophers.scala"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For more examples, see the 
+\begin_inset CommandInset href
+LatexCommand href
+name "code repository"
+target "https://github.com/Chymyst/chymyst-core"
+literal "false"
+
+\end_inset
+
+ (first-of, barriers, rendezvous, critical sections, readers/writers, Game
+ of Life, elevators, etc.)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Reasoning about code in the Chemical Machine paradigm
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Reasoning about concurrent data:
+\end_layout
+
+\begin_layout Itemize
+Emit molecule with value 
+\begin_inset Formula $\approx$
+\end_inset
+
+ lift data into the 
+\begin_inset Quotes eld
+\end_inset
+
+concurrent world
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Define reaction 
+\begin_inset Formula $\approx$
+\end_inset
+
+ lift a function into the 
+\begin_inset Quotes eld
+\end_inset
+
+concurrent world
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Reaction site 
+\begin_inset Formula $\approx$
+\end_inset
+
+ container for concurrent functions and data
+\end_layout
+
+\begin_layout Itemize
+Reaction consumes molecules 
+\begin_inset Formula $\approx$
+\end_inset
+
+ function consumes input values
+\end_layout
+
+\begin_layout Itemize
+Reaction emits molecules 
+\begin_inset Formula $\approx$
+\end_inset
+
+ function returns result values
+\end_layout
+
+\begin_layout Standard
+Reasoning about code:
+\end_layout
+
+\begin_layout Itemize
+What data do we need to handle concurrently? (Put it on molecules.)
+\end_layout
+
+\begin_layout Itemize
+What computations consume this data? (Define reactions.)
+\end_layout
+
+\begin_layout Standard
+Guarantees:
+\end_layout
+
+\begin_layout Itemize
+Molecule emitters and reactions are immutable values in local scopes
+\end_layout
+
+\begin_layout Itemize
+Reaction sites are immutable once activated; can refactor to libraries
+\end_layout
+
+\begin_layout Itemize
+Multiple input molecules are consumed atomically by reactions
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Chemical Machine paradigm to become mainstream in 2033
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset VSpace -0.2cm
+\end_inset
+
+The Chemical Machine paradigm was 
+\begin_inset CommandInset href
+LatexCommand href
+name "invented in 1995"
+target "http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.32.3078"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The gap from academic invention to industry adoption is 38.2 years (declarative
+ math, map/reduce, continuations, OOP, CSP, Actors, constraint programming,
+ DAG dataflow, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+-functions, Hindley-Milner)
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename 40-year-gap.png
+	width 70text%
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Current features of 
+\family typewriter
+Chymyst
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Blocking molecules with timeouts and back-signalling
+\end_layout
+
+\begin_layout Itemize
+Automatic pipelining of molecules (ordered mailboxes)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+Static
+\begin_inset Quotes erd
+\end_inset
+
+ molecules with read-only access (similar to Akka 
+\begin_inset Quotes eld
+\end_inset
+
+agents
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Compile-time and early run-time DSL error reporting
+\end_layout
+
+\begin_layout Itemize
+Logging, debugging, unit-testing facilities
+\end_layout
+
+\begin_layout Itemize
+Thread pools with thread priority control
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Related frameworks: Petri nets
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Workflow management: an approach based on 
+\begin_inset CommandInset href
+LatexCommand href
+name "Petri nets"
+target "https://en.wikipedia.org/wiki/Petri_net"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "ING Baker"
+target "https://github.com/ing-bank/baker"
+literal "false"
+
+\end_inset
+
+ – a DSL for workflow management
+\end_layout
+
+\begin_layout Itemize
+Process modeling and control (
+\begin_inset Quotes eld
+\end_inset
+
+elevator system
+\begin_inset Quotes erd
+\end_inset
+
+ etc.)
+\end_layout
+
+\begin_layout Itemize
+Business process management (BPM) systems
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+Chymyst
+\family default
+ implements a rich version of Petri nets:
+\end_layout
+
+\begin_layout Itemize
+Transitions admit arbitrary guard conditions and error recovery
+\end_layout
+
+\begin_layout Itemize
+Transitions carry values, reactions are values, can be nested
+\end_layout
+
+\begin_layout Itemize
+Nondeterministic, asynchronous, parallel execution
+\end_layout
+
+\begin_layout Standard
+A Petri net model is straightforwardly translated into a CM program
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Distributed Chemical Machine
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout FrameSubtitle
+Run concurrent code on a cluster with no code changes
+\end_layout
+
+\begin_layout Itemize
+\begin_inset VSpace -0.2cm
+\end_inset
+
+Declare some molecules as 
+\begin_inset Quotes eld
+\end_inset
+
+distributed
+\begin_inset Quotes erd
+\end_inset
+
+, of type 
+\family typewriter
+\size scriptsize
+\color blue
+DM[T]
+\end_layout
+
+\begin_layout Itemize
+No other new language constructions are necessary!
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+early prototype in progress, as extension of 
+\family typewriter
+Chymyst
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Distributed map/reduce in 15 LOC:
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+implicit val cluster = ClusterConfig(???)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val c = dm[Int] ; val d = dm[Int]
+\family default
+\color gray
+ // distributed
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val res = m[(Int, List[Int])] 
+\family default
+\color gray
+// local
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val fetch = b[Unit, List[Int]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+site(
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  go { case c(x) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ d(x * 2) },
+\family default
+\color gray
+  // 
+\begin_inset Quotes eld
+\end_inset
+
+map
+\begin_inset Quotes erd
+\end_inset
+
+ on cluster,
+\family typewriter
+\color blue
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+ 
+\family default
+\color gray
+// 
+\begin_inset Quotes eld
+\end_inset
+
+reduce
+\begin_inset Quotes erd
+\end_inset
+
+ on the driver node only.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  go { case res((n, list)) + d(x) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ res((n-1, s::list)) },
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+ 
+\family default
+\color gray
+// fetch results
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  go { case fetch(_, reply) + res((0, list)) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ reply(list) }
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+if (isDriver) {
+\family default
+\color gray
+ // `true` only on the driver node.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  Seq(1, 2, 3).foreach(x 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ c(x))
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  res((3, Nil)) ; fetch()
+\family default
+\color gray
+ // Returns the result.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+}
+\end_layout
+
+\begin_layout Standard
+Comparison: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Akka implementation of distributed map/reduce"
+target "https://github.com/ltronky/MapReduce-akka"
+literal "false"
+
+\end_inset
+
+ (400+ LOC)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Distributed cache in 10 LOC
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset VSpace -0.2cm
+\end_inset
+
+Mutable 
+\family typewriter
+\size scriptsize
+\color blue
+Map[String, String]
+\family default
+\size default
+\color inherit
+ with operations: 
+\family typewriter
+\size scriptsize
+\color blue
+put
+\family default
+\size default
+\color inherit
+, 
+\family typewriter
+\size scriptsize
+\color blue
+get
+\family default
+\size default
+\color inherit
+, 
+\family typewriter
+\size scriptsize
+\color blue
+delete
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+implicit val cluster = ClusterConfig(???)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val data = dm[mutable.Map[String, String]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val put = dm[(String, String)]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val get = dm[(String, M[Option[String]]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val delete = dm[String]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+site(
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+ go { case data(dict) + put((k, v)) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ data(dict.updated(k, v)) },
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+ go { case data(dict) + get((k, r)) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ data(dict); r(dict.get(k)) },
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+ go { case data(dict) + delete(k) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ dict.remove(k); data(dict) }
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+if (isDriver) data(mutable.Map[String, String]())
+\end_layout
+
+\begin_layout Itemize
+Comparison: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Distributed cache in 100 lines of Akka"
+target "https://medium.com/@hussachai/creating-a-distributed-cache-in-100-lines-with-akka-5387bd7310fd"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Distributed peer-to-peer chat in 15 LOC
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset VSpace -0.2cm
+\end_inset
+
+Register user names in chat room
+\end_layout
+
+\begin_layout Itemize
+Fetch list of users
+\end_layout
+
+\begin_layout Itemize
+Send and receive text messages
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+implicit val cluster = ClusterConfig(???)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val users = dm[List[DM[String]]]
+\family default
+\color gray
+ // List of users' message emitters.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val carrier = dm[DM[String]]
+\family default
+\color gray
+ // Carries this node's message emitter.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val fetch = b[Unit, List[DM[String]]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+site(go { case users(es) + carrier(e) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ users(e :: es) }
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+, go { case users(es) + fetch(_, r) 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ users(es); r(es) } )
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val peerName = ???
+\family default
+\color gray
+ // Read from config on node.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+val sender = new DM[String](peerName) 
+\family default
+\color gray
+// Assign unique molecule name.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+site(go { case sender(x) ⇒ println(s"Peer $peerName reads $x")})
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+   
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+carrier(sender)
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+if (isDriver) users(Nil)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size scriptsize
+\color gray
+// Fetch list of users and send a message to Sergei if present.
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+fetch()
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  .find(_.name == "Sergei")
+\end_layout
+
+\begin_layout LyX-Code
+
+\family typewriter
+\size scriptsize
+\color blue
+  .foreach(sender 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ sender("hello"))
+\end_layout
+
+\begin_layout Itemize
+Comparison: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Distributed chat in > 100 lines of Akka"
+target "https://github.com/typesafehub/activator-akka-clustering/tree/master/src/main/scala/chat"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Reasoning in the Distributed Chemical Machine
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Distributed computing is made declarative
+\end_layout
+
+\begin_layout Itemize
+Determine which data needs to be distributed and/or concurrent
+\end_layout
+
+\begin_layout Itemize
+Determine which computations will need to consume that data
+\end_layout
+
+\begin_layout Itemize
+Emit initial molecules and let the DCM run
+\end_layout
+
+\begin_layout Standard
+Pure peer-to-peer architecture
+\end_layout
+
+\begin_layout Itemize
+Distributed molecules may be consumed by 
+\emph on
+any
+\emph default
+ DCM peer
+\end_layout
+
+\begin_layout Itemize
+All DCM peers operate in the same way (no master/worker)
+\end_layout
+
+\begin_layout Itemize
+All DCM peers need to define the same distributed reaction sites
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+To designate a DCM peer as a 
+\begin_inset Quotes eld
+\end_inset
+
+driver
+\begin_inset Quotes erd
+\end_inset
+
+, use config files
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Examples (see documentation)
+\end_layout
+
+\begin_layout Itemize
+Broadcast (DCM peers see it exactly once upon connecting)
+\end_layout
+
+\begin_layout Itemize
+Distributed peer-to-peer chat
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Chemical Machine: implementation details
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Each reaction site has a scheduler thread and a worker thread pool
+\end_layout
+
+\begin_layout Itemize
+Each molecule is 
+\begin_inset Quotes eld
+\end_inset
+
+bound
+\begin_inset Quotes erd
+\end_inset
+
+ to a unique reaction site
+\end_layout
+
+\begin_layout Itemize
+Each emitted molecule is stored in a multi-set at its reaction site
+\end_layout
+
+\begin_layout Itemize
+Each emitted molecule triggers a search for possible reactions
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Reaction search proceeds concurrently for different reaction sites
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Reactions are scheduled on the worker thread pool
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The thread pool can be configured per-reaction or per-site
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Scala macros are used for static analysis and optimizations
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Automatically pipelined molecules
+\end_layout
+
+\begin_layout Itemize
+Simplify and analyze Boolean conditions
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Error analysis is also performed at early run time
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Reaction site with errors remain inactive
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Distributed Chemical Machine: implementation details
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Each distributed molecule (DM) is bound to a unique reaction site
+\end_layout
+
+\begin_layout Itemize
+Emitted DM data goes into the ZK instance
+\end_layout
+
+\begin_layout Itemize
+Each DCM peer listens to ZK messages and checks for its DMs
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Once a DM is found, its data is downloaded and deserialized
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+On a DCM peer, each DM is identified with a unique local RS
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Downloaded molecules are emitted into the local RS to run reactions
+\end_layout
+
+\begin_layout Itemize
+All DCM peers must run identical reaction code for DMs
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Each DCM peer acquires a distributed lock on its DMs
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Lock is released once reaction scheduling is complete
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+If a node goes down or network fails, molecules will be 
+\emph on
+unconsumed
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Another DCM peer will pick up these molecules later
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Conclusions and outlook
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Chemical Machine = declarative, purely functional concurrency
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Similar to 
+\begin_inset Quotes eld
+\end_inset
+
+Actors
+\begin_inset Quotes erd
+\end_inset
+
+, but easier to use and 
+\begin_inset Quotes eld
+\end_inset
+
+more purely functional
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Significantly shorter code, easier to reason about
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+An open-source Scala implementation: 
+\family typewriter
+
+\begin_inset CommandInset href
+LatexCommand href
+name "Chymyst"
+target "https://github.com/Chymyst/chymyst-core"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Static DSL code analysis (with Scala macros)
+\end_layout
+
+\begin_layout Itemize
+Industry-strength features (thread priority control, pipelining, fault tolerance
+, unit testing and debugging APIs)
+\end_layout
+
+\begin_layout Itemize
+Extensive documentation: 
+\begin_inset CommandInset href
+LatexCommand href
+name "tutorial book"
+target "https://winitzki.gitbooks.io/concurrency-in-reactions-declarative-multicore-in/content/"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Promising applications:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Workflow management
+\end_layout
+
+\begin_layout Itemize
+Distributed peer-to-peer systems
+\end_layout
+
+\begin_layout Itemize
+Process modeling, GUIs, BPM
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Distributed Chemical Machine in the works
+\end_layout
+
+\end_deeper
+\end_body
+\end_document
