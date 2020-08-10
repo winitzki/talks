@@ -196,7 +196,7 @@ adds 2 features (
 \begin_inset Quotes eld
 \end_inset
 
-async mailboxes
+async mailbox
 \begin_inset Quotes erd
 \end_inset
 
@@ -204,7 +204,7 @@ async mailboxes
 \begin_inset Quotes eld
 \end_inset
 
-async functions
+async function
 \begin_inset Quotes erd
 \end_inset
 
@@ -220,7 +220,7 @@ in the chemical metaphor:
 \begin_inset Quotes eld
 \end_inset
 
-molecules
+molecule
 \begin_inset Quotes erd
 \end_inset
 
@@ -228,7 +228,7 @@ molecules
 \begin_inset Quotes eld
 \end_inset
 
-reactions
+reaction
 \begin_inset Quotes erd
 \end_inset
 
@@ -948,7 +948,7 @@ case
 \end_layout
 
 \begin_layout Itemize
-Emitters (e.g., 
+Emitters for all molecules (e.g., 
 \family typewriter
 \size footnotesize
 \color blue
@@ -1015,7 +1015,7 @@ The
 \family typewriter
 Chymyst
 \family default
- runtime runs the simulation
+ runtime will run the simulation
 \end_layout
 
 \end_deeper
@@ -1189,7 +1189,7 @@ s(x)
 \end_layout
 
 \begin_layout Itemize
-External code may not emit 
+External code cannot emit 
 \family typewriter
 \size footnotesize
 \color blue
@@ -1197,7 +1197,7 @@ enable()
 \family default
 \size default
 \color inherit
- 
+ because of local scope
 \end_layout
 
 \begin_layout Standard
@@ -1210,6 +1210,119 @@ literal "false"
 \end_inset
 
 : > 50 LOC each
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example: throttling test
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Define a molecule 
+\family typewriter
+\size footnotesize
+\color blue
+p(...)
+\family default
+\size default
+\color inherit
+ that we will emit too quickly, and a reaction just to see when that molecule
+ has been emitted
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+val p = m[Int]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+site(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  go { case p(x) ⇒ println(s"Got $x at time ${LocalDateTime.now}") }
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+val t = throttle(p, 1000L)
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+t(10); t(20); t(30);
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+scala> Got 10 at time 2020-08-10T15:33:05.921
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+Got 20 at time 2020-08-10T15:33:06.914
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+Got 30 at time 2020-08-10T15:33:07.920
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+ 
 \end_layout
 
 \end_deeper
@@ -1243,7 +1356,7 @@ Cancel emitting molecules
 \family typewriter
 \size footnotesize
 \color blue
-x(a)
+x(...)
 \family default
 \size default
 \color inherit
@@ -1300,7 +1413,7 @@ def cancellation[A](x: M[A]): (M[A], M[Unit]) = {
 
 \size footnotesize
 \color blue
-    go { case enable(_) + cancel(_) ⇒ }
+    go { case enable(_) + cancel(_) ⇒ },
 \end_layout
 
 \begin_layout LyX-Code
@@ -1338,11 +1451,19 @@ def cancellation[A](x: M[A]): (M[A], M[Unit]) = {
 \end_layout
 
 \begin_layout Itemize
-No threads/semaphores/locks, no mutable state
+Emitting 
+\family typewriter
+\size footnotesize
+\color blue
+cancel()
+\family default
+\size default
+\color inherit
+ many times has no further effect
 \end_layout
 
 \begin_layout Itemize
-External code may not emit 
+External code cannot emit 
 \family typewriter
 \size footnotesize
 \color blue
@@ -1370,7 +1491,7 @@ Users cannot implement this in Monix or ZIO (cancellation is provided)
 status open
 
 \begin_layout Plain Layout
-An additional feature: Blocking molecules
+Example: async racing
 \end_layout
 
 \end_inset
@@ -1384,7 +1505,182 @@ An additional feature: Blocking molecules
 
 \begin_deeper
 \begin_layout Standard
-A molecule emitter type 
+For two molecules 
+\family typewriter
+\size footnotesize
+\color blue
+p(...)
+\family default
+\size default
+\color inherit
+ and 
+\family typewriter
+\size footnotesize
+\color blue
+q(...)
+\family default
+\size default
+\color inherit
+, determine which one is emitted first and report its value on a given molecule
+ 
+\family typewriter
+\size footnotesize
+\color blue
+r(...)
+\family default
+\size default
+\color inherit
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+def racing[A, B](r: M[Either[A, B]]): (M[A], M[B]) = {
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  val p = m[A]; val q = m[B]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  val enable = m[Unit]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  site(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+    go { case p(a) + enable(_) ⇒ r(Left(a))  },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+    go { case q(b) + enable(_) ⇒ r(Right(b)) },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  )
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  enable() 
+\size scriptsize
+\color gray
+// One copy of `enable` initially.
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  (p, q) 
+\size scriptsize
+\color gray
+// Outside scope will be able to emit these.
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+}
+\end_layout
+
+\begin_layout Itemize
+External code will emit 
+\family typewriter
+\size footnotesize
+\color blue
+p(...)
+\family default
+\size default
+\color inherit
+ and 
+\family typewriter
+\size footnotesize
+\color blue
+q(...)
+\family default
+\size default
+\color inherit
+, will get 
+\family typewriter
+\size footnotesize
+\color blue
+r(...)
+\family default
+\size default
+\color inherit
+ back
+\end_layout
+
+\begin_layout Itemize
+External code cannot emit 
+\family typewriter
+\size footnotesize
+\color blue
+enable()
+\family default
+\size default
+\color inherit
+ because of local scope
+\end_layout
+
+\begin_layout Standard
+Users cannot implement this in Monix or ZIO (racing facility is provided)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Additional feature: blocking molecules
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+A blocking molecule has type 
 \family typewriter
 \size footnotesize
 \color blue
@@ -1392,7 +1688,7 @@ B[A, R]
 \family default
 \size default
 \color inherit
- receives a reply value of type 
+ and receives a reply value of type 
 \family typewriter
 \size footnotesize
 \color blue
@@ -1411,7 +1707,7 @@ R
 val fetch = b[Unit, Int]
 \family default
 \color gray
- // Blocking emitter.
+ // Blocking molecule's emitter.
 \end_layout
 
 \begin_layout LyX-Code
@@ -1420,6 +1716,9 @@ val fetch = b[Unit, Int]
 \size scriptsize
 \color blue
 val result = m[Int]
+\family default
+\color gray
+ // A non-blocking molecule emitter.
 \end_layout
 
 \begin_layout LyX-Code
@@ -1436,9 +1735,11 @@ site(
 \size scriptsize
 \color blue
   go { case fetch(_, reply) + res(b) 
-\begin_inset Formula $\Rightarrow$
-\end_inset
-
+\family default
+\size footnotesize
+⇒
+\family typewriter
+\size scriptsize
  reply(b) }
 \end_layout
 
@@ -1487,6 +1788,203 @@ val x = fetch()
 
 \begin_layout Standard
 Blocking emitters are a convenience, do not increase expressive power
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator parbreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Example: racing with blocking molecules
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Given two blocking molecules 
+\family typewriter
+\size footnotesize
+\color blue
+p(x:X)
+\family default
+\size default
+\color inherit
+ and 
+\family typewriter
+\size footnotesize
+\color blue
+q(y:Y)
+\family default
+\size default
+\color inherit
+, create a new blocking molecule 
+\family typewriter
+\size footnotesize
+\color blue
+r(...)
+\family default
+\size default
+\color inherit
+, to determine which one returns first and return the corresponding value
+ of type 
+\family typewriter
+\size footnotesize
+\color blue
+Either[X, Y]
+\family default
+\size default
+\color inherit
+ 
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+def racing[X,Y](p: B[Unit,X], q: B[Unit,Y]): B[Unit, Either[X,Y]] = {
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+    val get = b[Unit, Either[X, Y]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+    val res = b[Unit, Either[X, Y]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+    val left = m[Unit]; val right = m[Unit]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+    val done = m[Either[X, Y]]
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+    site(
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+      go { case res(_, reply)
+\family typewriter
+\size scriptsize
+ 
+\family default
+\size footnotesize
+⇒ left(); right(); reply(get()) },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+      go { case left(_)  ⇒ done(Left(p()))  },      
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+      go { case right(_) ⇒ done(Right(q())) },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+      go { case get(_, r) + done(x)
+\family typewriter
+\size scriptsize
+ 
+\family default
+\size footnotesize
+⇒ r(x) },
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+    )
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+  res 
+\size scriptsize
+\color gray
+// Outside scope will be able to emit this.
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+\color blue
+}
+\end_layout
+
+\begin_layout Itemize
+External code will call 
+\family typewriter
+\size footnotesize
+\color blue
+r(...)
+\family default
+\size default
+\color inherit
+, which calls 
+\family typewriter
+\size footnotesize
+\color blue
+p(...)
+\family default
+\size default
+\color inherit
+ and 
+\family typewriter
+\size footnotesize
+\color blue
+q(...)
+\end_layout
+
+\begin_layout Standard
+Users cannot implement this in Monix or ZIO (racing facility is provided)
 \end_layout
 
 \end_deeper
@@ -1662,7 +2160,7 @@ reduce
 \begin_inset Formula $\Rightarrow$
 \end_inset
 
- reply(b) }
+ reply(b) },
 \end_layout
 
 \begin_layout LyX-Code
