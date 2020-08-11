@@ -194,13 +194,14 @@ Reactions are \emph{functions} from input values to output values
 
 \framesubtitle{How I learned to forget semaphores and to love concurrency}
 
-Molecule emitters are values of type \texttt{\textcolor{blue}{\footnotesize{}M{[}A{]}}}:
+Molecule \emph{emitters} are values of type \texttt{\textcolor{blue}{\footnotesize{}M{[}A{]}}}:
 \begin{lyxcode}
 \textcolor{blue}{\footnotesize{}val~count~=~m{[}Int{]};~val~inc~=~m{[}Unit{]}}{\footnotesize\par}
 \end{lyxcode}
-Molecules are emitted by calling the emitter's \texttt{\textcolor{blue}{\footnotesize{}apply()}}method:
+Molecule \emph{instances} are emitted by calling the emitter's \texttt{\textcolor{blue}{\footnotesize{}apply}}
+method:
 \begin{lyxcode}
-\textcolor{blue}{\footnotesize{}count(0);~inc();~inc();~inc();}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}count(0);~inc();~inc();~inc();}\textcolor{gray}{\scriptsize{}~//~Side-effect:~emit~molecules.}{\scriptsize\par}
 \end{lyxcode}
 Reactions are values of type \texttt{\textcolor{blue}{\footnotesize{}Reaction}}:
 \begin{lyxcode}
@@ -209,19 +210,20 @@ Reactions are values of type \texttt{\textcolor{blue}{\footnotesize{}Reaction}}:
 \begin{itemize}
 \item A reaction may be any partial function with a single \texttt{\textcolor{blue}{\footnotesize{}case}}
 clause
-\item Emitters for all molecules (e.g., \texttt{\textcolor{blue}{\footnotesize{}count}},
+\item All molecules (e.g., \texttt{\textcolor{blue}{\footnotesize{}count}},
 \texttt{\textcolor{blue}{\footnotesize{}inc}}) must be already defined
 \end{itemize}
-Reactions are ``activated'' as a group, using a ``reaction site'':
+A group of reactions are ``activated'' within a ``reaction site'':
 \begin{lyxcode}
-\textcolor{blue}{\footnotesize{}site(r1,~r2,~r3)}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}site(r1,~r2,~r3)}\textcolor{gray}{\scriptsize{}~//~Side-effect:~activate~reactions~r1,~r2,~r3.}{\scriptsize\par}
 \end{lyxcode}
 \begin{itemize}
-\item Molecules may be emitted after activating their consuming reactions 
-\item A site \emph{must} include all reactions that contend on an input
-molecule
+\item A molecule may be emitted only after activating a reaction site where
+some reactions consume that molecule as input
+\item A site \emph{must} include all reactions that consume a given molecule
 \end{itemize}
-Programs declare molecules and reaction sites, then emit initial molecules
+A Chemical Machine program declares some molecules, reactions, and
+reaction sites, and then can emit some initial molecules
 \begin{itemize}
 \item The \texttt{Chymyst} runtime will run the simulation
 \end{itemize}
@@ -237,7 +239,7 @@ ms
 
 \textcolor{blue}{\footnotesize{}~val~r~=~m{[}X{]}}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~val~enable~=~m{[}Unit{]}~}\textcolor{gray}{\scriptsize{}//~Molecule~is~confined~to~the~local~scope.}{\scriptsize\par}
+\textcolor{blue}{\footnotesize{}~val~enable~=~m{[}Unit{]}~}\textcolor{gray}{\scriptsize{}//~Emitter~is~confined~to~the~local~scope.}{\scriptsize\par}
 
 \textcolor{blue}{\footnotesize{}~site(}{\footnotesize\par}
 
@@ -255,27 +257,34 @@ ms
 
 \textcolor{blue}{\footnotesize{}~enable()~}\textcolor{gray}{\scriptsize{}//~Enable~emitting~`s`~initially.}{\scriptsize\par}
 
-\textcolor{blue}{\footnotesize{}~r~}\textcolor{gray}{\scriptsize{}//~Outside~scope~will~be~able~to~emit~`r`.}{\scriptsize\par}
+\textcolor{blue}{\footnotesize{}~r~}\textcolor{gray}{\scriptsize{}~~~~~~~~//~Outside~scope~will~be~able~to~emit~`r`.}{\scriptsize\par}
 
 \textcolor{blue}{\footnotesize{}\}}{\footnotesize\par}
 \end{lyxcode}
 \begin{itemize}
-\item No threads/semaphores/locks, no mutable state
+\item No threads (green or not), no semaphores, no locks, no mutable state
 \item External code may emit \texttt{\textcolor{blue}{\footnotesize{}r(x)}}
 at will, and \texttt{\textcolor{blue}{\footnotesize{}s(x)}} is then
 throttled
 \item External code cannot emit \texttt{\textcolor{blue}{\footnotesize{}enable()}}
 because of local scope
 \end{itemize}
-\href{\%20https://github.com/softwaremill/akka-vs-scalaz/tree/master/core/src/main/scala/com/softwaremill/ratelimiter}{Implementations in Akka, in Monix, and ZIO}:
+\href{https://github.com/softwaremill/akka-vs-scalaz/tree/master/core/src/main/scala/com/softwaremill/ratelimiter}{Implementations in Akka, in Monix, and ZIO}:
 > 50 LOC each
 \end{frame}
 
 \begin{frame}{Example: throttling test}
 
-Define a molecule \texttt{\textcolor{blue}{\footnotesize{}p(...)}}
-that we will emit too quickly, and a reaction just to see when that
-molecule has been emitted
+Assume a molecule \texttt{\textcolor{blue}{\footnotesize{}p}} is already
+bound in our reaction(s)
+
+Create a ``throttled version'' \texttt{\textcolor{blue}{\footnotesize{}tp}}
+that has the same effect as \texttt{\textcolor{blue}{\footnotesize{}p}}
+except that \texttt{\textcolor{blue}{\footnotesize{}tp}} is always
+emitted at a limited rate
+
+To test, emit \texttt{\textcolor{blue}{\footnotesize{}tp}} several
+times quickly:
 \begin{lyxcode}
 \textcolor{blue}{\footnotesize{}val~p~=~m{[}Int{]}}{\footnotesize\par}
 
@@ -285,24 +294,22 @@ molecule has been emitted
 
 \textcolor{blue}{\footnotesize{})}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}val~t~=~throttle(p,~1000L)}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}val~pt~=~throttle(p,~1000L)}\textcolor{gray}{\scriptsize{}~//~1~second~minimum~delay.}{\scriptsize\par}
 
-\textcolor{blue}{\footnotesize{}t(10);~t(20);~t(30);}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}pt(10);~pt(20);~pt(30);}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}scala>~Got~10~at~time~2020-08-10T15:33:05.921}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}Got~20~at~time~2020-08-10T15:33:06.914}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}Got~30~at~time~2020-08-10T15:33:07.920}{\footnotesize\par}
-
-\textcolor{blue}{\footnotesize{}~}{\footnotesize\par}
 \end{lyxcode}
 \end{frame}
 
-\begin{frame}{Example: cancellation}
+\begin{frame}{Example: async cancellation}
 
-Cancel emitting molecules \texttt{\textcolor{blue}{\footnotesize{}x(...)}}
-after a molecule \texttt{\textcolor{blue}{\footnotesize{}cancel()}}
+Prevent emission of molecule \texttt{\textcolor{blue}{\footnotesize{}x}}
+after a molecule \texttt{\textcolor{blue}{\footnotesize{}cancel}}
 is emitted
 \begin{lyxcode}
 \textcolor{blue}{\footnotesize{}def~cancellation{[}A{]}(x:~M{[}A{]}):~(M{[}A{]},~M{[}Unit{]})~=~\{}{\footnotesize\par}
@@ -319,7 +326,7 @@ is emitted
 
 \textcolor{blue}{\footnotesize{}~~)}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~enable()~}\textcolor{gray}{\scriptsize{}//~Enable~emitting~`x`~initially.}{\scriptsize\par}
+\textcolor{blue}{\footnotesize{}~~enable()~~~~~}\textcolor{gray}{\scriptsize{}//~Enable~emitting~`x`~initially.}{\scriptsize\par}
 
 \textcolor{blue}{\footnotesize{}~~(cx,~cancel)~}\textcolor{gray}{\scriptsize{}//~Outside~scope~will~be~able~to~emit~these.}{\scriptsize\par}
 
@@ -331,16 +338,42 @@ has no further effect
 \item External code cannot emit \texttt{\textcolor{blue}{\footnotesize{}enable()}}
 because of local scope
 \end{itemize}
-Users cannot implement this in Monix or ZIO (cancellation is provided)
+Libraries such as Monix or ZIO provide a cancellation facility
+
+The Chemical Machine code is easy to modify (e.g., add uncancel)
+\end{frame}
+
+\begin{frame}{Example: async cancellation test}
+
+Assume a molecule \texttt{\textcolor{blue}{\footnotesize{}x}} is already
+bound in our reaction(s)
+
+Create a ``cancellable version'' \texttt{\textcolor{blue}{\footnotesize{}cx}}
+that has the same effect as \texttt{\textcolor{blue}{\footnotesize{}x}}
+but can be (eventually) canceled by emitting a molecule \texttt{\textcolor{blue}{\footnotesize{}cancel}}:
+\begin{lyxcode}
+\textcolor{blue}{\footnotesize{}val~x~=~m{[}Int{]}}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}site(~go~\{~case~x(a)~\ensuremath{\Rightarrow}~println(s\textquotedbl Got~\$a\textquotedbl )~\}~)}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}val~(cx,~cancel)~=~cancellation(x)}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}scala>~cx(1);~cx(2);~cx(3);~cancel();~cx(4);~cx(5);}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}Got~1}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}Got~2}{\footnotesize\par}
+\end{lyxcode}
+\emph{Asynchronous} cancellation cannot guarantee order of events!
 \end{frame}
 
 \begin{frame}{Example: async racing}
 
-For two molecules \texttt{\textcolor{blue}{\footnotesize{}p(...)}}
-and \texttt{\textcolor{blue}{\footnotesize{}q(...)}}, determine which
-one is emitted first and report its value on a given molecule \texttt{\textcolor{blue}{\footnotesize{}r(...)}} 
+For two molecules \texttt{\textcolor{blue}{\footnotesize{}p}} and
+\texttt{\textcolor{blue}{\footnotesize{}q}}, determine which one was
+emitted first and report its value on a given molecule (\texttt{\textcolor{blue}{\footnotesize{}reply}}):
 \begin{lyxcode}
-\textcolor{blue}{\footnotesize{}def~racing{[}A,~B{]}(r:~M{[}Either{[}A,~B{]}{]}):~(M{[}A{]},~M{[}B{]})~=~\{}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}def~racing{[}A,~B{]}(reply:~M{[}Either{[}A,~B{]}{]}):~(M{[}A{]},~M{[}B{]})~=~\{}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}~~val~p~=~m{[}A{]};~val~q~=~m{[}B{]}}{\footnotesize\par}
 
@@ -348,26 +381,60 @@ one is emitted first and report its value on a given molecule \texttt{\textcolor
 
 \textcolor{blue}{\footnotesize{}~~site(}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~go~\{~case~p(a)~+~enable(\_)~\ensuremath{\Rightarrow}~r(Left(a))~~\},}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~~~go~\{~case~p(a)~+~enable(\_)~\ensuremath{\Rightarrow}~reply(Left(a))~~\},}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~go~\{~case~q(b)~+~enable(\_)~\ensuremath{\Rightarrow}~r(Right(b))~\},}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~~~go~\{~case~q(b)~+~enable(\_)~\ensuremath{\Rightarrow}~reply(Right(b))~\},}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}~~)}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~enable()~}\textcolor{gray}{\scriptsize{}//~One~copy~of~`enable`~initially.}{\scriptsize\par}
+\textcolor{blue}{\footnotesize{}~~enable()~}\textcolor{gray}{\scriptsize{}//~Initially,~we~only~have~one~copy~of~`enable`.}{\scriptsize\par}
 
-\textcolor{blue}{\footnotesize{}~~(p,~q)~}\textcolor{gray}{\scriptsize{}//~Outside~scope~will~be~able~to~emit~these.}{\scriptsize\par}
+\textcolor{blue}{\footnotesize{}~~(p,~q)~}\textcolor{gray}{\scriptsize{}~~//~Outside~scope~will~be~able~to~emit~these.}{\scriptsize\par}
 
 \textcolor{blue}{\footnotesize{}\}}{\footnotesize\par}
 \end{lyxcode}
 \begin{itemize}
 \item External code will emit \texttt{\textcolor{blue}{\footnotesize{}p(...)}}
-and \texttt{\textcolor{blue}{\footnotesize{}q(...)}}, will get \texttt{\textcolor{blue}{\footnotesize{}r(...)}}
-back
+and \texttt{\textcolor{blue}{\footnotesize{}q(...)}}, will get \texttt{\textcolor{blue}{\footnotesize{}reply(...)}}
+emitted
 \item External code cannot emit \texttt{\textcolor{blue}{\footnotesize{}enable()}}
 because of local scope
+\item Order of async molecules is not guaranteed
 \end{itemize}
-Users cannot implement this in Monix or ZIO (racing facility is provided)
+Libraries such as Monix or ZIO provide a racing facility
+
+The Chemical Machine code is easy to modify (e.g., add cleanup)
+\end{frame}
+
+\begin{frame}{Example: async racing test}
+
+Assume a molecule \texttt{\textcolor{blue}{\footnotesize{}result}}
+is already bound in our reaction(s)
+\begin{lyxcode}
+\textcolor{blue}{\footnotesize{}val~result~=~m{[}Either{[}Int,~String{]}{]}}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}site(}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}~~\{~go~\{~case~result(Left(x))~~\ensuremath{\Rightarrow}~...~\},}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}~~\{~go~\{~case~result(Right(y))~\ensuremath{\Rightarrow}~...~\},}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{})}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}val~(p,~q)~=~racing{[}Int,~String{]}(result)}{\footnotesize\par}
+
+\textcolor{gray}{\scriptsize{}//~Two~parallel~computations~can~now~emit~`p`~and~`q`~asynchronously.}{\scriptsize\par}
+
+\textcolor{gray}{\scriptsize{}//~First~computation:}{\scriptsize\par}
+
+\textcolor{blue}{\footnotesize{}...~p(123)}\textcolor{gray}{\scriptsize{}~~~~//~Non-blocking.}{\scriptsize\par}
+
+\textcolor{gray}{\scriptsize{}//~Second~computation:}{\scriptsize\par}
+
+\textcolor{blue}{\footnotesize{}...~q(\textquotedbl abc\textquotedbl )}\textcolor{gray}{\scriptsize{}~//~Non-blocking.~}{\scriptsize\par}
+
+\textcolor{gray}{\scriptsize{}//~Eventually,~a~`result(...)`~molecule~will~be~emitted.}{\scriptsize\par}
+\end{lyxcode}
 \end{frame}
 
 \begin{frame}{Additional feature: blocking molecules}
@@ -375,90 +442,123 @@ Users cannot implement this in Monix or ZIO (racing facility is provided)
 A blocking molecule has type \texttt{\textcolor{blue}{\footnotesize{}B{[}A,
 R{]}}} and receives a reply value of type \texttt{\textcolor{blue}{\footnotesize{}R}}:
 \begin{lyxcode}
-\textcolor{blue}{\scriptsize{}val~fetch~=~b{[}Unit,~Int{]}}\textcolor{gray}{\scriptsize{}~//~Blocking~molecule's~emitter.}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~fetch~=~b{[}Int,~String{]}}\textcolor{gray}{\scriptsize{}~//~Blocking~molecule's~emitter.}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}val~result~=~m{[}Int{]}}\textcolor{gray}{\scriptsize{}~//~A~non-blocking~molecule~emitter.}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~data~=~m{[}Int{]}}\textcolor{gray}{\scriptsize{}~//~A~non-blocking~molecule~emitter.}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}site(}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~go~\{~case~fetch(\_,~reply)~+~res(b)~}\textcolor{blue}{\footnotesize{}\ensuremath{\Rightarrow}}\textcolor{blue}{\scriptsize{}~reply(b)~\}}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~~go~\{~case~data(x)~+~fetch(y,~reply)~}\textcolor{blue}{\footnotesize{}\ensuremath{\Rightarrow}}\textcolor{blue}{\scriptsize{}~reply(s\textquotedbl got~\$x~and~\$y\textquotedbl )~\}}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{})}\textcolor{gray}{\footnotesize{}~}\textcolor{gray}{\scriptsize{}//~`reply`~is~a~ReplyEmitter{[}Int{]}~defined~within~reaction~scope.}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{})}\textcolor{gray}{\footnotesize{}~}\textcolor{gray}{\scriptsize{}//~`reply`~is~a~ReplyEmitter{[}String{]}~defined~within~reaction~scope.}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}result(123)}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}data(123)}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}val~x~=~fetch()}\textcolor{gray}{\footnotesize{}~}\textcolor{gray}{\scriptsize{}//~Blocking~call,~will~set~x~=~123.}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~x~=~fetch(456)}\textcolor{gray}{\footnotesize{}~}\textcolor{gray}{\scriptsize{}//~Blocking~call,~will~set~x~=~\textquotedbl got~123~and~456\textquotedbl .}{\scriptsize\par}
 \end{lyxcode}
 ~
 
 Blocking emitters are a convenience, do not increase expressive power
 \end{frame}
 
+\begin{frame}{Example: synchronous rendez-vous}
+
+Create two blocking molecules \texttt{\textcolor{blue}{\footnotesize{}p(x:~X)}}
+and \texttt{\textcolor{blue}{\footnotesize{}q(y:~Y)}} to implement
+synchronous rendez-vous that exchanges \texttt{\textcolor{blue}{\footnotesize{}x}}
+and \texttt{\textcolor{blue}{\footnotesize{}y}}:
+\begin{lyxcode}
+\textcolor{blue}{\footnotesize{}def~syncRendezvous{[}X,~Y{]}:~(B{[}X,~Y{]},~B{[}Y,~X{]})~=~\{}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}~~val~p~=~b{[}X,~Y{]};~val~q~=~b{[}Y,~X{]}}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}~~site(~go~\{~case~p(x,~rx)~+~q(y,~ry)~\ensuremath{\Rightarrow}~rx(y);~ry(x)~\}~)}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}~~(p,~q)}{\footnotesize\par}
+
+\textcolor{blue}{\footnotesize{}\}}{\footnotesize\par}
+
+\textcolor{gray}{\scriptsize{}//~To~test:~Create~the~molecules~for~a~rendez-vous.}{\scriptsize\par}
+
+\textcolor{blue}{\footnotesize{}val~(p,~q)~=~syncRendezvous{[}Int,~String{]}}{\footnotesize\par}
+
+\textcolor{gray}{\scriptsize{}//~Two~parallel~computations~can~exchange~data.~First~computation:}{\scriptsize\par}
+
+\textcolor{blue}{\footnotesize{}...~val~myResponse:~String~=~p(123)}\textcolor{gray}{\scriptsize{}~//~Blocking~until~response.}{\scriptsize\par}
+
+\textcolor{gray}{\scriptsize{}//~Second~computation:}{\scriptsize\par}
+
+\textcolor{blue}{\footnotesize{}...~val~myResponse:~Int~=~q(\textquotedbl abc\textquotedbl )~}\textcolor{gray}{\scriptsize{}~//~Blocking~until~response.}{\scriptsize\par}
+\end{lyxcode}
+\end{frame}
+
 \begin{frame}{Example: racing with blocking molecules}
 
-Given two blocking molecules \texttt{\textcolor{blue}{\footnotesize{}p(x:X)}}
-and \texttt{\textcolor{blue}{\footnotesize{}q(y:Y)}}, create a new
-blocking molecule \texttt{\textcolor{blue}{\footnotesize{}r(...)}},
-to determine which one returns first and return the corresponding
-value of type \texttt{\textcolor{blue}{\footnotesize{}Either{[}X,
-Y{]}}} 
+Given two blocking molecules \texttt{\textcolor{blue}{\footnotesize{}p(x:~X)}}
+and \texttt{\textcolor{blue}{\footnotesize{}q(y:~Y)}}, create a new
+blocking molecule \texttt{\textcolor{blue}{\footnotesize{}r(...)}}
+to determine which of \texttt{\textcolor{blue}{\footnotesize{}p}}
+and \texttt{\textcolor{blue}{\footnotesize{}q}} returns first and
+return the corresponding value of type \texttt{\textcolor{blue}{\footnotesize{}Either{[}X,
+Y{]}}}:
 \begin{lyxcode}
 \textcolor{blue}{\footnotesize{}def~racing{[}X,Y{]}(p:~B{[}Unit,X{]},~q:~B{[}Unit,Y{]}):~B{[}Unit,~Either{[}X,Y{]}{]}~=~\{}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~val~get~=~b{[}Unit,~Either{[}X,~Y{]}{]}}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~val~get~=~b{[}Unit,~Either{[}X,~Y{]}{]}}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~val~res~=~b{[}Unit,~Either{[}X,~Y{]}{]}}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~val~res~=~b{[}Unit,~Either{[}X,~Y{]}{]}}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~val~left~=~m{[}Unit{]};~val~right~=~m{[}Unit{]}}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~val~left~=~m{[}Unit{]};~val~right~=~m{[}Unit{]}}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~val~done~=~m{[}Either{[}X,~Y{]}{]}}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~val~done~=~m{[}Either{[}X,~Y{]}{]}}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~site(}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~site(}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~~~go~\{~case~res(\_,~reply)}\textcolor{blue}{\scriptsize{}~}\textcolor{blue}{\footnotesize{}\ensuremath{\Rightarrow}~left();~right();~reply(get())~\},}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~~~go~\{~case~res(\_,~reply)}\textcolor{blue}{\scriptsize{}~}\textcolor{blue}{\footnotesize{}\ensuremath{\Rightarrow}~left();~right();~reply(get())~\},}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~~~go~\{~case~left(\_)~~\ensuremath{\Rightarrow}~done(Left(p()))~~\},~~~~~~}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~~~go~\{~case~left(\_)~~\ensuremath{\Rightarrow}~done(Left(p()))~~\},~~~~~~}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~~~go~\{~case~right(\_)~\ensuremath{\Rightarrow}~done(Right(q()))~\},}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~~~go~\{~case~right(\_)~\ensuremath{\Rightarrow}~done(Right(q()))~\},}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~~~go~\{~case~get(\_,~r)~+~done(x)}\textcolor{blue}{\scriptsize{}~}\textcolor{blue}{\footnotesize{}\ensuremath{\Rightarrow}~r(x)~\},}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~~~go~\{~case~get(\_,~r)~+~done(x)}\textcolor{blue}{\scriptsize{}~}\textcolor{blue}{\footnotesize{}\ensuremath{\Rightarrow}~r(x)~\},}{\footnotesize\par}
 
-\textcolor{blue}{\footnotesize{}~~~~)}{\footnotesize\par}
+\textcolor{blue}{\footnotesize{}~~)}{\footnotesize\par}
 
 \textcolor{blue}{\footnotesize{}~~res~}\textcolor{gray}{\scriptsize{}//~Outside~scope~will~be~able~to~emit~this.}{\scriptsize\par}
 
 \textcolor{blue}{\footnotesize{}\}}{\footnotesize\par}
 \end{lyxcode}
 \begin{itemize}
-\item External code will call \texttt{\textcolor{blue}{\footnotesize{}r(...)}},
-which calls \texttt{\textcolor{blue}{\footnotesize{}p(...)}} and \texttt{\textcolor{blue}{\footnotesize{}q(...)}}{\footnotesize\par}
+\item External code calls \texttt{\textcolor{blue}{\footnotesize{}r(...)}},
+which will call both \texttt{\textcolor{blue}{\footnotesize{}p(...)}}
+and \texttt{\textcolor{blue}{\footnotesize{}q(...)}}{\footnotesize\par}
 \end{itemize}
-Users cannot implement this in Monix or ZIO (racing facility is provided)
+Libraries such as Monix or ZIO provide a racing facility
 \end{frame}
 
-\begin{frame}{Example: map/reduce}
+\begin{frame}{Example: parallel map/reduce}
 
 A simple map/reduce implementation:
 \begin{lyxcode}
-\textcolor{blue}{\scriptsize{}val~c~=~m{[}A{]}}\textcolor{gray}{\scriptsize{}~//~Initial~values~have~type~`A`.}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~c~=~m{[}A{]}}\textcolor{gray}{\scriptsize{}~~~~~~~~~~~//~Initial~values~have~type~`A`.}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}val~d~=~m{[}(Int,~B){]}~}\textcolor{gray}{\scriptsize{}//~`B`~is~a~commutative~monoid.}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~d~=~m{[}(Int,~B){]}~}\textcolor{gray}{\scriptsize{}~~~//~`B`~is~a~commutative~monoid.}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}val~res~=~m{[}B{]}}\textcolor{gray}{\scriptsize{}~//~Final~result~of~type~`B`.}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}val~res~=~m{[}B{]}}\textcolor{gray}{\scriptsize{}~~~~~~~~~//~Final~result~of~type~`B`.}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}val~fetch~=~b{[}Unit,~B{]}}\textcolor{gray}{\scriptsize{}~//~Blocking~emitter.}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}site(}{\scriptsize\par}
 
-\textcolor{gray}{\scriptsize{}~~//~``map''}{\scriptsize\par}
+\textcolor{gray}{\scriptsize{}~~//~``map''~to~perform~a~long~computation:}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}~~go~\{~case~c(x)~$\Rightarrow$~d((1,~long\_computation(x)))~\},~}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~}\textcolor{gray}{\scriptsize{}~//~``reduce''}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~}\textcolor{gray}{\scriptsize{}~//~``reduce''~to~aggregate~the~results:}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}~~go~\{~case~d((n1,~b1))~+~d((n2,~b2))~$\Rightarrow$}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~~val~(newN,~newB)~=~(n1~+~n2,~b1~|+|~b2)}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~~~val~(newN,~newB)~=~(n1~+~n2,~b1~|+|~b2)}\textcolor{gray}{\scriptsize{}~//~Aggregation.}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}~~~if~(newN~==~total)~res(newB)~else~d((newN,~newB))~}{\scriptsize\par}
 
@@ -480,8 +580,6 @@ Compare with the \href{https://stackoverflow.com/questions/17291851/mapreduce-im
 \begin{frame}{Example: parallel merge-sort}
 
 Reactions can be recursive
-
-Complete \texttt{Chymyst} code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/MergeSortSpec.scala}{MergeSortSpec.scala}
 \begin{lyxcode}
 \textcolor{blue}{\scriptsize{}val~mergesort~=~m{[}(Array{[}T{]},~M{[}Array{[}T{]}{]}){]}}{\scriptsize\par}
 
@@ -497,11 +595,11 @@ Complete \texttt{Chymyst} code: \href{https://github.com/Chymyst/jc-talk-2017-ex
 
 \textcolor{blue}{\scriptsize{}~~~~~~~~val~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}~=~m{[}Array{[}T{]}{]}}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~~}\textcolor{brown}{\scriptsize{}site}\textcolor{blue}{\scriptsize{}(}\textsf{\textcolor{gray}{\footnotesize{}~//~Define~a~lower-level~reaction~site.}}{\footnotesize\par}
+\textcolor{blue}{\scriptsize{}~~~~~~~~}\textcolor{brown}{\scriptsize{}site}\textcolor{blue}{\scriptsize{}(~~}\textsf{\textcolor{gray}{\footnotesize{}~}}\textcolor{gray}{\scriptsize{}//~Define~a~lower-level~reaction~site.}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}~~~~~~~~~~go~\{~case~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{}(x)~+~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{}(y)~$\Rightarrow$}{\scriptsize\par}
 
-\textcolor{brown}{\scriptsize{}~~~~~~~~~~~~~sortedResult}\textcolor{blue}{\scriptsize{}(arrayMerge(x,y))}{\scriptsize\par}
+\textcolor{brown}{\scriptsize{}~~~~~~~~~~~~~sortedResult}\textcolor{blue}{\scriptsize{}(arrayMerge(x,~y))~}\textcolor{gray}{\scriptsize{}//~Helper~function.}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}~~~~~~~~~~~~~\}}{\scriptsize\par}
 
@@ -509,14 +607,16 @@ Complete \texttt{Chymyst} code: \href{https://github.com/Chymyst/jc-talk-2017-ex
 
 \textcolor{blue}{\scriptsize{}~~~~~~~~val~(part1,~part2)~=~arr.splitAt(arr.length/2)}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~~}\textsf{\textcolor{gray}{\footnotesize{}//~Emit~lower-level~}}\textcolor{gray}{\footnotesize{}mergesort}\textsf{\textcolor{gray}{\footnotesize{}~molecules:}}{\footnotesize\par}
+\textcolor{blue}{\scriptsize{}~~~~~~~~}\textcolor{gray}{\scriptsize{}//~Emit~lower-level~`mergesort`~molecules:}{\scriptsize\par}
 
-\textcolor{blue}{\scriptsize{}~~~~~~~~mergesort(part1,~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{})~+~mergesort(part2,~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{})}{\scriptsize\par}
+\textcolor{blue}{\scriptsize{}~~~~~~~~mergesort(part1,~}\textcolor{brown}{\scriptsize{}sorted1}\textcolor{blue}{\scriptsize{});~mergesort(part2,~}\textcolor{brown}{\scriptsize{}sorted2}\textcolor{blue}{\scriptsize{})}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}~~~~\}}{\scriptsize\par}
 
 \textcolor{blue}{\scriptsize{}\})}{\scriptsize\par}
 \end{lyxcode}
+Complete \texttt{Chymyst} code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/test/scala/io/chymyst/talk_examples/MergeSortSpec.scala}{MergeSortSpec.scala}
+
 \href{https://gist.github.com/stephenmcd/7edbcfb632c373eaf466}{Implementation in Akka}:
 30 LOC for the same functionality
 \end{frame}
@@ -585,8 +685,8 @@ f51}}{\scriptsize\par}
 Source code: \href{https://github.com/Chymyst/jc-talk-2017-examples/blob/master/src/main/scala/io/chymyst/talk_examples/DiningPhilosophers.scala}{DiningPhilosophers.scala}
 
 For more examples, see the \href{https://github.com/Chymyst/chymyst-core}{code repository}
-(first-of, barriers, rendezvous, critical sections, readers/writers,
-Game of Life, elevators, etc.)
+(barriers, critical sections, readers/writers, Conway's ``Game of
+Life'', elevator control, etc.)
 \end{frame}
 
 \begin{frame}{Reasoning about code in the Chemical Machine paradigm}
@@ -609,7 +709,7 @@ Reasoning about code:
 Guarantees:
 \begin{itemize}
 \item Molecule emitters and reactions are immutable values in local scopes
-\item Reaction sites are immutable once activated; can refactor to libraries
+\item Reaction sites are immutable; input molecule sets are defined statically
 \item Multiple input molecules are consumed atomically by reactions
 \end{itemize}
 \end{frame}
@@ -636,7 +736,10 @@ types)
 
 Experience with Chemical Machine programming is limited
 
-Some features promise to be useful:
+A \href{https://winitzki.gitbooks.io/concurrency-in-reactions-declarative-multicore-in/content/}{tutorial book}
+goes through many examples
+
+Some features (already implemented) that promise to be useful:
 \begin{itemize}
 \item Blocking molecules with timeouts and timeout back-signalling
 \item Automatic pipelining of molecules (ordered mailboxes)
@@ -651,11 +754,16 @@ Some features promise to be useful:
 \begin{itemize}
 \item Forgetting to emit a molecule is \#1 programmer error
 \end{itemize}
-\item Logging, debugging, unit-testing facilities
+\item Logging, metrics monitoring, debugging, unit-testing facilities
+\end{itemize}
+Possible extensions:
+\begin{itemize}
+\item Persistence?
+\item Automatic parallelism adjustment?
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Related frameworks: Petri nets}
+\begin{frame}{Comparison to Petri nets}
 
 Workflow management: an approach based on \href{https://en.wikipedia.org/wiki/Petri_net}{Petri nets}
 \begin{itemize}
